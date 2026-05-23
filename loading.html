@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Composing your trip — K-Wellness Concierge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f5f5f7;
+    --bg-warm: #f0eee9;
+    --ink: #1d1d1f;
+    --ink-2: #2a2a2c;
+    --ink-3: #4a4a4d;
+    --line: #d2d2d7;
+    --rule: #e8e8ed;
+    --accent: #B21464;
+    --accent-deep: #8a0e4d;
+    --accent-soft: rgba(178, 20, 100, .08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                 Inter, "Helvetica Neue", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.5;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Nav (consistent with rest of site) */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, .82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--rule);
+    height: 68px;
+    flex-shrink: 0;
+  }
+  nav.top .inner {
+    height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    max-width: 1320px; margin: 0 auto;
+  }
+  nav.top .brand {
+    font-weight: 700; font-size: 19px;
+    color: var(--ink);
+  }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 42px; padding: 0 20px; border-radius: 999px;
+    background: var(--accent); color: #fff;
+    font-weight: 600; font-size: 15px;
+    transition: background .2s;
+  }
+  .cta:hover { background: var(--accent-deep); }
+
+  /* Main content */
+  main {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 56px 24px 80px;
+    max-width: 880px; margin: 0 auto; width: 100%;
+  }
+
+  /* AI badge */
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 18px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 13px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .ai-badge .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+
+  /* Bold headline (user requested) */
+  h1.headline {
+    font-weight: 800;
+    font-size: clamp(34px, 4.4vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-align: center;
+    max-width: 18ch;
+  }
+  h1.headline .accent { color: var(--accent); }
+
+  .subtext {
+    margin-top: 18px;
+    color: var(--ink-3);
+    font-size: 17px;
+    text-align: center;
+    max-width: 56ch;
+  }
+
+  /* Photo frame */
+  .frame-wrap {
+    margin-top: 48px;
+    width: 100%;
+    max-width: 720px;
+  }
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--bg-warm);
+    box-shadow:
+      0 1px 0 rgba(0,0,0,.04),
+      0 30px 60px -20px rgba(0,0,0,.25),
+      0 0 0 1px rgba(0,0,0,.06);
+  }
+  .frame .slide {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-warm);
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity .7s ease, transform 2.4s ease;
+  }
+  .frame .slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+  /* gradient overlay at bottom for caption legibility */
+  .frame::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
+    pointer-events: none;
+  }
+  .caption {
+    position: absolute;
+    left: 24px; bottom: 20px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.005em;
+    text-shadow: 0 1px 12px rgba(0,0,0,.35);
+    z-index: 2;
+  }
+  .caption .sub {
+    display: block;
+    font-weight: 500; font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .85;
+    margin-bottom: 4px;
+  }
+
+  /* Slide indicator dots */
+  .dots {
+    margin-top: 24px;
+    display: flex; gap: 8px; justify-content: center;
+  }
+  .dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--rule);
+    transition: background .3s, transform .3s;
+  }
+  .dots span.is-active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+
+  /* Skip link */
+  .skip {
+    margin-top: 36px;
+    font-size: 14px;
+    color: var(--ink-3);
+    text-align: center;
+  }
+  .skip a {
+    color: var(--accent);
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s;
+  }
+  .skip a:hover { border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="inner">
+    <a href="index.html" class="brand">K-Wellness</a>
+    <a href="step1.html" class="cta">Plan Korea</a>
+  </div>
+</nav>
+
+<main>
+  <div class="ai-badge"><span class="dot"></span>AI Concierge · Analyzing</div>
+
+  <h1 class="headline">
+    Powerful AI is composing<br />
+    the <span class="accent">best plan</span> for your trip
+  </h1>
+  <p class="subtext">Based on the choices you made, our AI is assembling your optimal seven-day journey. This will take a moment.</p>
+
+  <div class="frame-wrap">
+    <div class="frame" id="frame">
+      <!-- Slides injected by JS -->
+      <div class="caption" id="caption"></div>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <p class="skip">
+    To skip ahead, <a href="result.html" id="skip-link">view your itinerary now</a>
+  </p>
+</main>
+
+<script>
+  /*
+   * Slide data.
+   * Photos live in /assets/slides/ — see assets/slides/CREDITS.md for attribution.
+   * To re-order, add, or remove slides, just edit this array.
+   * Total slideshow duration = SLIDES.length × SLIDE_INTERVAL.
+   */
+  var SLIDES = [
+    {
+      src: 'assets/slides/01-korean-table-feast.jpg',
+      title: 'Hansik Feast',
+      sub: 'Cuisine · Seoul'
+    },
+    {
+      src: 'assets/slides/02-bibimbap.jpg',
+      title: 'Bibimbap',
+      sub: 'Cuisine · Signature'
+    },
+    {
+      src: 'assets/slides/03-kimchi.jpg',
+      title: 'Kimchi',
+      sub: 'Cuisine · Fermented'
+    },
+    {
+      src: 'assets/slides/04-kimchi-jjigae.jpg',
+      title: 'Kimchi Jjigae',
+      sub: 'Cuisine · Comfort'
+    },
+    {
+      src: 'assets/slides/05-myeongdong-street.jpg',
+      title: 'Myeongdong',
+      sub: 'Place · Seoul'
+    },
+    {
+      src: 'assets/slides/06-gyeongbokgung-pond.jpg',
+      title: 'Gyeongbokgung Hyangwonjeong',
+      sub: 'Place · Seoul'
+    },
+    {
+      src: 'assets/slides/07-hanbok-palace.jpg',
+      title: 'Hanbok at the Palace',
+      sub: 'Culture · Heritage'
+    },
+    {
+      src: 'assets/slides/08-cherry-blossom.jpg',
+      title: 'Cherry Blossom Road',
+      sub: 'Season · Spring'
+    },
+    {
+      src: 'assets/slides/09-n-seoul-tower.jpg',
+      title: 'N Seoul Tower',
+      sub: 'Place · Namsan'
+    }
+    // To use these extra slides, uncomment them below:
+    // ,{ src: 'assets/slides/10-seoul-night-skyline.jpg', title: 'Seoul Skyline',     sub: 'Place · Night' }
+    // ,{ src: 'assets/slides/11-gwanghwamun-roof.jpg',    title: 'Gwanghwamun',        sub: 'Place · Heritage' }
+  ];
+
+  var SLIDE_INTERVAL = 2000; // 2 seconds per slide
+  var TOTAL_DURATION = SLIDES.length * SLIDE_INTERVAL; // auto-redirects when all slides have shown
+
+  (function init() {
+    var frame = document.getElementById('frame');
+    var caption = document.getElementById('caption');
+    var dots = document.getElementById('dots');
+
+    // Build slide divs
+    SLIDES.forEach(function (s, i) {
+      var div = document.createElement('div');
+      div.className = 'slide';
+      // Preload so cross-fades stay smooth
+      var preload = new Image();
+      preload.src = s.src;
+      div.style.backgroundImage = 'url("' + s.src + '")';
+      frame.insertBefore(div, caption);
+
+      // Indicator dot
+      var dot = document.createElement('span');
+      dots.appendChild(dot);
+    });
+
+    var slides = frame.querySelectorAll('.slide');
+    var dotEls = dots.querySelectorAll('span');
+    var current = 0;
+
+    function show(i) {
+      slides.forEach(function (el, idx) {
+        el.classList.toggle('is-active', idx === i);
+      });
+      dotEls.forEach(function (el, idx) {
+        el.classList.toggle('is-active', idx === i);
+      });
+      caption.innerHTML = '<span class="sub">' + SLIDES[i].sub + '</span>' + SLIDES[i].title;
+    }
+
+    show(0);
+
+    var timer = setInterval(function () {
+      current = (current + 1) % SLIDES.length;
+      show(current);
+    }, SLIDE_INTERVAL);
+
+    // Once all slides have been shown, advance to the result page.
+    setTimeout(function () {
+      clearInterval(timer);
+      window.location.href = 'result.html';
+    }, TOTAL_DURATION);
+  })();
+</script>
+
+</body>
+</html>

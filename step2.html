@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>K-Wellness Concierge — Step 2 · Medical</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet" />
+<style>
+  /* ════════════════════════════════════════════════════════════════════
+     K-Wellness · Step 2 Medical · inherits Step 1 visual system.
+     Same tokens, same nav/stepbar/segmented/CTA. Adds medical-tile CSS.
+     ════════════════════════════════════════════════════════════════════ */
+  :root {
+    --kw-bg: #ffffff;
+    --kw-bg-soft: #f5f5f7;
+    --kw-bg-warm: #f0eee9;
+    --kw-ink: #1d1d1f;
+    --kw-ink-2: #2a2a2c;
+    --kw-ink-3: #4a4a4d;
+    --kw-line: #d2d2d7;
+    --kw-rule: #e8e8ed;
+    --kw-accent: #B21464;
+    --kw-accent-deep: #8a0e4d;
+    --kw-accent-soft: rgba(178,20,100,.08);
+    --kw-gold: #b48a3a;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                 Inter, "Helvetica Neue", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--kw-ink);
+    background: var(--kw-bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .kw-screen { background: var(--kw-bg); color: var(--kw-ink); position: relative; min-height: 100vh; }
+  .kw-screen * { box-sizing: border-box; }
+  .kw-screen a { color: inherit; text-decoration: none; }
+  /* Specificity rescue: .kw-screen a outranks .kw-cta, so we need to
+     re-assert white text on the pill button when it's inside a screen. */
+  .kw-screen a.kw-cta { color: #fff; }
+  .kw-screen a.kw-cta.kw-cta-ghost { color: var(--kw-ink); }
+  .kw-screen button { font: inherit; cursor: pointer; }
+  .kw-screen ul { list-style: none; margin: 0; padding: 0; }
+  .kw-screen input, .kw-screen textarea {
+    font: inherit; color: inherit;
+    background: transparent; border: none; outline: none;
+  }
+  .kw-screen .hangul {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  /* ── Nav ─────────────────────────────────────────────────────────── */
+  .kw-nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, .82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--kw-rule);
+    height: 68px;
+  }
+  .kw-nav-inner {
+    height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    max-width: 1440px; margin: 0 auto;
+  }
+  .kw-brand { display: flex; align-items: center; gap: 12px; }
+  .kw-brand .kw-wm {
+    font-weight: 700; font-size: 19px; letter-spacing: -0.01em; color: var(--kw-ink);
+  }
+  .kw-navlist {
+    display: flex; gap: 22px;
+    font-size: 14px; font-weight: 600;
+  }
+  .kw-navlist a {
+    color: var(--kw-ink); padding: 6px 0; transition: color .15s;
+    position: relative;
+  }
+  .kw-navlist a:hover { color: var(--kw-accent); }
+  .kw-navlist a.is-active { color: var(--kw-accent); }
+  .kw-navlist a.is-active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+    height: 2px; background: var(--kw-accent); border-radius: 2px;
+  }
+  .kw-nav-right { display: flex; align-items: center; gap: 18px; }
+  .kw-link-q { font-size: 14px; font-weight: 600; color: var(--kw-ink); }
+  .kw-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 50px; padding: 0 28px;
+    border-radius: 999px;
+    background: var(--kw-accent);
+    color: #fff;
+    font-weight: 600; font-size: 17px;
+    border: none;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
+  }
+  .kw-cta:hover { background: var(--kw-accent-deep); }
+  .kw-cta-sm { height: 38px; padding: 0 18px; font-size: 14px; }
+  .kw-cta-lg { height: 62px; padding: 0 38px; font-size: 19px; }
+  .kw-cta-ghost {
+    background: transparent; color: var(--kw-ink);
+    border: 1.5px solid var(--kw-line);
+  }
+  .kw-cta-ghost:hover { background: var(--kw-bg-soft); }
+
+  /* ── Step bar (5 main steps) ─────────────────────────────────────── */
+  .kw-stepbar-horizontal {
+    display: flex; align-items: center; gap: 0;
+    padding: 28px 0;
+  }
+  .kw-step { display: inline-flex; align-items: center; gap: 10px; flex: none; }
+  .kw-step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    border: 1.5px solid var(--kw-line);
+    color: var(--kw-ink-3); background: #fff;
+  }
+  .kw-step-label {
+    font-size: 14px; font-weight: 600;
+    color: var(--kw-ink-3); letter-spacing: -.005em;
+  }
+  .kw-step-active .kw-step-num {
+    background: var(--kw-accent); color: #fff; border-color: var(--kw-accent);
+  }
+  .kw-step-active .kw-step-label { color: var(--kw-ink); }
+  .kw-step-done .kw-step-num {
+    background: var(--kw-ink); color: #fff; border-color: var(--kw-ink);
+    font-size: 13px;
+  }
+  .kw-step-done .kw-step-label { color: var(--kw-ink); }
+  .kw-step-rule {
+    flex: 1 1 auto; min-width: 24px;
+    height: 1.5px; background: var(--kw-rule);
+    margin: 0 14px;
+  }
+
+  /* ── Eyebrow ─────────────────────────────────────────────────────── */
+  .kw-eyebrow {
+    display: inline-flex; align-items: baseline; gap: 12px;
+    color: var(--kw-accent);
+  }
+  .kw-eyebrow-num {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700; font-size: 13px; letter-spacing: .08em;
+  }
+  .kw-eyebrow-text {
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+  }
+
+  /* ── Segmented control ──────────────────────────────────────────── */
+  .kw-segmented {
+    display: inline-flex;
+    background: var(--kw-bg-soft);
+    padding: 4px;
+    border-radius: 12px;
+    gap: 4px;
+  }
+  .kw-segmented button {
+    height: 44px; padding: 0 22px;
+    border: none; border-radius: 9px;
+    background: transparent;
+    font-size: 15px; font-weight: 600;
+    color: var(--kw-ink-3);
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .kw-segmented button.is-active {
+    background: #fff; color: var(--kw-ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04);
+  }
+
+  /* ── Inputs (textarea) ──────────────────────────────────────────── */
+  .kw-textarea {
+    display: block; width: 100%;
+    min-height: 120px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    font-size: 17px; font-weight: 500;
+    color: var(--kw-ink);
+    resize: vertical; line-height: 1.5;
+  }
+  .kw-textarea:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
+  .kw-textarea::placeholder { color: var(--kw-ink-3); }
+  /* Example placeholder clears the moment the box is clicked */
+  .kw-textarea:focus::placeholder { color: transparent; }
+  .kw-med-custom-textarea:focus::placeholder { color: transparent; }
+  .kw-input-helper {
+    margin-top: 8px;
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+
+  /* ── Page wrapper ───────────────────────────────────────────────── */
+  .kw-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── Page hero ──────────────────────────────────────────────────── */
+  .kw-page-hero { padding: 8px 0 40px; }
+  .kw-page-hero h1 {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--kw-ink);
+    margin: 14px 0 16px;
+  }
+  .kw-page-hero h1 .kw-accent { color: var(--kw-accent); }
+  .kw-page-hero p {
+    font-size: clamp(17px, 1.3vw, 19px);
+    font-weight: 500; line-height: 1.45;
+    color: var(--kw-ink-2);
+    max-width: 64ch;
+  }
+
+  /* ── Question row ───────────────────────────────────────────────── */
+  .kw-q-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    padding: 40px 0;
+    border-top: 1px solid var(--kw-rule);
+  }
+  .kw-q-row:first-of-type { border-top: none; padding-top: 16px; }
+  /* Full-width row variant — no 360px label column, content uses full width. */
+  .kw-q-row-full { grid-template-columns: 1fr; }
+  .kw-q-title {
+    font-size: 26px; font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    color: var(--kw-ink);
+    margin: 10px 0 10px;
+    white-space: nowrap;
+  }
+  .kw-q-help {
+    font-size: 14px; font-weight: 500;
+    color: var(--kw-ink-3); line-height: 1.45;
+  }
+  .kw-q-input { min-width: 0; }
+
+  /* ── Footer action bar ──────────────────────────────────────────── */
+  .kw-actionbar {
+    margin-top: 56px;
+    padding: 28px 0 48px;
+    border-top: 1px solid var(--kw-rule);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .kw-actionbar-l { display: flex; align-items: center; gap: 14px; }
+  .kw-actionbar-note {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+    max-width: 40ch;
+  }
+
+  /* ════════════════════════════════════════════════════════════════════
+     Medical-tile grid — luxe edition with photo header per card
+     ════════════════════════════════════════════════════════════════════ */
+  /* Sub-step section header (Step Ⅰ / Step Ⅱ inside Medical) */
+  .kw-substep {
+    margin: 8px 0 24px;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--kw-rule);
+    display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
+  }
+  .kw-substep-l {
+    display: flex; align-items: baseline; gap: 20px;
+    flex: 1 1 auto; min-width: 0;
+  }
+  .kw-substep-numeral {
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 700; font-style: italic;
+    font-size: 13px;
+    color: var(--kw-accent);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    flex: none;
+    white-space: nowrap;
+  }
+  .kw-substep-title {
+    font-size: clamp(28px, 2.4vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.024em;
+    line-height: 1.1;
+    color: var(--kw-ink);
+  }
+  .kw-substep-hint {
+    font-size: 14px; font-weight: 500;
+    color: var(--kw-ink-3);
+    flex: 0 1 360px;
+    text-align: right;
+    line-height: 1.45;
+    white-space: nowrap;
+  }
+
+  /* Remove the second hairline rule when a .kw-q-row directly follows a
+     .kw-substep — the substep's border-bottom already separates them. */
+  .kw-substep + .kw-q-row { border-top: none; padding-top: 24px; }
+
+  /* Health-notes "scratchpad" card — distinct, warm container so the
+     user immediately registers this as a place to write. */
+  .kw-notes-card {
+    background: var(--kw-bg-warm);
+    border: 1px solid var(--kw-line);
+    border-radius: 18px;
+    padding: 20px 22px 22px;
+    position: relative;
+    box-shadow: inset 4px 0 0 var(--kw-accent);
+  }
+  .kw-notes-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .kw-notes-card-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--kw-accent);
+    text-transform: uppercase;
+  }
+  .kw-notes-card-label .kw-notes-card-pen {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--kw-accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .kw-notes-card-secure {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .04em;
+  }
+  .kw-notes-card .kw-textarea {
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    min-height: 160px;
+    padding: 18px 20px;
+    font-size: 17px;
+    color: var(--kw-ink);
+    line-height: 1.5;
+  }
+  .kw-notes-card .kw-textarea:focus {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+  }
+  .kw-notes-card-foot {
+    margin-top: 12px;
+    font-size: 12px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+
+  .kw-med-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .kw-med {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--kw-rule);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.2,.7,.3,1),
+                box-shadow .25s cubic-bezier(.2,.7,.3,1),
+                border-color .25s;
+    display: flex; flex-direction: column;
+  }
+  .kw-med:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px -12px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.04);
+    border-color: rgba(0,0,0,.08);
+  }
+  .kw-med.is-selected {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 2px var(--kw-accent),
+                0 16px 40px -12px rgba(178,20,100,.25),
+                0 4px 12px rgba(178,20,100,.08);
+  }
+
+  /* Floating "View details →" affordance, surfaces on hover */
+  .kw-med-view {
+    position: absolute;
+    top: 14px; right: 14px;
+    z-index: 2;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    color: var(--kw-ink);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+  }
+  .kw-med:hover .kw-med-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Photo area — 4:3, gradient placeholder, refined */
+  .kw-med-photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, var(--photo-a, #e8e8ed) 0%, var(--photo-b, #c5c5cc) 60%, var(--photo-c, #a5a5ac) 100%);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* layered texture for a more photo-like surface */
+  .kw-med-photo::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 140% 60% at 50% 0%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0,0,0,.12), transparent 60%);
+    pointer-events: none;
+  }
+  .kw-med-photo::after {
+    /* faint inner border for that printed-photo edge */
+    content: "";
+    position: absolute; inset: 12px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  /* Centered monogram — elegant serif initial, low opacity */
+  .kw-med-monogram {
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 88px;
+    color: var(--photo-fg, rgba(0,0,0,.35));
+    letter-spacing: -0.04em;
+    line-height: 1;
+    opacity: .55;
+  }
+
+  /* Small "Image placeholder" caption in the corner */
+  .kw-med-photo-label {
+    position: absolute;
+    bottom: 18px; left: 22px;
+    z-index: 2;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--photo-fg, rgba(0,0,0,.5));
+    letter-spacing: .04em;
+    opacity: .7;
+  }
+  .kw-med-photo-label::before {
+    content: "—  ";
+  }
+
+  /* Per-category palette — curated like a hotel collection */
+  .kw-photo-checkup    { --photo-a:#e7eef4; --photo-b:#b8c9d8; --photo-c:#7a92ad; --photo-fg:#1f3654; }
+  .kw-photo-derm       { --photo-a:#fae0e6; --photo-b:#f5cabe; --photo-c:#d99988; --photo-fg:#7a3a3a; }
+  .kw-photo-aesthetic  { --photo-a:#f7e8d8; --photo-b:#e8c8a4; --photo-c:#b89968; --photo-fg:#5a4020; }
+  .kw-photo-plastic    { --photo-a:#eee8df; --photo-b:#d4cabb; --photo-c:#a89c87; --photo-fg:#3e352a; }
+  .kw-photo-hair       { --photo-a:#e8d5b9; --photo-b:#c4a276; --photo-c:#8a6a43; --photo-fg:#3a2a14; }
+  .kw-photo-dental     { --photo-a:#e3ecec; --photo-b:#b5cccd; --photo-c:#7a9899; --photo-fg:#1f4042; }
+  .kw-photo-eye        { --photo-a:#cdd6e4; --photo-b:#7c8eae; --photo-c:#3a4a6e; --photo-fg:#0e1a36; }
+  .kw-photo-ortho      { --photo-a:#dcd6c7; --photo-b:#a8a08e; --photo-c:#74695a; --photo-fg:#322a1c; }
+  .kw-photo-stemcell   { --photo-a:#dcd4ea; --photo-b:#a99dcc; --photo-c:#6a5a98; --photo-fg:#2c1f4e; }
+  .kw-photo-iv         { --photo-a:#d8e8eb; --photo-b:#a3c3c8; --photo-c:#6a8d92; --photo-fg:#1b3a3e; }
+  .kw-photo-hanbang    { --photo-a:#d2dcc4; --photo-b:#92a374; --photo-c:#56673d; --photo-fg:#1c2a14; }
+  .kw-photo-custom     { --photo-a:#f0eee9; --photo-b:#e0dcd2; --photo-c:#bfb8a8; --photo-fg:#3a3326; }
+
+  /* Selection check on photo (top-right) — removed in favour of a CTA in
+     the card footer, but the rule is left so .is-selected won't crash if
+     a stray .kw-med-check survives. */
+  .kw-med-photo .kw-med-check { display: none; }
+
+  /* Footer CTA — "Add to basket" / "Added" pill */
+  .kw-med-add {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--kw-ink);
+    color: #fff;
+    border: none;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: background .15s, transform .15s, box-shadow .15s;
+  }
+  .kw-med-add:hover {
+    background: var(--kw-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(178,20,100,.25);
+  }
+  .kw-med-add-plus { font-size: 14px; font-weight: 500; line-height: 1; }
+  .kw-med.is-selected .kw-med-add {
+    background: var(--kw-accent-soft);
+    color: var(--kw-accent);
+    box-shadow: inset 0 0 0 1.5px var(--kw-accent);
+  }
+  .kw-med.is-selected .kw-med-add:hover {
+    background: var(--kw-accent);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(178,20,100,.3);
+  }
+
+  /* Body — generous breathing room */
+  .kw-med-body {
+    padding: 24px 26px 26px;
+    display: flex; flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .kw-med-eyebrow {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--kw-ink-3);
+  }
+  .kw-med.is-selected .kw-med-eyebrow { color: var(--kw-accent); }
+  .kw-med-name {
+    font-size: 20px; font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.018em;
+    line-height: 1.2;
+    margin-top: -4px;
+    /* allow up to two lines, then ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .kw-med-desc {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .kw-med-foot {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid var(--kw-rule);
+    gap: 12px;
+  }
+  .kw-med-foot-meta {
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 0;
+  }
+  .kw-med-price {
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--kw-ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    flex: none;
+  }
+  .kw-med.is-selected .kw-med-price { color: var(--kw-accent); }
+  .kw-med-clinic {
+    font-size: 12px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .02em;
+    text-align: right;
+    line-height: 1.3;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 12th tile — custom request, dashed inner frame */
+  .kw-med-custom .kw-med-photo {
+    background:
+      repeating-linear-gradient(45deg,
+        var(--photo-a) 0 16px, transparent 16px 32px),
+      linear-gradient(135deg, var(--photo-b), var(--photo-c));
+  }
+  .kw-med-custom .kw-med-photo::after {
+    border: 1.5px dashed rgba(0,0,0,.18);
+    inset: 14px;
+    border-radius: 10px;
+  }
+  .kw-med-custom .kw-med-monogram {
+    font-style: normal;
+    font-size: 60px;
+    font-weight: 400;
+  }
+  .kw-med-custom .kw-med-custom-textarea {
+    width: 100%;
+    background: var(--kw-bg-soft);
+    border: 1px solid var(--kw-rule);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink);
+    line-height: 1.4;
+    resize: none;
+    min-height: 76px;
+    font-family: inherit;
+  }
+  .kw-med-custom .kw-med-custom-textarea:focus {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+    outline: none;
+  }
+  .kw-med-custom .kw-med-custom-textarea::placeholder { color: var(--kw-ink-3); }
+
+  /* ── Basket ─ visual collection of picked categories ─────────── */
+  .kw-med-basket {
+    grid-column: 1 / -1;
+    background: var(--kw-bg-warm);
+    border-radius: 20px;
+    padding: 22px 26px 24px;
+    margin-top: 8px;
+    display: flex; flex-direction: column; gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.04),
+                inset 0 1px 0 rgba(255,255,255,.5);
+    position: relative;
+  }
+  .kw-med-basket::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 26px;
+    width: 48px; height: 3px;
+    background: var(--kw-accent);
+    border-radius: 0 0 3px 3px;
+  }
+  .kw-basket-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px;
+  }
+  .kw-basket-eyebrow {
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-weight: 700; font-style: italic;
+    font-size: 13px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--kw-accent);
+  }
+  .kw-basket-count {
+    color: var(--kw-ink-3);
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: .04em;
+    margin-left: 6px;
+  }
+  .kw-basket-clear {
+    font-size: 13px; font-weight: 600;
+    color: var(--kw-accent);
+    cursor: pointer;
+  }
+  .kw-basket-clear:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .kw-basket-items {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .kw-basket-item {
+    display: flex; align-items: center; gap: 14px;
+    background: #fff;
+    border: 1px solid var(--kw-rule);
+    border-radius: 14px;
+    padding: 10px 12px 10px 10px;
+    min-width: 0;
+    transition: transform .15s, box-shadow .15s, border-color .15s;
+  }
+  .kw-basket-item:hover {
+    border-color: var(--kw-line);
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  }
+  .kw-basket-thumb {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background:
+      linear-gradient(135deg, var(--photo-a) 0%, var(--photo-b) 60%, var(--photo-c) 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--photo-fg);
+    letter-spacing: -0.02em;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+  }
+  .kw-basket-item-info {
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 0;
+  }
+  .kw-basket-item-name {
+    font-size: 14px; font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+  .kw-basket-item-meta {
+    font-size: 11px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .01em;
+  }
+  .kw-basket-item-remove {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--kw-ink-3);
+    font-size: 18px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    margin-left: 4px;
+  }
+  .kw-basket-item-remove:hover {
+    background: var(--kw-accent);
+    color: #fff;
+  }
+  .kw-basket-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 64px;
+    padding: 0 18px;
+    border-radius: 14px;
+    border: 1.5px dashed var(--kw-line);
+    color: var(--kw-ink-3);
+    font-size: 14px; font-weight: 600;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .kw-basket-add:hover {
+    border-color: var(--kw-accent);
+    color: var(--kw-accent);
+    background: rgba(178,20,100,.04);
+  }
+  .kw-basket-add-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--kw-ink-3);
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+    transition: background .15s;
+  }
+  .kw-basket-add:hover .kw-basket-add-icon { background: var(--kw-accent); }
+
+  /* Summary bar — moved to the BOTTOM of the grid, horizontal */
+  .kw-med-summary {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 20px;
+    background: var(--kw-bg-warm);
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin-top: 4px;
+  }
+  .kw-med-summary-count {
+    font-size: 32px; font-weight: 700;
+    color: var(--kw-accent);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .kw-med-summary-text {
+    font-size: 14px; font-weight: 600;
+    color: var(--kw-ink-2);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .kw-med-summary-text b { color: var(--kw-ink); font-weight: 700; }
+  .kw-med-summary-clear {
+    font-size: 13px; font-weight: 600;
+    color: var(--kw-accent);
+    cursor: pointer;
+    padding: 8px 12px;
+  }
+  .kw-med-summary-clear:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Concierge note — horizontal, full-bleed, at the bottom of the page */
+  .kw-concierge-bar {
+    margin: 56px 0 0;
+    padding: 22px 28px;
+    border: 1px solid var(--kw-rule);
+    border-radius: 18px;
+    background: var(--kw-bg-soft);
+    display: flex; align-items: center; gap: 20px;
+  }
+  .kw-concierge-bar .kw-concierge-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5e7b9, #d9b25a);
+    color: #4a2e0a;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700; font-size: 19px; letter-spacing: .04em;
+    flex: none;
+  }
+  .kw-concierge-bar .kw-concierge-info {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .kw-concierge-bar .kw-concierge-name {
+    font-size: 16px; font-weight: 700;
+    color: var(--kw-ink);
+  }
+  .kw-concierge-bar .kw-concierge-sub {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+  .kw-concierge-bar .kw-concierge-creds {
+    display: flex; gap: 18px;
+    margin-left: auto; padding-left: 20px;
+    border-left: 1px solid var(--kw-line);
+  }
+  .kw-concierge-bar .kw-concierge-cred {
+    display: flex; flex-direction: column; gap: 2px;
+    text-align: right;
+  }
+  .kw-concierge-bar .kw-concierge-cred-val {
+    font-size: 18px; font-weight: 700;
+    color: var(--kw-ink);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.01em;
+  }
+  .kw-concierge-bar .kw-concierge-cred-lbl {
+    font-size: 11px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+        integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+        integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+        integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+        crossorigin="anonymous"></script>
+
+<div id="root"></div>
+
+<!-- shared components (BrandNav, StepBar, SectionEyebrow) reused from Step 1 -->
+<script type="text/babel" src="js/step1-trip-shared.jsx"></script>
+<script type="text/babel" src="js/step2-medical.jsx"></script>
+
+<!-- State store (the Step2Medical component handles its own chart + navigation) -->
+<script src="js/state.js"></script>
+
+<script type="text/babel" data-presets="react">
+  // Step2Medical is fully interactive — it owns the chart state and
+  // its Continue/Back navigation. No overlay needed.
+  ReactDOM.createRoot(document.getElementById('root')).render(<Step2Medical />);
+</script>
+
+</body>
+</html>

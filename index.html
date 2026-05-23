@@ -1,0 +1,2028 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>K-Wellness Concierge — Korea, received with care.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ─────────────────────────────────────────────────
+     Senior-friendly · Apple-benchmarked
+     · Inter / SF Pro stack, 19px body min, weights 500+
+     · Black on white, no light grays for body copy
+     · Magenta accent kept minimal for clarity
+     · 56pt+ tap targets, rounded pill CTAs
+     ───────────────────────────────────────────────── */
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f5f5f7;
+    --bg-warm: #f0eee9;
+    --ink: #1d1d1f;
+    --ink-2: #2a2a2c;
+    --ink-3: #4a4a4d;          /* lowest legal grey for body — still WCAG AA */
+    --line: #d2d2d7;
+    --rule: #e8e8ed;
+    --accent: #B21464;
+    --accent-deep: #8a0e4d;
+    --link: #0071e3;            /* Apple-style link blue, for plain text links only */
+    --gold: #b48a3a;
+    --black-lacquer: #16110b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                 Inter, "Helvetica Neue", Arial, sans-serif;
+    font-size: 19px;                /* senior-friendly base */
+    line-height: 1.5;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; }
+
+  /* ── Type primitives ─────────────────────────── */
+  .display {
+    font-weight: 700;
+    font-size: clamp(48px, 6.4vw, 96px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .display .accent { color: var(--accent); }
+  .h2 {
+    font-weight: 700;
+    font-size: clamp(40px, 4.6vw, 64px);
+    line-height: 1.07;
+    letter-spacing: -0.022em;
+  }
+  .h3 {
+    font-weight: 700;
+    font-size: clamp(28px, 2.6vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  .lede {
+    font-weight: 500;
+    font-size: clamp(20px, 1.6vw, 24px);
+    line-height: 1.4;
+    color: var(--ink-2);
+    letter-spacing: -0.005em;
+  }
+  .body {
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink-3);
+    font-weight: 500;
+  }
+  .body-lg {
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+  .eyebrow {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--accent);
+    text-transform: none;
+  }
+  .hangul {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  /* ── Layout ──────────────────────────────────── */
+  .wrap {
+    max-width: 1080px;             /* Apple uses ~980-1080 */
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .wrap-wide {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Nav ─────────────────────────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, .82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--rule);
+    height: 68px;
+  }
+  nav.top .inner {
+    height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    max-width: 1320px; margin: 0 auto;
+  }
+  nav.top .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  nav.top .brand .wm {
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  nav.top ul {
+    list-style: none; display: flex; gap: 24px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  nav.top ul a {
+    color: var(--ink);
+    padding: 8px 0;
+    transition: color .15s;
+  }
+  nav.top ul a:hover { color: var(--accent); }
+  nav.top .right {
+    display: flex; align-items: center; gap: 20px;
+  }
+  nav.top .lang {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-2);
+    display: flex; gap: 6px;
+  }
+  nav.top .lang b { color: var(--ink); }
+  nav.top .lang .sep { color: var(--line); }
+
+  /* ── CTAs (Apple pill buttons) ──────────────── */
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 50px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 17px;
+    border: none;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
+  }
+  .cta:hover { background: var(--accent-deep); }
+  .cta:active { transform: scale(.98); }
+  .cta.dark { background: var(--ink); color: #fff; }
+  .cta.dark:hover { background: #000; }
+  .cta.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+  }
+  .cta.ghost:hover { background: var(--ink); color: #fff; }
+  .cta.lg { height: 60px; padding: 0 36px; font-size: 19px; }
+  .cta.sm { height: 42px; padding: 0 20px; font-size: 15px; }
+
+  /* Text-link in Apple blue with chevron */
+  .link {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--link);
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 1;
+    padding: 8px 0;
+  }
+  .link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .link::after {
+    content: "›";
+    font-size: 22px;
+    line-height: 1;
+    margin-left: 2px;
+    transition: transform .15s;
+  }
+  .link:hover::after { transform: translateX(3px); }
+
+  /* ── Hero ────────────────────────────────────── */
+  section.hero {
+    text-align: center;
+    padding: 60px 0 80px;
+    background: var(--bg);
+  }
+  .hero h1 {
+    margin: 0 auto 16px;
+    max-width: 14ch;
+  }
+  .hero h1.hero-h1 {
+    max-width: none;
+    white-space: nowrap;
+    font-size: clamp(32px, 4.4vw, 64px);
+  }
+  @media (max-width: 760px) {
+    .hero h1.hero-h1 { white-space: normal; }
+  }
+  .hero .hero-lede {
+    font-weight: 500;
+    font-size: clamp(20px, 1.5vw, 22px);
+    line-height: 1.4;
+    color: var(--ink-2);
+    max-width: 68ch;
+    margin: 0 auto 56px;
+  }
+  .hero .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 700;
+    color: var(--accent);
+    background: rgba(178, 20, 100, .08);
+    padding: 8px 18px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .hero .hero-eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 4px;
+    background: var(--accent);
+  }
+
+  /* The flow diagram — the “one image” */
+  .flow {
+    margin: 0 auto;
+    max-width: 1240px;
+  }
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+  }
+  .flow-steps::before {
+    content: "";
+    position: absolute;
+    top: 64px; left: 5%; right: 5%;
+    height: 2px;
+    background: var(--rule);
+    z-index: 0;
+  }
+  .step-card {
+    background: var(--bg);
+    border: 1.5px solid var(--rule);
+    border-radius: 18px;
+    padding: 28px 20px 24px;
+    text-align: left;
+    display: flex; flex-direction: column;
+    position: relative;
+    z-index: 1;
+    margin: 0 8px;
+    min-height: 360px;
+    transition: border-color .2s, transform .2s, box-shadow .2s;
+  }
+  .step-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  }
+  .step-card .num {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .12em;
+    margin-bottom: 14px;
+  }
+  .step-card .icon {
+    width: 56px; height: 56px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(178, 20, 100, .06);
+    border-radius: 14px;
+  }
+  .step-card .icon svg {
+    width: 32px; height: 32px;
+    stroke: var(--accent);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .step-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+  }
+  .step-card .step-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-3);
+    line-height: 1.4;
+    margin-bottom: 0;
+  }
+
+  /* Option chips inside each step card — hint at what's pickable */
+  .step-card .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .step-card .chips-lbl {
+    width: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-3);
+    letter-spacing: .12em;
+    margin-bottom: 4px;
+  }
+  .step-card .chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--ink-2);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .step-card .chip.accent {
+    background: rgba(178, 20, 100, .08);
+    color: var(--accent);
+  }
+  .step-card .chip.more {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-3);
+  }
+  /* AI card chips on dark background */
+  .step-card.step-ai .chips { border-top-color: rgba(255,255,255,.12); }
+  .step-card.step-ai .chips-lbl { color: rgba(255,255,255,.55); }
+  .step-card.step-ai .chip {
+    background: rgba(255,255,255,.08);
+    color: #fff;
+  }
+  .step-card.step-ai .chip.accent {
+    background: rgba(255,95,166,.18);
+    color: #ff5fa6;
+  }
+
+  /* AI card minimal viz — 4 inputs → 7-day week */
+  .step-card.step-ai .ai-viz {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.12);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .step-card.step-ai .ai-viz-inputs {
+    display: flex; gap: 5px;
+  }
+  .step-card.step-ai .ai-viz-inputs .d {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,.35);
+  }
+  .step-card.step-ai .ai-viz-arrow {
+    color: #ff5fa6;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .step-card.step-ai .ai-viz-week {
+    flex: 1;
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .step-card.step-ai .ai-viz-week span {
+    height: 22px;
+    background: rgba(255,95,166,.18);
+    color: #ff5fa6;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .03em;
+  }
+
+  /* Option mini-cards inside step cards 2-4 — informational preview of pickable items */
+  .step-card .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+  .step-card .options-lbl {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-3);
+    letter-spacing: .12em;
+    margin-bottom: 2px;
+  }
+  .step-card .option {
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 10px 6px 9px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .step-card .option .emoji {
+    font-size: 22px;
+    line-height: 1;
+    margin-bottom: 4px;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
+  .step-card .option .name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+  .step-card .option .sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--ink-3);
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .step-card .option .price {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-top: auto;
+  }
+  .step-card .more-row {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Step 5 — the AI card (visually distinct) */
+  .step-card.step-ai {
+    background: linear-gradient(135deg, #1d1d1f 0%, #2a2a2c 100%);
+    border-color: transparent;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .step-card.step-ai::before {
+    content: "";
+    position: absolute;
+    top: -30%; right: -30%;
+    width: 140%; height: 160%;
+    background: radial-gradient(circle at center, rgba(255, 95, 166, .25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .step-card.step-ai > * { position: relative; }
+  .step-card.step-ai:hover {
+    border-color: transparent;
+    box-shadow: 0 12px 32px rgba(178, 20, 100, .25);
+  }
+  .step-card.step-ai .num {
+    color: #ff5fa6;
+  }
+  .step-card.step-ai .icon {
+    background: rgba(255, 95, 166, .15);
+  }
+  .step-card.step-ai .icon svg {
+    stroke: #ff5fa6;
+  }
+  .step-card.step-ai h3 {
+    color: #fff;
+  }
+  .step-card.step-ai .step-desc {
+    color: #c7c7cc;
+  }
+  .step-card.step-ai .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255, 95, 166, .18);
+    color: #ff5fa6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+  .step-card.step-ai .ai-badge .pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #ff5fa6;
+    animation: pulse-ai 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-ai {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,95,166,.6); }
+    50% { box-shadow: 0 0 0 8px rgba(255,95,166,0); }
+  }
+
+  /* The AI panel — value-prop centerpiece (replaces small pill) */
+  .flow-process { display: none; }  /* legacy hidden */
+  .ai-panel {
+    margin: 48px auto 28px;
+    background: linear-gradient(135deg, #1d1d1f 0%, #2a2a2c 100%);
+    color: #fff;
+    border-radius: 24px;
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-panel::before {
+    content: "";
+    position: absolute;
+    top: -40%; right: -10%;
+    width: 60%; height: 200%;
+    background: radial-gradient(ellipse at center, rgba(178,20,100,.22) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .ai-panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+  .ai-panel .left .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(178, 20, 100, .18);
+    color: #ff5fa6;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: 20px;
+  }
+  .ai-panel .left .badge .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ff5fa6;
+    animation: pulse-ai 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-ai {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,95,166,.6); }
+    50% { box-shadow: 0 0 0 10px rgba(255,95,166,0); }
+  }
+  .ai-panel .left h2 {
+    font-size: clamp(28px, 2.6vw, 36px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+  .ai-panel .left h2 em {
+    font-style: normal;
+    color: #ff5fa6;
+  }
+  .ai-panel .left p {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #c7c7cc;
+    max-width: 36ch;
+    font-weight: 500;
+  }
+  .ai-panel .right .considers-lbl {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 16px;
+  }
+  .considers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .consider {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .consider .check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(178, 20, 100, .25);
+    color: #ff5fa6;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .consider .text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+  }
+  @media (max-width: 900px) {
+    .ai-panel { padding: 32px 28px; }
+    .ai-panel-grid { grid-template-columns: 1fr; gap: 28px; }
+    .considers-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Insights row below schedule */
+  .ai-insights {
+    margin-top: 24px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 28px;
+    border: 1px solid var(--rule);
+  }
+  .ai-insights .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .ai-insights .head .icon {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .ai-insights .head .ttl {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .insight {
+    display: flex; flex-direction: column; gap: 4px;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+  }
+  .insight .key {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .04em;
+  }
+  .insight .val {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-2);
+    line-height: 1.4;
+  }
+  @media (max-width: 800px) {
+    .insights-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+
+  /* legacy keyframe still used elsewhere is harmless */
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(178, 20, 100, .25); }
+    50% { box-shadow: 0 0 0 8px rgba(178, 20, 100, .12); }
+  }
+
+  /* The AI output — sample schedule */
+  .flow-output {
+    background: var(--bg-soft);
+    border-radius: 24px;
+    padding: 32px;
+    text-align: left;
+  }
+  .flow-output-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+  }
+  .flow-output-head .ttl {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .flow-output-head .ttl .sub {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-3);
+    margin-top: 4px;
+  }
+  .flow-output-head .legend {
+    display: flex; gap: 18px;
+    flex-wrap: wrap;
+  }
+  .flow-output-head .legend .lg {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .flow-output-head .legend .sw {
+    width: 12px; height: 12px; border-radius: 3px;
+  }
+  .schedule {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+  }
+  .day {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 10px;
+    min-height: 220px;
+    display: flex; flex-direction: column;
+  }
+  .day .label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .day .date {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+  }
+  .day .block {
+    display: flex; flex-direction: column;
+    border-radius: 6px;
+    padding: 8px 8px 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    line-height: 1.25;
+    color: #fff;
+  }
+  .day .block .time { font-size: 10px; opacity: .85; margin-bottom: 1px; font-weight: 600; }
+  .day .block .name { font-weight: 700; }
+  .day .block.medical { background: #B21464; }
+  .day .block.hanbang { background: #8B1E1E; }
+  .day .block.culture { background: #1B2D5C; }
+  .day .block.cuisine { background: #0E4035; }
+  .day .block.stay    { background: var(--ink); }
+  .day .block.rest    { background: #b48a3a; }
+
+  .hero-cta-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 16px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .hero-foot {
+    margin-top: 24px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+  .hero-foot b { color: var(--ink); font-weight: 700; }
+
+  @media (max-width: 1100px) {
+    .flow-steps { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .flow-steps::before { display: none; }
+    .step-card { margin: 0; }
+    .schedule { grid-template-columns: repeat(4, 1fr); }
+    .day:nth-child(n+5) { display: none; }
+  }
+  @media (max-width: 700px) {
+    .flow-steps { grid-template-columns: 1fr 1fr; }
+    .schedule { grid-template-columns: repeat(2, 1fr); }
+    .day:nth-child(n+3) { display: none; }
+  }
+
+  /* ── Section header (common) ─────────────────── */
+  .sec-head {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+  .sec-head .eyebrow { display: block; margin-bottom: 12px; }
+  .sec-head h2 { margin-bottom: 16px; }
+  .sec-head .lede { margin: 0 auto; max-width: 36ch; }
+
+  /* ── Service tiles (Apple product grid) ─────── */
+  section.services {
+    padding: 96px 0;
+    background: var(--bg);
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .tile {
+    background: var(--bg-soft);
+    border-radius: 24px;
+    padding: 56px 48px 48px;
+    min-height: 580px;
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease;
+  }
+  .tile:hover { transform: translateY(-2px); }
+  .tile.dark {
+    background: var(--ink);
+    color: #fff;
+  }
+  .tile.dark .body { color: #c7c7cc; }
+  .tile.dark .ko { color: #fff; opacity: .8; }
+  .tile .ko {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    letter-spacing: .04em;
+  }
+  .tile h3 {
+    margin-bottom: 14px;
+    max-width: 14ch;
+  }
+  .tile .body {
+    font-size: 18px;
+    color: var(--ink-3);
+    max-width: 34ch;
+    margin-bottom: 28px;
+  }
+  .tile.dark .body { color: #d1d1d6; }
+  .tile .tile-cta {
+    margin-top: auto;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .tile .pill-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 18px; font-weight: 700; line-height: 1;
+  }
+  .tile.dark .pill-link { background: #fff; color: var(--ink); }
+  .tile .tile-cta .lbl {
+    font-size: 17px; font-weight: 600; color: var(--ink);
+  }
+  .tile.dark .tile-cta .lbl { color: #fff; }
+
+  /* tile visual area — abstract mark composition */
+  .tile .visual {
+    position: absolute;
+    bottom: -24px; right: -24px;
+    width: 280px; height: 280px;
+    opacity: .25;
+  }
+  .tile.dark .visual { opacity: .35; }
+
+  @media (max-width: 900px) {
+    .tiles { grid-template-columns: 1fr; }
+    .tile { min-height: 480px; padding: 40px 32px 36px; }
+  }
+
+  /* ── Philosophy (full-bleed dark) ───────────── */
+  section.philosophy {
+    background: var(--black-lacquer);
+    color: #f5f5f7;
+    padding: 120px 0;
+    text-align: center;
+  }
+  section.philosophy .han-giant {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 800;
+    font-size: clamp(140px, 22vw, 280px);
+    line-height: .85;
+    color: var(--gold);
+    margin: 0 auto 32px;
+    letter-spacing: -0.02em;
+  }
+  section.philosophy .pronounce {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 56px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  section.philosophy h2 {
+    color: #f5f5f7;
+    margin: 0 auto 28px;
+    max-width: 20ch;
+  }
+  section.philosophy .body-lg {
+    color: rgba(245, 245, 247, .82);
+    max-width: 56ch;
+    margin: 0 auto 40px;
+    font-size: 22px;
+  }
+  section.philosophy .sig {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(180, 138, 58, .35);
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  section.philosophy .sig .name { font-weight: 700; color: #fff; font-size: 17px; }
+  section.philosophy .sig .role { font-weight: 500; color: var(--gold); font-size: 15px; }
+
+  /* ── Journeys ────────────────────────────────── */
+  section.journeys {
+    padding: 96px 0;
+    background: var(--bg);
+  }
+  .journeys-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .journey {
+    background: var(--bg-soft);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform .2s;
+  }
+  .journey:hover { transform: translateY(-2px); }
+  .journey .photo {
+    aspect-ratio: 4/3;
+    background: var(--bg-warm);
+    overflow: hidden;
+  }
+  .journey .photo image-slot {
+    width: 100%; height: 100%; display: block;
+  }
+  .journey .info {
+    padding: 28px 28px 32px;
+    display: flex; flex-direction: column;
+    flex-grow: 1;
+  }
+  .journey .pill-row {
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 14px;
+  }
+  .journey .pill {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(178, 20, 100, .08);
+    padding: 5px 12px;
+    border-radius: 999px;
+    letter-spacing: 0;
+  }
+  .journey .pill.medical { color: #8B1E1E; background: rgba(139, 30, 30, .08); }
+  .journey .pill.cultural { color: #0E4035; background: rgba(14, 64, 53, .08); }
+  .journey .nights {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink-3);
+  }
+  .journey h3 { margin-bottom: 6px; }
+  .journey .ko {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    letter-spacing: .12em;
+  }
+  .journey .body { font-size: 17px; margin-bottom: 24px; }
+  .journey .price-row {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .journey .price-row .lbl { font-size: 15px; color: var(--ink-3); font-weight: 600; }
+  .journey .price-row .price { font-size: 22px; font-weight: 700; color: var(--ink); }
+
+  @media (max-width: 1000px) {
+    .journeys-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Process steps ──────────────────────────── */
+  section.process {
+    padding: 96px 0;
+    background: var(--bg-soft);
+  }
+  .process-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
+  .step {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 28px 32px;
+    text-align: left;
+    display: flex; flex-direction: column;
+  }
+  .step .num {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    line-height: 1;
+  }
+  .step h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .step .ko {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 14px;
+    letter-spacing: .12em;
+  }
+  .step .body { font-size: 17px; color: var(--ink-3); }
+
+  @media (max-width: 1000px) {
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .process-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Trust ──────────────────────────────────── */
+  section.trust {
+    padding: 80px 0;
+    background: var(--bg);
+    text-align: center;
+  }
+  .trust .eyebrow {
+    color: var(--ink-3);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .04em;
+    display: block;
+    margin-bottom: 36px;
+  }
+  .trust-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 24px;
+    align-items: center;
+  }
+  .partner {
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .partner .name {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    margin-bottom: 4px;
+  }
+  .partner .sub {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 900px) {
+    .trust-row { grid-template-columns: repeat(3, 1fr); gap: 28px 12px; }
+  }
+  @media (max-width: 500px) {
+    .trust-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── Contact ────────────────────────────────── */
+  section.contact {
+    padding: 120px 0;
+    background: var(--bg-soft);
+  }
+  .contact-card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 64px;
+    max-width: 980px;
+    margin: 0 auto;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .contact-card .head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .contact-card .head h2 { margin-bottom: 16px; }
+  .contact-card .head .lede { margin: 0 auto; max-width: 40ch; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 32px;
+  }
+  .contact-form-field {
+    display: flex; flex-direction: column;
+  }
+  .contact-form-field.full { grid-column: 1 / -1; }
+  .contact-form-field label {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .contact-form-field input,
+  .contact-form-field select,
+  .contact-form-field textarea {
+    height: 56px;
+    background: var(--bg-soft);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 0 18px;
+    font: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    width: 100%;
+    transition: border-color .15s, background .15s;
+  }
+  .contact-form-field textarea {
+    height: auto;
+    min-height: 120px;
+    padding: 14px 18px;
+    line-height: 1.4;
+    resize: vertical;
+  }
+  .contact-form-field input:focus,
+  .contact-form-field select:focus,
+  .contact-form-field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .contact-actions {
+    margin-top: 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .contact-actions .privacy {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-3);
+    max-width: 40ch;
+  }
+  .contact-channels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 980px;
+    margin: 32px auto 0;
+  }
+  .channel {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  .channel .lbl {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: .04em;
+  }
+  .channel .val {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  @media (max-width: 700px) {
+    .contact-card { padding: 40px 28px; border-radius: 20px; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-channels { grid-template-columns: 1fr; }
+  }
+
+  /* ── Footer ─────────────────────────────────── */
+  footer {
+    background: var(--bg);
+    padding: 72px 0 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 56px;
+  }
+  footer .brand-col .body { font-size: 17px; margin-top: 20px; max-width: 32ch; }
+  footer h4 {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 18px;
+    letter-spacing: .02em;
+  }
+  footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  footer li {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+  footer a:hover { color: var(--accent); }
+  .footer-bottom {
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; font-weight: 500;
+    color: var(--ink-3);
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-bottom .links { display: flex; gap: 20px; }
+
+  @media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  @media (max-width: 500px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+
+  /* SVG defs hidden */
+  .glyph-defs { position: absolute; width: 0; height: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<svg class="glyph-defs" aria-hidden="true">
+  <defs>
+    <!-- Han mark — gutter 14, internal 14, bg color via --mark-bg -->
+    <symbol id="han-mark" viewBox="0 0 200 200">
+      <clipPath id="han-clip"><rect width="200" height="200" rx="28"/></clipPath>
+      <g clip-path="url(#han-clip)">
+        <rect width="200" height="200" fill="var(--mark-bg, #f0eee9)"/>
+        <g fill="var(--mark-fg, #B21464)">
+          <rect x="14" y="14" width="79" height="87"/>
+          <polygon points="107,14 186,14 186,101"/>
+          <rect x="14" y="115" width="35" height="71"/>
+          <rect x="63" y="115" width="123" height="71"/>
+        </g>
+        <rect x="1" y="1" width="198" height="198" rx="27" fill="none"
+              stroke="var(--mark-bg, #f0eee9)" stroke-width="2"/>
+      </g>
+    </symbol>
+    <!-- thicker gutters for small sizes -->
+    <symbol id="han-mark-sm" viewBox="0 0 200 200">
+      <clipPath id="han-clip-sm"><rect width="200" height="200" rx="28"/></clipPath>
+      <g clip-path="url(#han-clip-sm)">
+        <rect width="200" height="200" fill="var(--mark-bg, #f0eee9)"/>
+        <g fill="var(--mark-fg, #B21464)">
+          <rect x="18" y="18" width="73" height="83"/>
+          <polygon points="109,18 182,18 182,101"/>
+          <rect x="18" y="117" width="33" height="65"/>
+          <rect x="65" y="117" width="117" height="65"/>
+        </g>
+        <rect x="1.5" y="1.5" width="197" height="197" rx="27" fill="none"
+              stroke="var(--mark-bg, #f0eee9)" stroke-width="3"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ════════════ NAV ════════════ -->
+<nav class="top">
+  <div class="inner">
+    <a href="index.html" class="brand" aria-label="K-Wellness home">
+      <svg width="36" height="36" style="display:block; --mark-bg:#ffffff;">
+        <use href="#han-mark-sm"/>
+      </svg>
+      <span class="wm">K-Wellness</span>
+    </a>
+    <ul>
+      <li><a href="#process">How it works</a></li>
+      <li><a href="step1.html">Trip</a></li>
+      <li><a href="step2.html">Medical</a></li>
+      <li><a href="step3.html">Culture</a></li>
+      <li><a href="step4.html">Food&amp;Beverage</a></li>
+      <li><a href="#insurance">Insurance Navigator</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#about">About Us</a></li>
+    </ul>
+    <div class="right">
+      <a href="step1.html" class="cta sm">Plan Korea</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════ HERO — How it works ════════════ -->
+<section class="hero">
+  <div class="wrap-wide">
+    <span class="hero-eyebrow"><span class="dot"></span>How K-Wellness works</span>
+    <h1 class="display hero-h1">Korea, <span class="accent">intelligently composed.</span></h1>
+    <p class="hero-lede">
+      Tell us your dates, stay, care, culture, and cuisine.
+      Our AI composes the optimal week<br>
+      — reviewed and held by a human concierge.
+    </p>
+
+    <div class="flow">
+      <!-- 5 input cards -->
+      <div class="flow-steps">
+
+        <div class="step-card">
+          <span class="num">STEP 01</span>
+          <h3>Trip</h3>
+          <p class="step-desc">Tell us how, where, and with whom you travel</p>
+          <div class="options-grid">
+            <span class="options-lbl">YOU TELL US</span>
+            <div class="option">
+              <span class="emoji">📅</span>
+              <span class="name">Dates</span>
+              <span class="sub">Travel window</span>
+              <span class="price">Flexible or fixed</span>
+            </div>
+            <div class="option">
+              <span class="emoji">👥</span>
+              <span class="name">Guests</span>
+              <span class="sub">Group type</span>
+              <span class="price">Solo · Couple · Family</span>
+            </div>
+            <div class="option">
+              <span class="emoji">✈️</span>
+              <span class="name">Airline</span>
+              <span class="sub">Preferred carrier</span>
+              <span class="price">Or any</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🛫</span>
+              <span class="name">Origin</span>
+              <span class="sub">Home airport</span>
+              <span class="price">Worldwide</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🏨</span>
+              <span class="name">Hotel</span>
+              <span class="sub">Chain or curated</span>
+              <span class="price">Shilla · Lotte · Park</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🚗</span>
+              <span class="name">Transit</span>
+              <span class="sub">Driver, visa, transfer</span>
+              <span class="price">Arranged</span>
+            </div>
+            <div class="more-row">+ AI fills the rest</div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="num">STEP 02</span>
+          <h3>Medical</h3>
+          <p class="step-desc">Checkup, dermatology, aesthetic</p>
+          <div class="options-grid">
+            <span class="options-lbl">CHOOSE OPTIONS</span>
+            <div class="option">
+              <span class="emoji">🦵</span>
+              <span class="name">Orthopedics</span>
+              <span class="sub">Knee, spine, joint</span>
+              <span class="price">$8,000+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🦷</span>
+              <span class="name">Dental</span>
+              <span class="sub">Implants, ortho</span>
+              <span class="price">$800+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">👁</span>
+              <span class="name">Eye care</span>
+              <span class="sub">LASIK, cataract</span>
+              <span class="price">$1,000+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">✨</span>
+              <span class="name">Skin</span>
+              <span class="sub">Derm, laser</span>
+              <span class="price">$50+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">💉</span>
+              <span class="name">Plastic</span>
+              <span class="sub">Cosmetic surgery</span>
+              <span class="price">On consult</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🩺</span>
+              <span class="name">Checkup</span>
+              <span class="sub">Cancer, full panel</span>
+              <span class="price">$300+</span>
+            </div>
+            <div class="more-row">+ 8 more clinics</div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="num">STEP 03</span>
+          <h3>Culture</h3>
+          <p class="step-desc">Palace, hanok, ceramic studio</p>
+          <div class="options-grid">
+            <span class="options-lbl">CHOOSE OPTIONS</span>
+            <div class="option">
+              <span class="emoji">👘</span>
+              <span class="name">Hanbok</span>
+              <span class="sub">Palace tour wear</span>
+              <span class="price">$30+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🏯</span>
+              <span class="name">Palace</span>
+              <span class="sub">Gyeongbokgung</span>
+              <span class="price">$20+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">💄</span>
+              <span class="name">K-Beauty</span>
+              <span class="sub">Skincare, makeup</span>
+              <span class="price">$50+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">♨️</span>
+              <span class="name">Hanbang spa</span>
+              <span class="sub">Jjimjilbang, sauna</span>
+              <span class="price">$15+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🛕</span>
+              <span class="name">Temple stay</span>
+              <span class="sub">Monastery retreat</span>
+              <span class="price">$80+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🏺</span>
+              <span class="name">Ceramics</span>
+              <span class="sub">Pottery class</span>
+              <span class="price">$40+</span>
+            </div>
+            <div class="more-row">+ 6 more activities</div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <span class="num">STEP 04</span>
+          <h3>Food&amp;Beverage</h3>
+          <p class="step-desc">Royal court, hanjeongsik, omakase</p>
+          <div class="options-grid">
+            <span class="options-lbl">CHOOSE OPTIONS</span>
+            <div class="option">
+              <span class="emoji">🥩</span>
+              <span class="name">K-BBQ</span>
+              <span class="sub">Samgyeopsal</span>
+              <span class="price">$15+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🍱</span>
+              <span class="name">Hanjeongsik</span>
+              <span class="sub">Traditional course</span>
+              <span class="price">$40+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🍜</span>
+              <span class="name">Naengmyeon</span>
+              <span class="sub">Cold noodles</span>
+              <span class="price">$12+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🍗</span>
+              <span class="name">Chimaek</span>
+              <span class="sub">Chicken + beer</span>
+              <span class="price">$20+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🌟</span>
+              <span class="name">Fine dining</span>
+              <span class="sub">Michelin Korean</span>
+              <span class="price">$80+</span>
+            </div>
+            <div class="option">
+              <span class="emoji">🏪</span>
+              <span class="name">Markets</span>
+              <span class="sub">Gwangjang, Tongin</span>
+              <span class="price">$15+</span>
+            </div>
+            <div class="more-row">+ 7 more dining</div>
+          </div>
+        </div>
+
+        <div class="step-card step-ai">
+          <span class="num">STEP 05</span>
+          <span class="ai-badge"><span class="pulse"></span>POWERED BY AI</span>
+          <h3>Your week</h3>
+          <p class="step-desc">AI composes. Concierge confirms.</p>
+          <div class="ai-viz" aria-hidden="true">
+            <div class="ai-viz-inputs">
+              <span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span>
+            </div>
+            <span class="ai-viz-arrow">→</span>
+            <div class="ai-viz-week">
+              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- (AI panel removed — Step 5 is now the AI moment) -->
+
+      <!-- AI panel — what our AI considers -->
+      <div class="ai-panel">
+        <div class="ai-panel-grid">
+          <div class="left">
+            <span class="badge"><span class="pulse"></span>WHAT OUR AI CONSIDERS</span>
+            <h2>Crafted for <em>your</em> perfect Korean experience.</h2>
+            <p>
+              Our AI analyses thousands of variables to compose the
+              week that fits you — then a senior concierge reviews
+              every detail before delivery.
+            </p>
+          </div>
+          <div class="right">
+            <div class="considers-lbl">YOUR AI CONSIDERS</div>
+            <div class="considers-grid">
+              <div class="consider"><span class="check">✓</span><span class="text">Jet lag & arrival fatigue</span></div>
+              <div class="consider"><span class="check">✓</span><span class="text">Medical recovery windows</span></div>
+              <div class="consider"><span class="check">✓</span><span class="text">Weather & cultural calendar</span></div>
+              <div class="consider"><span class="check">✓</span><span class="text">Personal energy & pace</span></div>
+              <div class="consider"><span class="check">✓</span><span class="text">Dietary needs & preferences</span></div>
+              <div class="consider"><span class="check">✓</span><span class="text">Transit time between venues</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output: sample schedule -->
+      <div class="flow-output">
+        <div class="flow-output-head">
+          <div class="ttl">
+            Your itinerary, composed
+            <span class="sub">A real schedule generated from your five choices</span>
+          </div>
+          <div class="legend">
+            <span class="lg"><span class="sw" style="background:#B21464"></span>Medical</span>
+            <span class="lg"><span class="sw" style="background:#8B1E1E"></span>Hanbang</span>
+            <span class="lg"><span class="sw" style="background:#1B2D5C"></span>Culture</span>
+            <span class="lg"><span class="sw" style="background:#0E4035"></span>Cuisine</span>
+            <span class="lg"><span class="sw" style="background:#b48a3a"></span>Rest</span>
+            <span class="lg"><span class="sw" style="background:#1d1d1f"></span>Stay</span>
+          </div>
+        </div>
+
+        <div class="schedule">
+          <div class="day">
+            <div class="label">Mon</div>
+            <div class="date">Apr 06</div>
+            <div class="block stay"><span class="time">15:00</span><span class="name">ICN arrival</span></div>
+            <div class="block stay"><span class="time">17:30</span><span class="name">Anguk Hanok check‑in</span></div>
+            <div class="block cuisine"><span class="time">19:30</span><span class="name">Welcome hanjeongsik</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Tue</div>
+            <div class="date">Apr 07</div>
+            <div class="block hanbang"><span class="time">09:00</span><span class="name">Hanbang pulse diagnosis</span></div>
+            <div class="block culture"><span class="time">14:00</span><span class="name">Bukchon walk</span></div>
+            <div class="block cuisine"><span class="time">19:00</span><span class="name">Tea ceremony</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Wed</div>
+            <div class="date">Apr 08</div>
+            <div class="block medical"><span class="time">08:00</span><span class="name">Asan executive screening</span></div>
+            <div class="block rest"><span class="time">14:00</span><span class="name">Recovery suite</span></div>
+            <div class="block cuisine"><span class="time">18:30</span><span class="name">Private dinner</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Thu</div>
+            <div class="date">Apr 09</div>
+            <div class="block medical"><span class="time">10:00</span><span class="name">Dermatology consult</span></div>
+            <div class="block culture"><span class="time">14:30</span><span class="name">Gyeongbokgung private tour</span></div>
+            <div class="block hanbang"><span class="time">20:00</span><span class="name">Onsen at Banpo</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Fri</div>
+            <div class="date">Apr 10</div>
+            <div class="block hanbang"><span class="time">07:30</span><span class="name">Temple breathwork</span></div>
+            <div class="block culture"><span class="time">11:00</span><span class="name">Onggi master studio</span></div>
+            <div class="block cuisine"><span class="time">19:00</span><span class="name">Royal court cuisine</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Sat</div>
+            <div class="date">Apr 11</div>
+            <div class="block rest"><span class="time">09:00</span><span class="name">Free morning</span></div>
+            <div class="block culture"><span class="time">13:00</span><span class="name">Insadong galleries</span></div>
+            <div class="block cuisine"><span class="time">19:00</span><span class="name">Farewell omakase</span></div>
+          </div>
+          <div class="day">
+            <div class="label">Sun</div>
+            <div class="date">Apr 12</div>
+            <div class="block rest"><span class="time">10:00</span><span class="name">Spa & packing</span></div>
+            <div class="block stay"><span class="time">14:30</span><span class="name">Private car · ICN</span></div>
+            <div class="block stay"><span class="time">17:00</span><span class="name">Departure</span></div>
+          </div>
+        </div>
+
+        <!-- AI Insights below schedule -->
+        <div class="ai-insights">
+          <div class="head">
+            <span class="icon">✨</span>
+            <span class="ttl">Why your AI scheduled it this way</span>
+          </div>
+          <div class="insights-grid">
+            <div class="insight">
+              <span class="key">MON · LIGHT START</span>
+              <span class="val">Welcome dinner only, accommodating long‑haul jet lag</span>
+            </div>
+            <div class="insight">
+              <span class="key">WED · RECOVERY BUFFER</span>
+              <span class="val">Afternoon rest scheduled after morning screening</span>
+            </div>
+            <div class="insight">
+              <span class="key">FRI · ENERGY ALIGNED</span>
+              <span class="val">Monastic breathwork at sunrise, indoor dining at evening</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-cta-row">
+      <a href="step1.html" class="cta lg">Start planning</a>
+      <a href="#journeys" class="cta lg ghost">See real journeys</a>
+    </div>
+    <p class="hero-foot">Trusted by guests from <b>42 countries</b> · 24/7 multilingual concierge · <b>17</b> partner hospitals</p>
+  </div>
+</section>
+
+<!-- ════════════ SERVICES (Apple-style tile grid) ════════════ -->
+<section class="services" id="services">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="eyebrow">Four disciplines</span>
+      <h2 class="h2">Everything Korea offers,<br>arranged as one stay.</h2>
+      <p class="lede">From hospital scheduling to monastery breathwork — one concierge holds the whole journey.</p>
+    </div>
+
+    <div class="tiles">
+      <!-- Tile 1: Medical -->
+      <div class="tile">
+        <div class="ko">01 · Care</div>
+        <h3 class="h3">Medical & aesthetic</h3>
+        <p class="body">Direct access to Seoul's most respected hospitals for executive health screening, dermatology, and aesthetic procedures — with a private nurse on call.</p>
+        <div class="tile-cta">
+          <span class="pill-link">›</span>
+          <span class="lbl">Explore medical care</span>
+        </div>
+        <svg class="visual" style="--mark-fg:#B21464; --mark-bg:#f5f5f7;">
+          <use href="#han-mark"/>
+        </svg>
+      </div>
+
+      <!-- Tile 2: Hanbang -->
+      <div class="tile dark">
+        <div class="ko" style="color:#d9b25a">02 · Restore</div>
+        <h3 class="h3">Hanbang & spa</h3>
+        <p class="body">Korean traditional medicine, acupuncture and herbal regimens with masters of the Heo Jun lineage. Paired with onsen and temple stay.</p>
+        <div class="tile-cta">
+          <span class="pill-link">›</span>
+          <span class="lbl">Explore hanbang</span>
+        </div>
+        <svg class="visual" style="--mark-fg:#d9b25a; --mark-bg:#16110b;">
+          <use href="#han-mark"/>
+        </svg>
+      </div>
+
+      <!-- Tile 3: Culture -->
+      <div class="tile">
+        <div class="ko">03 · Culture</div>
+        <h3 class="h3">Culture & cuisine</h3>
+        <p class="body">Curatorial introductions to palace conservators, ceramicists, and royal court cuisine. Private dinners at hanok residences.</p>
+        <div class="tile-cta">
+          <span class="pill-link">›</span>
+          <span class="lbl">Explore culture</span>
+        </div>
+        <svg class="visual" style="--mark-fg:#1B2D5C; --mark-bg:#f5f5f7;">
+          <use href="#han-mark"/>
+        </svg>
+      </div>
+
+      <!-- Tile 4: Logistics -->
+      <div class="tile">
+        <div class="ko">04 · Concierge</div>
+        <h3 class="h3">Logistics & stay</h3>
+        <p class="body">Visa coordination, private airport reception, 24/7 multilingual support, residency at our network of hanok retreats and five‑star suites.</p>
+        <div class="tile-cta">
+          <span class="pill-link">›</span>
+          <span class="lbl">Explore concierge</span>
+        </div>
+        <svg class="visual" style="--mark-fg:#0E4035; --mark-bg:#f5f5f7;">
+          <use href="#han-mark"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PHILOSOPHY ════════════ -->
+<section class="philosophy">
+  <div class="wrap">
+    <div class="han-giant">HAN</div>
+    <div class="pronounce">HAN · The whole of</div>
+    <h2 class="h2">To be received in HAN<br>is to be received whole.</h2>
+    <p class="body-lg">
+      K-Wellness was founded on a single belief: that medical
+      treatment, traditional healing, and cultural attention belong
+      to one continuous practice — the Korean art of receiving a guest.
+      One concierge, one phone number, one journey — from the airport
+      to the aftercare.
+    </p>
+    <div class="sig">
+      <span class="name">Soo‑hyun Park</span>
+      <span class="role">Founder & Head Concierge</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ JOURNEYS ════════════ -->
+<section class="journeys" id="journeys">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="eyebrow">Featured journeys</span>
+      <h2 class="h2">Privately authored<br>itineraries.</h2>
+      <p class="lede">Composed for one party at a time. Each journey is bespoke — these are common starting points.</p>
+    </div>
+
+    <div class="journeys-grid">
+      <article class="journey">
+        <div class="photo">
+          <image-slot id="j-1" shape="rect" placeholder="Hanok courtyard at dawn"></image-slot>
+        </div>
+        <div class="info">
+          <div class="pill-row">
+            <span class="pill">Restorative</span>
+            <span class="nights">7 nights</span>
+          </div>
+          <h3 class="h3">The Plum Blossom Retreat</h3>
+          <div class="ko">Maehwa · Plum Blossom</div>
+          <p class="body">Spring at Anguk Hanok — pulse diagnosis, royal cuisine, and three days of monastery breathwork on Bukhansan.</p>
+          <div class="price-row">
+            <span class="lbl">From / per guest</span>
+            <span class="price">₩ 18,400,000</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="journey">
+        <div class="photo">
+          <image-slot id="j-2" shape="rect" placeholder="Private clinic suite"></image-slot>
+        </div>
+        <div class="info">
+          <div class="pill-row">
+            <span class="pill medical">Medical</span>
+            <span class="nights">14 nights</span>
+          </div>
+          <h3 class="h3">The Gangnam Renewal</h3>
+          <div class="ko">Saero · Renewal</div>
+          <p class="body">Executive health screening at Asan plus aesthetic procedures with on‑premise recovery in a private Cheongdam residency.</p>
+          <div class="price-row">
+            <span class="lbl">From / per guest</span>
+            <span class="price">₩ 42,000,000</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="journey">
+        <div class="photo">
+          <image-slot id="j-3" shape="rect" placeholder="Temple kitchen"></image-slot>
+        </div>
+        <div class="info">
+          <div class="pill-row">
+            <span class="pill cultural">Cultural</span>
+            <span class="nights">10 nights</span>
+          </div>
+          <h3 class="h3">The Mountain Sutra</h3>
+          <div class="ko">San · Mountain Study</div>
+          <p class="body">A slow descent from Bukhansan to the Jeolla coast: monastic dining, ceramic study, and royal cuisine prepared for two.</p>
+          <div class="price-row">
+            <span class="lbl">From / per guest</span>
+            <span class="price">₩ 26,800,000</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="link">See all twelve journeys</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PROCESS ════════════ -->
+<section class="process" id="process">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="eyebrow">How a stay unfolds</span>
+      <h2 class="h2">Four conversations.<br>One journey.</h2>
+      <p class="lede">We do not begin until we have understood you — your history, your tastes, your reasons for coming.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="ko">Sangdam · Consultation</div>
+        <h3>Private consultation</h3>
+        <p class="body">A 60‑minute video call with your assigned concierge to understand intent and clinical considerations.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="ko">Seolgye · Design</div>
+        <h3>Itinerary authored</h3>
+        <p class="body">Within seven days, you receive a hand‑authored journey — clinics, residencies, dinners, and rest.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="ko">Maji · Welcome</div>
+        <h3>Arrival & stay</h3>
+        <p class="body">We meet you airside. Your concierge accompanies every appointment, reachable through one number.</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div class="ko">Ihu · Aftercare</div>
+        <h3>Aftercare</h3>
+        <p class="body">Coordinated follow‑up with your clinic — prescriptions forwarded, telemedicine arranged, returning visits planned.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ TRUST ════════════ -->
+<section class="trust">
+  <div class="wrap-wide">
+    <span class="eyebrow">In partnership with</span>
+    <div class="trust-row">
+      <div class="partner">
+        <div class="name">Asan Medical</div>
+        <div class="sub">Internal medicine</div>
+      </div>
+      <div class="partner">
+        <div class="name">Severance</div>
+        <div class="sub">Health screening</div>
+      </div>
+      <div class="partner">
+        <div class="name">Banobagi</div>
+        <div class="sub">Aesthetic</div>
+      </div>
+      <div class="partner">
+        <div class="name">Cheongdam Oriental</div>
+        <div class="sub">Hanbang</div>
+      </div>
+      <div class="partner">
+        <div class="name">Anguk Hanok</div>
+        <div class="sub">Residency</div>
+      </div>
+      <div class="partner">
+        <div class="name">Geumsunsa</div>
+        <div class="sub">Temple stay</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ CONTACT ════════════ -->
+<section class="contact" id="contact">
+  <div class="wrap-wide">
+    <div class="contact-card">
+      <div class="head">
+        <span class="eyebrow">Begin a conversation</span>
+        <h2 class="h2">Reach our concierge desk.</h2>
+        <p class="lede">All inquiries are answered personally within 24 hours — in English, Korean, Chinese, or Japanese.</p>
+      </div>
+
+      <form id="kw-contact-form" onsubmit="return kwSubmitContact(event)">
+        <div class="contact-grid">
+          <div class="contact-form-field">
+            <label for="f-name">Full name</label>
+            <input id="f-name" type="text" placeholder="Eleanor Chen" />
+          </div>
+          <div class="contact-form-field">
+            <label for="f-email">Email address</label>
+            <input id="f-email" type="email" placeholder="eleanor@example.com" />
+          </div>
+          <div class="contact-form-field">
+            <label for="f-from">Travelling from</label>
+            <input id="f-from" type="text" placeholder="Hong Kong" />
+          </div>
+          <div class="contact-form-field">
+            <label for="f-when">Intended dates</label>
+            <input id="f-when" type="text" placeholder="Spring 2026" />
+          </div>
+          <div class="contact-form-field full">
+            <label for="f-interest">I am most interested in</label>
+            <select id="f-interest">
+              <option>Medical & aesthetic care</option>
+              <option>Hanbang restoration</option>
+              <option>Cultural retreat</option>
+              <option>Mixed — please advise</option>
+            </select>
+          </div>
+          <div class="contact-form-field full">
+            <label for="f-note">A note for your concierge (optional)</label>
+            <textarea id="f-note" rows="3" placeholder="Anything we should know in advance — medical, dietary, or otherwise."></textarea>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <p class="privacy">Your reply will come from a real person, not a system. We do not share your information.</p>
+          <button type="submit" class="cta lg">Send to concierge</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="contact-channels">
+      <div class="channel">
+        <div class="lbl">CONCIERGE DESK · 24/7</div>
+        <div class="val">+82 2 · 1234 · 5678</div>
+      </div>
+      <div class="channel">
+        <div class="lbl">BY EMAIL</div>
+        <div class="val">concierge@k‑wellness.kr</div>
+      </div>
+      <div class="channel">
+        <div class="lbl">SEOUL RESIDENCE</div>
+        <div class="val">Anguk‑dong, Jongno</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="brand-col">
+        <a href="#" style="display:inline-flex; align-items:center; gap:12px;">
+          <svg width="40" height="40" style="--mark-bg:#ffffff;">
+            <use href="#han-mark-sm"/>
+          </svg>
+          <span style="font-weight:700; font-size:20px; color:var(--ink);">K-Wellness</span>
+        </a>
+        <p class="body">A private concierge for medical, restorative, and cultural journeys in Korea. Founded in Seoul, 2025.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Medical & aesthetic</a></li>
+          <li><a href="#">Hanbang & spa</a></li>
+          <li><a href="#">Culture & cuisine</a></li>
+          <li><a href="#">Logistics & stay</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Journeys</h4>
+        <ul>
+          <li><a href="#">Plum Blossom Retreat</a></li>
+          <li><a href="#">Gangnam Renewal</a></li>
+          <li><a href="#">Mountain Sutra</a></li>
+          <li><a href="#">All twelve journeys</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>House</h4>
+        <ul>
+          <li><a href="#">Our credo</a></li>
+          <li><a href="#">Partner network</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#contact">Concierge desk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 K-Wellness Concierge · Anguk‑dong, Seoul</span>
+      <span class="links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Korean</a>
+        <a href="#">Chinese</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/image-slot.js"></script>
+<script src="js/state.js"></script>
+<script>
+  // Contact form -> save to sessionStorage -> navigate to Step 1
+  function kwSubmitContact(ev) {
+    ev.preventDefault();
+    var form = ev.target;
+    var contact = {
+      name: (form.querySelector('#f-name') || {}).value || '',
+      email: (form.querySelector('#f-email') || {}).value || '',
+      from: (form.querySelector('#f-from') || {}).value || '',
+      when: (form.querySelector('#f-when') || {}).value || '',
+      interest: (form.querySelector('#f-interest') || {}).value || '',
+      note: (form.querySelector('#f-note') || {}).value || ''
+    };
+    if (window.kwState) window.kwState.saveStep('contact', contact);
+    window.location.href = 'step1.html';
+    return false;
+  }
+</script>
+</body>
+</html>

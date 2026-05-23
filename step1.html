@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>K-Wellness Concierge — Step 1 · Trip</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet" />
+<style>
+  /* ════════════════════════════════════════════════════════════════════
+     K-Wellness · Step 1 Trip · shared visual system
+     Inherits the landing page's senior-friendly Apple-style tokens.
+     Scoped to .kw- prefix so it can't collide with design_canvas chrome.
+     ════════════════════════════════════════════════════════════════════ */
+  :root {
+    --kw-bg: #ffffff;
+    --kw-bg-soft: #f5f5f7;
+    --kw-bg-warm: #f0eee9;
+    --kw-ink: #1d1d1f;
+    --kw-ink-2: #2a2a2c;
+    --kw-ink-3: #4a4a4d;
+    --kw-line: #d2d2d7;
+    --kw-rule: #e8e8ed;
+    --kw-accent: #B21464;
+    --kw-accent-deep: #8a0e4d;
+    --kw-accent-soft: rgba(178,20,100,.08);
+    --kw-gold: #b48a3a;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                 Inter, "Helvetica Neue", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--kw-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Inside an artboard, paint our own background */
+  .kw-screen { background: var(--kw-bg); color: var(--kw-ink); position: relative; min-height: 100%; }
+  .kw-screen * { box-sizing: border-box; }
+  .kw-screen a { color: inherit; text-decoration: none; }
+  /* Specificity rescue: .kw-screen a outranks .kw-cta, so reassert. */
+  .kw-screen a.kw-cta { color: #fff; }
+  .kw-screen a.kw-cta.kw-cta-ghost { color: var(--kw-ink); }
+  .kw-screen button { font: inherit; cursor: pointer; }
+  .kw-screen ul { list-style: none; margin: 0; padding: 0; }
+  .kw-screen input, .kw-screen textarea {
+    font: inherit; color: inherit;
+    background: transparent; border: none; outline: none;
+  }
+  .kw-screen .hangul {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  /* ── Nav ─────────────────────────────────────────────────────────── */
+  .kw-nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, .82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--kw-rule);
+    height: 68px;
+  }
+  .kw-nav-inner {
+    height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    max-width: 1440px; margin: 0 auto;
+  }
+  .kw-brand { display: flex; align-items: center; gap: 12px; }
+  .kw-brand .kw-wm {
+    font-weight: 700; font-size: 19px; letter-spacing: -0.01em; color: var(--kw-ink);
+  }
+  .kw-navlist {
+    display: flex; gap: 22px;
+    font-size: 14px; font-weight: 600;
+  }
+  .kw-navlist a {
+    color: var(--kw-ink); padding: 6px 0; transition: color .15s;
+    position: relative;
+  }
+  .kw-navlist a:hover { color: var(--kw-accent); }
+  .kw-navlist a.is-active { color: var(--kw-accent); }
+  .kw-navlist a.is-active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+    height: 2px; background: var(--kw-accent); border-radius: 2px;
+  }
+  .kw-nav-right { display: flex; align-items: center; gap: 18px; }
+  .kw-link-q {
+    font-size: 14px; font-weight: 600; color: var(--kw-ink);
+  }
+  .kw-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 50px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--kw-accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 17px;
+    border: none;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
+  }
+  .kw-cta:hover { background: var(--kw-accent-deep); }
+  .kw-cta-sm { height: 38px; padding: 0 18px; font-size: 14px; }
+  .kw-cta-lg { height: 62px; padding: 0 38px; font-size: 19px; }
+  .kw-cta-ghost {
+    background: transparent; color: var(--kw-ink);
+    border: 1.5px solid var(--kw-line);
+  }
+  .kw-cta-ghost:hover { background: var(--kw-bg-soft); }
+  .kw-cta-dark { background: var(--kw-ink); }
+  .kw-cta-dark:hover { background: #000; }
+
+  /* ── Step bar (5 main steps) ─────────────────────────────────────── */
+  .kw-stepbar-horizontal {
+    display: flex; align-items: center; gap: 0;
+    padding: 28px 0;
+  }
+  .kw-step {
+    display: inline-flex; align-items: center; gap: 10px;
+    flex: none;
+  }
+  .kw-step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    border: 1.5px solid var(--kw-line);
+    color: var(--kw-ink-3);
+    background: #fff;
+  }
+  .kw-step-label {
+    font-size: 14px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: -.005em;
+  }
+  .kw-step-active .kw-step-num {
+    background: var(--kw-accent); color: #fff; border-color: var(--kw-accent);
+  }
+  .kw-step-active .kw-step-label { color: var(--kw-ink); }
+  .kw-step-done .kw-step-num {
+    background: var(--kw-ink); color: #fff; border-color: var(--kw-ink);
+    font-size: 13px;
+  }
+  .kw-step-done .kw-step-label { color: var(--kw-ink); }
+  .kw-step-rule {
+    flex: 1 1 auto; min-width: 24px;
+    height: 1.5px; background: var(--kw-rule);
+    margin: 0 14px;
+  }
+
+  /* ── Eyebrow (section label) ─────────────────────────────────────── */
+  .kw-eyebrow {
+    display: inline-flex; align-items: baseline; gap: 12px;
+    color: var(--kw-accent);
+  }
+  .kw-eyebrow-num {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .08em;
+  }
+  .kw-eyebrow-text {
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  /* ── Inputs (text, textarea) ─────────────────────────────────────── */
+  .kw-input {
+    display: block; width: 100%;
+    height: 56px;
+    padding: 0 18px;
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    font-size: 17px; font-weight: 500;
+    color: var(--kw-ink);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .kw-input:hover { border-color: var(--kw-ink-3); }
+  .kw-input:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
+  .kw-input::placeholder { color: var(--kw-ink-3); font-weight: 500; }
+  .kw-textarea {
+    display: block; width: 100%;
+    min-height: 120px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    font-size: 17px; font-weight: 500;
+    color: var(--kw-ink);
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .kw-textarea:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
+  .kw-textarea::placeholder { color: var(--kw-ink-3); }
+  .kw-input-helper {
+    margin-top: 8px;
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+
+  /* Notes card — unified design shared with Medical Step Ⅱ boxes */
+  .kw-notes-card {
+    background: var(--kw-bg-warm);
+    border: 1px solid var(--kw-line);
+    border-radius: 18px;
+    padding: 20px 22px 22px;
+    position: relative;
+    box-shadow: inset 4px 0 0 var(--kw-accent);
+  }
+  .kw-notes-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .kw-notes-card-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--kw-accent);
+    text-transform: uppercase;
+  }
+  .kw-notes-card-label .kw-notes-card-pen {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--kw-accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .kw-notes-card-secure {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .04em;
+  }
+  .kw-notes-card .kw-textarea {
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    min-height: 160px;
+    padding: 18px 20px;
+    font-size: 17px;
+    color: var(--kw-ink);
+    line-height: 1.5;
+  }
+  .kw-notes-card .kw-textarea:focus {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+  }
+  .kw-notes-card-foot {
+    margin-top: 12px;
+    font-size: 12px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+  /* Example placeholder clears the moment the box is clicked */
+  .kw-textarea:focus::placeholder { color: transparent; }
+
+  /* Calendar — interactive states */
+  .kw-cal-day.kw-pick { cursor: pointer; }
+  .kw-cal-day.kw-pick:hover { background: var(--kw-accent-soft); color: var(--kw-accent); }
+  .kw-cal-day.kw-cal-past { color: var(--kw-line); cursor: default; }
+  .kw-cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .kw-cal-arrow {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid var(--kw-line); background: #fff;
+    color: var(--kw-ink); font-size: 18px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .15s, color .15s;
+  }
+  .kw-cal-arrow:hover:not(:disabled) { border-color: var(--kw-accent); color: var(--kw-accent); }
+  .kw-cal-arrow:disabled { opacity: .3; cursor: not-allowed; }
+
+  /* "I'm flexible" — AI recommendation message */
+  .kw-flex-msg {
+    background: var(--kw-accent-soft);
+    border: 1.5px solid var(--kw-accent);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+
+  /* Airport search w/ inline results — booking-site style */
+  .kw-airport-search {
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .kw-airport-search:focus-within {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+  }
+  .kw-airport-field {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 16px 0 20px;
+    height: 60px;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-airport-icon { color: var(--kw-accent); flex: none; }
+  .kw-airport-input {
+    flex: 1; height: 100%; min-width: 0;
+    background: transparent; border: none; outline: none;
+    font: inherit;
+    font-size: 18px; font-weight: 600;
+    color: var(--kw-ink);
+  }
+  .kw-airport-input::placeholder { color: var(--kw-ink-3); font-weight: 500; }
+  .kw-airport-clear {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--kw-bg-soft);
+    color: var(--kw-ink-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; line-height: 1; cursor: pointer;
+    flex: none;
+  }
+  .kw-airport-results { background: #fff; }
+  .kw-airport-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--kw-rule);
+    position: relative;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .kw-airport-row:last-child { border-bottom: none; }
+  .kw-airport-row:hover { background: var(--kw-bg-soft); }
+  .kw-airport-row.is-selected { background: var(--kw-accent-soft); }
+  .kw-airport-row-head {
+    cursor: default;
+    background: var(--kw-bg-soft);
+    grid-template-columns: 1fr auto;
+    padding: 10px 20px;
+    font-size: 12px; font-weight: 700;
+    color: var(--kw-ink-3);
+    letter-spacing: .04em;
+  }
+  .kw-airport-row-head:hover { background: var(--kw-bg-soft); }
+  .kw-airport-row-head b { color: var(--kw-ink); font-weight: 700; }
+  .kw-airport-code {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: var(--kw-ink);
+    letter-spacing: .06em;
+    background: var(--kw-bg-soft);
+    border-radius: 8px;
+    padding: 6px 8px;
+    text-align: center;
+    border: 1px solid var(--kw-rule);
+  }
+  .kw-airport-row.is-selected .kw-airport-code {
+    background: var(--kw-accent);
+    color: #fff;
+    border-color: var(--kw-accent);
+  }
+  .kw-airport-name {
+    display: flex; flex-direction: column; gap: 2px;
+    font-size: 16px; font-weight: 700;
+    color: var(--kw-ink);
+    line-height: 1.25;
+  }
+  .kw-airport-hint {
+    font-size: 12px; font-weight: 500;
+    color: var(--kw-ink-3);
+  }
+  .kw-airport-dist {
+    font-size: 13px; font-weight: 600;
+    color: var(--kw-ink-3);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .kw-airport-row.is-selected .kw-airport-dist { color: var(--kw-accent); }
+  .kw-airport-check {
+    position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--kw-accent); color: #fff;
+    display: none;
+  }
+
+  /* Segmented control (yes/no, fixed/flexible) */
+  .kw-segmented {
+    display: inline-flex;
+    background: var(--kw-bg-soft);
+    padding: 4px;
+    border-radius: 12px;
+    gap: 4px;
+  }
+  .kw-segmented button {
+    height: 44px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    font-size: 15px; font-weight: 600;
+    color: var(--kw-ink-3);
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .kw-segmented button.is-active {
+    background: #fff;
+    color: var(--kw-ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04);
+  }
+
+  /* ── Inline 2-month calendar ─────────────────────────────────────── */
+  .kw-cal {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+    background: #fff;
+  }
+  .kw-cal-month {}
+  .kw-cal-month-title {
+    font-size: 18px; font-weight: 700;
+    color: var(--kw-ink);
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .kw-cal-dow {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+  }
+  .kw-cal-dow span {
+    text-align: center;
+    font-size: 11px; font-weight: 700;
+    color: var(--kw-ink-3);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .kw-cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+  }
+  .kw-cal-day {
+    aspect-ratio: 1 / 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500;
+    color: var(--kw-ink-2);
+    border-radius: 8px;
+    position: relative;
+  }
+  .kw-cal-blank { color: transparent; }
+  .kw-cal-day.kw-cal-in {
+    background: var(--kw-accent-soft);
+    color: var(--kw-accent);
+    border-radius: 0;
+    font-weight: 600;
+  }
+  .kw-cal-day.kw-cal-start, .kw-cal-day.kw-cal-end {
+    background: var(--kw-accent);
+    color: #fff;
+    font-weight: 700;
+  }
+  .kw-cal-day.kw-cal-start { border-radius: 999px 0 0 999px; }
+  .kw-cal-day.kw-cal-end   { border-radius: 0 999px 999px 0; }
+  /* Apple-style "Sunday red" hint */
+  .kw-cal-dow span:first-child { color: #c0394b; }
+
+  /* ── Logo cards (airline / hotel grid) ───────────────────────────── */
+  .kw-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .kw-logo-grid.kw-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .kw-logo-grid.kw-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .kw-logo {
+    position: relative;
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 14px;
+    padding: 14px 12px 12px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    cursor: pointer;
+  }
+  .kw-logo:hover {
+    border-color: var(--kw-ink);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  }
+  .kw-logo.is-selected {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+  }
+  .kw-logo-mark {
+    height: 56px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--kw-rule);
+  }
+  .kw-logo-air {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: 0.04em;
+  }
+  .kw-logo-img {
+    max-width: 84%;
+    max-height: 38px;
+    width: auto; height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .kw-logo-hotel {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .kw-logo-name {
+    font-size: 12px; font-weight: 600;
+    color: var(--kw-ink-2);
+    line-height: 1.2;
+  }
+  .kw-logo-check {
+    position: absolute; top: -8px; right: -8px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--kw-accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    box-shadow: 0 2px 6px rgba(178,20,100,.4);
+  }
+
+  /* ── Party-type cards ────────────────────────────────────────────── */
+  .kw-party-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+  }
+  .kw-party {
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 16px;
+    padding: 20px 16px 18px;
+    text-align: left;
+    display: flex; flex-direction: column; gap: 14px;
+    cursor: pointer;
+    transition: border-color .15s, transform .15s;
+    min-height: 168px;
+  }
+  .kw-party:hover {
+    border-color: var(--kw-ink);
+    transform: translateY(-1px);
+  }
+  .kw-party.is-selected {
+    border-color: var(--kw-accent);
+    background: var(--kw-accent-soft);
+    box-shadow: 0 0 0 3px var(--kw-accent-soft);
+  }
+  .kw-party-icon { width: 36px; height: 36px; }
+  .kw-party-label {
+    font-size: 18px; font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.01em;
+  }
+  .kw-party-sub {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+    line-height: 1.35;
+    margin-top: -8px;
+  }
+
+  /* ── Stepper (adults/children count) ─────────────────────────────── */
+  .kw-stepper {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .kw-stepper-info {}
+  .kw-stepper-label {
+    font-size: 17px; font-weight: 700;
+    color: var(--kw-ink);
+  }
+  .kw-stepper-hint {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+    margin-top: 2px;
+  }
+  .kw-stepper-ctrl {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .kw-stepper-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--kw-line);
+    background: #fff;
+    color: var(--kw-ink);
+    font-size: 18px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .kw-stepper-btn:hover:not(:disabled) {
+    border-color: var(--kw-accent); color: var(--kw-accent);
+  }
+  .kw-stepper-btn:disabled {
+    opacity: .35; cursor: not-allowed;
+  }
+  .kw-stepper-val {
+    min-width: 22px; text-align: center;
+    font-size: 19px; font-weight: 700;
+    color: var(--kw-ink);
+  }
+
+  /* ── Page wrapper (per-variation container) ──────────────────────── */
+  .kw-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .kw-wrap-narrow {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── Page hero (section breadcrumb + title) ──────────────────────── */
+  .kw-page-hero {
+    padding: 8px 0 40px;
+  }
+  .kw-page-hero h1 {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--kw-ink);
+    margin: 14px 0 16px;
+  }
+  .kw-page-hero h1 .kw-accent { color: var(--kw-accent); }
+  .kw-page-hero p {
+    font-size: clamp(17px, 1.3vw, 19px);
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--kw-ink-2);
+    max-width: 56ch;
+  }
+
+  /* ── Question row (eyebrow + question + helper + input column) ──── */
+  .kw-q-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    padding: 40px 0;
+    border-top: 1px solid var(--kw-rule);
+  }
+  .kw-q-row:first-of-type { border-top: none; padding-top: 16px; }
+  .kw-q-title {
+    font-size: 26px; font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    color: var(--kw-ink);
+    margin: 10px 0 10px;
+    white-space: nowrap;
+  }
+  .kw-q-help {
+    font-size: 14px; font-weight: 500;
+    color: var(--kw-ink-3);
+    line-height: 1.45;
+  }
+  .kw-q-input { min-width: 0; }
+
+  /* ── Footer action bar ───────────────────────────────────────────── */
+  .kw-actionbar {
+    margin-top: 56px;
+    padding: 28px 0 48px;
+    border-top: 1px solid var(--kw-rule);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .kw-actionbar-l { display: flex; align-items: center; gap: 14px; }
+  .kw-actionbar-note {
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-3);
+    max-width: 36ch;
+  }
+
+  /* ════════════════════════════════════════════════════════════════════
+     Variation-specific overrides
+     ════════════════════════════════════════════════════════════════════ */
+
+  /* V2 — Rich editorial */
+  .kw-v2 .kw-q-row {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 64px 0;
+  }
+  .kw-v2 .kw-q-head {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+  }
+  .kw-v2 .kw-q-title {
+    font-size: 44px;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 14px 0 0;
+  }
+  .kw-v2 .kw-q-help {
+    font-size: 17px;
+    color: var(--kw-ink-2);
+    line-height: 1.5;
+  }
+  .kw-v2-imageband {
+    height: 320px;
+    margin: 0 0 0;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    display: flex; align-items: flex-end; padding: 28px;
+    background: var(--kw-bg-warm);
+  }
+  .kw-v2-imageband .kw-img-cap {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--kw-ink-2);
+    letter-spacing: .04em;
+    background: rgba(255,255,255,.85);
+    padding: 6px 14px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .kw-v2-imageband .kw-img-corner {
+    position: absolute; top: 18px; right: 18px;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    color: rgba(255,255,255,.9);
+    background: rgba(0,0,0,.35);
+    padding: 5px 10px;
+    border-radius: 999px;
+  }
+  /* image band — abstract gradient placeholders */
+  .kw-img-1 { background: linear-gradient(135deg, #f7d3df 0%, #fde9d3 60%, #fff 100%); }
+  .kw-img-2 { background: linear-gradient(135deg, #e4dccf 0%, #f0eee9 50%, #d9d3c4 100%); }
+  .kw-img-3 { background: linear-gradient(135deg, #d9e1f2 0%, #f5f5f7 60%, #b7c4dd 100%); }
+  .kw-img-4 { background: linear-gradient(135deg, #1d1d1f 0%, #2a2a2c 50%, #4a3a30 100%); }
+  .kw-img-4 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
+  .kw-img-5 { background: linear-gradient(135deg, #1b2d5c 0%, #2e4a85 60%, #b48a3a 100%); }
+  .kw-img-5 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
+  .kw-img-6 { background: linear-gradient(135deg, #0e4035 0%, #14583f 50%, #c9a96e 100%); }
+  .kw-img-6 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
+  .kw-img-7 { background: linear-gradient(135deg, #f0eee9 0%, #d9d3c4 50%, #8a0e4d 110%); }
+
+  /* V3 — Wizard. Side rail + focused content */
+  .kw-v3-grid {
+    display: grid; grid-template-columns: 280px 1fr;
+    gap: 80px;
+    padding: 40px 0 0;
+  }
+  .kw-v3-rail {
+    position: sticky; top: 96px; align-self: start;
+  }
+  .kw-v3-rail-eyebrow {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--kw-accent);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .kw-v3-rail h2 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 28px;
+    color: var(--kw-ink);
+  }
+  .kw-v3-substeps {
+    display: flex; flex-direction: column; gap: 4px;
+    position: relative;
+  }
+  .kw-v3-substep {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-v3-substep:last-child { border-bottom: none; }
+  .kw-v3-substep-bullet {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1.5px solid var(--kw-line);
+    background: #fff;
+    color: var(--kw-ink-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex: none;
+  }
+  .kw-v3-substep.is-done .kw-v3-substep-bullet {
+    background: var(--kw-ink); color: #fff; border-color: var(--kw-ink);
+  }
+  .kw-v3-substep.is-active .kw-v3-substep-bullet {
+    background: var(--kw-accent); color: #fff; border-color: var(--kw-accent);
+    box-shadow: 0 0 0 4px var(--kw-accent-soft);
+  }
+  .kw-v3-substep-label {
+    font-size: 15px; font-weight: 600;
+    color: var(--kw-ink-3);
+  }
+  .kw-v3-substep.is-active .kw-v3-substep-label { color: var(--kw-ink); font-weight: 700; }
+  .kw-v3-substep.is-done .kw-v3-substep-label { color: var(--kw-ink); }
+  .kw-v3-substep-sum {
+    font-size: 12px; font-weight: 500;
+    color: var(--kw-ink-3);
+    margin-left: auto;
+    text-align: right;
+    max-width: 130px;
+    line-height: 1.2;
+  }
+  .kw-v3-content {
+    min-width: 0;
+    min-height: 720px;
+  }
+  .kw-v3-content h1 {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    line-height: 1.04;
+    margin: 16px 0 14px;
+    color: var(--kw-ink);
+  }
+  .kw-v3-content h1 .kw-accent { color: var(--kw-accent); }
+  .kw-v3-content > p.kw-lede {
+    font-size: 19px;
+    color: var(--kw-ink-2);
+    line-height: 1.45;
+    max-width: 50ch;
+    margin: 0 0 40px;
+  }
+  .kw-v3-meta {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--kw-ink-3);
+    margin-bottom: 18px;
+  }
+  .kw-v3-meta .kw-v3-q-num {
+    color: var(--kw-accent);
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 15px;
+    letter-spacing: .06em;
+  }
+  .kw-v3-nav {
+    margin-top: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+  }
+  .kw-v3-progress {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 13px; font-weight: 500; color: var(--kw-ink-3);
+  }
+  .kw-v3-progress-bar {
+    width: 160px; height: 4px;
+    background: var(--kw-rule); border-radius: 999px;
+    overflow: hidden;
+  }
+  .kw-v3-progress-bar > i {
+    display: block; height: 100%; background: var(--kw-accent);
+    border-radius: 999px;
+  }
+
+  /* V4 — Conversational */
+  .kw-v4-bg {
+    background: var(--kw-bg-warm);
+    min-height: 100%;
+  }
+  .kw-v4-thread {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 24px 200px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .kw-v4-day {
+    text-align: center;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--kw-ink-3);
+    text-transform: uppercase;
+    padding: 8px 0;
+  }
+  .kw-v4-msg {
+    display: flex; gap: 16px;
+    align-items: flex-start;
+  }
+  .kw-v4-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--kw-ink);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .04em;
+  }
+  .kw-v4-avatar-img {
+    background: linear-gradient(135deg, #f5e7b9 0%, #d9b25a 100%);
+    color: #4a2e0a;
+  }
+  .kw-v4-bubble {
+    background: #fff;
+    border: 1px solid var(--kw-rule);
+    border-radius: 20px;
+    border-top-left-radius: 6px;
+    padding: 18px 22px 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--kw-ink);
+    max-width: 540px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .kw-v4-bubble .kw-v4-sender {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--kw-accent);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .kw-v4-bubble p { margin: 0; }
+  .kw-v4-bubble p + p { margin-top: 8px; }
+  .kw-v4-bubble strong { color: var(--kw-ink); font-weight: 700; }
+
+  .kw-v4-msg.is-user { flex-direction: row-reverse; }
+  .kw-v4-msg.is-user .kw-v4-bubble {
+    background: var(--kw-ink);
+    color: #fff;
+    border-color: var(--kw-ink);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 6px;
+  }
+  .kw-v4-msg.is-user .kw-v4-avatar {
+    background: #fff; color: var(--kw-ink);
+    border: 1.5px solid var(--kw-rule);
+  }
+
+  .kw-v4-attached {
+    background: #fff;
+    border: 1px solid var(--kw-rule);
+    border-radius: 18px;
+    padding: 22px;
+    margin-left: 60px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .kw-v4-attached-head {
+    font-size: 12px; font-weight: 700;
+    color: var(--kw-ink-3);
+    letter-spacing: .12em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .kw-v4-active {
+    background: #fff;
+    border: 2px solid var(--kw-accent);
+    border-radius: 18px;
+    padding: 24px;
+    margin-left: 60px;
+    box-shadow: 0 8px 28px rgba(178,20,100,.12);
+    position: relative;
+  }
+  .kw-v4-active::before {
+    content: 'YOUR TURN';
+    position: absolute;
+    top: -10px; left: 22px;
+    background: var(--kw-accent); color: #fff;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .14em;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .kw-v4-active h4 {
+    margin: 0 0 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.01em;
+  }
+  .kw-v4-future {
+    margin-left: 60px;
+    padding: 18px 22px;
+    border: 1.5px dashed var(--kw-line);
+    border-radius: 18px;
+    color: var(--kw-ink-3);
+    font-size: 14px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .kw-v4-future .kw-v4-future-q {
+    font-weight: 700; color: var(--kw-ink-2);
+  }
+  .kw-v4-composer {
+    position: sticky; bottom: 0;
+    background: linear-gradient(to top, var(--kw-bg-warm) 70%, rgba(240,238,233,0));
+    padding: 32px 24px 28px;
+    margin: -32px -24px 0;
+  }
+  .kw-v4-composer-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 999px;
+    padding: 8px 8px 8px 24px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06), 0 0 0 1px var(--kw-rule);
+  }
+  .kw-v4-composer-inner input {
+    flex: 1; border: none; outline: none;
+    font-size: 16px; height: 48px;
+    background: transparent;
+  }
+  .kw-v4-composer-inner input::placeholder { color: var(--kw-ink-3); }
+
+  /* Design canvas tweaks — let our artboards fill width */
+  .dc-card { background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- React + Babel pinned versions -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+        integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+        integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+        integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+        crossorigin="anonymous"></script>
+
+<div id="root"></div>
+
+<!-- Shared components + V1 Minimal (chosen direction per README) -->
+<script type="text/babel" src="js/step1-trip-shared.jsx"></script>
+<script type="text/babel" src="js/step1-trip-v1.jsx"></script>
+
+<!-- State store (the V1 component handles its own interactions + navigation) -->
+<script src="js/state.js"></script>
+
+<script type="text/babel" data-presets="react">
+  // V1 Minimal is fully interactive — it owns its calendar, steppers,
+  // autocomplete, and Continue/Back navigation. No overlay needed.
+  ReactDOM.createRoot(document.getElementById('root')).render(<TripV1Minimal />);
+</script>
+
+<!-- Han mark shared SVG defs (kept here so all variations can <use href> -->
+<svg width="0" height="0" style={{position:'absolute'}} aria-hidden="true"></svg>
+
+</body>
+</html>

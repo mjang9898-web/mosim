@@ -1,0 +1,57 @@
+# Netlify static-site configuration.
+# No build step required — pure static site.
+
+[build]
+  publish = "."
+
+# Set proper MIME types so JSX files load as type="text/babel".
+# JSX cache is short (for iteration), images are long-cached.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "no-referrer-when-downgrade"
+
+[[headers]]
+  for = "/js/*.jsx"
+  [headers.values]
+    Content-Type = "text/babel; charset=utf-8"
+    Cache-Control = "public, max-age=300"
+
+[[headers]]
+  for = "/js/*.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Clean URLs: /step1 -> /step1.html
+[[redirects]]
+  from = "/step1"
+  to = "/step1.html"
+  status = 200
+
+[[redirects]]
+  from = "/step2"
+  to = "/step2.html"
+  status = 200
+
+[[redirects]]
+  from = "/step3"
+  to = "/step3.html"
+  status = 200
+
+[[redirects]]
+  from = "/step4"
+  to = "/step4.html"
+  status = 200
+
+[[redirects]]
+  from = "/result"
+  to = "/result.html"
+  status = 200
