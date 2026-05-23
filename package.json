@@ -1,0 +1,13 @@
+{
+  "name": "mosim-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "K-Wellness Concierge — 5-step funnel + AI itinerary",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

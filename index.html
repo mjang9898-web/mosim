@@ -2007,10 +2007,11 @@
 <script src="js/image-slot.js"></script>
 <script src="js/state.js"></script>
 <script>
-  // Contact form -> save to sessionStorage -> navigate to Step 1
-  function kwSubmitContact(ev) {
+  // Contact form -> save to sessionStorage + POST to /api/lead -> navigate to Step 1
+  async function kwSubmitContact(ev) {
     ev.preventDefault();
     var form = ev.target;
+    var btn = form.querySelector('button[type="submit"]');
     var contact = {
       name: (form.querySelector('#f-name') || {}).value || '',
       email: (form.querySelector('#f-email') || {}).value || '',
@@ -2019,7 +2020,26 @@
       interest: (form.querySelector('#f-interest') || {}).value || '',
       note: (form.querySelector('#f-note') || {}).value || ''
     };
+
+    if (!contact.email) {
+      alert('Please enter an email so our concierge can reply.');
+      return false;
+    }
+
     if (window.kwState) window.kwState.saveStep('contact', contact);
+
+    // sessionStorage holds the lead even if the POST fails — funnel must always progress.
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(contact)
+      });
+    } catch (e) {
+      console.warn('[kw] /api/lead failed, lead held in sessionStorage', e);
+    }
+
     window.location.href = 'step1.html';
     return false;
   }
