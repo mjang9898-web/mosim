@@ -5,6 +5,7 @@
   "type": "module",
   "description": "K-Wellness Concierge — 5-step funnel + AI itinerary",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.88.0",
     "@supabase/supabase-js": "^2.45.0"
   },
   "engines": {
