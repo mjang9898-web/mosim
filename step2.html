@@ -193,9 +193,6 @@
   }
   .kw-textarea:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
   .kw-textarea::placeholder { color: var(--kw-ink-3); }
-  /* Example placeholder clears the moment the box is clicked */
-  .kw-textarea:focus::placeholder { color: transparent; }
-  .kw-med-custom-textarea:focus::placeholder { color: transparent; }
   .kw-input-helper {
     margin-top: 8px;
     font-size: 13px; font-weight: 500;
@@ -425,8 +422,6 @@
     position: relative;
     aspect-ratio: 4 / 3;
     background: linear-gradient(135deg, var(--photo-a, #e8e8ed) 0%, var(--photo-b, #c5c5cc) 60%, var(--photo-c, #a5a5ac) 100%);
-    background-size: cover;
-    background-position: center;
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
@@ -446,15 +441,6 @@
     border: 1px solid rgba(255,255,255,.18);
     border-radius: 8px;
     pointer-events: none;
-  }
-  /* When a real photo is loaded, soften the radial overlay so the image
-     reads cleanly while preserving the same printed-photo edge.        */
-  .kw-med-photo.has-image::before {
-    background:
-      linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 40%, rgba(0,0,0,.18) 100%);
-  }
-  .kw-med-photo.has-image::after {
-    border-color: rgba(255,255,255,.28);
   }
 
   /* Centered monogram — elegant serif initial, low opacity */
@@ -489,16 +475,171 @@
 
   /* Per-category palette — curated like a hotel collection */
   .kw-photo-checkup    { --photo-a:#e7eef4; --photo-b:#b8c9d8; --photo-c:#7a92ad; --photo-fg:#1f3654; }
+
+  /* Real photo for Screening card — covers the gradient placeholder */
+  .kw-med-photo.kw-photo-checkup {
+    background-image: url('assets/medical/healthcheckup.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-checkup::before { display: none; }
+  .kw-med-photo.kw-photo-checkup .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-checkup .kw-basket-thumb {
+    background-image: url('assets/medical/healthcheckup.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-derm       { --photo-a:#fae0e6; --photo-b:#f5cabe; --photo-c:#d99988; --photo-fg:#7a3a3a; }
   .kw-photo-aesthetic  { --photo-a:#f7e8d8; --photo-b:#e8c8a4; --photo-c:#b89968; --photo-fg:#5a4020; }
   .kw-photo-plastic    { --photo-a:#eee8df; --photo-b:#d4cabb; --photo-c:#a89c87; --photo-fg:#3e352a; }
   .kw-photo-hair       { --photo-a:#e8d5b9; --photo-b:#c4a276; --photo-c:#8a6a43; --photo-fg:#3a2a14; }
   .kw-photo-dental     { --photo-a:#e3ecec; --photo-b:#b5cccd; --photo-c:#7a9899; --photo-fg:#1f4042; }
+  /* Real photo for Dental card */
+  .kw-med-photo.kw-photo-dental {
+    background-image: url('assets/medical/dental.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-dental::before { display: none; }
+  .kw-med-photo.kw-photo-dental .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-dental .kw-basket-thumb {
+    background-image: url('assets/medical/dental.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-eye        { --photo-a:#cdd6e4; --photo-b:#7c8eae; --photo-c:#3a4a6e; --photo-fg:#0e1a36; }
+  /* Real photo for Ophthalmology card */
+  .kw-med-photo.kw-photo-eye {
+    background-image: url('assets/medical/eye.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-eye::before { display: none; }
+  .kw-med-photo.kw-photo-eye .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-eye .kw-basket-thumb {
+    background-image: url('assets/medical/eye.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-ortho      { --photo-a:#dcd6c7; --photo-b:#a8a08e; --photo-c:#74695a; --photo-fg:#322a1c; }
+  /* Real photo for Orthopedic card */
+  .kw-med-photo.kw-photo-ortho {
+    background-image: url('assets/medical/ortho.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-ortho::before { display: none; }
+  .kw-med-photo.kw-photo-ortho .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-ortho .kw-basket-thumb {
+    background-image: url('assets/medical/ortho.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
+  /* Real photo for Hair restoration card */
+  .kw-med-photo.kw-photo-hair {
+    background-image: url('assets/medical/hair.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-hair::before { display: none; }
+  .kw-med-photo.kw-photo-hair .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-hair .kw-basket-thumb {
+    background-image: url('assets/medical/hair.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
+  /* Real photo for Dermatology card */
+  .kw-med-photo.kw-photo-derm {
+    background-image: url('assets/medical/derm.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-derm::before { display: none; }
+  .kw-med-photo.kw-photo-derm .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-derm .kw-basket-thumb {
+    background-image: url('assets/medical/derm.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
+  /* Real photo for Aesthetic medicine card */
+  .kw-med-photo.kw-photo-aesthetic {
+    background-image: url('assets/medical/aesthetic.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-aesthetic::before { display: none; }
+  .kw-med-photo.kw-photo-aesthetic .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-aesthetic .kw-basket-thumb {
+    background-image: url('assets/medical/aesthetic.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-stemcell   { --photo-a:#dcd4ea; --photo-b:#a99dcc; --photo-c:#6a5a98; --photo-fg:#2c1f4e; }
+  /* Real photo for Stem cell & regenerative card */
+  .kw-med-photo.kw-photo-stemcell {
+    background-image: url('assets/medical/stemcell.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-stemcell::before { display: none; }
+  .kw-med-photo.kw-photo-stemcell .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-stemcell .kw-basket-thumb {
+    background-image: url('assets/medical/stemcell.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-iv         { --photo-a:#d8e8eb; --photo-b:#a3c3c8; --photo-c:#6a8d92; --photo-fg:#1b3a3e; }
+  /* Real photo for IV nutrient therapy card */
+  .kw-med-photo.kw-photo-iv {
+    background-image: url('assets/medical/iv.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-iv::before { display: none; }
+  .kw-med-photo.kw-photo-iv .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-iv .kw-basket-thumb {
+    background-image: url('assets/medical/iv.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-hanbang    { --photo-a:#d2dcc4; --photo-b:#92a374; --photo-c:#56673d; --photo-fg:#1c2a14; }
+  /* Real photo for Korean traditional medicine card */
+  .kw-med-photo.kw-photo-hanbang {
+    background-image: url('assets/medical/hanbang.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-hanbang::before { display: none; }
+  .kw-med-photo.kw-photo-hanbang .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-hanbang .kw-basket-thumb {
+    background-image: url('assets/medical/hanbang.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
+  /* Real photo for Plastic surgery card */
+  .kw-med-photo.kw-photo-plastic {
+    background-image: url('assets/medical/plastic.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  .kw-med-photo.kw-photo-plastic::before { display: none; }
+  .kw-med-photo.kw-photo-plastic .kw-med-monogram { display: none; }
+  .kw-basket-item.kw-photo-plastic .kw-basket-thumb {
+    background-image: url('assets/medical/plastic.jpg');
+    background-size: cover;
+    background-position: center;
+    color: transparent;
+  }
   .kw-photo-custom     { --photo-a:#f0eee9; --photo-b:#e0dcd2; --photo-c:#bfb8a8; --photo-fg:#3a3326; }
 
   /* Selection check on photo (top-right) — removed in favour of a CTA in
@@ -862,6 +1003,652 @@
     letter-spacing: .08em;
     text-transform: uppercase;
   }
+
+  /* ─────────────────────────────────────────────────────────────
+     DETAIL DRAWER
+     Right-side slide-in for medical category detail pages.
+     ───────────────────────────────────────────────────────────── */
+
+  .kw-med.has-detail { cursor: pointer; }
+  .kw-med.has-detail:hover { transform: translateY(-3px); }
+  .kw-med.has-detail .kw-med-view { color: var(--kw-accent); }
+
+  @keyframes kw-drawer-in {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
+  @keyframes kw-scrim-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .kw-drawer-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 14, 18, .42);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 90;
+    animation: kw-scrim-in .22s ease-out both;
+  }
+  .kw-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 88vw;
+    max-width: 1180px;
+    background: #ffffff;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -24px 0 60px rgba(0, 0, 0, .14);
+    animation: kw-drawer-in .28s cubic-bezier(.22, .61, .36, 1) both;
+  }
+
+  /* Top bar — breadcrumb + close */
+  .kw-drawer-top {
+    flex: none;
+    height: 64px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--kw-rule);
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .kw-drawer-crumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--kw-ink-3);
+  }
+  .kw-drawer-crumb a {
+    color: var(--kw-ink-2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color .15s ease;
+  }
+  .kw-drawer-crumb a:hover { color: var(--kw-accent); }
+  .kw-drawer-crumb-sep { color: var(--kw-line); }
+  .kw-drawer-crumb-now {
+    color: var(--kw-ink);
+    font-weight: 600;
+  }
+  .kw-drawer-close {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--kw-line);
+    background: #ffffff;
+    color: var(--kw-ink-2);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .kw-drawer-close:hover {
+    background: var(--kw-bg-soft);
+    border-color: var(--kw-ink-3);
+    color: var(--kw-ink);
+  }
+
+  /* Body — scrollable */
+  .kw-drawer-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 28px 40px 24px;
+  }
+
+  /* Hero */
+  .kw-detail-hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--kw-rule);
+    margin-bottom: 28px;
+  }
+  .kw-detail-eyebrow {
+    font-family: 'Playfair Display', 'Nanum Myeongjo', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--kw-accent);
+    letter-spacing: .02em;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .kw-detail-title {
+    font-size: clamp(28px, 2.6vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    line-height: 1.08;
+    color: var(--kw-ink);
+    margin: 0 0 12px 0;
+  }
+  .kw-detail-positioning {
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--kw-ink-2);
+    margin: 0 0 18px 0;
+    text-wrap: pretty;
+  }
+  .kw-detail-hospitals {
+    border-top: 1px solid var(--kw-rule);
+    padding-top: 14px;
+  }
+  .kw-detail-hospitals-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--kw-ink-3);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .kw-detail-hospitals ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+  .kw-detail-hospitals li {
+    font-size: 12.5px;
+    color: var(--kw-ink-2);
+    padding: 5px 11px;
+    background: var(--kw-bg-soft);
+    border: 1px solid var(--kw-rule);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .kw-detail-hospitals li::before { content: none; }
+
+  /* Hero photo grid */
+  .kw-detail-hero-r {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    min-height: 220px;
+  }
+  .kw-detail-photo {
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--photo-a), var(--photo-c));
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    color: var(--photo-fg);
+  }
+  .kw-detail-photo span {
+    position: absolute;
+    bottom: 12px; left: 14px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    opacity: .75;
+  }
+  .kw-detail-photo-main {
+    grid-row: 1 / span 2;
+  }
+  .kw-detail-photo-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 30% 20%, rgba(255,255,255,.12) 0%, transparent 60%),
+      radial-gradient(140% 100% at 70% 100%, rgba(0,0,0,.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Sections inside drawer */
+  .kw-detail-section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-detail-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 12px;
+  }
+  .kw-detail-section-head {
+    margin-bottom: 18px;
+    max-width: 640px;
+  }
+  .kw-detail-h3 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.018em;
+    color: var(--kw-ink);
+    margin: 4px 0 6px 0;
+  }
+  .kw-detail-help {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--kw-ink-3);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  /* Tier picker */
+  .kw-tier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .kw-tier {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px 20px;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .kw-tier:hover {
+    border-color: var(--kw-ink-3);
+  }
+  .kw-tier.is-selected {
+    border-color: var(--kw-accent);
+    border-width: 2px;
+    padding: 21.5px 19.5px 19.5px;
+    background: var(--kw-accent-soft);
+    box-shadow: 0 0 0 4px rgba(178, 20, 100, .06);
+  }
+  .kw-tier input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .kw-tier-radio {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--kw-line);
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .kw-tier.is-selected .kw-tier-radio {
+    border-color: var(--kw-accent);
+  }
+  .kw-tier-radio-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--kw-accent);
+  }
+  .kw-tier-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 10px;
+    padding-right: 30px;
+  }
+  .kw-tier-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.01em;
+  }
+  .kw-tier-duration {
+    font-size: 12.5px;
+    color: var(--kw-ink-3);
+    font-weight: 500;
+  }
+  .kw-tier-price {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-tier-price-from {
+    font-size: 11px;
+    color: var(--kw-ink-3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+  }
+  .kw-tier-price-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.015em;
+  }
+  .kw-tier-blurb {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--kw-ink-2);
+    margin: 0 0 12px 0;
+    text-wrap: pretty;
+  }
+  .kw-tier-includes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .kw-tier-includes li {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--kw-ink-2);
+    padding-left: 16px;
+    position: relative;
+  }
+  .kw-tier-includes li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--kw-accent);
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  /* Add-ons */
+  .kw-addon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .kw-addon {
+    position: relative;
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .kw-addon:hover { border-color: var(--kw-ink-3); }
+  .kw-addon.is-selected {
+    border-color: var(--kw-accent);
+    background: var(--kw-accent-soft);
+  }
+  .kw-addon input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .kw-addon-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--kw-line);
+    background: #ffffff;
+    color: var(--kw-ink-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .kw-addon.is-selected .kw-addon-check {
+    background: var(--kw-accent);
+    border-color: var(--kw-accent);
+    color: #ffffff;
+  }
+  .kw-addon-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--kw-ink);
+    line-height: 1.35;
+  }
+  .kw-addon-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--kw-ink);
+    white-space: nowrap;
+  }
+  .kw-addon.is-selected .kw-addon-price { color: var(--kw-accent); }
+
+  /* À la carte procedure groups */
+  .kw-proc-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .kw-proc-group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-proc-group-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.005em;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .kw-proc-group-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--kw-accent);
+    letter-spacing: .04em;
+  }
+  .kw-proc-group-stat {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--kw-accent);
+    letter-spacing: .04em;
+  }
+  .kw-proc-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .kw-proc {
+    position: relative;
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--kw-line);
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .kw-proc:hover { border-color: var(--kw-ink-3); }
+  .kw-proc.is-selected {
+    border-color: var(--kw-accent);
+    background: var(--kw-accent-soft);
+  }
+  .kw-proc input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .kw-proc-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--kw-line);
+    background: #ffffff;
+    color: var(--kw-ink-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+    flex: none;
+  }
+  .kw-proc.is-selected .kw-proc-check {
+    background: var(--kw-accent);
+    border-color: var(--kw-accent);
+    color: #ffffff;
+  }
+  .kw-proc-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .kw-proc-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kw-ink);
+    line-height: 1.25;
+    letter-spacing: -0.003em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .kw-proc-meta {
+    font-size: 12.5px;
+    color: var(--kw-ink-3);
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    font-weight: 500;
+  }
+  .kw-proc-meta .kw-proc-dur {
+    color: var(--kw-ink-2);
+    font-weight: 600;
+    letter-spacing: -0.003em;
+  }
+  .kw-proc-meta .kw-proc-dur::after {
+    content: " · ";
+    color: var(--kw-line);
+    font-weight: 500;
+    margin: 0 2px;
+  }
+  .kw-proc-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .kw-proc.is-selected .kw-proc-price { color: var(--kw-accent); }
+
+  .kw-detail-disclaimer {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--kw-ink-3);
+    padding: 18px 22px;
+    border: 1px solid var(--kw-rule);
+    border-radius: 12px;
+    background: var(--kw-bg-soft);
+    margin-top: 18px;
+    text-wrap: pretty;
+  }
+
+  /* Sticky footer */
+  .kw-drawer-foot {
+    flex: none;
+    padding: 18px 32px;
+    border-top: 1px solid var(--kw-rule);
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .kw-drawer-foot-l {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    column-gap: 18px;
+    align-items: baseline;
+  }
+  .kw-drawer-foot-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--kw-ink-3);
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .kw-drawer-foot-total {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 4px;
+  }
+  .kw-drawer-foot-meta {
+    font-size: 13px;
+    color: var(--kw-ink-3);
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: end;
+    padding-bottom: 2px;
+  }
+  .kw-drawer-foot-r {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .kw-drawer-saved {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kw-accent);
+  }
+
+  .kw-cta:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+  }
+  .kw-cta:disabled:hover { background: var(--kw-accent); }
+
+  @media (max-width: 900px) {
+    .kw-drawer { width: 100vw; }
+    .kw-drawer-body { padding: 28px 24px 24px; }
+    .kw-detail-hero {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .kw-detail-hero-r { min-height: 220px; }
+    .kw-tier-grid { grid-template-columns: 1fr; }
+    .kw-addon-grid { grid-template-columns: 1fr; }
+    .kw-proc { grid-template-columns: 28px 1fr; }
+    .kw-proc-price { grid-column: 2; }
+    .kw-drawer-foot {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -872,20 +1659,19 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
         integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
         crossorigin="anonymous"></script>
+
 <div id="root"></div>
 
 <!-- shared components (BrandNav, StepBar, SectionEyebrow) reused from Step 1 -->
 <script src="js/step1-trip-shared.js" defer></script>
 <script src="js/step2-medical.js" defer></script>
 
-<!-- State store (the Step2Medical component handles its own chart + navigation) -->
+<!-- State store -->
 <script src="js/state.js"></script>
 
 <script>
   window.addEventListener('DOMContentLoaded', function () {
-    // Step2Medical is fully interactive — it owns the chart state and
-      // its Continue/Back navigation. No overlay needed.
-      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Step2Medical));
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Step2Medical));
   });
 </script>
 
