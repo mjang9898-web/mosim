@@ -1,0 +1,773 @@
+{
+  "gyeongbokgung": {
+    "title": "File:Gyeonghoeru (Royal Banquet Hall) at Gyeongbokgung Palace, Seoul.jpg",
+    "author": "Frank Schulenburg",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gyeonghoeru_(Royal_Banquet_Hall)_at_Gyeongbokgung_Palace,_Seoul.jpg"
+  },
+  "gyeongbokgung-2": {
+    "title": "File:Front view of the Imperial Throne Hall Geunjeongjeon at Gyeongbokgung Palace with blue sky in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Front_view_of_the_Imperial_Throne_Hall_Geunjeongjeon_at_Gyeongbokgung_Palace_with_blue_sky_in_Seoul.jpg"
+  },
+  "gyeongbokgung-3": {
+    "title": "File:Front view of Heungnyemun Gate in Gyeongbokgung Palace Seoul South Korea.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Front_view_of_Heungnyemun_Gate_in_Gyeongbokgung_Palace_Seoul_South_Korea.jpg"
+  },
+  "gyeongbokgung-4": {
+    "title": "File:Panoramic view of Hyangwonjeong Pavilion in its pond at Gyeongbokgung Palace with blue sky in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Panoramic_view_of_Hyangwonjeong_Pavilion_in_its_pond_at_Gyeongbokgung_Palace_with_blue_sky_in_Seoul.jpg"
+  },
+  "gyeongbokgung-5": {
+    "title": "File:KOCIS Korea Snowfall in Gyeongbokgung 24 (11318893804).jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:KOCIS_Korea_Snowfall_in_Gyeongbokgung_24_(11318893804).jpg"
+  },
+  "gyeongbokgung-6": {
+    "title": "File:Royal Guard Changing Ceremony at Gyeongbokgung.jpg",
+    "author": "Stevenliuyi",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Royal_Guard_Changing_Ceremony_at_Gyeongbokgung.jpg"
+  },
+  "changdeokgung": {
+    "title": "File:Exterior view of Seongjeonggak with blue sky at Changdeokgung Palace in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Exterior_view_of_Seongjeonggak_with_blue_sky_at_Changdeokgung_Palace_in_Seoul.jpg"
+  },
+  "changdeokgung-2": {
+    "title": "File:Injeongjeon and rank stones.jpg",
+    "author": "Jjw",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Injeongjeon_and_rank_stones.jpg"
+  },
+  "changdeokgung-3": {
+    "title": "File:부용지와 주합루.jpg (Buyongji pond and Juhamnu pavilion in the Secret Garden)",
+    "author": "Story-grapher (sang hun kim)",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%EB%B6%80%EC%9A%A9%EC%A7%80%EC%99%80_%EC%A3%BC%ED%95%A9%EB%A3%A8.jpg"
+  },
+  "changdeokgung-4": {
+    "title": "File:Donhwamun Gate Changdeokgung 2.jpg",
+    "author": "Kallerna",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Donhwamun_Gate_Changdeokgung_2.jpg"
+  },
+  "changdeokgung-5": {
+    "title": "File:Aeryeonji Pond 02.jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Aeryeonji_Pond_02.jpg"
+  },
+  "changdeokgung-6": {
+    "title": "File:창덕궁 낙선재 전경.jpg (Nakseonjae overall view at Changdeokgung)",
+    "author": "Seo HeUn Kang (Korea Cultural Heritage Administration)",
+    "license": "KOGL Type 1",
+    "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+    "source": "https://commons.wikimedia.org/wiki/File:%EC%B0%BD%EB%8D%95%EA%B6%81_%EB%82%99%EC%84%A0%EC%9E%AC_%EC%A0%84%EA%B2%BD.jpg"
+  },
+  "deoksugung": {
+    "title": "File:Deoksugung Palace 20240409 029.jpg",
+    "author": "Mobius6",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Deoksugung_Palace_20240409_029.jpg"
+  },
+  "deoksugung-2": {
+    "title": "File:Junghwajeon Front.jpg",
+    "author": "Tungdangthanh",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Junghwajeon_Front.jpg"
+  },
+  "deoksugung-3": {
+    "title": "File:Deoksu Palace at night, Seoul.jpg",
+    "author": "Rtflakfizer",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Deoksu_Palace_at_night,_Seoul.jpg"
+  },
+  "deoksugung-4": {
+    "title": "File:Seokjojeon of Deoksugung palace.jpg",
+    "author": "Pip1024",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seokjojeon_of_Deoksugung_palace.jpg"
+  },
+  "deoksugung-5": {
+    "title": "File:Seoul 2520b.jpg (Changing of the guard at Daehanmun, Deoksugung)",
+    "author": "Yves Picq",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul_2520b.jpg"
+  },
+  "deoksugung-6": {
+    "title": "File:덕수궁의 가을.jpg (Autumn at Deoksugung)",
+    "author": "La Seong-min (라성민)",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%EB%8D%95%EC%88%98%EA%B6%81%EC%9D%98_%EA%B0%80%EC%9D%84.jpg"
+  },
+  "changgyeonggung": {
+    "title": "File:Myeongjeongjeon seen through the wooden Gate Hyehwamun at Changgyeonggung Palace in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Myeongjeongjeon_seen_through_the_wooden_Gate_Hyehwamun_at_Changgyeonggung_Palace_in_Seoul.jpg"
+  },
+  "jongmyo": {
+    "title": "File:Jongmyo Shrine 02.jpg",
+    "author": "Bgag",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Jongmyo_Shrine_02.jpg"
+  },
+  "huwon": {
+    "title": "File:Huwon Changdeokgung Foulk.jpg",
+    "author": "George C. Foulk",
+    "license": "Public domain",
+    "license_url": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Huwon_Changdeokgung_Foulk.jpg"
+  },
+  "bukchon": {
+    "title": "File:Bukchon-ro 11-gil street with hanok houses at blue hour in Bukchon Hanok Village Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bukchon-ro_11-gil_street_with_hanok_houses_at_blue_hour_in_Bukchon_Hanok_Village_Seoul.jpg"
+  },
+  "bongeunsa": {
+    "title": "File:Bongeunsa Seoul 8.jpg",
+    "author": "kallerna",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bongeunsa_Seoul_8.jpg"
+  },
+  "jogyesa": {
+    "title": "File:Jogyesa Temple (1509839597).jpg",
+    "author": "Francisco Anzola",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jogyesa_Temple_(1509839597).jpg"
+  },
+  "haeinsa": {
+    "title": "File:Haeinsa Temple 01.jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Haeinsa_Temple_01.jpg"
+  },
+  "meditation": {
+    "title": "File:Beopjusa-TempleStay-Korea 1765.jpg",
+    "author": "MeganYoungmee",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Beopjusa-TempleStay-Korea_1765.jpg"
+  },
+  "tea": {
+    "title": "File:Korean tea ceremony DSC04095.jpg",
+    "author": "Mai-Linh Doan",
+    "license": "CC BY-SA 1.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/1.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_tea_ceremony_DSC04095.jpg"
+  },
+  "calligraphy": {
+    "title": "File:Calligraphy couplet by Yun Yong Gu, c. 1900.jpg",
+    "author": "Hiart",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Calligraphy_couplet_by_Yun_Yong_Gu,_c._1900.jpg"
+  },
+  "hanbok": {
+    "title": "File:Female Hanbok From South Korea.jpg",
+    "author": "IssamBarhoumi",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Female_Hanbok_From_South_Korea.jpg"
+  },
+  "nationalmuseum": {
+    "title": "File:Front view of national museum of korea.jpg",
+    "author": "Jinah78",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Front_view_of_national_museum_of_korea.jpg"
+  },
+  "warmemorial": {
+    "title": "File:War Memorial Korea entrance.JPG",
+    "author": "Adbar",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:War_Memorial_Korea_entrance.JPG"
+  },
+  "cheonggye": {
+    "title": "File:Cheonggyecheon stream at sunrise with trees in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cheonggyecheon_stream_at_sunrise_with_trees_in_Seoul.jpg"
+  },
+  "royalcuisine": {
+    "title": "File:Korean cuisine-Hanjeongsik-05.jpg",
+    "author": "by Richy! at flickr",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_cuisine-Hanjeongsik-05.jpg"
+  },
+
+  "changgyeonggung-2": {
+    "title": "File:Korea-Seoul-Changgyeonggung-Myeongjeongjeon-01.jpg",
+    "author": "d'n'c",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Changgyeonggung-Myeongjeongjeon-01.jpg"
+  },
+  "changgyeonggung-3": {
+    "title": "File:Korea-Seoul-Changgyeonggung-Tongmyeongjeon-01.jpg",
+    "author": "Gapo",
+    "license": "Public Domain",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Changgyeonggung-Tongmyeongjeon-01.jpg"
+  },
+  "changgyeonggung-4": {
+    "title": "File:Chundangji Pond (춘당지).jpg",
+    "author": "Noh Mun Duek",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chundangji_Pond_(%EC%B6%98%EB%8B%B9%EC%A7%80).jpg"
+  },
+  "changgyeonggung-5": {
+    "title": "File:Changgyeonggung Greenhouse October 2024.jpg",
+    "author": "Nick-D",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Changgyeonggung_Greenhouse_October_2024.jpg"
+  },
+  "changgyeonggung-6": {
+    "title": "File:Changgyeonggung blossom.jpg",
+    "author": "Wei-Te Wong",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Changgyeonggung_blossom.jpg"
+  },
+
+  "jongmyo-2": {
+    "title": "File:Jeongjeon, Jongmyo (Autumn, 2012).jpg",
+    "author": "Cultural Heritage Administration of Korea",
+    "license": "KOGL Type 1",
+    "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+    "source": "https://commons.wikimedia.org/wiki/File:Jeongjeon,_Jongmyo_(Autumn,_2012).jpg"
+  },
+  "jongmyo-3": {
+    "title": "File:종묘의 정전.jpg (Jeongjeon at Jongmyo)",
+    "author": "Inggunghwa12",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%EC%A2%85%EB%AC%98%EC%9D%98_%EC%A0%95%EC%A0%84.jpg"
+  },
+  "jongmyo-4": {
+    "title": "File:Yeongnyeongjeon of Jongmyo-1.jpg",
+    "author": "Immanuelle",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yeongnyeongjeon_of_Jongmyo-1.jpg"
+  },
+  "jongmyo-5": {
+    "title": "File:Jongmyo Jerye (55246238362).jpg",
+    "author": "Republic of Korea / Lee Jeong Woo (MCST)",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jongmyo_Jerye_(55246238362).jpg"
+  },
+  "jongmyo-6": {
+    "title": "File:Jongmyo Royal Shrine (종묘) Total View of Rite.jpg",
+    "author": "Noh Mun Duek",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jongmyo_Royal_Shrine_(%EC%A2%85%EB%AC%98)_Total_View_of_Rite.jpg"
+  },
+
+  "huwon-2": {
+    "title": "File:Changdeokgung Palace Snow 10 (16076879972).jpg (Buyongji winter)",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Changdeokgung_Palace_Snow_10_(16076879972).jpg"
+  },
+  "huwon-3": {
+    "title": "File:Korea-Seoul-Changdeokgung-Aeryeonjeong and Aeryeonji-01.jpg",
+    "author": "Prattflora",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Changdeokgung-Aeryeonjeong_and_Aeryeonji-01.jpg"
+  },
+  "huwon-4": {
+    "title": "File:Ongnyucheon, Changdeokgung - Seoul, Korea.JPG",
+    "author": "Daderot",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ongnyucheon,_Changdeokgung_-_Seoul,_Korea.JPG"
+  },
+  "huwon-5": {
+    "title": "File:Yeongyeongdang, Changdeokgung - Seoul, Korea.JPG",
+    "author": "Daderot",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yeongyeongdang,_Changdeokgung_-_Seoul,_Korea.JPG"
+  },
+  "huwon-6": {
+    "title": "File:Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg",
+    "author": "Alain Seguin",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Changdeokgung-Yeongyeongdang-01.jpg"
+  },
+
+  "bukchon-2": {
+    "title": "File:Bukchon-ro 11-gil street with hanok houses and blue sky in Bukchon Hanok Village Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bukchon-ro_11-gil_street_with_hanok_houses_and_blue_sky_in_Bukchon_Hanok_Village_Seoul.jpg"
+  },
+  "bukchon-3": {
+    "title": "File:Gyedong-gil street with climbing plants at golden hour in Seoul South Korea.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gyedong-gil_street_with_climbing_plants_at_golden_hour_in_Seoul_South_Korea.jpg"
+  },
+  "bukchon-4": {
+    "title": "File:Hanok Roofs at Night, Bukcheon Village, Seoul.jpg",
+    "author": "Ken Eckert",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hanok_Roofs_at_Night,_Bukcheon_Village,_Seoul.jpg"
+  },
+  "bukchon-5": {
+    "title": "File:Namsan Tower from Bukchon Hanok Village.jpg",
+    "author": "Joannesheppard",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Namsan_Tower_from_Bukchon_Hanok_Village.jpg"
+  },
+  "bukchon-6": {
+    "title": "File:KOCIS outside view of Mangyeongjae, a hanok in Bukchon (4769433669).jpg",
+    "author": "Korea.net / KOCIS",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:KOCIS_outside_view_of_Mangyeongjae,_a_hanok_in_Bukchon_(4769433669).jpg"
+  },
+
+  "bongeunsa-2": {
+    "title": "File:The Mireuk Daebul at Bongeunsa.jpg",
+    "author": "Ethan Doyle White",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Mireuk_Daebul_at_Bongeunsa.jpg"
+  },
+  "bongeunsa-3": {
+    "title": "File:The Daewoongjeon at Bongeunsa.jpg",
+    "author": "Ethan Doyle White",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Daewoongjeon_at_Bongeunsa.jpg"
+  },
+  "bongeunsa-4": {
+    "title": "File:Lanternes temple.jpg (Lanterns at Bongeunsa)",
+    "author": "Solène Huille",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lanternes_temple.jpg"
+  },
+  "bongeunsa-5": {
+    "title": "File:Samseong-dong skyline from Bongeunsa 2.jpg",
+    "author": "S h y numis",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Samseong-dong_skyline_from_Bongeunsa_2.jpg"
+  },
+  "bongeunsa-6": {
+    "title": "File:Korea-Seoul-Bongeunsa-12.jpg",
+    "author": "Gaël Chardon",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Bongeunsa-12.jpg"
+  },
+
+  "jogyesa-2": {
+    "title": "File:Korea-Seoul-Jogyesa Main Hall Buddha Triad 0158-07.JPG",
+    "author": "Steve46814",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Jogyesa_Main_Hall_Buddha_Triad_0158-07.JPG"
+  },
+  "jogyesa-3": {
+    "title": "File:Lotus Lantern Festival at Jogyesa, Seoul.jpg",
+    "author": "Ken Eckert",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lotus_Lantern_Festival_at_Jogyesa,_Seoul.jpg"
+  },
+  "jogyesa-4": {
+    "title": "File:Korea-Seoul-Jogyesa Lacebark Pine Tree 2209-06.JPG",
+    "author": "Steve46814",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Seoul-Jogyesa_Lacebark_Pine_Tree_2209-06.JPG"
+  },
+  "jogyesa-5": {
+    "title": "File:The lantern with the people's wishes in Jogyesa.jpg",
+    "author": "Irma2403",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_lantern_with_the_people%27s_wishes_in_Jogyesa.jpg"
+  },
+  "jogyesa-6": {
+    "title": "File:Dharma Ceremony 2017 01 (34288276811).jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Dharma_Ceremony_2017_01_(34288276811).jpg"
+  },
+
+  "haeinsa-2": {
+    "title": "File:20170812.해인사 장경판전(Haeinsa Janggyeong Panjeon).01.jpg",
+    "author": "SpongeFan0304",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:20170812.%ED%95%B4%EC%9D%B8%EC%82%AC_%EC%9E%A5%EA%B2%BD%ED%8C%90%EC%A0%84(Haeinsa_Janggyeong_Panjeon).01.jpg"
+  },
+  "haeinsa-3": {
+    "title": "File:Tripitaka Koreana.jpg",
+    "author": "Arian Zwegers",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tripitaka_Koreana.jpg"
+  },
+  "haeinsa-4": {
+    "title": "File:Haeinsa in Fall.jpg",
+    "author": "Lcarrion88",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Haeinsa_in_Fall.jpg"
+  },
+  "haeinsa-5": {
+    "title": "File:2018-07-09 belfry of Haeinsa.jpg",
+    "author": "xiquinhosilva",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018-07-09_belfry_of_Haeinsa.jpg"
+  },
+  "haeinsa-6": {
+    "title": "File:일주문 3.jpg (Iljumun gate at Haeinsa)",
+    "author": "KTO / UNESCO Korea Committee",
+    "license": "KOGL Type 1",
+    "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+    "source": "https://commons.wikimedia.org/wiki/File:%EC%9D%BC%EC%A3%BC%EB%AC%B8_3.jpg"
+  },
+
+  "meditation-2": {
+    "title": "File:Interior view of Beomeosa temple with two Buddhist monks in Busan South Korea.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Interior_view_of_Beomeosa_temple_with_two_Buddhist_monks_in_Busan_South_Korea.jpg"
+  },
+  "meditation-3": {
+    "title": "File:Korea-Andong-Bongjeongsa-Monk hitting the bell-01.jpg",
+    "author": "Robert (Picasa)",
+    "license": "CC BY 3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea-Andong-Bongjeongsa-Monk_hitting_the_bell-01.jpg"
+  },
+  "meditation-4": {
+    "title": "File:Unmun-Tempel-Korea-nuns.jpg",
+    "author": "Wolfgang Michel",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Unmun-Tempel-Korea-nuns.jpg"
+  },
+  "meditation-5": {
+    "title": "File:108배를 하고있는 템플스테이 참가자들.jpg (Templestay 108 prostrations)",
+    "author": "Templestay PR Team",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:108%EB%B0%B0%EB%A5%BC_%ED%95%98%EA%B3%A0%EC%9E%88%EB%8A%94_%ED%85%9C%ED%94%8C%EC%8A%A4%ED%85%8C%EC%9D%B4_%EC%B0%B8%EA%B0%80%EC%9E%90%EB%93%A4.jpg"
+  },
+  "meditation-6": {
+    "title": "File:수덕사 108배.jpg (Hands with prayer beads at Sudeoksa)",
+    "author": "Templestay PR Team",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%EC%88%98%EB%8D%95%EC%82%AC_108%EB%B0%B0.jpg"
+  },
+
+  "tea-2": {
+    "title": "File:Korean tea ceremony-Darye-01.jpg",
+    "author": "hojusaram",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_tea_ceremony-Darye-01.jpg"
+  },
+  "tea-3": {
+    "title": "File:Korean tea ceremony, 2012.jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_tea_ceremony,_2012.jpg"
+  },
+  "tea-4": {
+    "title": "File:Boseong Green Tea Field in summer 2017.jpg",
+    "author": "S Shamima Nasrin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Boseong_Green_Tea_Field_in_summer_2017.jpg"
+  },
+  "tea-5": {
+    "title": "File:Pastries served at a Korean tea ceremony.jpg",
+    "author": "Jens Ohlig",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Pastries_served_at_a_Korean_tea_ceremony.jpg"
+  },
+  "tea-6": {
+    "title": "File:Lightmatter korean tea ceremonytable.jpg",
+    "author": "Aaron Logan",
+    "license": "CC BY 1.0",
+    "license_url": "https://creativecommons.org/licenses/by/1.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lightmatter_korean_tea_ceremonytable.jpg"
+  },
+
+  "calligraphy-2": {
+    "title": "File:Inkstone and brush - 硯と筆 - Flickr.jpg",
+    "author": "Kanko (Nagasaki)",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Inkstone_and_brush_-_%E7%A1%AF%E3%81%A8%E7%AD%86_-_Flickr.jpg"
+  },
+  "calligraphy-3": {
+    "title": "File:Festival des Handwerks, Kalligraphie Schreiben, 2024 Budapest.jpg",
+    "author": "Globetrotter19",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Festival_des_Handwerks,_Kalligraphie_Schreiben,_2024_Budapest.jpg"
+  },
+  "calligraphy-4": {
+    "title": "File:Seoul-Insadong-A calligraphy shop-01.jpg",
+    "author": "Gaël Chardon",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul-Insadong-A_calligraphy_shop-01.jpg"
+  },
+  "calligraphy-5": {
+    "title": "File:Korean calligraphy-Hangul-01.jpg",
+    "author": "Samuraijohnny",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_calligraphy-Hangul-01.jpg"
+  },
+  "calligraphy-6": {
+    "title": "File:Chusa-Silsa gusijang.jpg (Joseon masterwork by Kim Chŏnghŭi)",
+    "author": "Kim Chŏnghŭi (1786-1856)",
+    "license": "Public Domain",
+    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Chusa-Silsa_gusijang.jpg"
+  },
+
+  "hanbok-2": {
+    "title": "File:Gyeongbokgung Hanbok 01 (32928645842).jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gyeongbokgung_Hanbok_01_(32928645842).jpg"
+  },
+  "hanbok-3": {
+    "title": "File:Couple in Hanbok.jpg",
+    "author": "Jordi Sanchez (sunnex)",
+    "license": "CC BY-SA 2.5",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Couple_in_Hanbok.jpg"
+  },
+  "hanbok-4": {
+    "title": "File:Seoul-Gyeongbokgung-Chinjamrye-01.jpg",
+    "author": "ddol-mang",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul-Gyeongbokgung-Chinjamrye-01.jpg"
+  },
+  "hanbok-5": {
+    "title": "File:Seoul-Gyeongbokgung-Chinjamrye-10.jpg",
+    "author": "ddol-mang",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul-Gyeongbokgung-Chinjamrye-10.jpg"
+  },
+  "hanbok-6": {
+    "title": "File:Samjak Norigae.jpg (traditional hanbok ornament)",
+    "author": "Mar del Este (박정욱)",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Samjak_Norigae.jpg"
+  },
+
+  "royalcuisine-2": {
+    "title": "File:Sinseollo 2.jpg (Korean royal hot pot)",
+    "author": "wizdata (freeqration.com)",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Sinseollo_2.jpg"
+  },
+  "royalcuisine-3": {
+    "title": "File:Cooking for Gujeolpan(Platter of Nine Delicacies) 2.jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cooking_for_Gujeolpan(Platter_of_Nine_Delicacies)_2.jpg"
+  },
+  "royalcuisine-4": {
+    "title": "File:KOCIS Korea Royal Cuisine Festival 14 (10110865273).jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:KOCIS_Korea_Royal_Cuisine_Festival_14_(10110865273).jpg"
+  },
+  "royalcuisine-5": {
+    "title": "File:Yakgwa.jpg (Korean royal honey cookies)",
+    "author": "Lawren00",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yakgwa.jpg"
+  },
+  "royalcuisine-6": {
+    "title": "File:Korean cuisine-Domimyeon-stuffed sea bream casserole with vegetables and vermicelli-01.jpg",
+    "author": "Camemberu (Catherine Ling)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_cuisine-Domimyeon-stuffed_sea_bream_casserole_with_vegetables_and_vermicelli-01.jpg"
+  },
+
+  "nationalmuseum-2": {
+    "title": "File:KOCIS Korea National Museum Snowfall 04 (11580580383).jpg",
+    "author": "Jeon Han / Korea.net (KOCIS)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:KOCIS_Korea_National_Museum_Snowfall_04_(11580580383).jpg"
+  },
+  "nationalmuseum-3": {
+    "title": "File:Entrance Hall at the National Museum of Korea.jpg",
+    "author": "Ethan Doyle White",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Entrance_Hall_at_the_National_Museum_of_Korea.jpg"
+  },
+  "nationalmuseum-4": {
+    "title": "File:Royal Crown of Silla from Geumnyeongchong Tomb.jpg",
+    "author": "National Museum of Korea (국립중앙박물관)",
+    "license": "KOGL Type 1",
+    "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+    "source": "https://commons.wikimedia.org/wiki/File:Royal_Crown_of_Silla_from_Geumnyeongchong_Tomb.jpg"
+  },
+  "nationalmuseum-5": {
+    "title": "File:Gilt-bronze Maitreya in Meditation (National Treasure No. 83) 02.jpg (Bangasayusang)",
+    "author": "angkor22 (Flickr)",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Gilt-bronze_Maitreya_in_Meditation_(National_Treasure_No._83)_%EA%B8%88%EB%8F%99%EB%AF%B8%EB%A5%B5%EB%B3%B4%EC%82%B4%EB%B0%98%EA%B0%80%EC%82%AC%EC%9C%A0%EC%83%81_(%EA%B5%AD%EB%B3%B4_%EC%A0%9C83%ED%98%B8)_02.jpg"
+  },
+  "nationalmuseum-6": {
+    "title": "File:Korea - Seoul - National Museum - Incense Burner 0252-06a.jpg (Goryeo celadon, National Treasure #95)",
+    "author": "Steve46814",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea_-_Seoul_-_National_Museum_-_Incense_Burner_0252-06a.jpg"
+  },
+
+  "warmemorial-2": {
+    "title": "File:F-86D Sabre War Memorial of Korea.jpg",
+    "author": "Balon Greyjoy (Will Schlitzer)",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:F-86D_Sabre_War_Memorial_of_Korea.jpg"
+  },
+  "warmemorial-3": {
+    "title": "File:Korean War Monument, War Memorial of Korea, Seoul - 48660070113.jpg",
+    "author": "Matt Kieffer",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_War_Monument,_War_Memorial_of_Korea,_Seoul_-_48660070113.jpg"
+  },
+  "warmemorial-4": {
+    "title": "File:Statue of Brothers, War Memorial of Korea (1) (39323291750).jpg",
+    "author": "Richard Mortel",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Statue_of_Brothers,_War_Memorial_of_Korea_(1)_(39323291750).jpg"
+  },
+  "warmemorial-5": {
+    "title": "File:Main hall of the War Memorial of Korea.jpg",
+    "author": "Christophe95",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Main_hall_of_the_War_Memorial_of_Korea.jpg"
+  },
+  "warmemorial-6": {
+    "title": "File:MiG-19 Farmer War Memorial of Korea.jpg",
+    "author": "Balon Greyjoy (Will Schlitzer)",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:MiG-19_Farmer_War_Memorial_of_Korea.jpg"
+  },
+
+  "cheonggye-2": {
+    "title": "File:Cheonggyecheon stream with flowers and bridge at sunrise near Cheonggye Plaza in Seoul.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cheonggyecheon_stream_with_flowers_and_bridge_at_sunrise_near_Cheonggye_Plaza_in_Seoul.jpg"
+  },
+  "cheonggye-3": {
+    "title": "File:Cheonggyecheon evening 2.jpg",
+    "author": "Kallerna",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cheonggyecheon_evening_2.jpg"
+  },
+  "cheonggye-4": {
+    "title": "File:Seoul Lantern Festival 2012.jpg",
+    "author": "Bohyunlee",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul_Lantern_Festival_2012.jpg"
+  },
+  "cheonggye-5": {
+    "title": "File:광통교 (2015).jpg (Gwangtonggyo Bridge)",
+    "author": "Cultural Heritage Administration of Korea",
+    "license": "KOGL Type 1",
+    "license_url": "https://www.kogl.or.kr/info/licenseType1.do",
+    "source": "https://commons.wikimedia.org/wiki/File:%EA%B4%91%ED%86%B5%EA%B5%90_(2015).jpg"
+  },
+  "cheonggye-6": {
+    "title": "File:Seoul-Cheonggyecheon-04.jpg (stream-level path with stepping stones)",
+    "author": "w00kie (Flickr)",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Seoul-Cheonggyecheon-04.jpg"
+  }
+}

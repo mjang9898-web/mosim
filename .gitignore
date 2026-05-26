@@ -26,13 +26,21 @@ package-lock.json.bak
 .vercel
 .vercel-build-output/
 
-# ── Build / cache (none today, but reserve) ──────
+# ── Build / cache ────────────────────────────────
 dist/
 build/
 .cache/
 .next/
 .turbo/
 .parcel-cache/
+
+# Built JS artifacts from /js/*.jsx (regenerate with `npm run build`)
+/js/step1-trip-shared.js
+/js/step1-trip-v1.js
+/js/step2-medical.js
+/js/step3-culture.js
+/js/step4-cuisine.js
+/js/*.js.map
 
 # ── Local dev artifacts ──────────────────────────
 *.log

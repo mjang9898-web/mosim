@@ -113,17 +113,17 @@ function MedIcon({ code }) {
 // Order: Checkup · Eye · Dental · Plastic · Dermatology · Orthopedic · Hanbang · Hair loss · IV · Other (aesthetic, stem cell)
 // Footer now shows average duration instead of clinic name.
 const MEDICAL = [
-  { code: 'checkup',   mono: 'I',    eyebrow: '01 / Screening',     name: 'Executive health screening',  desc: 'Comprehensive 4–8h panel — cancer markers, MRI/CT, cardiac, endoscopy.',   price: 'From $850',  duration: '4–8 hours' },
-  { code: 'eye',       mono: 'II',   eyebrow: '02 / Vision',        name: 'Ophthalmology · LASIK',       desc: 'Korea-pioneered SMILE & LASEK, cataract, dry-eye care.',                  price: 'From $1,600', duration: '1–2 hours' },
-  { code: 'dental',    mono: 'III',  eyebrow: '03 / Dental',        name: 'Dental',                      desc: 'Implants, crowns, scaling, whitening, root canal, orthodontics.',         price: 'From $220',  duration: '1–3 visits' },
-  { code: 'plastic',   mono: 'IV',   eyebrow: '04 / Surgery',       name: 'Plastic surgery',             desc: 'Cosmetic & reconstructive procedures with concierge recovery suite.',     price: 'From $3,500', duration: '2–7 days recovery' },
-  { code: 'derm',      mono: 'V',    eyebrow: '05 / Dermatology',   name: 'Dermatology',                 desc: 'Medical skin care — laser, anti-aging, pigmentation, K-beauty consult.',  price: 'From $200',  duration: '30–60 min' },
-  { code: 'ortho',     mono: 'VI',   eyebrow: '06 / Orthopedic',    name: 'Orthopedic & joint',          desc: 'Stem-cell knee, PRP, joint injection, MRI-guided diagnosis.',             price: 'From $500',  duration: '1–2 hours' },
-  { code: 'hanbang',   mono: 'VII',  eyebrow: '07 / Hanbang',       name: 'Korean traditional medicine', desc: 'Pulse diagnosis, acupuncture, herbal regimen, cupping — Heo Jun lineage.', price: 'From $90',  duration: 'Half day' },
-  { code: 'hair',      mono: 'VIII', eyebrow: '08 / Hair',          name: 'Hair restoration',            desc: 'FUE transplants, PRP, scalp therapy, low-level laser.',                   price: 'From $4,200', duration: '6–8 hours' },
-  { code: 'iv',        mono: 'IX',   eyebrow: '09 / Infusion',      name: 'IV nutrient therapy',         desc: 'Glutathione, NAD+, vitamin C, Myers cocktail — concierge-delivered.',     price: 'From $180',  duration: '30–60 min' },
-  { code: 'aesthetic', mono: 'X',    eyebrow: '10 / Aesthetic',     name: 'Aesthetic medicine',          desc: 'Non-surgical injectables — Botox, fillers, threads, skin boosters.',      price: 'From $300',  duration: '30–60 min' },
-  { code: 'stemcell',  mono: 'XI',   eyebrow: '11 / Regenerative',  name: 'Stem cell & regenerative',    desc: 'Mesenchymal, NK-cell, exosomes, anti-aging infusion protocols.',          price: 'From $2,800', duration: 'Half day' },
+  { code: 'checkup',   mono: 'I',    eyebrow: '01 / Screening',     name: 'Executive health screening',  desc: 'Comprehensive 4–8h panel — cancer markers, MRI/CT, cardiac, endoscopy.',   price: 'From $850',  duration: '4–8 hours',           image: '/assets/medical/medical-banner-58cbc748.webp' },
+  { code: 'eye',       mono: 'II',   eyebrow: '02 / Vision',        name: 'Ophthalmology · LASIK',       desc: 'Korea-pioneered SMILE & LASEK, cataract, dry-eye care.',                  price: 'From $1,600', duration: '1–2 hours',           image: '/assets/medical/medical-banner-968dc090.webp' },
+  { code: 'dental',    mono: 'III',  eyebrow: '03 / Dental',        name: 'Dental',                      desc: 'Implants, crowns, scaling, whitening, root canal, orthodontics.',         price: 'From $220',  duration: '1–3 visits',          image: '/assets/medical/medical-banner-d3e277e3.webp' },
+  { code: 'plastic',   mono: 'IV',   eyebrow: '04 / Surgery',       name: 'Plastic surgery',             desc: 'Cosmetic & reconstructive procedures with concierge recovery suite.',     price: 'From $3,500', duration: '2–7 days recovery',   image: '/assets/medical/medical-gemini-g3zmjr.webp' },
+  { code: 'derm',      mono: 'V',    eyebrow: '05 / Dermatology',   name: 'Dermatology',                 desc: 'Medical skin care — laser, anti-aging, pigmentation, K-beauty consult.',  price: 'From $200',  duration: '30–60 min',           image: '/assets/medical/medical-chatgpt-092412.webp' },
+  { code: 'ortho',     mono: 'VI',   eyebrow: '06 / Orthopedic',    name: 'Orthopedic & joint',          desc: 'Stem-cell knee, PRP, joint injection, MRI-guided diagnosis.',             price: 'From $500',  duration: '1–2 hours',           image: '/assets/medical/medical-chatgpt-100205.webp' },
+  { code: 'hanbang',   mono: 'VII',  eyebrow: '07 / Hanbang',       name: 'Korean traditional medicine', desc: 'Pulse diagnosis, acupuncture, herbal regimen, cupping — Heo Jun lineage.', price: 'From $90',  duration: 'Half day',            image: '/assets/medical/medical-gemini-uycgpl.webp' },
+  { code: 'hair',      mono: 'VIII', eyebrow: '08 / Hair',          name: 'Hair restoration',            desc: 'FUE transplants, PRP, scalp therapy, low-level laser.',                   price: 'From $4,200', duration: '6–8 hours',           image: '/assets/medical/medical-chatgpt-095746.webp' },
+  { code: 'iv',        mono: 'IX',   eyebrow: '09 / Infusion',      name: 'IV nutrient therapy',         desc: 'Glutathione, NAD+, vitamin C, Myers cocktail — concierge-delivered.',     price: 'From $180',  duration: '30–60 min',           image: '/assets/medical/medical-istock-665515600.webp' },
+  { code: 'aesthetic', mono: 'X',    eyebrow: '10 / Aesthetic',     name: 'Aesthetic medicine',          desc: 'Non-surgical injectables — Botox, fillers, threads, skin boosters.',      price: 'From $300',  duration: '30–60 min',           image: '/assets/medical/medical-chatgpt-092118.webp' },
+  { code: 'stemcell',  mono: 'XI',   eyebrow: '11 / Regenerative',  name: 'Stem cell & regenerative',    desc: 'Mesenchymal, NK-cell, exosomes, anti-aging infusion protocols.',          price: 'From $2,800', duration: 'Half day',            image: '/assets/medical/medical-istock-1326646524.webp' },
 ];
 
 function Step2Medical() {
@@ -199,8 +199,11 @@ function Step2Medical() {
                        className={'kw-med ' + (sel ? 'is-selected' : '')}
                        style={{ cursor: 'pointer' }}
                        onClick={function () { toggle(m.code); }}>
-                    <div className={'kw-med-photo kw-photo-' + m.code}>
-                      <span className="kw-med-monogram">{m.mono}</span>
+                    <div
+                      className={'kw-med-photo kw-photo-' + m.code + (m.image ? ' has-image' : '')}
+                      style={m.image ? { backgroundImage: "url('" + m.image.replace(/\/([^/]+\.webp)$/, '/thumbs/$1') + "')" } : undefined}
+                    >
+                      {!m.image && <span className="kw-med-monogram">{m.mono}</span>}
                     </div>
                     <span className="kw-med-view">View details →</span>
                     <div className="kw-med-body">

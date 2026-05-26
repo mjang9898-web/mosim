@@ -425,6 +425,8 @@
     position: relative;
     aspect-ratio: 4 / 3;
     background: linear-gradient(135deg, var(--photo-a, #e8e8ed) 0%, var(--photo-b, #c5c5cc) 60%, var(--photo-c, #a5a5ac) 100%);
+    background-size: cover;
+    background-position: center;
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
@@ -444,6 +446,15 @@
     border: 1px solid rgba(255,255,255,.18);
     border-radius: 8px;
     pointer-events: none;
+  }
+  /* When a real photo is loaded, soften the radial overlay so the image
+     reads cleanly while preserving the same printed-photo edge.        */
+  .kw-med-photo.has-image::before {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 40%, rgba(0,0,0,.18) 100%);
+  }
+  .kw-med-photo.has-image::after {
+    border-color: rgba(255,255,255,.28);
   }
 
   /* Centered monogram — elegant serif initial, low opacity */
@@ -855,29 +866,27 @@
 </head>
 <body>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
-        integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+        integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
         crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
-        integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+        integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
         crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
-        integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
-        crossorigin="anonymous"></script>
-
 <div id="root"></div>
 
 <!-- shared components (BrandNav, StepBar, SectionEyebrow) reused from Step 1 -->
-<script type="text/babel" src="js/step1-trip-shared.jsx"></script>
-<script type="text/babel" src="js/step2-medical.jsx"></script>
+<script src="js/step1-trip-shared.js" defer></script>
+<script src="js/step2-medical.js" defer></script>
 
 <!-- State store (the Step2Medical component handles its own chart + navigation) -->
 <script src="js/state.js"></script>
 
-<script type="text/babel" data-presets="react">
-  // Step2Medical is fully interactive — it owns the chart state and
-  // its Continue/Back navigation. No overlay needed.
-  ReactDOM.createRoot(document.getElementById('root')).render(<Step2Medical />);
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    // Step2Medical is fully interactive — it owns the chart state and
+      // its Continue/Back navigation. No overlay needed.
+      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Step2Medical));
+  });
 </script>
 
 </body>

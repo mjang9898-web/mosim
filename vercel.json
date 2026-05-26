@@ -1,14 +1,8 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "buildCommand": "npm run build",
   "headers": [
-    {
-      "source": "/js/(.*).jsx",
-      "headers": [
-        { "key": "Content-Type", "value": "text/babel; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=300" }
-      ]
-    },
     {
       "source": "/js/(.*).js",
       "headers": [

@@ -320,6 +320,8 @@
     position: relative;
     aspect-ratio: 4 / 3;
     background: linear-gradient(135deg, var(--photo-a, #e8e8ed) 0%, var(--photo-b, #c5c5cc) 60%, var(--photo-c, #a5a5ac) 100%);
+    background-size: cover;
+    background-position: center;
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
@@ -335,6 +337,15 @@
     border: 1px solid rgba(255,255,255,.16);
     border-radius: 6px;
     pointer-events: none;
+  }
+  /* When a real photo is loaded, lighten the radial gradient so the image shows through
+     while keeping the inner border accent for visual consistency with placeholder cards. */
+  .kw-cul-photo.has-image::before {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 40%, rgba(0,0,0,.18) 100%);
+  }
+  .kw-cul-photo.has-image::after {
+    border-color: rgba(255,255,255,.28);
   }
   .kw-cul-monogram {
     position: relative; z-index: 1;
@@ -629,6 +640,8 @@
     position: relative;
     aspect-ratio: 5 / 3;
     background: linear-gradient(135deg, var(--photo-a) 0%, var(--photo-b) 60%, var(--photo-c) 100%);
+    background-size: cover;
+    background-position: center;
     overflow: hidden;
     display: flex; align-items: center; padding: 0 24px;
     color: var(--photo-fg);
@@ -645,6 +658,18 @@
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 8px;
     pointer-events: none;
+  }
+  /* When a real photo is loaded, swap the bright gradient overlay for a darker one
+     so the region tag stays legible on top of the image. */
+  .kw-city-photo.has-image {
+    color: #fff;
+  }
+  .kw-city-photo.has-image::before {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 40%, rgba(0,0,0,.42) 100%);
+  }
+  .kw-city-photo.has-image::after {
+    border-color: rgba(255,255,255,.32);
   }
   .kw-city-monogram {
     position: relative; z-index: 1;
@@ -732,6 +757,246 @@
   .kw-pkg-classic   { --photo-a:#f0e5d0; --photo-b:#c4a16b; --photo-c:#7a4a2a; --photo-fg:#2a1a0a; }
   .kw-pkg-kwave     { --photo-a:#e8d4e6; --photo-b:#b87cc4; --photo-c:#5a1a78; --photo-fg:#2a0a3e; }
   .kw-pkg-quiet     { --photo-a:#d2dcc4; --photo-b:#7a8e62; --photo-c:#3a4628; --photo-fg:#1a2410; }
+
+  /* Package card foot — replaces the button with a CTA link (clicking the
+     card itself opens the detail drawer). */
+  .kw-pkg-cta-link {
+    font-size: 13px; font-weight: 700;
+    color: var(--kw-accent);
+    white-space: nowrap;
+    letter-spacing: -0.005em;
+  }
+  .kw-pkg:hover .kw-pkg-cta-link { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Package detail drawer — hero block + "What's inside" experiences grid */
+  .kw-pkg-detail-hero {
+    margin-bottom: 40px;
+  }
+  .kw-pkg-detail-hero .kw-detail-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+  }
+  .kw-pkg-detail-hero .kw-detail-tagline {
+    font-size: 19px; line-height: 1.55;
+    color: var(--kw-ink-2);
+    max-width: 70ch;
+  }
+
+  /* Trip itinerary — two rows of 5 days connected by a meandering pink road.
+     Row 1: chips on top, stops below. Row 2: stops above, chips on bottom
+     (column-reverse). A right-edge U-curve joins the two chip rails so the
+     trip reads Day 1 (top-left) → Day 5 (top-right) → U → Day 6 (bot-right)
+     → Day 10 (bot-left). */
+  .kw-itin {
+    position: relative;
+    display: flex; flex-direction: column;
+    gap: 36px;
+    padding: 8px 40px 8px 0;   /* right gutter holds the U-curve */
+  }
+  /* Right-edge U-curve connecting row 1 chip rail (top) to row 2 chip rail
+     (bottom). Built from three borders + elliptical radii so it stays crisp
+     at any width and follows the actual chip Y positions exactly. */
+  .kw-itin::after {
+    content: "";
+    position: absolute;
+    right: 4px;
+    top: 30px;       /* row 1 chip vertical centre (8 padding + 22 chip half) */
+    bottom: 30px;    /* row 2 chip vertical centre from bottom */
+    width: 36px;
+    border-top:    4px solid rgba(178,20,100,.55);
+    border-right:  4px solid rgba(178,20,100,.55);
+    border-bottom: 4px solid rgba(178,20,100,.55);
+    border-left: none;
+    border-radius: 0 50% 50% 0 / 0 50% 50% 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .kw-itin-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  /* Each row carries its own horizontal pink rail through the chip centre. */
+  .kw-itin-row::before {
+    content: "";
+    position: absolute;
+    left: 6%; right: -4px;        /* extends to the U-curve start on the right */
+    height: 4px;
+    background: linear-gradient(90deg,
+      rgba(178,20,100,.0)  0%,
+      rgba(178,20,100,.55) 12%,
+      rgba(178,20,100,.55) 100%);
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .kw-itin-row:first-of-type::before    { top: 22px; }     /* chip centre at row top */
+  .kw-itin-row.kw-itin-row-rev::before  { bottom: 22px; }   /* chip centre at row bottom */
+  /* Row 2 flips the rail gradient so the colour deepest is on the LEFT
+     (where Day 10 sits) — the road fades into the trip's start/end. */
+  .kw-itin-row.kw-itin-row-rev::before {
+    background: linear-gradient(90deg,
+      rgba(178,20,100,.0)  0%,
+      rgba(178,20,100,.55) 12%,
+      rgba(178,20,100,.55) 100%);
+  }
+  .kw-itin-day {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+  }
+  /* Row 2 days: stops above, chip below */
+  .kw-itin-row-rev .kw-itin-day {
+    flex-direction: column-reverse;
+  }
+  .kw-itin-row-rev .kw-itin-stops {
+    padding-top: 0;
+    padding-bottom: 18px;
+  }
+  .kw-itin-day-chip {
+    z-index: 1;
+    align-self: center;
+    height: 44px;
+    min-width: 86px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--kw-accent);
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 14px; letter-spacing: .08em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 14px -4px rgba(178,20,100,.45),
+                0 1px 0 rgba(255,255,255,.4) inset;
+  }
+  .kw-itin-stops {
+    list-style: none; margin: 0; padding: 18px 0 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .kw-itin-stop {
+    background: #fff;
+    border: 1px solid var(--kw-rule);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex; align-items: flex-start; gap: 10px;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+  }
+  .kw-itin-stop:hover {
+    border-color: rgba(0,0,0,.12);
+    box-shadow: 0 4px 14px -6px rgba(0,0,0,.12);
+    transform: translateY(-1px);
+  }
+  .kw-itin-stop-marker {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .kw-itin-stop-text {
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 0;
+  }
+  .kw-itin-stop-name {
+    font-size: 13px; font-weight: 700;
+    color: var(--kw-ink);
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+  }
+  .kw-itin-stop-detail {
+    font-size: 10px; font-weight: 600;
+    color: var(--kw-ink-3);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* Marker palettes by stop kind */
+  .kw-itin-stop-arrival .kw-itin-stop-marker,
+  .kw-itin-stop-departure .kw-itin-stop-marker {
+    background: var(--kw-ink);
+    color: #fff;
+    transform: rotate(-30deg);
+  }
+  .kw-itin-stop-departure .kw-itin-stop-marker {
+    transform: rotate(30deg);
+  }
+  .kw-itin-stop-medical .kw-itin-stop-marker {
+    background: var(--kw-accent-soft);
+    color: var(--kw-accent);
+    font-size: 14px;
+  }
+  .kw-itin-stop-culture .kw-itin-stop-marker {
+    background: var(--kw-bg-warm);
+    color: var(--kw-gold);
+    font-size: 8px;
+  }
+  /* Bookend stops get a subtle highlight so the arrival/departure stand out */
+  .kw-itin-stop-arrival,
+  .kw-itin-stop-departure {
+    border-color: var(--kw-ink-3);
+    background: var(--kw-bg-soft);
+  }
+  .kw-itin-stop-medical {
+    border-color: var(--kw-accent);
+    background: rgba(178,20,100,.04);
+  }
+
+  .kw-itin-foot {
+    margin: 18px 0 0;
+    padding: 12px 16px;
+    background: var(--kw-bg-warm);
+    border-radius: 12px;
+    box-shadow: inset 4px 0 0 var(--kw-accent);
+    font-size: 13px; font-weight: 500;
+    color: var(--kw-ink-2); line-height: 1.45;
+  }
+
+  /* On narrow drawers / mobile, the meander unrolls into a single vertical
+     timeline. Both rows stack, chips align to the left, a single vertical
+     pink rail runs through them. */
+  @media (max-width: 980px) {
+    .kw-itin { padding: 0; gap: 18px; }
+    .kw-itin::after { display: none; }                       /* hide the U-curve */
+    .kw-itin-row::before { display: none; }                  /* hide horizontal rails */
+    .kw-itin-row,
+    .kw-itin-row-rev {
+      grid-template-columns: 1fr;
+    }
+    .kw-itin-row-rev .kw-itin-day {
+      flex-direction: column;                                /* unflip — chip back on top */
+    }
+    .kw-itin-row-rev .kw-itin-stops {
+      padding-top: 18px; padding-bottom: 0;
+    }
+    /* A single vertical rail behind everything */
+    .kw-itin::before {
+      content: "";
+      position: absolute;
+      top: 8%; bottom: 8%;
+      left: 22px;
+      width: 4px;
+      background: linear-gradient(180deg,
+        rgba(178,20,100,.0)  0%,
+        rgba(178,20,100,.4)  12%,
+        rgba(178,20,100,.55) 50%,
+        rgba(178,20,100,.4)  88%,
+        rgba(178,20,100,.0)  100%);
+      pointer-events: none;
+    }
+    .kw-itin-day { padding-left: 64px; }
+    .kw-itin-day-chip {
+      position: absolute; left: 0; top: 0;
+      align-self: auto;
+    }
+    .kw-itin-stops { padding-top: 0; }
+  }
 
   /* "Or browse individually" divider */
   .kw-or-divider {
@@ -910,32 +1175,238 @@
     transition: background .15s;
   }
   .kw-basket-add:hover .kw-basket-add-icon { background: var(--kw-accent); }
+
+  /* ─── Detail drawer (opens when you click a culture card) ───────── */
+  @keyframes kw-scrim-in   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes kw-drawer-in  { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+  .kw-drawer-scrim {
+    position: fixed; inset: 0;
+    background: rgba(15, 14, 18, .42);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 90;
+    animation: kw-scrim-in .22s ease-out both;
+  }
+  .kw-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 88vw; max-width: 1180px;
+    background: #fff;
+    z-index: 100;
+    display: flex; flex-direction: column;
+    box-shadow: -24px 0 60px rgba(0,0,0,.14);
+    animation: kw-drawer-in .28s cubic-bezier(.22,.61,.36,1) both;
+  }
+  .kw-drawer-top {
+    flex: none; height: 64px; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--kw-rule);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .kw-drawer-crumb {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--kw-ink-3);
+  }
+  .kw-drawer-crumb a {
+    color: var(--kw-ink-2); text-decoration: none;
+    font-weight: 600; transition: color .15s;
+  }
+  .kw-drawer-crumb a:hover { color: var(--kw-accent); }
+  .kw-drawer-crumb-sep { color: var(--kw-line); }
+  .kw-drawer-crumb-now { color: var(--kw-ink); font-weight: 600; }
+  .kw-drawer-close {
+    width: 38px; height: 38px;
+    border-radius: 50%; border: 1px solid var(--kw-line);
+    background: #fff; color: var(--kw-ink-2);
+    font-size: 22px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .kw-drawer-close:hover {
+    background: var(--kw-bg-soft);
+    border-color: var(--kw-ink-3); color: var(--kw-ink);
+  }
+  .kw-drawer-body {
+    flex: 1 1 auto; overflow-y: auto;
+    padding: 36px 44px 32px;
+  }
+  .kw-drawer-foot {
+    flex: none; padding: 18px 32px;
+    border-top: 1px solid var(--kw-rule);
+    background: rgba(255,255,255,.96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  }
+  .kw-drawer-foot-l { display: flex; flex-direction: column; gap: 4px; }
+  .kw-drawer-foot-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--kw-ink-3);
+  }
+  .kw-drawer-foot-meta {
+    font-size: 14px; color: var(--kw-ink-2); font-weight: 500;
+  }
+  .kw-drawer-foot-r {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* Detail body — hero / sections / facts / video */
+  .kw-detail-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: start;
+  }
+  .kw-detail-hero-l {
+    display: flex; flex-direction: column;
+  }
+  .kw-detail-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--kw-accent);
+    margin-bottom: 18px;
+  }
+  .kw-detail-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--kw-ink);
+    margin: 0 0 20px;
+    font-weight: 700;
+  }
+  .kw-detail-tagline {
+    font-size: 20px; line-height: 1.55;
+    color: var(--kw-ink-2);
+    font-weight: 400;
+  }
+  .kw-detail-gallery {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .kw-detail-hero-photo {
+    width: 100%; aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    background-size: cover; background-position: center;
+    background-color: var(--kw-bg-soft);
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  .kw-detail-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .kw-detail-thumb {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-size: cover; background-position: center;
+    background-color: var(--kw-bg-soft);
+    cursor: pointer; padding: 0;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .kw-detail-thumb:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,.10);
+  }
+  .kw-detail-thumb.is-active {
+    border-color: var(--kw-accent);
+    box-shadow: 0 0 0 2px rgba(178,20,100,.18), 0 3px 8px rgba(0,0,0,.10);
+  }
+
+  .kw-detail-section { margin-bottom: 40px; }
+  .kw-detail-section:last-child { margin-bottom: 8px; }
+  .kw-detail-h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--kw-ink);
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+
+  .kw-detail-facts {
+    border-top: 1px solid var(--kw-rule);
+    margin: 32px 0 0;
+  }
+  .kw-detail-fact-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    column-gap: 32px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .kw-detail-fact-row dt {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--kw-ink-3);
+    line-height: 1.4;
+    margin: 0;
+  }
+  .kw-detail-fact-row dd {
+    font-size: 15px; line-height: 1.55;
+    letter-spacing: -0.003em;
+    color: var(--kw-ink);
+    margin: 0;
+  }
+
+  .kw-detail-video {
+    position: relative;
+    width: 100%; aspect-ratio: 16 / 9;
+    border-radius: 14px; overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 18px rgba(0,0,0,.12);
+  }
+  .kw-detail-video iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
+  .kw-detail-video-caption {
+    margin-top: 10px;
+    font-size: 13px; color: var(--kw-ink-3);
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .kw-drawer { width: 100vw; }
+    .kw-drawer-top { padding: 0 20px; }
+    .kw-drawer-body { padding: 24px 20px 20px; }
+    .kw-drawer-foot { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px 20px; }
+    .kw-detail-hero { grid-template-columns: 1fr; gap: 22px; }
+    .kw-detail-title { font-size: 34px; }
+    .kw-detail-facts { grid-template-columns: 1fr; }
+    .kw-detail-facts dt { padding-bottom: 4px; border-bottom: 0; }
+    .kw-detail-facts dd { padding-top: 0; }
+  }
 </style>
 </head>
 <body>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
-        integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+        integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
         crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
-        integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+        integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
         crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
-        integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
-        crossorigin="anonymous"></script>
-
 <div id="root"></div>
 
-<script type="text/babel" src="js/step1-trip-shared.jsx"></script>
-<script type="text/babel" src="js/step3-culture.jsx?v=3"></script>
+<script src="js/step1-trip-shared.js" defer></script>
+<script src="js/step3-culture.js" defer></script>
 
 <!-- State store (the Step3Culture component handles its own basket + navigation) -->
 <script src="js/state.js"></script>
 
-<script type="text/babel" data-presets="react">
-  // Step3Culture is fully interactive — it owns the basket state and
-  // its Continue/Back navigation. No overlay needed.
-  ReactDOM.createRoot(document.getElementById('root')).render(<Step3Culture />);
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    // Step3Culture is fully interactive — it owns the basket state and
+      // its Continue/Back navigation. No overlay needed.
+      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Step3Culture));
+  });
 </script>
 
 </body>

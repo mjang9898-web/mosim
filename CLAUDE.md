@@ -49,9 +49,9 @@ mosim-site/
 
 ### 코드
 - **새 페이지 추가 금지** (PRD에 정의된 funnel 외). 추가가 필요하면 먼저 PRD 업데이트
-- JSX 파일은 브라우저에서 babel-standalone으로 트랜스파일됨 → JSX 안에서 `import`/`require` 사용 불가, 모든 컴포넌트는 전역 스코프에서 정의
+- JSX 파일은 esbuild로 사전 컴파일됨 (`npm run build`) → JSX 안에서 `import`/`require` 사용 불가, 모든 컴포넌트는 전역 스코프에서 정의 (React production CDN 사용 중, JSX는 `React.createElement`로 변환됨)
 - 상태 추가/변경 시 반드시 `js/state.js`의 `DEFAULT_STATE` 키 업데이트
-- 정적 서버만으로 동작해야 함 → 빌드 도구 도입은 별도 PR
+- 빌드 후 산출물 (`js/step*.js`)는 gitignore됨 — 소스는 `.jsx`, 배포 시 Vercel이 `npm run build`로 자동 컴파일
 
 ### 디자인
 - 본문 19px 이하 금지. 회색은 `--ink-3` 이하로 옅게 가지 않기 (design.md 참고)
@@ -64,15 +64,32 @@ mosim-site/
 
 ## 로컬에서 실행
 
+**최초 1회 (또는 git pull 후)**:
 ```bash
-cd mosim-site
+npm install
+npm run build       # JSX → JS 컴파일 (10ms)
+```
+
+**개발 서버**:
+```bash
 python3 -m http.server 8000
 # 또는
 npx http-server -p 8000
 ```
+
+**JSX 수정 중일 때** — watch 모드 권장:
+```bash
+npm run dev         # JSX 저장 시 자동 재빌드 + sourcemap
+```
+
 브라우저: http://localhost:8000
 
-빌드 단계 없음. 파일 저장하고 새로고침.
+## 빌드 파이프라인
+
+- 소스: `js/step*.jsx` (커밋됨, source of truth)
+- 산출물: `js/step*.js` (gitignore, Vercel이 배포 시 자동 생성)
+- 도구: esbuild — JSX 트랜스폼 + 미니파이 + es2020 타겟
+- 비-JSX JS 파일 (`state.js`, `nav.js`, `schedule.js` 등)은 그대로 사용
 
 ## 배포 — GitHub + Vercel + Supabase
 
