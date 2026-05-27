@@ -1089,6 +1089,95 @@
     .trust-row { grid-template-columns: repeat(2, 1fr); }
   }
 
+  /* ── FAQ ────────────────────────────────────── */
+  section.faq {
+    padding: 120px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--rule);
+  }
+  .faq-groups {
+    max-width: 880px;
+    margin: 56px auto 0;
+    display: flex; flex-direction: column;
+    gap: 48px;
+  }
+  .faq-group {
+    border-top: 1px solid var(--rule);
+    padding-top: 28px;
+  }
+  .faq-group-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .faq-group details {
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 0;
+  }
+  .faq-group details:last-of-type { border-bottom: none; }
+  .faq-group summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+    letter-spacing: -0.012em;
+    transition: color .15s;
+  }
+  .faq-group summary::-webkit-details-marker { display: none; }
+  .faq-group summary:hover { color: var(--accent); }
+  .faq-group summary::after {
+    content: "+";
+    flex: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 400;
+    line-height: 1;
+    color: var(--ink-3);
+    transition: transform .25s cubic-bezier(.2,.7,.3,1), background .15s, border-color .15s, color .15s;
+  }
+  .faq-group summary:hover::after {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .faq-group details[open] summary::after {
+    transform: rotate(45deg);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .faq-group details[open] summary { color: var(--accent); }
+  .faq-group .answer {
+    margin-top: 16px;
+    padding-right: 56px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    font-weight: 500;
+    max-width: 70ch;
+  }
+  .faq-group .answer strong { color: var(--ink); font-weight: 700; }
+
+  @media (max-width: 700px) {
+    section.faq { padding: 80px 0; }
+    .faq-group summary { font-size: 18px; }
+    .faq-group .answer { padding-right: 0; font-size: 16px; }
+  }
+
   /* ── Contact ────────────────────────────────── */
   section.contact {
     padding: 120px 0;
@@ -1880,6 +1969,118 @@
         <div class="name">Geumsunsa</div>
         <div class="sub">Temple stay</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FAQ ════════════ -->
+<section class="faq" id="faq">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="eyebrow">Honest answers</span>
+      <h2 class="h2">Questions our<br>guests usually ask.</h2>
+      <p class="lede">Short and direct — the way a good concierge would explain it over coffee.</p>
+    </div>
+
+    <div class="faq-groups">
+
+      <div class="faq-group">
+        <span class="faq-group-label">Pricing</span>
+
+        <details>
+          <summary>Are the prices I see on this site what I'll pay?</summary>
+          <p class="answer">
+            No — those are <strong>starting baselines published by our partner hospitals</strong>, the same prices a Korean patient would see. You pay each hospital directly at the time of service (most accept major credit cards and wire transfer). Our concierge fee is a separate, flat amount we'll quote once your itinerary is finalized — no commissions on procedures, no hidden markups.
+          </p>
+        </details>
+
+        <details>
+          <summary>When do I pay, and to whom?</summary>
+          <p class="answer">
+            A small refundable deposit confirms your itinerary. From there, hospitals are paid at the point of service, hotels at check-out, and our concierge fee at booking. Every line item appears on one transparent invoice before you commit — you'll never be surprised by a bill.
+          </p>
+        </details>
+      </div>
+
+      <div class="faq-group">
+        <span class="faq-group-label">Safety &amp; Trust</span>
+
+        <details>
+          <summary>Are the hospitals you partner with safe?</summary>
+          <p class="answer">
+            Yes. We only work with hospitals accredited by Korea's Ministry of Health and Welfare and the <strong>Joint Commission International (JCI)</strong> — the same global standard used by leading US hospitals. Our medical partners are tertiary academic centers like Asan Medical, Samsung Medical, Severance, Seoul St. Mary's, and Seoul National University Hospital. These are the same hospitals where Korean presidents and chaebol families receive their care.
+          </p>
+        </details>
+
+        <details>
+          <summary>Will the doctors speak English?</summary>
+          <p class="answer">
+            At every partner hospital, yes — they all staff <strong>International Medical Centers</strong> with English-speaking physicians and care coordinators. For consultations that require nuance, your dedicated K-Wellness medical concierge sits in with you to make sure nothing is lost in translation.
+          </p>
+        </details>
+
+        <details>
+          <summary>What if something goes wrong during my procedure?</summary>
+          <p class="answer">
+            Every itinerary is pre-cleared for medical fit <strong>before you fly</strong> — your health profile is reviewed by our medical team and the receiving hospital. If a complication arises during your stay, our medical concierge arranges same-day specialist care at no markup. Once you're home, your partner clinic provides a written English discharge protocol you can share with your US physician.
+          </p>
+        </details>
+      </div>
+
+      <div class="faq-group">
+        <span class="faq-group-label">Logistics</span>
+
+        <details>
+          <summary>How long should we plan to stay?</summary>
+          <p class="answer">
+            It depends on what you choose. A health screening with a cultural week runs <strong>5–7 days</strong>. Plastic surgery or stem-cell protocols benefit from <strong>10–14 days</strong> for proper recovery. We calibrate the itinerary to your specific medical schedule and never rush you through it.
+          </p>
+        </details>
+
+        <details>
+          <summary>Do we need a visa?</summary>
+          <p class="answer">
+            US citizens, no — Korea grants <strong>90 days of visa-free entry</strong>. You'll need an electronic K-ETA travel authorization, which we help you file as part of pre-trip prep. Citizens of other countries: we'll let you know during your initial consultation what your situation requires.
+          </p>
+        </details>
+
+        <details>
+          <summary>Can my spouse come along — even if they're not receiving care?</summary>
+          <p class="answer">
+            Yes — the entire funnel is <strong>designed around couples</strong>. While one of you is in clinic, your concierge has the other on a curated cultural or culinary itinerary (palaces, hanok villages, tea ceremonies, Han River cruises — your call). Recovery suites accommodate two, and many include separate sitting and sleeping rooms.
+          </p>
+        </details>
+      </div>
+
+      <div class="faq-group">
+        <span class="faq-group-label">Insurance</span>
+
+        <details>
+          <summary>Will my US insurance cover anything I do in Korea?</summary>
+          <p class="answer">
+            Usually no — most US health plans exclude elective procedures and overseas care. <strong>HSAs and high-deductible plans</strong> sometimes qualify for screening or treatment of an existing condition; we point you to a US-based medical tourism brokerage that handles policy interpretation if you'd like one. Most of our clients pay out of pocket and find that, even with our concierge fee, the total is a fraction of US pricing for the same care.
+          </p>
+        </details>
+      </div>
+
+      <div class="faq-group">
+        <span class="faq-group-label">Why Korea &amp; aftercare</span>
+
+        <details>
+          <summary>Why Korea and not Thailand, Mexico, or another medical-tourism destination?</summary>
+          <p class="answer">
+            Korea ranks <strong>#1 worldwide</strong> in plastic surgery, dental, and ophthalmology by procedure volume, and is the only OECD country to have approved commercial autologous stem-cell therapy. Care happens in tertiary academic hospitals — not stand-alone clinics. Just as importantly, Korea is genuinely worth visiting on its own: the funnel weaves your medical days into a real trip, not a clinical visit.
+          </p>
+        </details>
+
+        <details>
+          <summary>What about follow-up care once we're home?</summary>
+          <p class="answer">
+            Every partner hospital sends you home with a <strong>written English discharge plan</strong>, all imaging on a portable drive, and a direct contact for your physician. Our medical concierge stays available for <strong>30 days post-trip</strong> to coordinate questions, prescription refills, or telemedicine follow-ups with your US doctor.
+          </p>
+        </details>
+      </div>
+
     </div>
   </div>
 </section>
