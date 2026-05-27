@@ -42,14 +42,13 @@ function HanMark({ size = 32, bg = '#ffffff', fg = '#B21464' }) {
 function BrandNav({ active = 'plan' }) {
   // href:
   //   - Page-level menu items (Trip/Medical/Culture/Food&Beverage) link straight to their step page.
-  //   - The remaining items (How it works/Insurance/FAQ/About) scroll to an anchor on the landing page.
+  //   - The remaining items (How it works/FAQ/About) scroll to an anchor on the landing page.
   const items = [
     { id: 'how',       label: 'How it works',        href: 'index.html#process' },
     { id: 'trip',      label: 'Trip',                href: 'step1.html' },
     { id: 'medical',   label: 'Medical',             href: 'step2.html' },
     { id: 'culture',   label: 'Culture',             href: 'step3.html' },
     { id: 'food',      label: 'Food&Beverage',       href: 'step4.html' },
-    { id: 'insurance', label: 'Insurance Navigator', href: 'index.html#insurance' },
     { id: 'faq',       label: 'FAQ',                 href: 'index.html#faq' },
     { id: 'about',     label: 'About Us',            href: 'index.html#about' },
   ];
