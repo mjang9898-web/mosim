@@ -166,3 +166,19 @@ var s = await fetch('/.netlify/functions/schedule', { method: 'POST', body: JSON
 - **JSX는 브라우저에서 Babel Standalone으로 변환**: 첫 로드가 다소 느립니다 (각 step 페이지에서 ~1초). 프로덕션 트래픽이 늘면 빌드 단계를 추가해서 사전 트랜스파일하시는 걸 권장합니다.
 - **이미지 라이선스**: `assets/` 안의 항공사·호텔 로고는 라이선스 미확보 placeholder입니다. 정식 런칭 전 교체 필요.
 - **Korean i18n**: 결과 페이지(result.html)는 한국어, 나머지는 영어 카피입니다. 다국어가 필요하면 카피 분리 필요.
+
+## Local development with Vercel CLI
+
+The `api/*` serverless functions only work under the Vercel dev server, not under plain `python3 -m http.server`.
+
+```bash
+npm i -g vercel
+vercel link              # one-time, pick the existing project
+vercel env pull          # pulls SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY into .env.local
+npm run build            # one-time, also rerun after JSX edits unless you use `npm run dev`
+vercel dev               # http://localhost:3000
+```
+
+## Supabase setup
+
+See `supabase/SETUP.md` for the one-time configuration of Google OAuth and redirect URLs. The DDL lives in `supabase/schema.sql` and is applied via Supabase Studio's SQL Editor.

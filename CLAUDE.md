@@ -45,6 +45,8 @@ mosim-site/
 
 저장 키: `sessionStorage["kw.state.v1"]`. 스키마는 `js/state.js`의 `DEFAULT_STATE` 참고.
 
+로그인한 사용자는 result 페이지에서 "Save this itinerary" CTA로 일정을 `public.itineraries`에 영구 저장한다. My Page (`/me.html`)는 Supabase JS로 RLS-보호된 `profiles` + `itineraries`를 직접 읽고, 4개 탭(Itineraries / Status / Profile / Settings)을 렌더한다. 인증은 Supabase Auth — Google OAuth 또는 Email/Password.
+
 ## 작업 규칙
 
 ### 코드
@@ -252,7 +254,9 @@ renderSchedule(schedule);
 - [ ] `.gitignore` 확인 — `.DS_Store`, `node_modules`, `.env*` 제외
 - [ ] PRD/design.md/CLAUDE.md 최신 상태
 - [ ] Vercel 환경변수 4개(SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY, ANTHROPIC_API_KEY) 설정
-- [ ] Supabase RLS 정책 적용 (anon insert만)
+- [ ] Supabase RLS 정책 적용 (anon insert만 + profiles/itineraries own row)
+- [ ] Supabase Auth Providers — Google 활성 + Client ID/Secret 입력
+- [ ] Supabase URL Configuration — Site URL + redirect URLs (signup/signin/me/reset-password/result) 등록
 - [ ] 이미지 라이선스 placeholder 교체 (또는 임시 공지)
 
 배포 후:
