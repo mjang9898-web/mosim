@@ -728,6 +728,7 @@ buildCal(); buildSched(); updateCost(); bindHeroFromState();
 
   let t = 0;
   while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+  if (!window.kwAuth) return;
   const user = await window.kwAuth.getUser();
 
   function titleFromState(state) {

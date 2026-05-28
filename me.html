@@ -72,6 +72,7 @@
   (async function () {
     let t = 0;
     while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+    if (!window.kwAuth) { window.location.replace('/signin.html?next=me'); return; }
     const user = await window.kwAuth.getUser();
     if (!user) {
       window.location.replace('/signin.html?next=me');
@@ -94,8 +95,8 @@
   })();
 </script>
 <script src="/js/me-itineraries.js?v=d74255e1" defer></script>
-<script src="/js/me-status.js?v=e3b0c442" defer></script>
-<script src="/js/me-profile.js?v=e3b0c442" defer></script>
-<script src="/js/me-settings.js?v=e3b0c442" defer></script>
+<script src="/js/me-status.js?v=14d1942b" defer></script>
+<script src="/js/me-profile.js?v=e99311e2" defer></script>
+<script src="/js/me-settings.js?v=9e9d9a92" defer></script>
 </body>
 </html>

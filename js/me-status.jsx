@@ -5,7 +5,6 @@ const { useEffect, useState } = React;
 const STAGES = ['new', 'reviewing', 'quoted', 'booked'];
 
 function MeStatus() {
-  const [supa, setSupa] = useState(null);
   const [latest, setLatest] = useState(undefined);
   const [err, setErr] = useState(null);
 
@@ -14,7 +13,6 @@ function MeStatus() {
       let t = 0;
       while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
       const client = await window.kwAuth.init();
-      setSupa(client);
       const { data, error } = await client
         .from('itineraries')
         .select('id, title, status, created_at')

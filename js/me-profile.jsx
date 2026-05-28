@@ -17,6 +17,7 @@ function MeProfile() {
       const client = await window.kwAuth.init();
       setSupa(client);
       const u = await window.kwAuth.getUser();
+      if (!u) { setLoading(false); return; }
       setUser(u);
       const { data } = await client.from('profiles').select('*').eq('id', u.id).single();
       if (data) {

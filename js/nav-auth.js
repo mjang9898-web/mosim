@@ -13,10 +13,12 @@
     const slot = document.getElementById(SLOT_ID);
     if (!slot) return;
     if (user) {
-      const label = user.user_metadata?.name || user.email || 'My Page';
       slot.innerHTML = `<a href="/me.html" class="kw-nav-auth-link" aria-label="My Page">My Page</a>`;
     } else {
-      slot.innerHTML = `<a href="/signin.html" class="kw-nav-auth-link" aria-label="Sign in">Sign in</a>`;
+      const path = window.location.pathname;
+      const stepMatch = path.match(/\/step([1-4])\.html?$/);
+      const nextParam = stepMatch ? '?next=step' + stepMatch[1] : '';
+      slot.innerHTML = `<a href="/signin.html${nextParam}" class="kw-nav-auth-link" aria-label="Sign in">Sign in</a>`;
     }
   }
 

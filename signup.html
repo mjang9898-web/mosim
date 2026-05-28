@@ -95,6 +95,7 @@
       return '/result.html' + (save ? '?save=1' : '');
     }
     if (next === 'me') return '/me.html';
+    if (next && /^step[1-4]$/.test(next)) return '/' + next + '.html';
     return '/me.html';
   }
 
