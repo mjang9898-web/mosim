@@ -88,3 +88,8 @@ begin
   );
 end;
 $$;
+
+-- record_payment must only be callable by the service role (the serverless
+-- /api/paypal-order capture step). Supabase grants EXECUTE on public-schema
+-- functions to `public` by default, which would expose it to anon via REST RPC.
+revoke execute on function public.record_payment(text, numeric, text, text, text, text) from public, anon, authenticated;
