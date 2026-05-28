@@ -45,6 +45,13 @@
     window.paypal.Buttons({
       createOrder: async () => {
         $('msg').textContent = '';
+        const amt = parseFloat($('amount').value);
+        const max = parseFloat($('amount').max);
+        if (!amt || amt <= 0 || amt > max) {
+          $('msg').style.color = '#a00';
+          $('msg').textContent = 'Enter an amount between $0.01 and ' + fmt(max) + '.';
+          throw new Error('invalid amount');
+        }
         const r = await fetch('/api/paypal-order', {
           method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ action: 'create', token, amount: $('amount').value })
@@ -60,19 +67,29 @@
         });
         const b = await r.json();
         if (!r.ok) { $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Payment failed'; return; }
-        render({ title: $('trip').textContent.split(' · ')[0], people: 1, total: b.total, paid: b.paid, balance: b.balance, status: b.status });
+        try {
+          render(await loadSummary());            // authoritative — preserves title & people
+        } catch (_) {
+          // fall back to the totals the capture returned (people/title unchanged on screen)
+          $('total').textContent = fmt(b.total); $('paid').textContent = fmt(b.paid); $('balance').textContent = fmt(b.balance);
+          if (b.status === 'paid' || b.balance <= 0) { $('payArea').style.display = 'none'; $('paidArea').style.display = 'block'; }
+        }
         $('msg').style.color = '#0a6';
         $('msg').textContent = b.status === 'paid' ? 'Fully paid ✓ Thank you!' : 'Payment received ✓';
       },
       onError: () => { $('msg').style.color = '#a00'; $('msg').textContent = 'PayPal error — please try again.'; }
-    }).render('#paypal-buttons');
+    }).render('#paypal-buttons').catch((e) => {
+      console.error('paypal mount', e);
+      $('msg').style.color = '#a00';
+      $('msg').textContent = 'Could not load PayPal. Please reload.';
+    });
   }
 
   $('copyBtn') && $('copyBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText(location.href).then(() => {
-      $('copyBtn').textContent = 'Link copied ✓';
-      setTimeout(() => { $('copyBtn').textContent = 'Copy payment link'; }, 2000);
-    });
+    navigator.clipboard.writeText(location.href)
+      .then(() => { $('copyBtn').textContent = 'Link copied ✓'; })
+      .catch(() => { $('copyBtn').textContent = 'Copy failed — copy manually'; })
+      .finally(() => setTimeout(() => { $('copyBtn').textContent = 'Copy payment link'; }, 2000));
   });
 
   (async function init() {
