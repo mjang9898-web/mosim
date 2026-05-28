@@ -1,5 +1,6 @@
 // My Page > Itineraries — list cards, delete button, link to viewer.
 
+(function () {
 const { useEffect, useState } = React;
 
 function StatusBadge({ status }) {
@@ -104,3 +105,4 @@ if (root) {
   root.classList.remove('placeholder');
   ReactDOM.render(<MeItineraries />, root);
 }
+})();

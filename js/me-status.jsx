@@ -1,5 +1,6 @@
 // My Page > Status — timeline for the user's most recent itinerary.
 
+(function () {
 const { useEffect, useState } = React;
 
 const STAGES = ['new', 'reviewing', 'quoted', 'booked'];
@@ -79,3 +80,4 @@ if (root) {
   root.classList.remove('placeholder');
   ReactDOM.render(<MeStatus />, root);
 }
+})();

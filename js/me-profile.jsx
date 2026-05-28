@@ -1,5 +1,6 @@
 // My Page > Profile — editable form for profiles row.
 
+(function () {
 const { useEffect, useState } = React;
 
 function MeProfile() {
@@ -96,3 +97,4 @@ if (root) {
   root.classList.remove('placeholder');
   ReactDOM.render(<MeProfile />, root);
 }
+})();

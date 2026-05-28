@@ -1,6 +1,7 @@
 // My Page > Settings — notification toggle + delete account.
 
-const { useEffect, useState } = React;
+(function () {
+const { useState } = React;
 
 function MeSettings() {
   const [emailUpdates, setEmailUpdates] = useState(true);
@@ -71,3 +72,4 @@ if (root) {
   root.classList.remove('placeholder');
   ReactDOM.render(<MeSettings />, root);
 }
+})();
