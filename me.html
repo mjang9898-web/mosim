@@ -64,6 +64,8 @@
   <section id="sec-settings"><div id="me-settings-root" class="placeholder">Settings — coming next.</div></section>
 </main>
 
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script type="module" src="/js/auth.js"></script>
 <script>
   // Guard: redirect anonymous users to signin.
@@ -91,5 +93,9 @@
     document.getElementById('sec-' + tab).classList.add('active');
   })();
 </script>
+<script src="/js/me-itineraries.js?v=d74255e1" defer></script>
+<script src="/js/me-status.js?v=e3b0c442" defer></script>
+<script src="/js/me-profile.js?v=e3b0c442" defer></script>
+<script src="/js/me-settings.js?v=e3b0c442" defer></script>
 </body>
 </html>

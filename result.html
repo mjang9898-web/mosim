@@ -257,6 +257,10 @@ nav.top .right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   </div>
 </nav>
 
+<div id="kw-itin-banner" style="display:none; background:#fff8e1; border-bottom:1px solid #f0e0a0; padding:10px 20px; font-size:15px; color:#7a5b00; text-align:center;">
+  📌 Viewing a saved itinerary. <a href="/me.html?tab=itineraries" style="color:#B21464;">Back to My Page</a>
+</div>
+
 <div class="page">
 <div class="hero">
   <div class="hero-eyebrow">Your Mosim Itinerary</div>
@@ -659,6 +663,49 @@ function onModifyPlan(){
 
 /* ─── boot ─────────────────────────────────────────────────── */
 buildCal(); buildSched(); updateCost(); bindHeroFromState();
+</script>
+<script>
+// Saved-itinerary viewer: if ?itin=<id> is in URL, load it from Supabase,
+// sync its `state` into kwState so the hero re-binds to the saved values,
+// show the banner, and set document.title.
+(async function loadSavedItinerary() {
+  const params = new URLSearchParams(window.location.search);
+  const itinId = params.get('itin');
+  if (!itinId) return;
+
+  // Wait for kwAuth to be available
+  let t = 0;
+  while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+  if (!window.kwAuth) return;
+
+  const supa = await window.kwAuth.init();
+  const { data, error } = await supa
+    .from('itineraries')
+    .select('state, title')
+    .eq('id', itinId)
+    .single();
+
+  if (error || !data) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center;font-size:19px;color:#a00">Could not load this itinerary. It may have been deleted, or you may not have access.</div>';
+    return;
+  }
+
+  if (data.title) document.title = data.title + ' — K-Wellness';
+
+  // Sync saved state into sessionStorage so existing bindHeroFromState() works
+  if (data.state && window.kwState) {
+    try {
+      sessionStorage.setItem('kw.state.v1', JSON.stringify(data.state));
+      if (typeof bindHeroFromState === 'function') bindHeroFromState();
+    } catch (e) {
+      console.warn('[itin viewer] sync state failed', e);
+    }
+  }
+
+  // Show banner
+  const banner = document.getElementById('kw-itin-banner');
+  if (banner) banner.style.display = 'block';
+})();
 </script>
 <script type="module" src="/js/auth.js"></script>
 <script src="/js/nav-auth.js" defer></script>

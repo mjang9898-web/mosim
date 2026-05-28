@@ -27,6 +27,10 @@ const HASHED_BASENAMES = [
   'step2-medical.js',
   'step3-culture.js',
   'step4-cuisine.js',
+  'me-itineraries.js',
+  'me-status.js',
+  'me-profile.js',
+  'me-settings.js',
 ];
 
 // 1. Compute SHA-256 short hash (8 chars) of each built JS file.

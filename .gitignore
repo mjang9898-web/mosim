@@ -40,6 +40,10 @@ build/
 /js/step2-medical.js
 /js/step3-culture.js
 /js/step4-cuisine.js
+/js/me-itineraries.js
+/js/me-status.js
+/js/me-profile.js
+/js/me-settings.js
 /js/*.js.map
 
 # ── Local dev artifacts ──────────────────────────
