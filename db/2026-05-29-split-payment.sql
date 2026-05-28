@@ -65,6 +65,10 @@ begin
     raise exception 'payment group not found';
   end if;
 
+  if g.status = 'paid' then
+    raise exception 'payment group already fully paid';
+  end if;
+
   insert into public.payments(
     payment_group_id, payer_name, payer_email, amount, paypal_order_id, paypal_capture_id, status
   ) values (g.id, p_payer_name, p_payer_email, p_amount, p_order_id, p_capture_id, 'completed');

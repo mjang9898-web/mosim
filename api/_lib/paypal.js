@@ -38,7 +38,9 @@ export async function captureOrder(orderId) {
   });
   const data = await r.json();
   if (!r.ok || data.status !== 'COMPLETED') {
-    throw new Error(`paypal capture ${r.status} ${data.status || ''}`);
+    const err = new Error(`paypal capture ${r.status} ${data.status || ''}`);
+    err.issue = data?.details?.[0]?.issue || null;
+    throw err;
   }
   const pu = data.purchase_units?.[0];
   const cap = pu?.payments?.captures?.[0];

@@ -10,10 +10,12 @@ const supa = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE
 });
 
 async function loadGroup(token) {
-  const { data } = await supa
+  const { data, error } = await supa
     .from('payment_groups')
     .select('total_amount, amount_paid, currency, status')
     .eq('share_token', token).single();
+  // PGRST116 = no rows → treat as "not found" (data stays null); other errors are real.
+  if (error && error.code !== 'PGRST116') throw error;
   return data;
 }
 
@@ -25,11 +27,11 @@ export default async function handler(req, res) {
   const { action, token, amount, orderID } = req.body || {};
   if (!token) return res.status(400).json({ error: 'token required' });
 
-  const g = await loadGroup(token);
-  if (!g) return res.status(404).json({ error: 'Payment link not found' });
-  const balance = Number(g.total_amount) - Number(g.amount_paid);
-
   try {
+    const g = await loadGroup(token);
+    if (!g) return res.status(404).json({ error: 'Payment link not found' });
+    const balance = Number(g.total_amount) - Number(g.amount_paid);
+
     if (action === 'create') {
       if (balance <= 0) return res.status(409).json({ error: 'Already fully paid' });
       const v = normalizeAmount(amount, balance);
@@ -40,7 +42,20 @@ export default async function handler(req, res) {
 
     if (action === 'capture') {
       if (!orderID) return res.status(400).json({ error: 'orderID required' });
-      const cap = await captureOrder(orderID);              // money moves here
+      let cap;
+      try {
+        cap = await captureOrder(orderID);                  // money moves here
+      } catch (e) {
+        if (e.issue === 'ORDER_ALREADY_CAPTURED') {
+          // Idempotent retry: order was already captured & recorded earlier.
+          const cur = await loadGroup(token);
+          const total = Number(cur.total_amount), paid = Number(cur.amount_paid);
+          return res.status(200).json({
+            ok: true, paid, total, balance: Math.max(0, total - paid), status: cur.status
+          });
+        }
+        throw e;                                            // other errors → outer catch → 502
+      }
       // Record atomically; use the amount PayPal actually captured.
       const { data, error } = await supa.rpc('record_payment', {
         p_token: token,
