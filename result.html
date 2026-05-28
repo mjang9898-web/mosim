@@ -640,33 +640,27 @@ function bindHeroFromState(){
   }
 }
 
-/* ─── CTA handlers — payment integration goes here ──────────────
- *
- * When the user clicks "Confirm & Book" they should be guided to:
- *   1. Sign up / create an account
- *   2. Pay the Mosim concierge fee via a payment gateway
- *      (Polar.sh / Stripe / PayPal — to be decided)
- *   3. Confirmation page + concierge follow-up within 24h
- *
- * Not wired up yet — onBookNow() shows a placeholder. When the
- * gateway is chosen, replace it with the real signup → checkout flow:
- *
- *   async function onBookNow() {
- *     const state = window.kwState.loadAll();
- *     await fetch('/api/booking/draft', { method:'POST', body: JSON.stringify(state) });
- *     window.location.href = '/signup.html?next=checkout';
- *   }
+/* ─── Concierge fee payment ─────────────────────────────────────
+ * Requires a saved itinerary (see setupSave). Creates a payment
+ * group for it and sends the user to the shareable /pay page.
  * ───────────────────────────────────────────────────────────── */
+async function goToPayment(itineraryId) {
+  const supa = await window.kwAuth.init();
+  const { data: { session } } = await supa.auth.getSession();
+  if (!session) { window.location.href = '/signup.html?next=result&save=1'; return; }
+  const r = await fetch('/api/payment-group', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+    body: JSON.stringify({ itinerary_id: itineraryId })
+  });
+  const b = await r.json();
+  if (!r.ok) { alert(b.error || 'Could not start payment'); return; }
+  window.location.href = '/pay?g=' + encodeURIComponent(b.token);
+}
 function onBookNow(){
-  alert(
-    "Great — your plan is ready.\n\n" +
-    "Next step: create your Mosim account and pay the concierge fee. " +
-    "We'll wire this to a payment gateway (Polar.sh / Stripe / PayPal) " +
-    "once selected. For now, this is a placeholder."
-  );
+  alert('Please save your itinerary first, then use "Pay concierge fee".');
 }
 function onModifyPlan(){
-  // Re-enter the funnel at Step 1; selections stay in sessionStorage.
   window.location.href = 'step1.html';
 }
 
@@ -714,6 +708,16 @@ buildCal(); buildSched(); updateCost(); bindHeroFromState();
   // Show banner
   const banner = document.getElementById('kw-itin-banner');
   if (banner) banner.style.display = 'block';
+
+  // Owner can pay the concierge fee from the viewer.
+  const u = await window.kwAuth.getUser();
+  if (u) {
+    const bar = document.createElement('div');
+    bar.style = 'max-width:760px;margin:16px auto;text-align:center';
+    bar.innerHTML = '<button id="kw-pay-btn" style="padding:14px 22px;background:#B21464;color:#fff;border:0;border-radius:10px;font-size:19px;font-weight:600;cursor:pointer">Pay concierge fee →</button>';
+    document.querySelector('#kw-itin-banner')?.after(bar);
+    document.getElementById('kw-pay-btn').addEventListener('click', () => goToPayment(itinId));
+  }
 })();
 </script>
 <script>
@@ -772,7 +776,10 @@ buildCal(); buildSched(); updateCost(); bindHeroFromState();
     }
     msg.style.color = '#0a6';
     msg.innerHTML = `Saved ✓ &nbsp; <a href="/me.html?tab=itineraries" style="color:#B21464;">View in My Page</a>`;
-    btn.style.display = 'none';
+    btn.textContent = 'Pay concierge fee →';
+    btn.disabled = false;
+    btn.replaceWith(btn.cloneNode(true));      // drop old click listeners
+    document.getElementById('kw-save-btn').addEventListener('click', () => goToPayment(body.id));
   }
 
   if (!user) {
