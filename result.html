@@ -261,6 +261,15 @@ nav.top .right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   📌 Viewing a saved itinerary. <a href="/me.html?tab=itineraries" style="color:#B21464;">Back to My Page</a>
 </div>
 
+<section id="kw-save-cta" style="display:none; max-width:760px; margin:24px auto; background:#fff; border:1px solid #e2e2e2; border-radius:14px; padding:24px 28px; text-align:center;">
+  <h2 style="margin:0 0 8px; font-size:22px;">Save this itinerary</h2>
+  <p style="margin:0 0 18px; color:#444; font-size:19px;">Track concierge progress and pick it up later from My Page.</p>
+  <button id="kw-save-btn" type="button" style="padding:14px 22px; background:#B21464; color:#fff; border:0; border-radius:10px; font-size:19px; font-weight:600; cursor:pointer;">
+    Save to my account
+  </button>
+  <div id="kw-save-msg" style="margin-top:12px; font-size:15px; min-height:1.2em;"></div>
+</section>
+
 <div class="page">
 <div class="hero">
   <div class="hero-eyebrow">Your Mosim Itinerary</div>
@@ -705,6 +714,82 @@ buildCal(); buildSched(); updateCost(); bindHeroFromState();
   // Show banner
   const banner = document.getElementById('kw-itin-banner');
   if (banner) banner.style.display = 'block';
+})();
+</script>
+<script>
+(async function setupSave() {
+  const cta = document.getElementById('kw-save-cta');
+  const btn = document.getElementById('kw-save-btn');
+  const msg = document.getElementById('kw-save-msg');
+  if (!cta || !btn || !msg) return;
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('itin')) return; // viewer mode — no save CTA
+
+  let t = 0;
+  while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+  const user = await window.kwAuth.getUser();
+
+  function titleFromState(state) {
+    const when = state?.trip?.when || state?.trip?.monthLabel || state?.contact?.when || '';
+    const interest = (Array.isArray(state?.medical) && state.medical[0])
+      || (state?.medical && Object.keys(state.medical)[0])
+      || (state?.contact?.interest)
+      || 'Wellness';
+    const cap = s => String(s).charAt(0).toUpperCase() + String(s).slice(1).toLowerCase();
+    const base = `${cap(interest)} trip — ${when || 'Korea'}`;
+    return base.slice(0, 120);
+  }
+
+  async function doSave() {
+    btn.disabled = true; msg.style.color = ''; msg.textContent = 'Saving...';
+    const state = (window.kwState && window.kwState.loadAll) ? window.kwState.loadAll() : {};
+    const schedule = (window.kwSchedule && window.kwSchedule.generate) ? window.kwSchedule.generate(state) : { days: [] };
+    const title = titleFromState(state);
+    const supa = await window.kwAuth.init();
+    const { data: { session } } = await supa.auth.getSession();
+    if (!session) {
+      msg.style.color = '#a00';
+      msg.textContent = 'Sign-in expired. Please sign in again.';
+      btn.disabled = false;
+      return;
+    }
+    const r = await fetch('/api/save-itinerary', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer ' + session.access_token
+      },
+      body: JSON.stringify({ state, schedule, title })
+    });
+    const body = await r.json();
+    if (!r.ok) {
+      msg.style.color = '#a00';
+      msg.textContent = body.error || 'Failed to save';
+      btn.disabled = false;
+      return;
+    }
+    msg.style.color = '#0a6';
+    msg.innerHTML = `Saved ✓ &nbsp; <a href="/me.html?tab=itineraries" style="color:#B21464;">View in My Page</a>`;
+    btn.style.display = 'none';
+  }
+
+  if (!user) {
+    cta.style.display = 'block';
+    btn.textContent = 'Sign up to save';
+    btn.addEventListener('click', () => {
+      window.location.href = '/signup.html?next=result&save=1';
+    });
+    return;
+  }
+
+  cta.style.display = 'block';
+  btn.addEventListener('click', doSave);
+
+  // Auto-save when user returns from signup with ?save=1
+  if (params.get('save') === '1') {
+    await doSave();
+  }
 })();
 </script>
 <script type="module" src="/js/auth.js"></script>
