@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My Page — K-Wellness Concierge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ink-1:#1a1a1a; --ink-2:#444; --ink-3:#777; --bg-1:#fff; --bg-2:#f5f5f5; --bg-3:#fafafa;
+    --magenta:#B21464; --border:#e2e2e2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; min-height:100vh; background: var(--bg-3); color: var(--ink-1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  header.me-head {
+    background:#fff; border-bottom: 1px solid var(--border);
+    padding: 20px 28px; display:flex; align-items:center; justify-content: space-between;
+  }
+  header.me-head a.brand { font-weight:700; font-size:19px; color: var(--ink-1); text-decoration:none; }
+  header.me-head .right { display:flex; align-items:center; gap:16px; }
+  header.me-head .greeting { font-size:19px; color: var(--ink-2); }
+  header.me-head button.signout {
+    font: inherit; font-size:15px; padding:8px 14px;
+    background:#fff; border:1px solid var(--border); border-radius:8px; cursor:pointer;
+  }
+  header.me-head button.signout:hover { background: var(--bg-2); }
+  nav.tabs { background:#fff; border-bottom:1px solid var(--border); padding: 0 28px; display:flex; gap: 28px; }
+  nav.tabs a {
+    display:inline-block; padding: 14px 0; font-size:19px; color: var(--ink-2);
+    text-decoration:none; border-bottom: 2px solid transparent;
+  }
+  nav.tabs a[aria-current="page"] { color: var(--ink-1); border-bottom-color: var(--magenta); }
+  main { padding: 28px; max-width: 960px; margin: 0 auto; }
+  main section { display:none; }
+  main section.active { display:block; }
+  .placeholder {
+    padding: 40px; background:#fff; border:1px solid var(--border); border-radius:12px;
+    color: var(--ink-3); text-align:center; font-size:19px;
+  }
+</style>
+</head>
+<body>
+<header class="me-head">
+  <a class="brand" href="/">K-Wellness</a>
+  <div class="right">
+    <span id="greeting" class="greeting"></span>
+    <button id="signout" class="signout" type="button">Sign out</button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <a href="?tab=itineraries" data-tab="itineraries">Itineraries</a>
+  <a href="?tab=status"      data-tab="status">Status</a>
+  <a href="?tab=profile"     data-tab="profile">Profile</a>
+  <a href="?tab=settings"    data-tab="settings">Settings</a>
+</nav>
+
+<main>
+  <section id="sec-itineraries"><div id="me-itineraries-root" class="placeholder">My itineraries — coming next.</div></section>
+  <section id="sec-status"><div id="me-status-root" class="placeholder">Status timeline — coming next.</div></section>
+  <section id="sec-profile"><div id="me-profile-root" class="placeholder">Profile editor — coming next.</div></section>
+  <section id="sec-settings"><div id="me-settings-root" class="placeholder">Settings — coming next.</div></section>
+</main>
+
+<script type="module" src="/js/auth.js"></script>
+<script>
+  // Guard: redirect anonymous users to signin.
+  (async function () {
+    let t = 0;
+    while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+    const user = await window.kwAuth.getUser();
+    if (!user) {
+      window.location.replace('/signin.html?next=me');
+      return;
+    }
+    document.getElementById('greeting').textContent = user.user_metadata?.name || user.email;
+    document.getElementById('signout').addEventListener('click', async () => {
+      await window.kwAuth.signOut();
+      window.location.href = '/';
+    });
+
+    // Tab routing
+    const params = new URLSearchParams(window.location.search);
+    const tab = ['itineraries','status','profile','settings'].includes(params.get('tab'))
+      ? params.get('tab') : 'itineraries';
+    document.querySelectorAll('#tabs a').forEach(a => {
+      if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page');
+    });
+    document.getElementById('sec-' + tab).classList.add('active');
+  })();
+</script>
+</body>
+</html>
