@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       people: groupSize(itin?.state),
       total: Number(g.total_amount),
       paid: Number(g.amount_paid),
-      balance: Number(g.total_amount) - Number(g.amount_paid),
+      balance: Math.max(0, Number(g.total_amount) - Number(g.amount_paid)),
       currency: g.currency,
       status: g.status
     });
@@ -72,6 +72,12 @@ export default async function handler(req, res) {
       .insert({ itinerary_id, share_token: shareToken, total_amount: total })
       .select('share_token').single();
     if (error) {
+      if (error.code === '23505') {
+        // Lost a concurrent create race — return the winner's token (idempotent).
+        const { data: winner } = await supa
+          .from('payment_groups').select('share_token').eq('itinerary_id', itinerary_id).single();
+        if (winner) return res.status(200).json({ token: winner.share_token });
+      }
       console.error('[payment-group] insert failed', error);
       return res.status(500).json({ error: 'Failed to create payment group' });
     }
