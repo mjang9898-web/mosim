@@ -2188,10 +2188,23 @@
 
     // sessionStorage holds the lead even if the POST fails — funnel must always progress.
     if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+    // Best-effort: include bearer token if user is logged in so the lead row gets user_id.
+    let authHeader = {};
+    if (window.kwAuth) {
+      try {
+        const supa = await window.kwAuth.init();
+        const { data: { session } } = await supa.auth.getSession();
+        if (session) authHeader = { 'Authorization': 'Bearer ' + session.access_token };
+      } catch (e) {
+        // best-effort — proceed unauthenticated
+      }
+    }
+
     try {
       await fetch('/api/lead', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json', ...authHeader },
         body: JSON.stringify(contact)
       });
     } catch (e) {

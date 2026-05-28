@@ -31,6 +31,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
+    // If a bearer token is present, attach the user_id to the lead.
+    let userId = null;
+    const auth = req.headers.authorization || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    if (token) {
+      try {
+        const { data: { user } } = await supa.auth.getUser(token);
+        if (user) userId = user.id;
+      } catch (e) {
+        // best-effort — proceed without user_id
+      }
+    }
+
     const { data, error } = await supa
       .from('leads')
       .insert({
@@ -40,7 +53,8 @@ export default async function handler(req, res) {
         travel_when: travelWhen || null,
         interest: interest || null,
         note: note || null,
-        state: state || null
+        state: state || null,
+        user_id: userId
       })
       .select('id')
       .single();
