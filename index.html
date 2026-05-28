@@ -913,15 +913,6 @@
     margin: 0 auto 40px;
     font-size: 22px;
   }
-  section.philosophy .sig {
-    display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
-    padding-top: 32px;
-    border-top: 1px solid rgba(180, 138, 58, .35);
-    max-width: 360px;
-    margin: 0 auto;
-  }
-  section.philosophy .sig .name { font-weight: 700; color: #fff; font-size: 17px; }
-  section.philosophy .sig .role { font-weight: 500; color: var(--gold); font-size: 15px; }
 
   /* ── Journeys ────────────────────────────────── */
   section.journeys {
@@ -1318,6 +1309,51 @@
     border-radius: 6px;
   }
   #kw-nav-auth .kw-nav-auth-link:hover { background: var(--bg-2, #f5f5f5); color: var(--ink-1, #1a1a1a); }
+
+  /* ── About — founder ─────────────────────────── */
+  section.about { background: var(--bg); padding: 100px 0; }
+  .about .about-grid {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .about .about-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    filter: grayscale(100%);
+    background: var(--bg-soft);
+  }
+  .about .about-copy .eyebrow { display: block; margin-bottom: 14px; }
+  .about .about-copy h2.h2 { margin: 0 0 28px; }
+  .about .about-copy p.body { margin: 0 0 20px; }
+  .about .mosim-callout {
+    margin: 8px 0 20px;
+    padding: 20px 24px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-soft);
+    border-radius: 0 12px 12px 0;
+  }
+  .about .mosim-callout .mosim-word {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .about .mosim-callout .mosim-word em { font-style: italic; font-weight: 600; }
+  .about .mosim-callout .mosim-gloss { display: block; font-size: 17px; color: var(--ink-3); }
+  .about .about-sig { margin-top: 32px; }
+  .about .about-sig .name { display: block; font-weight: 700; color: var(--ink); font-size: 17px; }
+  .about .about-sig .role { display: block; font-weight: 500; color: var(--gold); font-size: 15px; margin-top: 2px; }
+  @media (max-width: 700px) {
+    section.about { padding: 64px 0; }
+    .about .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about .about-photo { max-width: 360px; }
+    .about .mosim-callout .mosim-word { font-size: 24px; }
+  }
 </style>
 </head>
 <body>
@@ -1810,9 +1846,35 @@
       One concierge, one phone number, one journey — from the airport
       to the aftercare.
     </p>
-    <div class="sig">
-      <span class="name">Soo‑hyun Park</span>
-      <span class="role">Founder & Head Concierge</span>
+  </div>
+</section>
+
+<!-- ════════════ ABOUT — Founder ════════════ -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-photo">
+        <img src="assets/founder/michael-jang.jpg"
+             alt="Sunggun Michael Jang, founder of Mosim"
+             width="900" height="917" loading="lazy">
+      </div>
+      <div class="about-copy">
+        <span class="eyebrow">The person behind Mosim</span>
+        <h2 class="h2">I built the trip I wish my own family could have had.</h2>
+        <p class="body">I was born and raised in Seoul, and I've spent the last twenty years building a life in the United States — business school in Philadelphia, a career that keeps me moving between both countries. Somewhere along the way, I became the person friends and colleagues called whenever they were headed to Korea. I'd plan their days, book their clinics, and walk them through the parts of Seoul you only find if someone who loves the city takes you there.</p>
+        <p class="body">I loved doing it. And I noticed something: the people I hosted didn't just leave with good photos — they left with care they couldn't get at home, and they were stunned by how accessible it was.</p>
+        <p class="body">I know that gap personally. I've felt the cost and the complexity of getting care in the States — the bills, the waiting, the sense that the system isn't built for you. Korea quietly offers another way: world‑class medicine, traditional healing, and a culture that treats a guest as someone to be looked after completely.</p>
+        <p class="body">There's a Korean word for that kind of care:</p>
+        <div class="mosim-callout">
+          <span class="mosim-word">모심 · <em>mosim</em></span>
+          <span class="mosim-gloss">to attend to someone with reverence</span>
+        </div>
+        <p class="body">It's the way you look after your parents, your elders, an honored guest in your home — not service rendered for a fee, but devotion. I named this company Mosim because it's the only promise I know how to make: I'll give you exactly what I give the people I love — one person who knows both worlds, handling everything, so you can simply arrive and be cared for.</p>
+        <div class="about-sig">
+          <span class="name">Sunggun Michael Jang</span>
+          <span class="role">Founder</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
