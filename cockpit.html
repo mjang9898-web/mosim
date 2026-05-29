@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cockpit — Mosim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --ink-1:#1d1d1f; --ink-2:#2a2a2c; --ink-3:#4a4a4d; --bg:#fafafa; --bg-1:#fff; --bg-soft:#f5f5f7;
+    --accent:#B21464; --gold:#b48a3a; --border:#e2e2e2;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink-1);
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  header.cp-head { background:#fff; border-bottom:1px solid var(--border); padding:20px 28px;
+    display:flex; align-items:center; justify-content:space-between; }
+  header.cp-head .brand { font-weight:700; font-size:19px; }
+  header.cp-head .brand .sub { color:var(--ink-3); font-weight:500; }
+  header.cp-head .right { display:flex; align-items:center; gap:16px; }
+  header.cp-head .greeting { font-size:15px; color:var(--ink-2); }
+  header.cp-head button.signout { font:inherit; font-size:15px; padding:8px 14px; background:#fff;
+    border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+  header.cp-head button.signout:hover { background:var(--bg-soft); }
+  main { max-width:1000px; margin:0 auto; padding:32px 28px; }
+  h1.cp-title { font-size:26px; margin:0 0 4px; }
+  p.cp-lede { font-size:17px; color:var(--ink-3); margin:0 0 28px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .tile { background:var(--bg-1); border:1px solid var(--border); border-radius:14px; padding:24px;
+    display:flex; flex-direction:column; gap:10px; }
+  .tile .num { font-size:13px; font-weight:700; color:var(--ink-3); letter-spacing:.04em; }
+  .tile h2 { font-size:21px; margin:0; }
+  .tile .desc { font-size:15px; color:var(--ink-2); margin:0; line-height:1.5; }
+  .tile .metric { font-size:28px; font-weight:700; color:var(--ink-1); margin-top:6px; }
+  .tile .metric .ph { color:var(--ink-3); font-weight:500; font-size:19px; }
+  .badge { align-self:flex-start; display:inline-block; padding:4px 11px; border-radius:999px;
+    font-size:13px; font-weight:600; }
+  .b-active { background:#e9f7ef; color:#1b6e3d; }
+  .b-frozen { background:#eef2ff; color:#3744a6; }
+  .b-foundation { background:#fff4e5; color:#7a4a00; }
+  .b-planned { background:#eee; color:#666; }
+  .cp-note { margin-top:28px; font-size:13px; color:var(--ink-3); border-top:1px solid var(--border); padding-top:16px; }
+  @media (max-width:720px) { .grid { grid-template-columns:1fr; } main { padding:24px 18px; } }
+</style>
+</head>
+<body>
+<header class="cp-head">
+  <div class="brand">Mosim <span class="sub">· Cockpit</span></div>
+  <div class="right">
+    <span id="greeting" class="greeting"></span>
+    <button id="signout" class="signout" type="button">Sign out</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="cp-title">Departments</h1>
+  <p class="cp-lede">Four departments on one shared backbone. You're the connective tissue.</p>
+
+  <div class="grid">
+    <section class="tile">
+      <span class="num">DEPT 01</span>
+      <h2>Development</h2>
+      <span class="badge b-active">Active</span>
+      <p class="desc">AI build team — front &amp; back end. <code>mosim-orchestrator</code> + 4 agents (frontend · backend · visual-qa · content).</p>
+      <div class="metric">4 <span class="ph">agents</span></div>
+    </section>
+
+    <section class="tile">
+      <span class="num">DEPT 02</span>
+      <h2>Itinerary</h2>
+      <span class="badge b-frozen">Design frozen</span>
+      <p class="desc">Customer trip planner — Medical · Food · Culture&amp;Experience · Logistics, composed by an itinerary specialist. Build cost-deferred (Claude API).</p>
+      <div class="metric">6 <span class="ph">specialists · planned</span></div>
+    </section>
+
+    <section class="tile">
+      <span class="num">DEPT 03</span>
+      <h2>Finance</h2>
+      <span class="badge b-foundation">Foundation</span>
+      <p class="desc">Revenue &amp; accounting. PayPal + payment groups are live; reconciliation, invoicing and reports come next.</p>
+      <div class="metric"><span class="ph">revenue — coming</span></div>
+    </section>
+
+    <section class="tile">
+      <span class="num">DEPT 04</span>
+      <h2>HR</h2>
+      <span class="badge b-planned">Planned</span>
+      <p class="desc">People ops for human staff — onboarding, payroll, attendance. Starts when the first hire happens.</p>
+      <div class="metric">0 <span class="ph">employees</span></div>
+    </section>
+  </div>
+
+  <p class="cp-note">Shell — live metrics (itineraries, concierge revenue) and founder-only role gating are follow-ups (need a founder-authenticated aggregate API; RLS scopes normal reads to the owner).</p>
+</main>
+
+<script type="module" src="/js/auth.js"></script>
+<script>
+  // Login gate. NOTE: founder-only role gating is a TODO — for now any signed-in
+  // user reaches the shell, which shows no sensitive data (status tiles only).
+  (async function () {
+    let t = 0;
+    while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
+    if (!window.kwAuth) { window.location.replace('/signin.html?next=cockpit'); return; }
+    const user = await window.kwAuth.getUser();
+    if (!user) { window.location.replace('/signin.html?next=cockpit'); return; }
+    document.getElementById('greeting').textContent = user.user_metadata?.name || user.email;
+    document.getElementById('signout').addEventListener('click', async () => {
+      await window.kwAuth.signOut();
+      window.location.href = '/';
+    });
+  })();
+</script>
+</body>
+</html>
