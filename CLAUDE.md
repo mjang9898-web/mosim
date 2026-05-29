@@ -270,3 +270,14 @@ renderSchedule(schedule);
 - 사용자 선택 데이터는 `kwState`로만 다룬다. 직접 `sessionStorage` 호출 금지 (테스트성 코드 제외)
 - JSX 안에서 새 의존성을 import하지 말 것 — babel-standalone 환경
 - 새 카테고리 옵션 추가 시 `js/schedule.js`의 `MED_LABELS`/`CULTURE_LABELS`/`CUISINE_LABELS` 매핑 동시 업데이트
+
+## 하네스: mosim-site 빌드 팀
+
+**목표:** 프론트(JSX/정적)·백엔드(Supabase/serverless/PayPal)·QA(Playwright)·콘텐츠를 전문 에이전트 팀으로 일관되게 빌드/검증한다.
+
+**트리거:** mosim-site의 비자명한 빌드/수정/풀스택 작업 요청 시 `mosim-orchestrator` 스킬을 사용하라(에이전트 팀 기본). 단순 질문/조회는 직접 응답 가능. 에이전트는 `.claude/agents/`, 컨벤션 스킬은 `.claude/skills/mosim-*`에 있다.
+
+**변경 이력:**
+| 날짜 | 변경 내용 | 대상 | 사유 |
+|------|----------|------|------|
+| 2026-05-29 | 초기 구성 (에이전트4 + 스킬3 + 오케스트레이터) | 전체 | 하네스 신규 구축 |
