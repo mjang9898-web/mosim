@@ -85,27 +85,52 @@ gather → compose. The interface should not preclude adding this later.
 
 ## 3. Components & Data Flow
 
+> **⚠️ Reality check (discovered 2026-05-29, post-approval).** Two assumptions in the
+> first draft were wrong and are corrected here:
+> 1. **`api/schedule.js` already exists** (commit `4b17919`, predates the agent harness).
+>    It already does Sonnet + prompt caching + structured output + server error handling,
+>    but is **hardcoded to 7 days, hardcoded model, has no caller, no fallback, no
+>    collaboration seam**. We **evolve** it, not create it.
+> 2. **result.html does NOT render `kwSchedule.generate` output.** Its itinerary is a
+>    fully **hardcoded 13-day demo** (`DAYS` = `Oct1..Oct13`, `weekData` = fixed Oct 2025
+>    calendar, `cpp/dm/cg/cd` cost calc). `kwSchedule.generate` is only used to build the
+>    object that gets *saved to the DB* (never displayed). So a **real renderer must be
+>    built**, and per founder decision the **calendar grid + cost calculator become
+>    data-driven** too.
+
 ```
-[result.html]
-   └─ kwSchedule.generate(state)            ← stays the public entry point (now async)
-         └─ fetch POST /api/schedule         ← orchestrator (NEW serverless fn)
-               ├─ derive trip context (incl. day count from dates)   §5
+[result.html]  (on load)
+   └─ kwSchedule.generate(state)            ← public entry point, now ASYNC
+         └─ fetch POST /api/schedule         ← orchestrator (EVOLVE existing fn)
+               ├─ tripDayCount(state) → N    ← variable length (§5)
                ├─ run specialists  → Contribution[]  (Slice 1: itinerary/composer only)
-               ├─ compose: Claude (Sonnet) → final schedule JSON      §4, §6
-               │     (system prompt + label maps prompt-cached)
+               ├─ compose: Claude (model = SCHEDULE_MODEL) → enriched schedule JSON  §4,§6
+               │     (static system prompt cached; the "N days" instruction goes in the
+               │      USER message so the cache key stays stable across trip lengths)
                └─ validate shape → return
-         └─ on any failure → fall back to existing template generator §6
-   └─ renderSchedule(schedule)               ← UNCHANGED (same output shape)
+         └─ on any failure → fall back to template generator (now emits enriched shape) §6
+   └─ renderItinerary(schedule)             ← NEW: builds day-cards + calendar + cost,
+                                              all from schedule.days (variable length)
 ```
 
 ### Files
-- **`api/schedule.js`** (new) — orchestrator + composer call. Reads
-  `SUPABASE_*`, `ANTHROPIC_API_KEY`, `SCHEDULE_MODEL` env vars.
-- **`js/schedule.js`** (edit) — `generateSchedule` becomes `async`, fetches
-  `/api/schedule`; the current template body is *kept* as `generateScheduleTemplate`
-  (renamed) and used as the fallback. Public `kwSchedule.generate` signature preserved.
-- **`result.html`** (minimal edit) — `await` the now-async generate; show a brief
-  loading state while the API runs. No change to `renderSchedule` or markup.
+- **`api/schedule.js`** (EVOLVE — exists) — add `SCHEDULE_MODEL` env var (default
+  `claude-sonnet-4-6`); variable day count (instruction in user message, not system,
+  to preserve cache); **enriched output schema** (§4); add a light orchestrator seam
+  (`gatherContributions(state)` → `[]` today → composer). Keeps existing server-side
+  error handling.
+- **`api/_lib/trip-length.js`** (new) — pure `tripDayCount(state)` → integer. No I/O,
+  unit-tested under `test/` with `node --test` (mirrors `api/_lib/amount.js`).
+- **`js/schedule.js`** (edit) — `generateSchedule` becomes `async`: POSTs `/api/schedule`,
+  returns its schedule on success; on ANY failure returns the template result. Current
+  template body kept as `generateScheduleTemplate`, **upgraded to emit the enriched
+  shape** so fallback still renders in the rich cards. Public `kwSchedule.generate`
+  name/signature preserved (callers just `await` it).
+- **`result.html`** (substantial) — replace hardcoded `DAYS`/`weekData`/`buildCal`/
+  `buildSched`/`openDet` with functions that consume `schedule.days`; generate the
+  calendar from `trip.startDate` + N days; initialise the cost calculator from state
+  (people + N days); add a loading state; `await kwSchedule.generate(state)` on load then
+  `renderItinerary`.
 - **Supabase `places` table** (new, structure only) — vetted-place schema, empty for
   now. Wired into the orchestrator as an optional lookup that injects matched vetted
   places into the composer prompt. With an empty table the composer simply proceeds on
@@ -115,8 +140,9 @@ gather → compose. The interface should not preclude adding this later.
 
 ## 4. Output Contract (the frontend's safety contract)
 
-The composer MUST return JSON in the **same shape** `result.html` already renders, so
-the frontend is not touched. Reference shape (from current `kwSchedule.generate`):
+Per the founder decision (rich cards + AI enrichment), the composer returns an
+**enriched** shape that matches the existing rich demo cards (venue name, description,
+accessibility tip, color-coded type) — not the old thin `{time, label}`.
 
 ```
 {
@@ -124,13 +150,26 @@ the frontend is not touched. Reference shape (from current `kwSchedule.generate`
   adults, children, partyType, travelClass, hotelTier,
   medicalSelections: string[], cultureSelections: string[], cuisineSelections: string[],
   allergens: string[], diets: string[], spice,
-  days: [ { day: number, title: string, items: [ { time: string, label: string } ] } ]
+  days: [ {
+    day:   number,
+    type:  'medical'|'culture'|'cuisine'|'rest'|'travel'|'mixed',  // drives card color/badge
+    title: string,                                                  // "Day 3 — Gyeongbokgung..."
+    items: [ {
+      time: string,                       // '09:00' | 'Morning' | 'All day'
+      type: 'medical'|'culture'|'cuisine'|'rest'|'travel',  // slot dot color
+      name: string,                       // venue / activity, e.g. 'Gyeongbokgung Palace'
+      desc: string,                       // one-line detail
+      tip?: string                        // optional senior/accessibility note
+    } ]
+  } ]
 }
 ```
 
-- `days.length` = computed trip length (§5), not fixed at 7.
-- Validation in the orchestrator checks this shape before returning; malformed →
-  fallback (§6).
+- `days.length` = computed trip length N (§5), not fixed at 7/13.
+- The template fallback (`js/schedule.js`) emits this same shape (with `desc:''`,
+  `type` from the day theme) so the rich cards still render when the AI path fails.
+- Validation (orchestrator + client) checks `days` is a non-empty array of this shape
+  before use; malformed → fallback (§6).
 
 ### `Contribution` interface (defined now, consumed by composer)
 ```
