@@ -47,6 +47,11 @@ mosim-site/
 
 로그인한 사용자는 result 페이지에서 "Save this itinerary" CTA로 일정을 `public.itineraries`에 영구 저장한다. My Page (`/me.html`)는 Supabase JS로 RLS-보호된 `profiles` + `itineraries`를 직접 읽고, 4개 탭(Itineraries / Status / Profile / Settings)을 렌더한다. 인증은 Supabase Auth — Google OAuth 또는 Email/Password.
 
+로그인 사용자는 저장된 일정에 대해 컨시어지 수수료를 결제할 수 있다. `/api/payment-group`이
+일정당 `payment_groups` 행(총액 = $1,200 × 인원수, 조정 가능)을 만들고, `/pay?g=<token>`는
+로그인 없이 누구나 잔액을 분할 결제할 수 있는 공유 페이지다. 결제는 PayPal(한국 법인 계정),
+캡처는 `record_payment()`로 기록된다. 실비는 고객이 vendor에 직접 결제 — Mosim 미관여.
+
 ## 작업 규칙
 
 ### 코드
@@ -170,6 +175,9 @@ SUPABASE_URL=https://<project>.supabase.co
 SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...      # 서버 함수 전용, 클라이언트에 노출 금지
 ANTHROPIC_API_KEY=sk-ant-...           # 일정 생성용
+PAYPAL_CLIENT_ID=...
+PAYPAL_CLIENT_SECRET=...              # 서버 함수 전용, 클라이언트 노출 금지
+PAYPAL_ENV=sandbox                    # 운영 시 live
 ```
 
 **3.3 클라이언트에서 호출 (`/api/lead` 경유 권장)**
@@ -253,7 +261,8 @@ renderSchedule(schedule);
 배포 전:
 - [ ] `.gitignore` 확인 — `.DS_Store`, `node_modules`, `.env*` 제외
 - [ ] PRD/design.md/CLAUDE.md 최신 상태
-- [ ] Vercel 환경변수 4개(SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY, ANTHROPIC_API_KEY) 설정
+- [ ] Vercel 환경변수 설정 — Supabase 4개(SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY, ANTHROPIC_API_KEY) + PayPal 3개(CLIENT_ID, CLIENT_SECRET, ENV)
+- [ ] PayPal 환경변수 3개(CLIENT_ID, CLIENT_SECRET, ENV) 설정 + 운영 전 PAYPAL_ENV=live 전환
 - [ ] Supabase RLS 정책 적용 (anon insert만 + profiles/itineraries own row)
 - [ ] Supabase Auth Providers — Google 활성 + Client ID/Secret 입력
 - [ ] Supabase URL Configuration — Site URL + redirect URLs (signup/signin/me/reset-password/result) 등록

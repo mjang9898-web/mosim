@@ -31,6 +31,18 @@ Result — 7일 일정  (result.html) AI 생성된 일정 + 컨시어지 후속 
 
 상태 키: `sessionStorage["kw.state.v1"]` — 새로고침 OK, 탭 닫으면 휘발.
 
+## 3-a. Concierge fee payment (split payment)
+
+After the funnel produces an itinerary on `result.html`, a logged-in user can pay the
+Mosim **concierge fee** (`$1,200 × group size`, adjustable per trip). Payment uses a
+shareable, **login-free** page `/pay?g=<token>` backed by a per-itinerary *payment group*
+that tracks total / paid / balance. Anyone with the link can pay part or all of the
+remaining balance via **PayPal** until the balance is $0 (e.g. an organizer pays for one
+couple and forwards the link to the other). Trip actuals (flights, hotels, procedures)
+are paid by the customer **directly to vendors** and are out of Mosim's payment scope.
+
+Design spec: `docs/superpowers/specs/2026-05-29-split-payment-design.md`
+
 ## 4. 기능 요구사항
 
 ### 4.1 반드시 (MVP — 현재 구현됨)
@@ -75,7 +87,7 @@ Result — 7일 일정  (result.html) AI 생성된 일정 + 컨시어지 후속 
 - **JSX 프로토타입은 정적**: 원본 Claude Design 컴포넌트들이 useState 거의 없음. `interactive.js`가 클래스 토글 + DOM 스크랩으로 선택값 캡처. 견고성 필요 시 Next.js 재구현
 - **이미지 라이선스 미확보**: `assets/airlines/`, `assets/hotels/` 는 placeholder. 정식 런칭 전 교체
 - **언어 일관성 미정**: 결과 페이지만 한국어, 나머지 영어. 타깃이 영미권이라면 결과도 영어로 통일 검토
-- **결제는 범위 밖**: funnel은 lead-gen까지만. 견적/계약은 오프라인 컨시어지가 처리
+- **결제 범위**: 컨시어지 수수료(`$1,200 × 인원`)는 `/pay?g=<token>` 페이지에서 PayPal로 분담 결제. 항공·호텔·의료 실비는 고객이 벤더에게 직접 결제 — Mosim 범위 밖. 자세한 설계는 §3-a 참고
 
 ## 8. 참고
 

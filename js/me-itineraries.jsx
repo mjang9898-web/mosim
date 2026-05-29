@@ -29,6 +29,7 @@ function MeItineraries() {
   const [supa, setSupa] = useState(null);
   const [rows, setRows] = useState(null);
   const [err, setErr]   = useState(null);
+  const [pay, setPay]   = React.useState({});
 
   useEffect(() => {
     (async () => {
@@ -42,6 +43,12 @@ function MeItineraries() {
         .order('created_at', { ascending: false });
       if (error) { setErr(error.message); return; }
       setRows(data || []);
+      const { data: pgs } = await client
+        .from('payment_groups')
+        .select('itinerary_id, total_amount, amount_paid, status');
+      const payByItin = {};
+      (pgs || []).forEach(p => { payByItin[p.itinerary_id] = p; });
+      setPay(payByItin);
     })();
   }, []);
 
@@ -78,7 +85,16 @@ function MeItineraries() {
             padding:20, display:'flex', flexDirection:'column', gap:10
           }}>
             <div style={{fontSize:19, fontWeight:600, color:'#1a1a1a'}}>{r.title || 'Untitled trip'}</div>
-            <StatusBadge status={r.status} />
+            <div style={{display:'flex', alignItems:'center', flexWrap:'wrap', gap:6}}>
+              <StatusBadge status={r.status} />
+              {pay[r.id] && (
+                <span style={{ fontSize: 13, color: pay[r.id].status === 'paid' ? '#0a6' : '#B21464', fontWeight: 600 }}>
+                  {pay[r.id].status === 'paid'
+                    ? 'Paid ✓'
+                    : `$${Number(pay[r.id].amount_paid).toLocaleString()} of $${Number(pay[r.id].total_amount).toLocaleString()} paid`}
+                </span>
+              )}
+            </div>
             <div style={{fontSize:15, color:'#777'}}>Saved {fmtDate(r.created_at)}</div>
             <div style={{display:'flex', gap:10, marginTop:6}}>
               <a href={`/result.html?itin=${r.id}`} style={{

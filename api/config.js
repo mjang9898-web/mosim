@@ -13,9 +13,13 @@ export default function handler(req, res) {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     return res.status(500).json({ error: 'Supabase env vars not set' });
   }
+  const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
+  const PAYPAL_ENV = process.env.PAYPAL_ENV || 'sandbox';
   res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
   return res.status(200).json({
     supabaseUrl: SUPABASE_URL,
-    supabaseAnonKey: SUPABASE_ANON_KEY
+    supabaseAnonKey: SUPABASE_ANON_KEY,
+    paypalClientId: PAYPAL_CLIENT_ID,
+    paypalEnv: PAYPAL_ENV
   });
 }
