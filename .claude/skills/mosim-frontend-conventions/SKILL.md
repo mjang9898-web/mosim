@@ -26,6 +26,8 @@ description: The hard rules for building UI on mosim-site (static HTML/CSS + esb
 
 빌드: `npm run build`(JSX→JS + 콘텐츠 해시 스탬프, ~15ms). watch: `npm run dev`.
 
+**비-JSX plain JS**(`state.js`, `nav.js`, `js/pay.js` 등)는 빌드 대상이 아니라 **그대로 배포**된다. 새 plain JS는 esbuild/post-build/gitignore 목록에 넣지 말 것(JSX 엔트리만 거기 등록). `pay.html`처럼 funnel 밖 자체완결 페이지는 인라인 토큰 사용(≥19px·`#B21464`·`--ink-3` 동일 적용).
+
 ## 콘텐츠 해시 캐시버스팅
 `scripts/post-build.mjs`가 HTML의 `js/x.js?v=<hash>`를 자동 갱신. `/js/*.js`는 `max-age=immutable`로 캐시되고 해시가 바뀌면 새로 받음. HTML은 `max-age=300`. 빌드 산출물 해시는 결정적이라 Vercel이 배포 시 재빌드해도 동일.
 
