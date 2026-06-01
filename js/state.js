@@ -8,14 +8,26 @@
 (function (global) {
   'use strict';
 
-  var STORAGE_KEY = 'kw.state.v1';
+  var STORAGE_KEY = 'mosim.state.v1';
 
+  // Planner funnel data model — see docs/superpowers/specs/2026-06-01-planner-funnel-design.md
   var DEFAULT_STATE = {
-    contact: null, // { name, email, from, when, interest, note }
-    trip: null,    // step 1 selections
-    medical: null, // step 2 selections
-    culture: null, // step 3 selections
-    cuisine: null  // step 4 selections
+    // Step 1 · Care.  needs: ['screening','knees','dental','eyes','unsure']
+    // note: client-side ONLY — must NOT be persisted to the DB (privacy promise).
+    care: { needs: [], note: '' },
+    // Step 2 · Trip
+    trip: {
+      when: { mode: 'flexible', dates: { start: null, end: null }, season: '' }, // mode:'dates'|'flexible'
+      length: '',      // 'under1w'|'1to2w'|'2plus'|'unsure'
+      party: '',       // 'solo'|'couple'|'family'
+      partySize: 1,
+      stay: '',        // 'cozy'|'comfort'|'premium'
+      arrival: 'ICN'   // constant — not asked
+    },
+    // Step 3 · Experiences — ['heritage','cuisine','markets','nature','spa','beyond'] | ['minimal']
+    experiences: [],
+    // Step 4 · Comfort & food
+    comfort: { pace: '', mobility: '', spice: '', food: [] }
   };
 
   function read() {

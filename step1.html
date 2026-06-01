@@ -1,1071 +1,152 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>K-Wellness Concierge — Step 1 · Trip</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mosim — Plan your trip · Step 1, Your care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ════════════════════════════════════════════════════════════════════
-     K-Wellness · Step 1 Trip · shared visual system
-     Inherits the landing page's senior-friendly Apple-style tokens.
-     Scoped to .kw- prefix so it can't collide with design_canvas chrome.
-     ════════════════════════════════════════════════════════════════════ */
-  :root {
-    --kw-bg: #ffffff;
-    --kw-bg-soft: #f5f5f7;
-    --kw-bg-warm: #f0eee9;
-    --kw-ink: #1d1d1f;
-    --kw-ink-2: #2a2a2c;
-    --kw-ink-3: #4a4a4d;
-    --kw-line: #d2d2d7;
-    --kw-rule: #e8e8ed;
-    --kw-accent: #B21464;
-    --kw-accent-deep: #8a0e4d;
-    --kw-accent-soft: rgba(178,20,100,.08);
-    --kw-gold: #b48a3a;
-  }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-                 Inter, "Helvetica Neue", Arial, sans-serif;
-    font-size: 19px;
-    line-height: 1.5;
-    font-weight: 500;
-    color: var(--kw-ink);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  /* Inside an artboard, paint our own background */
-  .kw-screen { background: var(--kw-bg); color: var(--kw-ink); position: relative; min-height: 100%; }
-  .kw-screen * { box-sizing: border-box; }
-  .kw-screen a { color: inherit; text-decoration: none; }
-  /* Specificity rescue: .kw-screen a outranks .kw-cta, so reassert. */
-  .kw-screen a.kw-cta { color: #fff; }
-  .kw-screen a.kw-cta.kw-cta-ghost { color: var(--kw-ink); }
-  .kw-screen button { font: inherit; cursor: pointer; }
-  .kw-screen ul { list-style: none; margin: 0; padding: 0; }
-  .kw-screen input, .kw-screen textarea {
-    font: inherit; color: inherit;
-    background: transparent; border: none; outline: none;
-  }
-  .kw-screen .hangul {
-    font-family: 'Nanum Myeongjo', serif;
-    font-weight: 700;
-    letter-spacing: .04em;
-  }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:96px;}
+  .wrap{max-width:880px; margin:0 auto; padding:0 36px;}
+  h1,h2,.brand{font-family:'Fraunces',Georgia,serif;}
+  a{color:inherit;}
 
-  /* ── Nav ─────────────────────────────────────────────────────────── */
-  .kw-nav {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(255, 255, 255, .82);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid var(--kw-rule);
-    height: 68px;
-  }
-  .kw-nav-inner {
-    height: 100%;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px;
-    max-width: 1440px; margin: 0 auto;
-  }
-  .kw-brand { display: flex; align-items: center; gap: 12px; }
-  .kw-brand .kw-wm {
-    font-weight: 700; font-size: 19px; letter-spacing: -0.01em; color: var(--kw-ink);
-  }
-  .kw-navlist {
-    display: flex; gap: 22px;
-    font-size: 14px; font-weight: 600;
-  }
-  .kw-navlist a {
-    color: var(--kw-ink); padding: 6px 0; transition: color .15s;
-    position: relative;
-  }
-  .kw-navlist a:hover { color: var(--kw-accent); }
-  .kw-navlist a.is-active { color: var(--kw-accent); }
-  .kw-navlist a.is-active::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
-    height: 2px; background: var(--kw-accent); border-radius: 2px;
-  }
-  .kw-nav-right { display: flex; align-items: center; gap: 18px; }
-  .kw-link-q {
-    font-size: 14px; font-weight: 600; color: var(--kw-ink);
-  }
-  .kw-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    height: 50px;
-    padding: 0 28px;
-    border-radius: 999px;
-    background: var(--kw-accent);
-    color: #fff;
-    font-weight: 600;
-    font-size: 17px;
-    border: none;
-    transition: background .2s, transform .1s;
-    white-space: nowrap;
-  }
-  .kw-cta:hover { background: var(--kw-accent-deep); }
-  .kw-cta-sm { height: 38px; padding: 0 18px; font-size: 14px; }
-  .kw-cta-lg { height: 62px; padding: 0 38px; font-size: 19px; }
-  .kw-cta-ghost {
-    background: transparent; color: var(--kw-ink);
-    border: 1.5px solid var(--kw-line);
-  }
-  .kw-cta-ghost:hover { background: var(--kw-bg-soft); }
-  .kw-cta-dark { background: var(--kw-ink); }
-  .kw-cta-dark:hover { background: #000; }
+  nav{padding:18px 0; border-bottom:1px solid var(--line);}
+  .nav-in{display:flex; align-items:center; justify-content:space-between;}
+  .brand{font-weight:600; font-size:22px; color:var(--navy); text-decoration:none;} .brand .dot{color:var(--gold);}
+  .exit{font-size:15px; color:var(--ink); text-decoration:none;}
 
-  /* ── Step bar (5 main steps) ─────────────────────────────────────── */
-  .kw-stepbar-horizontal {
-    display: flex; align-items: center; gap: 0;
-    padding: 28px 0;
-  }
-  .kw-step {
-    display: inline-flex; align-items: center; gap: 10px;
-    flex: none;
-  }
-  .kw-step-num {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; letter-spacing: .04em;
-    border: 1.5px solid var(--kw-line);
-    color: var(--kw-ink-3);
-    background: #fff;
-  }
-  .kw-step-label {
-    font-size: 14px; font-weight: 600;
-    color: var(--kw-ink-3);
-    letter-spacing: -.005em;
-  }
-  .kw-step-active .kw-step-num {
-    background: var(--kw-accent); color: #fff; border-color: var(--kw-accent);
-  }
-  .kw-step-active .kw-step-label { color: var(--kw-ink); }
-  .kw-step-done .kw-step-num {
-    background: var(--kw-ink); color: #fff; border-color: var(--kw-ink);
-    font-size: 13px;
-  }
-  .kw-step-done .kw-step-label { color: var(--kw-ink); }
-  .kw-step-rule {
-    flex: 1 1 auto; min-width: 24px;
-    height: 1.5px; background: var(--kw-rule);
-    margin: 0 14px;
-  }
+  .head{text-align:center; padding:50px 0 6px;}
+  .step-label{font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold);}
+  .progress{display:flex; gap:8px; justify-content:center; margin:18px auto 28px; max-width:280px;}
+  .progress span{flex:1; height:5px; border-radius:99px; background:var(--line);}
+  .progress span.now{background:var(--navy);}
+  .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12;}
+  .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6;}
 
-  /* ── Eyebrow (section label) ─────────────────────────────────────── */
-  .kw-eyebrow {
-    display: inline-flex; align-items: baseline; gap: 12px;
-    color: var(--kw-accent);
-  }
-  .kw-eyebrow-num {
-    font-family: 'Nanum Myeongjo', serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .08em;
-  }
-  .kw-eyebrow-text {
-    font-size: 13px; font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-  }
+  .tiles{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:40px 0 8px;}
+  .tile{display:flex; gap:14px; align-items:flex-start; background:var(--ivory-soft); border:2px solid var(--line); border-radius:14px; padding:20px 20px; cursor:pointer; text-align:left; position:relative; min-height:84px; transition:border-color .12s, box-shadow .12s;}
+  .tile:hover{border-color:var(--gold-soft);}
+  .tile.sel{border-color:var(--gold); background:#fff; box-shadow:0 12px 30px -16px rgba(195,154,63,.55);}
+  .tile h3{font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin-bottom:4px;}
+  .tile p{font-size:15px; color:var(--ink); line-height:1.45;}
+  .tile .check{position:absolute; top:16px; right:16px; width:26px; height:26px; border-radius:50%; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; font-weight:700;}
+  .tile.sel .check{background:var(--gold); border-color:var(--gold);}
+  .tile.wide{grid-column:1 / -1;}
 
-  /* ── Inputs (text, textarea) ─────────────────────────────────────── */
-  .kw-input {
-    display: block; width: 100%;
-    height: 56px;
-    padding: 0 18px;
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 12px;
-    font-size: 17px; font-weight: 500;
-    color: var(--kw-ink);
-    transition: border-color .15s, box-shadow .15s;
-  }
-  .kw-input:hover { border-color: var(--kw-ink-3); }
-  .kw-input:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
-  .kw-input::placeholder { color: var(--kw-ink-3); font-weight: 500; }
-  .kw-textarea {
-    display: block; width: 100%;
-    min-height: 120px;
-    padding: 14px 18px;
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 12px;
-    font-size: 17px; font-weight: 500;
-    color: var(--kw-ink);
-    resize: vertical;
-    line-height: 1.5;
-  }
-  .kw-textarea:focus { border-color: var(--kw-accent); box-shadow: 0 0 0 3px var(--kw-accent-soft); }
-  .kw-textarea::placeholder { color: var(--kw-ink-3); }
-  .kw-input-helper {
-    margin-top: 8px;
-    font-size: 13px; font-weight: 500;
-    color: var(--kw-ink-3);
-  }
+  .note-box{margin:28px 0 0;}
+  .note-box label{display:block; font-size:16px; font-weight:600; color:var(--navy); margin-bottom:10px;}
+  .note-box textarea{width:100%; min-height:96px; border:2px solid var(--line); border-radius:12px; background:#fff; padding:14px 16px; font-size:19px; font-family:'Inter',sans-serif; color:var(--navy); resize:vertical; line-height:1.5;}
+  .note-box textarea:focus{outline:none; border-color:var(--gold);}
+  .note-box .privacy{font-size:14px; color:var(--ink-2); margin-top:10px; line-height:1.5;}
 
-  /* Notes card — unified design shared with Medical Step Ⅱ boxes */
-  .kw-notes-card {
-    background: var(--kw-bg-warm);
-    border: 1px solid var(--kw-line);
-    border-radius: 18px;
-    padding: 20px 22px 22px;
-    position: relative;
-    box-shadow: inset 4px 0 0 var(--kw-accent);
-  }
-  .kw-notes-card-head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  .kw-notes-card-label {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-size: 12px; font-weight: 700;
-    letter-spacing: .14em;
-    color: var(--kw-accent);
-    text-transform: uppercase;
-  }
-  .kw-notes-card-label .kw-notes-card-pen {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--kw-accent); color: #fff;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700;
-  }
-  .kw-notes-card-secure {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 600;
-    color: var(--kw-ink-3);
-    letter-spacing: .04em;
-  }
-  .kw-notes-card .kw-textarea {
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 12px;
-    min-height: 160px;
-    padding: 18px 20px;
-    font-size: 17px;
-    color: var(--kw-ink);
-    line-height: 1.5;
-  }
-  .kw-notes-card .kw-textarea:focus {
-    border-color: var(--kw-accent);
-    box-shadow: 0 0 0 3px var(--kw-accent-soft);
-  }
-  .kw-notes-card-foot {
-    margin-top: 12px;
-    font-size: 12px; font-weight: 500;
-    color: var(--kw-ink-3);
-  }
-  /* Example placeholder clears the moment the box is clicked */
-  .kw-textarea:focus::placeholder { color: transparent; }
+  .footbar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:10;}
+  .fb-in{max-width:880px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .back{font-size:16px; color:var(--ink); text-decoration:none; padding:10px 4px; min-height:44px; display:inline-flex; align-items:center;}
+  .count{font-size:15px; color:var(--ink-2);}
+  .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 30px; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
+  .btn:hover{background:var(--navy-soft);}
 
-  /* Calendar — interactive states */
-  .kw-cal-day.kw-pick { cursor: pointer; }
-  .kw-cal-day.kw-pick:hover { background: var(--kw-accent-soft); color: var(--kw-accent); }
-  .kw-cal-day.kw-cal-past { color: var(--kw-line); cursor: default; }
-  .kw-cal-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px;
-  }
-  .kw-cal-arrow {
-    width: 36px; height: 36px; border-radius: 50%;
-    border: 1.5px solid var(--kw-line); background: #fff;
-    color: var(--kw-ink); font-size: 18px; line-height: 1;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color .15s, color .15s;
-  }
-  .kw-cal-arrow:hover:not(:disabled) { border-color: var(--kw-accent); color: var(--kw-accent); }
-  .kw-cal-arrow:disabled { opacity: .3; cursor: not-allowed; }
-
-  /* "I'm flexible" — AI recommendation message */
-  .kw-flex-msg {
-    background: var(--kw-accent-soft);
-    border: 1.5px solid var(--kw-accent);
-    border-radius: 14px;
-    padding: 20px 22px;
-  }
-
-  /* Airport search w/ inline results — booking-site style */
-  .kw-airport-search {
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: border-color .15s, box-shadow .15s;
-  }
-  .kw-airport-search:focus-within {
-    border-color: var(--kw-accent);
-    box-shadow: 0 0 0 3px var(--kw-accent-soft);
-  }
-  .kw-airport-field {
-    display: flex; align-items: center; gap: 12px;
-    padding: 0 16px 0 20px;
-    height: 60px;
-    border-bottom: 1px solid var(--kw-rule);
-  }
-  .kw-airport-icon { color: var(--kw-accent); flex: none; }
-  .kw-airport-input {
-    flex: 1; height: 100%; min-width: 0;
-    background: transparent; border: none; outline: none;
-    font: inherit;
-    font-size: 18px; font-weight: 600;
-    color: var(--kw-ink);
-  }
-  .kw-airport-input::placeholder { color: var(--kw-ink-3); font-weight: 500; }
-  .kw-airport-clear {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--kw-bg-soft);
-    color: var(--kw-ink-3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; line-height: 1; cursor: pointer;
-    flex: none;
-  }
-  .kw-airport-results { background: #fff; }
-  .kw-airport-row {
-    display: grid;
-    grid-template-columns: 60px 1fr auto;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--kw-rule);
-    position: relative;
-    cursor: pointer;
-    transition: background .12s;
-  }
-  .kw-airport-row:last-child { border-bottom: none; }
-  .kw-airport-row:hover { background: var(--kw-bg-soft); }
-  .kw-airport-row.is-selected { background: var(--kw-accent-soft); }
-  .kw-airport-row-head {
-    cursor: default;
-    background: var(--kw-bg-soft);
-    grid-template-columns: 1fr auto;
-    padding: 10px 20px;
-    font-size: 12px; font-weight: 700;
-    color: var(--kw-ink-3);
-    letter-spacing: .04em;
-  }
-  .kw-airport-row-head:hover { background: var(--kw-bg-soft); }
-  .kw-airport-row-head b { color: var(--kw-ink); font-weight: 700; }
-  .kw-airport-code {
-    font-family: 'Inter', sans-serif;
-    font-size: 18px; font-weight: 800;
-    color: var(--kw-ink);
-    letter-spacing: .06em;
-    background: var(--kw-bg-soft);
-    border-radius: 8px;
-    padding: 6px 8px;
-    text-align: center;
-    border: 1px solid var(--kw-rule);
-  }
-  .kw-airport-row.is-selected .kw-airport-code {
-    background: var(--kw-accent);
-    color: #fff;
-    border-color: var(--kw-accent);
-  }
-  .kw-airport-name {
-    display: flex; flex-direction: column; gap: 2px;
-    font-size: 16px; font-weight: 700;
-    color: var(--kw-ink);
-    line-height: 1.25;
-  }
-  .kw-airport-hint {
-    font-size: 12px; font-weight: 500;
-    color: var(--kw-ink-3);
-  }
-  .kw-airport-dist {
-    font-size: 13px; font-weight: 600;
-    color: var(--kw-ink-3);
-    text-align: right;
-    white-space: nowrap;
-  }
-  .kw-airport-row.is-selected .kw-airport-dist { color: var(--kw-accent); }
-  .kw-airport-check {
-    position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--kw-accent); color: #fff;
-    display: none;
-  }
-
-  /* Segmented control (yes/no, fixed/flexible) */
-  .kw-segmented {
-    display: inline-flex;
-    background: var(--kw-bg-soft);
-    padding: 4px;
-    border-radius: 12px;
-    gap: 4px;
-  }
-  .kw-segmented button {
-    height: 44px;
-    padding: 0 22px;
-    border: none;
-    border-radius: 9px;
-    background: transparent;
-    font-size: 15px; font-weight: 600;
-    color: var(--kw-ink-3);
-    transition: background .15s, color .15s, box-shadow .15s;
-  }
-  .kw-segmented button.is-active {
-    background: #fff;
-    color: var(--kw-ink);
-    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04);
-  }
-
-  /* ── Inline 2-month calendar ─────────────────────────────────────── */
-  .kw-cal {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
-    background: #fff;
-  }
-  .kw-cal-month {}
-  .kw-cal-month-title {
-    font-size: 18px; font-weight: 700;
-    color: var(--kw-ink);
-    text-align: center;
-    margin-bottom: 16px;
-    letter-spacing: -0.01em;
-  }
-  .kw-cal-dow {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 6px;
-  }
-  .kw-cal-dow span {
-    text-align: center;
-    font-size: 11px; font-weight: 700;
-    color: var(--kw-ink-3);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-  .kw-cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    row-gap: 4px;
-  }
-  .kw-cal-day {
-    aspect-ratio: 1 / 1;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 500;
-    color: var(--kw-ink-2);
-    border-radius: 8px;
-    position: relative;
-  }
-  .kw-cal-blank { color: transparent; }
-  .kw-cal-day.kw-cal-in {
-    background: var(--kw-accent-soft);
-    color: var(--kw-accent);
-    border-radius: 0;
-    font-weight: 600;
-  }
-  .kw-cal-day.kw-cal-start, .kw-cal-day.kw-cal-end {
-    background: var(--kw-accent);
-    color: #fff;
-    font-weight: 700;
-  }
-  .kw-cal-day.kw-cal-start { border-radius: 999px 0 0 999px; }
-  .kw-cal-day.kw-cal-end   { border-radius: 0 999px 999px 0; }
-  /* Apple-style "Sunday red" hint */
-  .kw-cal-dow span:first-child { color: #c0394b; }
-
-  /* ── Logo cards (airline / hotel grid) ───────────────────────────── */
-  .kw-logo-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-  }
-  .kw-logo-grid.kw-cols-4 { grid-template-columns: repeat(4, 1fr); }
-  .kw-logo-grid.kw-cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .kw-logo {
-    position: relative;
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 14px;
-    padding: 14px 12px 12px;
-    text-align: center;
-    display: flex; flex-direction: column; align-items: stretch; gap: 8px;
-    transition: border-color .15s, transform .15s, box-shadow .15s;
-    cursor: pointer;
-  }
-  .kw-logo:hover {
-    border-color: var(--kw-ink);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.05);
-  }
-  .kw-logo.is-selected {
-    border-color: var(--kw-accent);
-    box-shadow: 0 0 0 3px var(--kw-accent-soft);
-  }
-  .kw-logo-mark {
-    height: 56px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--kw-rule);
-  }
-  .kw-logo-air {
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 19px;
-    letter-spacing: 0.04em;
-  }
-  .kw-logo-img {
-    max-width: 84%;
-    max-height: 38px;
-    width: auto; height: auto;
-    object-fit: contain;
-    display: block;
-  }
-  .kw-logo-hotel {
-    font-family: 'Nanum Myeongjo', serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  .kw-logo-name {
-    font-size: 12px; font-weight: 600;
-    color: var(--kw-ink-2);
-    line-height: 1.2;
-  }
-  .kw-logo-check {
-    position: absolute; top: -8px; right: -8px;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--kw-accent); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700;
-    box-shadow: 0 2px 6px rgba(178,20,100,.4);
-  }
-
-  /* ── Party-type cards ────────────────────────────────────────────── */
-  .kw-party-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-  }
-  .kw-party {
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 16px;
-    padding: 20px 16px 18px;
-    text-align: left;
-    display: flex; flex-direction: column; gap: 14px;
-    cursor: pointer;
-    transition: border-color .15s, transform .15s;
-    min-height: 168px;
-  }
-  .kw-party:hover {
-    border-color: var(--kw-ink);
-    transform: translateY(-1px);
-  }
-  .kw-party.is-selected {
-    border-color: var(--kw-accent);
-    background: var(--kw-accent-soft);
-    box-shadow: 0 0 0 3px var(--kw-accent-soft);
-  }
-  .kw-party-icon { width: 36px; height: 36px; }
-  .kw-party-label {
-    font-size: 18px; font-weight: 700;
-    color: var(--kw-ink);
-    letter-spacing: -0.01em;
-  }
-  .kw-party-sub {
-    font-size: 13px; font-weight: 500;
-    color: var(--kw-ink-3);
-    line-height: 1.35;
-    margin-top: -8px;
-  }
-
-  /* ── Stepper (adults/children count) ─────────────────────────────── */
-  .kw-stepper {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #fff;
-    border: 1.5px solid var(--kw-line);
-    border-radius: 12px;
-    padding: 16px 18px;
-  }
-  .kw-stepper-info {}
-  .kw-stepper-label {
-    font-size: 17px; font-weight: 700;
-    color: var(--kw-ink);
-  }
-  .kw-stepper-hint {
-    font-size: 13px; font-weight: 500;
-    color: var(--kw-ink-3);
-    margin-top: 2px;
-  }
-  .kw-stepper-ctrl {
-    display: flex; align-items: center; gap: 14px;
-  }
-  .kw-stepper-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    border: 1.5px solid var(--kw-line);
-    background: #fff;
-    color: var(--kw-ink);
-    font-size: 18px; font-weight: 500;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color .15s, background .15s, color .15s;
-  }
-  .kw-stepper-btn:hover:not(:disabled) {
-    border-color: var(--kw-accent); color: var(--kw-accent);
-  }
-  .kw-stepper-btn:disabled {
-    opacity: .35; cursor: not-allowed;
-  }
-  .kw-stepper-val {
-    min-width: 22px; text-align: center;
-    font-size: 19px; font-weight: 700;
-    color: var(--kw-ink);
-  }
-
-  /* ── Page wrapper (per-variation container) ──────────────────────── */
-  .kw-wrap {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
-  .kw-wrap-narrow {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
-
-  /* ── Page hero (section breadcrumb + title) ──────────────────────── */
-  .kw-page-hero {
-    padding: 8px 0 40px;
-  }
-  .kw-page-hero h1 {
-    font-size: clamp(36px, 4vw, 56px);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.05;
-    color: var(--kw-ink);
-    margin: 14px 0 16px;
-  }
-  .kw-page-hero h1 .kw-accent { color: var(--kw-accent); }
-  .kw-page-hero p {
-    font-size: clamp(17px, 1.3vw, 19px);
-    font-weight: 500;
-    line-height: 1.45;
-    color: var(--kw-ink-2);
-    max-width: 56ch;
-  }
-
-  /* ── Question row (eyebrow + question + helper + input column) ──── */
-  .kw-q-row {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 48px;
-    padding: 40px 0;
-    border-top: 1px solid var(--kw-rule);
-  }
-  .kw-q-row:first-of-type { border-top: none; padding-top: 16px; }
-  .kw-q-title {
-    font-size: 26px; font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.018em;
-    color: var(--kw-ink);
-    margin: 10px 0 10px;
-    white-space: nowrap;
-  }
-  .kw-q-help {
-    font-size: 14px; font-weight: 500;
-    color: var(--kw-ink-3);
-    line-height: 1.45;
-  }
-  .kw-q-input { min-width: 0; }
-
-  /* ── Footer action bar ───────────────────────────────────────────── */
-  .kw-actionbar {
-    margin-top: 56px;
-    padding: 28px 0 48px;
-    border-top: 1px solid var(--kw-rule);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
-  }
-  .kw-actionbar-l { display: flex; align-items: center; gap: 14px; }
-  .kw-actionbar-note {
-    font-size: 13px; font-weight: 500;
-    color: var(--kw-ink-3);
-    max-width: 36ch;
-  }
-
-  /* ════════════════════════════════════════════════════════════════════
-     Variation-specific overrides
-     ════════════════════════════════════════════════════════════════════ */
-
-  /* V2 — Rich editorial */
-  .kw-v2 .kw-q-row {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 64px 0;
-  }
-  .kw-v2 .kw-q-head {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
-  }
-  .kw-v2 .kw-q-title {
-    font-size: 44px;
-    letter-spacing: -0.025em;
-    line-height: 1.05;
-    margin: 14px 0 0;
-  }
-  .kw-v2 .kw-q-help {
-    font-size: 17px;
-    color: var(--kw-ink-2);
-    line-height: 1.5;
-  }
-  .kw-v2-imageband {
-    height: 320px;
-    margin: 0 0 0;
-    border-radius: 18px;
-    overflow: hidden;
-    position: relative;
-    display: flex; align-items: flex-end; padding: 28px;
-    background: var(--kw-bg-warm);
-  }
-  .kw-v2-imageband .kw-img-cap {
-    font-family: 'Nanum Myeongjo', serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--kw-ink-2);
-    letter-spacing: .04em;
-    background: rgba(255,255,255,.85);
-    padding: 6px 14px;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-  }
-  .kw-v2-imageband .kw-img-corner {
-    position: absolute; top: 18px; right: 18px;
-    font-size: 11px; font-weight: 700; letter-spacing: .12em;
-    color: rgba(255,255,255,.9);
-    background: rgba(0,0,0,.35);
-    padding: 5px 10px;
-    border-radius: 999px;
-  }
-  /* image band — abstract gradient placeholders */
-  .kw-img-1 { background: linear-gradient(135deg, #f7d3df 0%, #fde9d3 60%, #fff 100%); }
-  .kw-img-2 { background: linear-gradient(135deg, #e4dccf 0%, #f0eee9 50%, #d9d3c4 100%); }
-  .kw-img-3 { background: linear-gradient(135deg, #d9e1f2 0%, #f5f5f7 60%, #b7c4dd 100%); }
-  .kw-img-4 { background: linear-gradient(135deg, #1d1d1f 0%, #2a2a2c 50%, #4a3a30 100%); }
-  .kw-img-4 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
-  .kw-img-5 { background: linear-gradient(135deg, #1b2d5c 0%, #2e4a85 60%, #b48a3a 100%); }
-  .kw-img-5 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
-  .kw-img-6 { background: linear-gradient(135deg, #0e4035 0%, #14583f 50%, #c9a96e 100%); }
-  .kw-img-6 .kw-img-cap { background: rgba(0,0,0,.5); color: #fff; }
-  .kw-img-7 { background: linear-gradient(135deg, #f0eee9 0%, #d9d3c4 50%, #8a0e4d 110%); }
-
-  /* V3 — Wizard. Side rail + focused content */
-  .kw-v3-grid {
-    display: grid; grid-template-columns: 280px 1fr;
-    gap: 80px;
-    padding: 40px 0 0;
-  }
-  .kw-v3-rail {
-    position: sticky; top: 96px; align-self: start;
-  }
-  .kw-v3-rail-eyebrow {
-    font-size: 12px; font-weight: 700;
-    letter-spacing: .12em;
-    color: var(--kw-accent);
-    text-transform: uppercase;
-    margin-bottom: 22px;
-  }
-  .kw-v3-rail h2 {
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin: 0 0 28px;
-    color: var(--kw-ink);
-  }
-  .kw-v3-substeps {
-    display: flex; flex-direction: column; gap: 4px;
-    position: relative;
-  }
-  .kw-v3-substep {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--kw-rule);
-  }
-  .kw-v3-substep:last-child { border-bottom: none; }
-  .kw-v3-substep-bullet {
-    width: 26px; height: 26px; border-radius: 50%;
-    border: 1.5px solid var(--kw-line);
-    background: #fff;
-    color: var(--kw-ink-3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-    flex: none;
-  }
-  .kw-v3-substep.is-done .kw-v3-substep-bullet {
-    background: var(--kw-ink); color: #fff; border-color: var(--kw-ink);
-  }
-  .kw-v3-substep.is-active .kw-v3-substep-bullet {
-    background: var(--kw-accent); color: #fff; border-color: var(--kw-accent);
-    box-shadow: 0 0 0 4px var(--kw-accent-soft);
-  }
-  .kw-v3-substep-label {
-    font-size: 15px; font-weight: 600;
-    color: var(--kw-ink-3);
-  }
-  .kw-v3-substep.is-active .kw-v3-substep-label { color: var(--kw-ink); font-weight: 700; }
-  .kw-v3-substep.is-done .kw-v3-substep-label { color: var(--kw-ink); }
-  .kw-v3-substep-sum {
-    font-size: 12px; font-weight: 500;
-    color: var(--kw-ink-3);
-    margin-left: auto;
-    text-align: right;
-    max-width: 130px;
-    line-height: 1.2;
-  }
-  .kw-v3-content {
-    min-width: 0;
-    min-height: 720px;
-  }
-  .kw-v3-content h1 {
-    font-size: 52px;
-    font-weight: 700;
-    letter-spacing: -0.028em;
-    line-height: 1.04;
-    margin: 16px 0 14px;
-    color: var(--kw-ink);
-  }
-  .kw-v3-content h1 .kw-accent { color: var(--kw-accent); }
-  .kw-v3-content > p.kw-lede {
-    font-size: 19px;
-    color: var(--kw-ink-2);
-    line-height: 1.45;
-    max-width: 50ch;
-    margin: 0 0 40px;
-  }
-  .kw-v3-meta {
-    display: flex; align-items: center; gap: 16px;
-    font-size: 13px; font-weight: 700;
-    letter-spacing: .12em; text-transform: uppercase;
-    color: var(--kw-ink-3);
-    margin-bottom: 18px;
-  }
-  .kw-v3-meta .kw-v3-q-num {
-    color: var(--kw-accent);
-    font-family: 'Nanum Myeongjo', serif;
-    font-size: 15px;
-    letter-spacing: .06em;
-  }
-  .kw-v3-nav {
-    margin-top: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 20px;
-  }
-  .kw-v3-progress {
-    display: flex; align-items: center; gap: 16px;
-    font-size: 13px; font-weight: 500; color: var(--kw-ink-3);
-  }
-  .kw-v3-progress-bar {
-    width: 160px; height: 4px;
-    background: var(--kw-rule); border-radius: 999px;
-    overflow: hidden;
-  }
-  .kw-v3-progress-bar > i {
-    display: block; height: 100%; background: var(--kw-accent);
-    border-radius: 999px;
-  }
-
-  /* V4 — Conversational */
-  .kw-v4-bg {
-    background: var(--kw-bg-warm);
-    min-height: 100%;
-  }
-  .kw-v4-thread {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 56px 24px 200px;
-    display: flex; flex-direction: column; gap: 28px;
-  }
-  .kw-v4-day {
-    text-align: center;
-    font-size: 12px; font-weight: 700;
-    letter-spacing: .14em;
-    color: var(--kw-ink-3);
-    text-transform: uppercase;
-    padding: 8px 0;
-  }
-  .kw-v4-msg {
-    display: flex; gap: 16px;
-    align-items: flex-start;
-  }
-  .kw-v4-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    flex: none;
-    background: var(--kw-ink);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Nanum Myeongjo', serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: .04em;
-  }
-  .kw-v4-avatar-img {
-    background: linear-gradient(135deg, #f5e7b9 0%, #d9b25a 100%);
-    color: #4a2e0a;
-  }
-  .kw-v4-bubble {
-    background: #fff;
-    border: 1px solid var(--kw-rule);
-    border-radius: 20px;
-    border-top-left-radius: 6px;
-    padding: 18px 22px 16px;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--kw-ink);
-    max-width: 540px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04);
-  }
-  .kw-v4-bubble .kw-v4-sender {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--kw-accent);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .kw-v4-bubble p { margin: 0; }
-  .kw-v4-bubble p + p { margin-top: 8px; }
-  .kw-v4-bubble strong { color: var(--kw-ink); font-weight: 700; }
-
-  .kw-v4-msg.is-user { flex-direction: row-reverse; }
-  .kw-v4-msg.is-user .kw-v4-bubble {
-    background: var(--kw-ink);
-    color: #fff;
-    border-color: var(--kw-ink);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 6px;
-  }
-  .kw-v4-msg.is-user .kw-v4-avatar {
-    background: #fff; color: var(--kw-ink);
-    border: 1.5px solid var(--kw-rule);
-  }
-
-  .kw-v4-attached {
-    background: #fff;
-    border: 1px solid var(--kw-rule);
-    border-radius: 18px;
-    padding: 22px;
-    margin-left: 60px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04);
-  }
-  .kw-v4-attached-head {
-    font-size: 12px; font-weight: 700;
-    color: var(--kw-ink-3);
-    letter-spacing: .12em; text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-  .kw-v4-active {
-    background: #fff;
-    border: 2px solid var(--kw-accent);
-    border-radius: 18px;
-    padding: 24px;
-    margin-left: 60px;
-    box-shadow: 0 8px 28px rgba(178,20,100,.12);
-    position: relative;
-  }
-  .kw-v4-active::before {
-    content: 'YOUR TURN';
-    position: absolute;
-    top: -10px; left: 22px;
-    background: var(--kw-accent); color: #fff;
-    font-size: 10px; font-weight: 700;
-    letter-spacing: .14em;
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
-  .kw-v4-active h4 {
-    margin: 0 0 14px;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--kw-ink);
-    letter-spacing: -0.01em;
-  }
-  .kw-v4-future {
-    margin-left: 60px;
-    padding: 18px 22px;
-    border: 1.5px dashed var(--kw-line);
-    border-radius: 18px;
-    color: var(--kw-ink-3);
-    font-size: 14px;
-    font-weight: 500;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .kw-v4-future .kw-v4-future-q {
-    font-weight: 700; color: var(--kw-ink-2);
-  }
-  .kw-v4-composer {
-    position: sticky; bottom: 0;
-    background: linear-gradient(to top, var(--kw-bg-warm) 70%, rgba(240,238,233,0));
-    padding: 32px 24px 28px;
-    margin: -32px -24px 0;
-  }
-  .kw-v4-composer-inner {
-    max-width: 720px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 999px;
-    padding: 8px 8px 8px 24px;
-    display: flex; align-items: center; gap: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.06), 0 0 0 1px var(--kw-rule);
-  }
-  .kw-v4-composer-inner input {
-    flex: 1; border: none; outline: none;
-    font-size: 16px; height: 48px;
-    background: transparent;
-  }
-  .kw-v4-composer-inner input::placeholder { color: var(--kw-ink-3); }
-
-  /* Design canvas tweaks — let our artboards fill width */
-  .dc-card { background: #fff; }
-</style>
-<style>
-  #kw-nav-auth .kw-nav-auth-link {
-    font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #1a1a1a;
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-  }
-  #kw-nav-auth .kw-nav-auth-link:hover { background: #fff; }
+  @media(max-width:640px){ .tiles{grid-template-columns:1fr;} .head h1{font-size:28px;} }
 </style>
 </head>
 <body>
-<div id="kw-nav-auth" style="position:fixed; top:16px; right:20px; z-index:1000;"></div>
-<script type="module" src="/js/auth.js"></script>
-<script src="/js/nav-auth.js" defer></script>
 
-<!-- React + Babel pinned versions -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
-        integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
-        crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
-        integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
-        crossorigin="anonymous"></script>
-<div id="root"></div>
+<nav><div class="wrap nav-in">
+  <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
+  <a href="index.html" class="exit">Save &amp; exit</a>
+</div></nav>
 
-<!-- Shared components + V1 Minimal (chosen direction per README) -->
-<script src="js/step1-trip-shared.js?v=a4534440" defer></script>
-<script src="js/step1-trip-v1.js?v=93038a03" defer></script>
+<div class="wrap">
+  <div class="head">
+    <div class="step-label">Step 1 of 4 · Your care</div>
+    <div class="progress"><span class="now"></span><span></span><span></span><span></span></div>
+    <h1>What would you like looked after?</h1>
+    <p>Choose anything that brings you — you don't have to be sure yet. We'll guide you from here.</p>
+  </div>
 
-<!-- State store (the V1 component handles its own interactions + navigation) -->
+  <div class="tiles" id="tiles">
+    <button class="tile" data-key="screening" type="button">
+      <div><h3>Health screening</h3><p>A thorough, full-body checkup.</p></div>
+      <span class="check">✓</span>
+    </button>
+    <button class="tile" data-key="knees" type="button">
+      <div><h3>Knees &amp; joints</h3><p>Orthopedics — knees, hips, spine.</p></div>
+      <span class="check">✓</span>
+    </button>
+    <button class="tile" data-key="dental" type="button">
+      <div><h3>Dental</h3><p>Implants, crowns, restorative work.</p></div>
+      <span class="check">✓</span>
+    </button>
+    <button class="tile" data-key="eyes" type="button">
+      <div><h3>Eyes</h3><p>Cataracts, vision, eye health.</p></div>
+      <span class="check">✓</span>
+    </button>
+    <button class="tile wide" data-key="unsure" type="button">
+      <div><h3>I'm not sure yet</h3><p>Help me figure out what I need.</p></div>
+      <span class="check">✓</span>
+    </button>
+  </div>
+
+  <div class="note-box">
+    <label for="note">Anything you'd like us to know? <span style="font-weight:500;color:var(--ink-2);">(optional)</span></label>
+    <textarea id="note" placeholder="A symptom, a worry, a question — whatever's on your mind."></textarea>
+    <p class="privacy">We don't store this — it's used only to help our AI build your best plan.</p>
+  </div>
+</div>
+
+<div class="footbar"><div class="fb-in">
+  <a href="index.html" class="back">← Back</a>
+  <span class="count" id="count">Choose what you need</span>
+  <button class="btn" id="continue" type="button">Continue →</button>
+</div></div>
+
 <script src="js/state.js"></script>
-
 <script>
-  window.addEventListener('DOMContentLoaded', function () {
-    // V1 Minimal is fully interactive — it owns its calendar, steppers,
-      // autocomplete, and Continue/Back navigation. No overlay needed.
-      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(TripV1Minimal));
-  });
+  (function () {
+    var tiles = document.getElementById('tiles');
+    var countEl = document.getElementById('count');
+    var noteEl = document.getElementById('note');
+
+    // restore prior answers (if returning)
+    var prior = (window.kwState && kwState.loadStep('care')) || null;
+    if (prior) {
+      (prior.needs || []).forEach(function (k) {
+        var t = tiles.querySelector('[data-key="' + k + '"]');
+        if (t) t.classList.add('sel');
+      });
+      if (prior.note) noteEl.value = prior.note;
+    }
+
+    function selected() {
+      return Array.prototype.slice.call(tiles.querySelectorAll('.tile.sel'))
+        .map(function (t) { return t.getAttribute('data-key'); });
+    }
+    function refresh() {
+      var n = selected().length;
+      countEl.textContent = n === 0 ? 'Choose what you need' : (n + ' selected — pick as many as you like');
+    }
+
+    tiles.addEventListener('click', function (ev) {
+      var t = ev.target.closest('.tile');
+      if (!t) return;
+      t.classList.toggle('sel');
+      refresh();
+    });
+
+    document.getElementById('continue').addEventListener('click', function () {
+      // care.note is intentionally kept client-side only; backend must NOT persist it to the DB.
+      if (window.kwState) kwState.saveStep('care', { needs: selected(), note: noteEl.value.trim() });
+      window.location.href = 'step2.html';
+    });
+
+    refresh();
+  })();
 </script>
-
-<!-- Han mark shared SVG defs (kept here so all variations can <use href> -->
-<svg width="0" height="0" style={{position:'absolute'}} aria-hidden="true"></svg>
-
 </body>
 </html>
