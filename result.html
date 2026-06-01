@@ -11,8 +11,8 @@
   :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; --care:#5C7C63; --rest:#C39A3F; --explore:#2A3C5E; --travel:#9A938A; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
-  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
-  .wrap{max-width:980px; margin:0 auto; padding:0 36px;}
+  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:84px;}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 36px;}
   h1,h2,h3,.brand{font-family:'Fraunces',Georgia,serif;}
   a{color:inherit;}
   .label{font-size:13px; font-weight:600; letter-spacing:2.2px; text-transform:uppercase; color:var(--gold);}
@@ -23,8 +23,8 @@
   .nav-save{font-size:15px; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--gold); padding-bottom:2px;}
 
   .head{text-align:center; padding:60px 0 8px;}
-  .head h1{font-size:clamp(36px,5vw,50px); font-weight:600; line-height:1.06;}
-  .head p{font-size:19px; color:var(--ink); margin:20px auto 0; max-width:32em; line-height:1.6;}
+  .head h1{font-size:clamp(36px,5vw,50px); font-weight:600; line-height:1.06; text-wrap:balance;}
+  .head p{font-size:19px; color:var(--ink); margin:20px auto 0; max-width:32em; line-height:1.6; text-wrap:balance;}
   .recap{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:28px 0 0;}
   .recap span{background:var(--ivory-soft); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:15px; color:var(--navy);}
 
@@ -83,6 +83,15 @@
   .inrow input{flex:1; min-width:180px; height:54px; border-radius:10px; border:none; padding:0 18px; font-size:17px; font-family:'Inter',sans-serif;}
   .inrow .btn{background:var(--gold); color:#23304a; font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
   .invite .fine{color:#9FA9BC; font-size:14px; margin-top:18px;}
+
+  /* sticky proceed bar — always-available CTA while scrolling */
+  .result-bar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:30; transition:transform .25s ease;}
+  .result-bar.hidden{transform:translateY(110%);}
+  .rb-in{max-width:1200px; margin:0 auto; padding:14px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .rb-label{font-size:16px; color:var(--ink);}
+  .rb-btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:14px 28px; cursor:pointer; min-height:44px; font-family:'Inter',sans-serif;}
+  .rb-btn:hover{background:var(--navy-soft);}
+  @media(max-width:560px){ .rb-label{display:none;} .rb-in{justify-content:center;} .rb-btn{width:100%;} }
 
   @media(max-width:760px){ .head h1{font-size:36px;} .cal{grid-template-columns:repeat(2,1fr);} .fee-block{grid-template-columns:1fr; gap:18px;} .fee-block ul{columns:1;} }
 </style>
@@ -168,6 +177,11 @@
   <div class="fine">Your plan is yours to keep. We'll only ever reach out if you ask us to.</div>
 </div></div>
 
+<div class="result-bar" id="resultBar"><div class="rb-in">
+  <span class="rb-label">Like this plan? Let's make it real — together.</span>
+  <button class="rb-btn" id="rb-cta" type="button">Let's go to Korea</button>
+</div></div>
+
 <script src="js/state.js"></script>
 <script>
   (function () {
@@ -231,6 +245,20 @@
       this.textContent = 'Thank you — we’ll be in touch.';
       this.disabled = true;
     });
+
+    // ---- sticky proceed bar ----
+    var bar = document.getElementById('resultBar');
+    document.getElementById('rb-cta').addEventListener('click', function () {
+      var talk = document.getElementById('talk');
+      talk.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(function () { document.getElementById('lead-email').focus(); }, 450);
+    });
+    // hide the bar once the invite section is on screen (no redundant overlap)
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { bar.classList.toggle('hidden', e.isIntersecting); });
+      }, { threshold: 0.25 }).observe(document.getElementById('talk'));
+    }
   })();
 </script>
 </body>

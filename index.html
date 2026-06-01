@@ -16,7 +16,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
-  .wrap{max-width:1080px; margin:0 auto; padding:0 40px;}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
   h1,h2,h3,.brand{font-family:'Fraunces',Georgia,serif;}
   a{color:inherit;}
   .label{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold);}
@@ -34,9 +34,9 @@
   .nav-cta{font-size:15px; font-weight:600; color:var(--navy)!important; border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center;}
 
   /* hero */
-  .hero{max-width:760px; margin:0 auto; text-align:center; padding:104px 0 24px;}
-  .hero h1{font-weight:600; font-size:clamp(40px,6vw,60px); line-height:1.05; letter-spacing:-.5px;}
-  .hero .sub{font-size:21px; line-height:1.6; color:var(--ink); margin:28px auto 0; max-width:30em;}
+  .hero{max-width:1040px; margin:0 auto; text-align:center; padding:104px 0 24px;}
+  .hero h1{font-weight:600; font-size:clamp(38px,5.2vw,56px); line-height:1.06; letter-spacing:-.5px; text-wrap:balance;}
+  .hero .sub{font-size:21px; line-height:1.6; color:var(--ink); margin:28px auto 0; max-width:30em; text-wrap:balance;}
   .cta-row{margin-top:40px; display:flex; flex-direction:column; align-items:center; gap:20px;}
   .care-line{max-width:760px; margin:64px auto 0; text-align:center; color:var(--ink-2); font-size:16px;}
   .care-line .sep{color:var(--gold); margin:0 12px;}
@@ -49,8 +49,8 @@
   /* sections */
   section.blk{padding:96px 0;}
   .center{text-align:center; max-width:640px; margin:0 auto;}
-  .center h2{font-size:clamp(30px,4vw,42px); font-weight:600; line-height:1.1;}
-  .center .lede{font-size:20px; color:var(--ink); margin-top:18px; line-height:1.6;}
+  .center h2{font-size:clamp(30px,4vw,42px); font-weight:600; line-height:1.1; text-wrap:balance;}
+  .center .lede{font-size:20px; color:var(--ink); margin-top:18px; line-height:1.6; text-wrap:balance;}
 
   /* how it works */
   .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:36px; margin-top:60px;}
@@ -76,7 +76,7 @@
   .faq-list{margin-top:48px; border-top:1px solid var(--line);}
   .faq-item{padding:26px 4px; border-bottom:1px solid var(--line);}
   .faq-item h3{font-size:21px; font-weight:600; color:var(--navy);}
-  .faq-item p{font-size:19px; color:var(--ink); line-height:1.6; margin-top:10px;}
+  .faq-item p{font-size:19px; color:var(--ink); line-height:1.6; margin-top:10px; padding-left:28px; max-width:64ch;}
 
   /* final cta */
   .final{background:var(--navy); color:#fff; text-align:center;}
@@ -115,7 +115,7 @@
 
 <div class="wrap">
   <section class="hero">
-    <h1>You're never<br>alone in Korea.</h1>
+    <h1>You're never alone in Korea.</h1>
     <p class="sub">World-class medical care in Korea — fully arranged, with someone beside you the whole way.</p>
     <div class="cta-row">
       <a href="step1.html" class="btn">Plan my trip</a>
@@ -159,12 +159,12 @@
 </div></section>
 
 <!-- FAQ -->
-<section id="faq" class="blk diff"><div class="wrap" style="max-width:800px;">
+<section id="faq" class="blk diff"><div class="wrap" style="max-width:1040px;">
   <div class="center"><div class="label">Before you ask</div><h2 style="margin-top:16px;">The questions on your mind.</h2></div>
   <div class="faq-list">
     <div class="faq-item"><h3>I've never traveled that far. What if something goes wrong?</h3><p>You're never on your own. A Mosim person is with you on the ground, and we plan for the unexpected so you don't have to.</p></div>
-    <div class="faq-item"><h3>Will there be a language barrier at the hospital?</h3><p>No. We interpret everything — with your doctors, your paperwork, your day. You'll always understand what's happening.</p></div>
-    <div class="faq-item"><h3>How much will it really cost?</h3><p>Clearly, upfront, with no surprises. You pay hospitals and hotels directly; Mosim charges one concierge fee.</p></div>
+    <div class="faq-item"><h3>Will there be a language barrier at the hospital?</h3><p>No. We interpret everything — with your doctors, your paperwork, your day. <br>You'll always understand what's happening.</p></div>
+    <div class="faq-item"><h3>How much will it really cost?</h3><p>Clearly, upfront, with no surprises. You pay hospitals and hotels directly; <br>Mosim charges one concierge fee.</p></div>
     <div class="faq-item"><h3>How long would I be in Korea?</h3><p>It depends on your care — we build the plan around your body and your pace, never the other way around.</p></div>
   </div>
 </div></section>

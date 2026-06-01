@@ -12,7 +12,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:124px;}
-  .wrap{max-width:760px; margin:0 auto; padding:0 36px;}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 36px;}
   h1,.brand{font-family:'Fraunces',Georgia,serif;}
   a{color:inherit;}
 
@@ -27,8 +27,8 @@
   .progress span{flex:1; height:5px; border-radius:99px; background:var(--line);}
   .progress span.done{background:var(--gold-soft);}
   .progress span.now{background:var(--navy);}
-  .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12;}
-  .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6;}
+  .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12; text-wrap:balance;}
+  .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6; text-wrap:balance;}
 
   .field{margin:36px 0;}
   .field .q{font-size:18px; font-weight:600; color:var(--navy); margin-bottom:14px;}
@@ -40,7 +40,7 @@
   .custom:focus{outline:none; border-color:var(--gold);}
 
   .footbar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:10;}
-  .fb-in{max-width:760px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .fb-in{max-width:1200px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .back{font-size:16px; color:var(--ink); text-decoration:none; padding:10px 4px; min-height:44px; display:inline-flex; align-items:center;}
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 30px; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
   .btn:hover{background:var(--navy-soft);}

@@ -12,7 +12,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:96px;}
-  .wrap{max-width:880px; margin:0 auto; padding:0 36px;}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 36px;}
   h1,h2,.brand{font-family:'Fraunces',Georgia,serif;}
   a{color:inherit;}
 
@@ -26,8 +26,8 @@
   .progress{display:flex; gap:8px; justify-content:center; margin:18px auto 28px; max-width:280px;}
   .progress span{flex:1; height:5px; border-radius:99px; background:var(--line);}
   .progress span.now{background:var(--navy);}
-  .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12;}
-  .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6;}
+  .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12; text-wrap:balance;}
+  .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6; text-wrap:balance;}
 
   .tiles{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:40px 0 8px;}
   .tile{display:flex; gap:14px; align-items:flex-start; background:var(--ivory-soft); border:2px solid var(--line); border-radius:14px; padding:20px 20px; cursor:pointer; text-align:left; position:relative; min-height:84px; transition:border-color .12s, box-shadow .12s;}
@@ -46,7 +46,7 @@
   .note-box .privacy{font-size:14px; color:var(--ink-2); margin-top:10px; line-height:1.5;}
 
   .footbar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:10;}
-  .fb-in{max-width:880px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .fb-in{max-width:1200px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .back{font-size:16px; color:var(--ink); text-decoration:none; padding:10px 4px; min-height:44px; display:inline-flex; align-items:center;}
   .count{font-size:15px; color:var(--ink-2);}
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 30px; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
@@ -67,7 +67,7 @@
     <div class="step-label">Step 1 of 4 · Your care</div>
     <div class="progress"><span class="now"></span><span></span><span></span><span></span></div>
     <h1>What would you like looked after?</h1>
-    <p>Choose anything that brings you — you don't have to be sure yet. We'll guide you from here.</p>
+    <p>Choose anything that matters to you — you don't have to be sure yet. We'll guide you from here.</p>
   </div>
 
   <div class="tiles" id="tiles">
