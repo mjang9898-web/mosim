@@ -26,16 +26,16 @@ description: The hard rules for building UI on mosim-site (static HTML/CSS + esb
 
 빌드: `npm run build`(JSX→JS + 콘텐츠 해시 스탬프, ~15ms). watch: `npm run dev`.
 
-**비-JSX plain JS**(`state.js`, `nav.js`, `js/pay.js` 등)는 빌드 대상이 아니라 **그대로 배포**된다. 새 plain JS는 esbuild/post-build/gitignore 목록에 넣지 말 것(JSX 엔트리만 거기 등록). `pay.html`처럼 funnel 밖 자체완결 페이지는 인라인 토큰 사용(≥19px·`#B21464`·`--ink-3` 동일 적용).
+**비-JSX plain JS**(`state.js`, `nav.js`, `js/pay.js` 등)는 빌드 대상이 아니라 **그대로 배포**된다. 새 plain JS는 esbuild/post-build/gitignore 목록에 넣지 말 것(JSX 엔트리만 거기 등록). `pay.html`처럼 funnel 밖 자체완결 페이지는 인라인 토큰 사용(≥19px·Warm Trust 팔레트·`--ink-2` 동일 적용).
 
 ## 콘텐츠 해시 캐시버스팅
 `scripts/post-build.mjs`가 HTML의 `js/x.js?v=<hash>`를 자동 갱신. `/js/*.js`는 `max-age=immutable`로 캐시되고 해시가 바뀌면 새로 받음. HTML은 `max-age=300`. 빌드 산출물 해시는 결정적이라 Vercel이 배포 시 재빌드해도 동일.
 
-## 디자인 토큰 (design.md)
-- 본문 **≥19px**. 회색은 **`--ink-3`(#4a4a4d)보다 옅게 금지**(WCAG AA).
-- 마젠타는 **`#B21464`(`--accent`)만**. 다른 핑크 금지.
-- `index.html` `:root`: `--bg`#fff, `--bg-soft`#f5f5f7, `--ink`#1d1d1f, `--ink-2`#2a2a2c, `--ink-3`#4a4a4d, `--accent`#B21464, `--gold`#b48a3a.
-- 자체완결 페이지(signup/signin/me 등)는 인라인 토큰을 자체 정의 — 공유 스타일시트로 리팩터 강요 금지.
+## 디자인 토큰 (design.md v2 — Warm Trust)
+- 본문 **≥19px**(시니어). 회색은 **`--ink-2`(#8A8479)보다 옅게 금지**.
+- **마젠타/핑크 폐기.** 골드(`--gold` #C39A3F)는 액센트로만(밑줄·라벨·구분점). 헤드라인 **Fraunces serif**, 본문 **Inter**.
+- `index.html` `:root`: `--ivory`#F7F2EA, `--ivory-soft`#FBF8F2, `--navy`#1B2A4A(헤드라인·텍스트·1차 버튼), `--navy-soft`#2A3C5E, `--gold`#C39A3F, `--ink`#54514B, `--ink-2`#8A8479, `--line`#E5DBC8.
+- 자체완결 페이지(signup/signin/me 등)는 인라인 토큰 자체 정의 — 단 Warm Trust 팔레트 따를 것. 옛 마젠타 K-Wellness는 `legacy-2026-06-01` 태그에 보존.
 
 ## 페이지/상태 규칙
 - **새 페이지 추가 금지**(PRD funnel 외). 필요하면 PRD 먼저.
