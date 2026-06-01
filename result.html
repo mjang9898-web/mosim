@@ -1,807 +1,237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>K-Wellness Concierge — Your Itinerary</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mosim — Your plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/*
- * Result page. Layout from the user's "mosim_calendar_clean" design.
- * Accent colors swapped from the original blue (#0066cc / #2997ff)
- * to the K-Wellness magenta palette for site-wide consistency.
- * Category colors (culture green, cuisine orange, travel purple,
- * rest gray) are semantic and kept as-is.
- */
-:root {
-  --accent: #B21464;
-  --accent-deep: #8a0e4d;
-  --accent-soft: rgba(178, 20, 100, .08);
-  --accent-tint: #fae8f1;     /* light magenta surface */
-  --accent-tint-2: #fdf6fa;   /* even lighter magenta */
-  --ink: #1d1d1f;
-  --rule: #e8e8ed;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { background:#f5f5f7; }
-body { font-family:"SF Pro Display",system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
-a { text-decoration:none; color:inherit; }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; --care:#5C7C63; --rest:#C39A3F; --explore:#2A3C5E; --travel:#9A938A; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 36px;}
+  h1,h2,h3,.brand{font-family:'Fraunces',Georgia,serif;}
+  a{color:inherit;}
+  .label{font-size:13px; font-weight:600; letter-spacing:2.2px; text-transform:uppercase; color:var(--gold);}
 
-/* ─── K-Wellness brand nav (shared across all pages) ─── */
-nav.top {
-  position:sticky; top:0; z-index:200;
-  background:rgba(255,255,255,.9);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid var(--rule);
-  height:64px;
-}
-nav.top .inner {
-  height:100%; display:flex; align-items:center; justify-content:space-between;
-  padding:0 24px; max-width:1320px; margin:0 auto;
-}
-nav.top .brand { font-weight:700; font-size:18px; color:var(--ink); }
-nav.top .right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-.nav-cta {
-  display:inline-flex; align-items:center;
-  height:38px; padding:0 16px; border-radius:9999px;
-  background:var(--accent); color:#fff;
-  font-family:"SF Pro Text",system-ui,sans-serif;
-  font-weight:600; font-size:13px;
-  transition:background .2s;
-}
-.nav-cta:hover { background:var(--accent-deep); }
-.nav-cta.ghost { background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
-.nav-cta.ghost:hover { background:var(--ink); color:#fff; }
+  nav{padding:18px 0; border-bottom:1px solid var(--line);}
+  .nav-in{display:flex; justify-content:space-between; align-items:center;}
+  .brand{font-weight:600; font-size:22px; text-decoration:none;} .brand .dot{color:var(--gold);}
+  .nav-save{font-size:15px; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--gold); padding-bottom:2px;}
 
-.page { font-family:"SF Pro Display",system-ui,-apple-system,sans-serif; background:#f5f5f7; }
-.hero { background:#1d1d1f; color:#fff; padding:36px 24px 28px; text-align:center; }
-.hero-eyebrow { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; font-weight:700; }
-.hero-title { font-size:34px; font-weight:600; letter-spacing:-0.3px; margin-bottom:6px; }
-.hero-sub { font-family:"SF Pro Text",system-ui,sans-serif; font-size:15px; color:#aaa; margin-bottom:22px; }
-.hero-pills { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
-.hero-pill { background:rgba(255,255,255,.08); border:0.5px solid rgba(255,255,255,.15); border-radius:9999px; padding:6px 14px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#fff; }
-.tab-nav { position:sticky; top:64px; z-index:100; background:rgba(245,245,247,.96); backdrop-filter:saturate(180%) blur(20px); border-bottom:0.5px solid #e0e0e0; display:grid; grid-template-columns:repeat(5,1fr); }
-.tab-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; cursor:pointer; background:none; border:none; border-bottom:2px solid transparent; color:#7a7a7a; }
-.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
-.tab-icon { font-size:20px; line-height:1; }
-.tab-label { font-family:"SF Pro Text",system-ui,sans-serif; font-size:10px; font-weight:500; line-height:1; white-space:nowrap; color:inherit; }
-.tab-btn.active .tab-label { font-weight:600; }
-.tab-panel { display:none; } .tab-panel.active { display:block; }
+  .head{text-align:center; padding:60px 0 8px;}
+  .head h1{font-size:clamp(36px,5vw,50px); font-weight:600; line-height:1.06;}
+  .head p{font-size:19px; color:var(--ink); margin:20px auto 0; max-width:32em; line-height:1.6;}
+  .recap{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:28px 0 0;}
+  .recap span{background:var(--ivory-soft); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:15px; color:var(--navy);}
 
-/* CALENDAR */
-.cal-section { padding:20px 16px 32px; max-width:780px; margin:0 auto; }
-.legend-row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:20px; }
-.leg { display:flex; align-items:center; gap:5px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:#666; }
-.leg-dot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
-.pre-label { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#aaa; margin-bottom:6px; }
-.dow-header { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px; }
-.dow-cell { text-align:center; font-family:"SF Pro Text",system-ui,sans-serif; font-size:10px; color:#aaa; font-weight:600; padding:3px 0; text-transform:uppercase; letter-spacing:.04em; }
-.week-row { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:4px; }
-.c-day { background:#fff; border-radius:10px; border:0.5px solid #e8e8e8; min-height:76px; padding:7px 7px 5px; cursor:pointer; position:relative; overflow:hidden; transition:transform .12s,box-shadow .12s; }
-.c-day:hover { transform:scale(1.03); box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:2; }
-.c-day.inactive { background:#fafafa; border-color:#f0f0f0; cursor:default; }
-.c-day.inactive:hover { transform:none; box-shadow:none; }
-.c-day.sel { border:2px solid var(--accent); }
-.c-day::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:10px 10px 0 0; }
-.c-day.t-medical::before { background:var(--accent); }
-.c-day.t-culture::before { background:#30b87a; }
-.c-day.t-cuisine::before { background:#f07020; }
-.c-day.t-rest::before { background:#c0c0c0; }
-.c-day.t-travel::before { background:#9060d0; }
-.c-day.t-mixed::before { background:linear-gradient(90deg,var(--accent) 50%,#30b87a 50%); }
-.c-day.inactive::before { display:none; }
-.c-day-num { font-size:13px; font-weight:600; color:#1d1d1f; margin-bottom:3px; }
-.c-day.inactive .c-day-num { color:#ccc; }
-.c-mo { font-family:"SF Pro Text",system-ui,sans-serif; font-size:9px; color:#c0c0c0; font-weight:400; }
-.c-badge { display:inline-block; font-family:"SF Pro Text",system-ui,sans-serif; font-size:9px; font-weight:600; border-radius:9999px; padding:2px 6px; margin-bottom:3px; }
-.bm{background:var(--accent-tint);color:var(--accent-deep);} .bc{background:#e6f8ef;color:#1a7a4a;} .br{background:#f0f0f0;color:#777;} .bt{background:#f0eafc;color:#6030b0;}
-.c-acts { display:flex; flex-direction:column; gap:2px; }
-.c-act { font-family:"SF Pro Text",system-ui,sans-serif; font-size:9px; color:#666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:3px; line-height:1.3; }
-.a-dot { width:4px; height:4px; border-radius:50%; flex-shrink:0; }
-.det-panel { background:#fff; border-radius:16px; border:0.5px solid #e0e0e0; margin:12px 0 0; display:none; overflow:hidden; }
-.det-panel.open { display:block; }
-.det-head { background:#1d1d1f; color:#fff; padding:16px 20px 12px; display:flex; align-items:center; justify-content:space-between; }
-.det-date-lbl { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#aaa; }
-.det-title { font-size:17px; font-weight:600; margin-top:2px; }
-.det-close { background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:50%; width:26px; height:26px; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.dslot { display:flex; gap:12px; padding:12px 20px; border-bottom:0.5px solid #f5f5f7; align-items:flex-start; }
-.dslot:last-child { border-bottom:none; }
-.dslot-t { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:#aaa; width:52px; flex-shrink:0; padding-top:2px; }
-.dslot-pip { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:3px; }
-.dslot-b { flex:1; }
-.dslot-n { font-size:14px; font-weight:600; color:#1d1d1f; margin-bottom:2px; }
-.dslot-d { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; line-height:1.5; }
-.dslot-tip { display:inline-flex; align-items:center; gap:3px; margin-top:5px; background:#fffbe8; border-radius:7px; padding:3px 8px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:#7a5000; }
-.sum-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px; }
-.sum-c { background:#fff; border-radius:12px; border:0.5px solid #e0e0e0; padding:12px; text-align:center; }
-.sum-n { font-size:20px; font-weight:600; color:#1d1d1f; }
-.sum-l { font-family:"SF Pro Text",system-ui,sans-serif; font-size:10px; color:#7a7a7a; margin-top:3px; }
-.cta-row { display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap; }
-.btn-p { background:var(--accent); color:#fff; border:none; border-radius:9999px; padding:12px 26px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background .2s; }
-.btn-p:hover { background:var(--accent-deep); }
-.btn-s { background:transparent; color:var(--accent); border:1.5px solid var(--accent); border-radius:9999px; padding:11px 26px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background .2s,color .2s; }
-.btn-s:hover { background:var(--accent); color:#fff; }
+  .preview-note{max-width:640px; margin:30px auto 0; text-align:center; font-size:15px; color:var(--ink-2); background:var(--ivory-soft); border:1px solid var(--line); border-radius:12px; padding:14px 20px; line-height:1.5;}
 
-.sched-section { padding:16px; max-width:780px; margin:0 auto; }
-.day-card { background:#fff; border-radius:16px; border:0.5px solid #e0e0e0; margin-bottom:10px; overflow:hidden; }
-.day-hdr { padding:16px 18px 12px; display:flex; align-items:center; gap:12px; cursor:pointer; }
-.d-badge { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; font-weight:600; border-radius:9px; padding:5px 12px; white-space:nowrap; flex-shrink:0; background:#f5f5f7; color:#1d1d1f; }
-.d-badge.med { background:var(--accent-tint); color:var(--accent); }
-.d-title { font-size:15px; font-weight:600; color:#1d1d1f; flex:1; }
-.d-tag { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:#7a7a7a; background:#f5f5f7; border-radius:9999px; padding:3px 9px; white-space:nowrap; }
-.d-tag.med { background:var(--accent-tint); color:var(--accent); }
-.d-chev { font-size:12px; color:#aaa; transition:transform .18s; flex-shrink:0; }
-.d-chev.open { transform:rotate(180deg); }
-.day-body { display:none; border-top:0.5px solid #f5f5f7; padding:0 18px 14px; }
-.day-body.open { display:block; }
+  .sec{padding:60px 0;}
+  .sec-h{text-align:center; margin-bottom:18px;}
+  .sec-h h2{font-size:clamp(26px,3.4vw,32px); font-weight:600;}
+  .legend{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin:0 0 26px;}
+  .legend span{display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink);}
+  .legend i{width:11px; height:11px; border-radius:3px; display:inline-block;}
 
-.med-section { padding:16px; max-width:780px; margin:0 auto; }
-.appt-card { background:#fff; border-radius:16px; border:0.5px solid #e0e0e0; margin-bottom:12px; overflow:hidden; }
-.appt-header { display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; }
-.appt-date-badge { background:var(--accent-tint); color:var(--accent-deep); font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; font-weight:600; border-radius:9px; padding:5px 12px; white-space:nowrap; flex-shrink:0; }
-.appt-info { flex:1; }
-.appt-name { font-size:15px; font-weight:600; color:#1d1d1f; margin-bottom:2px; }
-.appt-type { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; }
-.appt-chev { font-size:12px; color:#aaa; transition:transform .18s; }
-.appt-chev.open { transform:rotate(180deg); }
-.appt-body { display:none; border-top:0.5px solid #f0f0f0; }
-.appt-body.open { display:block; }
-.notice-row { display:flex; gap:12px; padding:13px 18px; border-bottom:0.5px solid #f5f5f7; align-items:flex-start; }
-.notice-row:last-child { border-bottom:none; }
-.notice-icon { font-size:18px; flex-shrink:0; }
-.notice-body { flex:1; }
-.notice-title { font-size:13px; font-weight:600; color:#1d1d1f; margin-bottom:2px; font-family:"SF Pro Text",system-ui,sans-serif; }
-.notice-desc { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; line-height:1.5; }
-.notice-tag { display:inline-block; margin-top:5px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; font-weight:600; border-radius:9999px; padding:3px 9px; }
-.tag-red{background:#fff0f0;color:#c03030;} .tag-amber{background:#fffbe8;color:#7a5000;} .tag-blue{background:var(--accent-tint);color:var(--accent-deep);} .tag-green{background:#e6f8ef;color:#1a7a4a;}
-.prep-card { background:#f5f5f7; border-radius:16px; padding:20px; margin-bottom:12px; }
-.prep-title { font-size:15px; font-weight:600; color:#1d1d1f; margin-bottom:14px; }
-.prep-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.prep-item { background:#fff; border-radius:12px; border:0.5px solid #e0e0e0; padding:12px 14px; display:flex; gap:10px; align-items:flex-start; }
-.prep-item-icon { font-size:18px; flex-shrink:0; }
-.prep-item-body { flex:1; }
-.prep-item-title { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; font-weight:600; color:#1d1d1f; margin-bottom:2px; }
-.prep-item-desc { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:#7a7a7a; line-height:1.4; }
-.emergency-card { background:#fff0f0; border:0.5px solid #f0c0c0; border-radius:16px; padding:18px 20px; margin-bottom:12px; }
-.emergency-title { font-size:14px; font-weight:600; color:#c03030; margin-bottom:10px; }
-.emergency-row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:0.5px solid #f0d0d0; font-family:"SF Pro Text",system-ui,sans-serif; font-size:13px; }
-.emergency-row:last-child { border-bottom:none; }
-.emergency-lbl{color:#666;} .emergency-val{font-weight:600;color:#1d1d1f;}
+  .cal{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
+  .cell{background:#fff; border:1px solid var(--line); border-radius:12px; padding:15px 15px 16px; min-height:158px; border-top:3px solid var(--line);}
+  .cell .d{font-size:11px; font-weight:600; letter-spacing:1px; color:var(--ink-2); text-transform:uppercase;}
+  .cell h3{font-size:16px; font-weight:600; color:var(--navy); margin:7px 0 4px; line-height:1.18;}
+  .cell .cat{font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; margin-bottom:11px;}
+  .slot{font-size:13px; color:var(--ink); line-height:1.4; padding:3px 0; border-top:1px solid #F0EADC;}
+  .slot b{color:var(--ink-2); font-weight:600;}
+  .care{border-top-color:var(--care);} .care .cat{color:var(--care);}
+  .rest{border-top-color:var(--rest);} .rest .cat{color:var(--rest);}
+  .explore{border-top-color:var(--explore);} .explore .cat{color:var(--explore);}
+  .travel{border-top-color:var(--travel);} .travel .cat{color:var(--travel);}
+  .cal-note{text-align:center; color:var(--ink-2); font-size:15px; font-style:italic; margin-top:24px;}
 
-.cost-section { padding:16px; max-width:780px; margin:0 auto; }
-.group-selector { background:#fff; border-radius:16px; border:0.5px solid #e0e0e0; padding:20px; margin-bottom:12px; }
-.group-label { font-size:15px; font-weight:600; color:#1d1d1f; margin-bottom:14px; }
-.group-tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.g-tab { border:1.5px solid #e0e0e0; border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; background:#f5f5f7; }
-.g-tab.active { border-color:var(--accent); background:var(--accent-tint-2); }
-.g-tab-num { font-size:20px; font-weight:600; color:#1d1d1f; }
-.g-tab.active .g-tab-num { color:var(--accent); }
-.g-tab-lbl { font-family:"SF Pro Text",system-ui,sans-serif; font-size:10px; color:#7a7a7a; margin-top:3px; }
-.g-tab.active .g-tab-lbl { color:var(--accent); }
-.concierge-card { background:var(--accent); border-radius:16px; padding:22px; margin-bottom:12px; color:#fff; }
-.cc-eyebrow { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:8px; }
-.cc-duration-tabs { display:flex; gap:8px; margin-bottom:18px; }
-.dur-tab { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; padding:5px 14px; border-radius:9999px; border:1.5px solid rgba(255,255,255,.35); color:rgba(255,255,255,.7); cursor:pointer; background:transparent; }
-.dur-tab.active { background:#fff; color:var(--accent); border-color:#fff; font-weight:600; }
-.cc-price-row { display:flex; align-items:flex-end; gap:6px; margin-bottom:4px; }
-.cc-price-big { font-size:38px; font-weight:600; letter-spacing:-0.5px; }
-.cc-price-sub { font-family:"SF Pro Text",system-ui,sans-serif; font-size:13px; color:rgba(255,255,255,.7); padding-bottom:6px; }
-.cc-price-per { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:rgba(255,255,255,.6); margin-bottom:16px; }
-.incl-excl { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.ie-block { background:rgba(255,255,255,.12); border-radius:12px; padding:14px; }
-.ie-head { font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; }
-.ie-head.incl{color:rgba(255,255,255,.9);} .ie-head.excl{color:rgba(255,200,100,.9);}
-.ie-item { display:flex; gap:6px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:11px; color:rgba(255,255,255,.85); margin-bottom:7px; line-height:1.4; }
-.ie-item:last-child{margin-bottom:0;}
-.add-card { background:#fff; border-radius:16px; border:0.5px solid #e0e0e0; padding:20px; margin-bottom:12px; }
-.add-title { font-size:15px; font-weight:600; color:#1d1d1f; margin-bottom:4px; }
-.add-subtitle { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; margin-bottom:16px; }
-.add-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:0.5px solid #f0f0f0; font-family:"SF Pro Text",system-ui,sans-serif; font-size:13px; }
-.add-row:last-child{border-bottom:none;}
-.add-row-l { color:#444; display:flex; align-items:center; gap:8px; }
-.add-row-icon { font-size:15px; }
-.add-row-note { font-size:11px; color:#aaa; display:block; margin-top:1px; }
-.add-row-v { font-weight:600; color:#1d1d1f; }
-.total-card { background:#1d1d1f; border-radius:16px; padding:22px; margin-bottom:12px; }
-.total-head { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; margin-bottom:16px; text-transform:uppercase; letter-spacing:.08em; }
-.total-rows { margin-bottom:16px; }
-.total-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:0.5px solid rgba(255,255,255,.08); font-family:"SF Pro Text",system-ui,sans-serif; font-size:13px; }
-.total-row:last-child{border-bottom:none;}
-.total-row-l{color:#aaa;} .total-row-v{color:#fff;font-weight:600;}
-.total-divider { height:0.5px; background:rgba(255,255,255,.15); margin:4px 0 14px; }
-.grand-row { display:flex; justify-content:space-between; align-items:flex-end; }
-.grand-lbl { font-size:15px; font-weight:600; color:#fff; }
-.grand-sub { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; margin-top:2px; }
-.grand-val { text-align:right; }
-.grand-per { font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#7a7a7a; margin-bottom:3px; }
-.grand-total { font-size:32px; font-weight:600; color:var(--accent); letter-spacing:-0.5px; }
-.compare-note { margin-top:14px; background:var(--accent-soft); border-radius:10px; padding:10px 14px; font-family:"SF Pro Text",system-ui,sans-serif; font-size:12px; color:#aaa; line-height:1.5; }
-.compare-note span{color:var(--accent);font-weight:600;}
-.info-section { padding:16px; max-width:780px; margin:0 auto; }
-.tips-card { background:#fffbf0; border-radius:16px; border:0.5px solid #f0ddb0; padding:20px; margin-bottom:12px; }
-.tip-row { display:flex; gap:12px; padding:10px 0; border-bottom:0.5px solid #f0e8d0; align-items:flex-start; }
-.tip-row:last-child{border-bottom:none;}
-.tip-ico{font-size:20px;flex-shrink:0;}
-.tip-body{flex:1;}
-.tip-head{font-weight:600;font-size:13px;color:#1d1d1f;margin-bottom:2px;font-family:"SF Pro Text",system-ui,sans-serif;}
-.tip-desc{font-size:12px;color:#7a7a7a;font-family:"SF Pro Text",system-ui,sans-serif;line-height:1.5;}
-.cta-block { background:#1d1d1f; border-radius:16px; padding:28px 24px; text-align:center; margin:4px 16px 40px; max-width:780px; margin-left:auto; margin-right:auto; }
-.cta-title { font-size:22px; font-weight:600; color:#fff; margin-bottom:6px; }
-.cta-sub { font-family:"SF Pro Text",system-ui,sans-serif; font-size:14px; color:#aaa; margin-bottom:20px; line-height:1.5; }
-@media (max-width:520px){ .prep-grid{grid-template-columns:1fr;} }
-/* ── Nav auth indicator ──────────────────────────── */
-#kw-nav-auth { display: inline-flex; align-items: center; margin-right: 12px; }
-#kw-nav-auth .kw-nav-auth-link {
-  font: inherit;
-  font-size: 15px;
-  color: var(--ink-2, #444);
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-}
-#kw-nav-auth .kw-nav-auth-link:hover { background: var(--bg-2, #f5f5f5); color: var(--ink-1, #1a1a1a); }
+  .pricing{background:var(--ivory-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:center;}
+  .fee-block .amt{font-family:'Fraunces',serif; font-size:46px; font-weight:600; color:var(--navy); white-space:nowrap;}
+  .fee-block .amt small{display:block; font-family:'Inter'; font-size:13px; color:var(--ink-2); font-weight:500; letter-spacing:.3px; margin-top:2px;}
+  .fee-block .who{font-size:16px; color:var(--care); font-weight:600; margin-bottom:8px;}
+  .fee-block ul{list-style:none; columns:2; column-gap:26px;}
+  .fee-block li{font-size:15px; color:var(--ink); padding:3px 0 3px 16px; position:relative; break-inside:avoid;}
+  .fee-block li:before{content:""; position:absolute; left:2px; top:11px; width:5px; height:5px; border-radius:50%; background:var(--gold);}
+
+  .compare{margin-top:30px;}
+  .compare .ctitle{font-size:16px; color:var(--ink); margin-bottom:20px;}
+  .bar-row{margin-bottom:20px;}
+  .bar-row .blab{display:flex; justify-content:space-between; font-size:15px; margin-bottom:8px;}
+  .bar-row .blab b{font-family:'Fraunces',serif; font-size:18px;}
+  .bar{height:30px; border-radius:7px; background:#ECE4D5; overflow:hidden;}
+  .bar i{display:block; height:100%; border-radius:7px;}
+  .bar-kr i{background:var(--care);} .bar-kr b{color:var(--care);}
+  .bar-us i{background:#C9C0B2;} .bar-us .blab b{color:var(--ink-2);}
+  .save{text-align:center; margin-top:8px; font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--navy);}
+  .save em{color:var(--care); font-style:normal;}
+  .est-note{font-size:14px; color:var(--ink-2); font-style:italic; margin-top:18px; text-align:center;}
+  .other{margin-top:30px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 26px;}
+  .other h3{font-size:18px; font-weight:600; margin-bottom:6px;}
+  .other p{font-size:15px; color:var(--ink-2); line-height:1.55;}
+  .other p b{color:var(--navy); font-weight:600;}
+
+  .invite{background:var(--navy); color:#fff; text-align:center;}
+  .invite h2{color:#fff; font-size:clamp(28px,3.6vw,36px); font-weight:600;}
+  .invite p{color:#D7DCE6; font-size:19px; margin:16px auto 28px; max-width:30em; line-height:1.6;}
+  .inrow{display:flex; gap:12px; justify-content:center; max-width:520px; margin:0 auto; flex-wrap:wrap;}
+  .inrow input{flex:1; min-width:180px; height:54px; border-radius:10px; border:none; padding:0 18px; font-size:17px; font-family:'Inter',sans-serif;}
+  .inrow .btn{background:var(--gold); color:#23304a; font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
+  .invite .fine{color:#9FA9BC; font-size:14px; margin-top:18px;}
+
+  @media(max-width:760px){ .head h1{font-size:36px;} .cal{grid-template-columns:repeat(2,1fr);} .fee-block{grid-template-columns:1fr; gap:18px;} .fee-block ul{columns:1;} }
 </style>
 </head>
 <body>
 
-<!-- ─── Brand nav (shared across all pages) ─── -->
-<nav class="top">
-  <div class="inner">
-    <a href="index.html" class="brand">K-Wellness</a>
-    <div class="right">
-      <div id="kw-nav-auth"></div>
-      <a href="step4.html" class="nav-cta ghost">Review selections</a>
-      <a href="#" class="nav-cta ghost" onclick="window.print(); return false;">Save as PDF</a>
-      <a href="step1.html" class="nav-cta">Plan Korea</a>
-    </div>
-  </div>
-</nav>
+<nav><div class="wrap nav-in">
+  <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
+  <a href="#talk" class="nav-save">Email me this plan</a>
+</div></nav>
 
-<div id="kw-itin-banner" style="display:none; background:#fff8e1; border-bottom:1px solid #f0e0a0; padding:10px 20px; font-size:15px; color:#7a5b00; text-align:center;">
-  📌 Viewing a saved itinerary. <a href="/me.html?tab=itineraries" style="color:#B21464;">Back to My Page</a>
-</div>
-
-<section id="kw-save-cta" style="display:none; max-width:760px; margin:24px auto; background:#fff; border:1px solid #e2e2e2; border-radius:14px; padding:24px 28px; text-align:center;">
-  <h2 style="margin:0 0 8px; font-size:22px;">Save this itinerary</h2>
-  <p style="margin:0 0 18px; color:#444; font-size:19px;">Track concierge progress and pick it up later from My Page.</p>
-  <button id="kw-save-btn" type="button" style="padding:14px 22px; background:#B21464; color:#fff; border:0; border-radius:10px; font-size:19px; font-weight:600; cursor:pointer;">
-    Save to my account
-  </button>
-  <div id="kw-save-msg" style="margin-top:12px; font-size:15px; min-height:1.2em;"></div>
-</section>
-
-<div class="page">
-<div class="hero">
-  <div class="hero-eyebrow">Your Mosim Itinerary</div>
-  <div class="hero-title" id="h-title">Korea, October 2025</div>
-  <div class="hero-sub" id="h-sub">12 nights · 4 people · AI-curated by Mosim</div>
-  <div class="hero-pills">
-    <div class="hero-pill">✈ Oct 1 Arrival</div>
-    <div class="hero-pill">🏥 3 Medical Appts</div>
-    <div class="hero-pill">🏯 8 Cultural Sites</div>
-    <div class="hero-pill">✈ Oct 13 Departure</div>
-  </div>
-</div>
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span></button>
-  <button class="tab-btn" onclick="switchTab(1)"><span class="tab-icon">🗓</span><span class="tab-label">Schedule</span></button>
-  <button class="tab-btn" onclick="switchTab(2)"><span class="tab-icon">🏥</span><span class="tab-label">Medical</span></button>
-  <button class="tab-btn" onclick="switchTab(3)"><span class="tab-icon">💰</span><span class="tab-label">Cost</span></button>
-  <button class="tab-btn" onclick="switchTab(4)"><span class="tab-icon">🤝</span><span class="tab-label">Care Guide</span></button>
-</div>
-
-<div class="tab-panel active" id="tp0">
-  <div class="cal-section">
-    <div class="legend-row">
-      <div class="leg"><div class="leg-dot" style="background:#B21464"></div>Medical</div>
-      <div class="leg"><div class="leg-dot" style="background:#30b87a"></div>Culture</div>
-      <div class="leg"><div class="leg-dot" style="background:#f07020"></div>Cuisine</div>
-      <div class="leg"><div class="leg-dot" style="background:#9060d0"></div>Travel</div>
-      <div class="leg"><div class="leg-dot" style="background:#c0c0c0"></div>Rest</div>
-    </div>
-    <div class="dow-header">
-      <div class="dow-cell">Sun</div><div class="dow-cell">Mon</div><div class="dow-cell">Tue</div>
-      <div class="dow-cell">Wed</div><div class="dow-cell">Thu</div><div class="dow-cell">Fri</div><div class="dow-cell">Sat</div>
-    </div>
-    <div id="calBody"></div>
-    <div class="det-panel" id="detPanel">
-      <div class="det-head">
-        <div><div class="det-date-lbl" id="detDate"></div><div class="det-title" id="detTitle"></div></div>
-        <button class="det-close" onclick="closeDet()">✕</button>
-      </div>
-      <div id="detSlots"></div>
-    </div>
-    <div class="sum-strip">
-      <div class="sum-c"><div class="sum-n">12</div><div class="sum-l">Nights</div></div>
-      <div class="sum-c"><div class="sum-n">3</div><div class="sum-l">Medical Appts</div></div>
-      <div class="sum-c"><div class="sum-n">8</div><div class="sum-l">Cultural Sites</div></div>
-      <div class="sum-c"><div class="sum-n" style="color:#B21464">4</div><div class="sum-l">Travelers</div></div>
-    </div>
-    <div class="cta-row">
-      <button class="btn-p" onclick="onBookNow()">Confirm &amp; Book</button>
-      <button class="btn-s" onclick="onModifyPlan()">Modify Plan ↗</button>
-    </div>
+<div class="wrap">
+  <div class="head">
+    <div class="label">Your plan</div>
+    <h1>Here's your Korea.</h1>
+    <p>Drafted from everything you chose — to be perfected together with your concierge. Nothing here is locked in.</p>
+    <div class="recap" id="recap"></div>
+    <div class="preview-note">This is a preview. Once you're ready, our AI and your concierge tailor every day around you — your care, your pace, your taste.</div>
   </div>
 </div>
 
-<div class="tab-panel" id="tp1"><div class="sched-section" id="schedList"></div></div>
+<!-- ITINERARY -->
+<div class="sec"><div class="wrap">
+  <div class="sec-h"><div class="label">Your days, at a glance</div><h2 style="margin-top:12px;">A calm rhythm, built around your care.</h2></div>
+  <div class="legend">
+    <span><i style="background:var(--care)"></i>Care</span>
+    <span><i style="background:var(--rest)"></i>Rest</span>
+    <span><i style="background:var(--explore)"></i>Explore</span>
+    <span><i style="background:var(--travel)"></i>Travel</span>
+  </div>
+  <div class="cal" id="cal"></div>
+  <div class="cal-note">Your concierge fine-tunes every day with you — nothing is rushed, nothing is fixed.</div>
+</div></div>
 
-<div class="tab-panel" id="tp2">
-  <div class="med-section">
-    <div class="appt-card">
-      <div class="appt-header" onclick="toggleAppt(this)">
-        <div class="appt-date-badge">Oct 2</div>
-        <div class="appt-info"><div class="appt-name">Samsung Medical Center</div><div class="appt-type">Comprehensive Health Checkup · 8:30 AM</div></div>
-        <div class="appt-chev open">▼</div>
-      </div>
-      <div class="appt-body open">
-        <div class="notice-row"><div class="notice-icon">🚫</div><div class="notice-body"><div class="notice-title">Fasting Required</div><div class="notice-desc">No food or drink (except water) after midnight the night before.</div><span class="notice-tag tag-red">No food after midnight</span></div></div>
-        <div class="notice-row"><div class="notice-icon">💊</div><div class="notice-body"><div class="notice-title">Medications</div><div class="notice-desc">Take essential daily medications with a small sip of water. Bring your complete medication list.</div><span class="notice-tag tag-amber">Bring full medication list</span></div></div>
-        <div class="notice-row"><div class="notice-icon">👕</div><div class="notice-body"><div class="notice-title">What to Wear</div><div class="notice-desc">Loose clothing. Avoid jewelry — must be removed for imaging.</div></div></div>
-        <div class="notice-row"><div class="notice-icon">📋</div><div class="notice-body"><div class="notice-title">Documents to Bring</div><div class="notice-desc">Passport, insurance card copy, recent US doctor notes (past 6 months).</div><span class="notice-tag tag-blue">English interpreter provided</span></div></div>
-        <div class="notice-row"><div class="notice-icon">⏱</div><div class="notice-body"><div class="notice-title">Expected Duration</div><div class="notice-desc">Allow 4–5 hours. Results briefing at 2:30 PM same day.</div></div></div>
-      </div>
-    </div>
-    <div class="appt-card">
-      <div class="appt-header" onclick="toggleAppt(this)">
-        <div class="appt-date-badge">Oct 4</div>
-        <div class="appt-info"><div class="appt-name">Bright Dental Seoul</div><div class="appt-type">Cleaning & Examination × 4 · 10:00 AM</div></div>
-        <div class="appt-chev">▼</div>
-      </div>
-      <div class="appt-body">
-        <div class="notice-row"><div class="notice-icon">🦷</div><div class="notice-body"><div class="notice-title">Before Your Appointment</div><div class="notice-desc">Brush and floss as normal. Avoid eating 1 hour before.</div><span class="notice-tag tag-green">No fasting required</span></div></div>
-        <div class="notice-row"><div class="notice-icon">💊</div><div class="notice-body"><div class="notice-title">Blood Thinners & Heart Conditions</div><div class="notice-desc">Inform the dentist if you take warfarin, aspirin, or Plavix, or have a heart valve condition.</div><span class="notice-tag tag-red">Important for blood thinner users</span></div></div>
-        <div class="notice-row"><div class="notice-icon">😬</div><div class="notice-body"><div class="notice-title">Dental Anxiety</div><div class="notice-desc">Let your Mosim guide know. Mild sedation can be arranged upon request.</div></div></div>
-        <div class="notice-row"><div class="notice-icon">📋</div><div class="notice-body"><div class="notice-title">Documents to Bring</div><div class="notice-desc">Passport and medications list. Recent US X-rays can be shared digitally.</div><span class="notice-tag tag-blue">English-speaking dentist</span></div></div>
-      </div>
-    </div>
-    <div class="appt-card">
-      <div class="appt-header" onclick="toggleAppt(this)">
-        <div class="appt-date-badge">Oct 8</div>
-        <div class="appt-info"><div class="appt-name">Severance Hospital</div><div class="appt-type">Orthopedic Consultation · 9:00 AM</div></div>
-        <div class="appt-chev">▼</div>
-      </div>
-      <div class="appt-body">
-        <div class="notice-row"><div class="notice-icon">🚫</div><div class="notice-body"><div class="notice-title">Fasting</div><div class="notice-desc">No fasting required for a standard orthopedic consultation.</div><span class="notice-tag tag-green">No fasting required</span></div></div>
-        <div class="notice-row"><div class="notice-icon">🩻</div><div class="notice-body"><div class="notice-title">Imaging & X-rays</div><div class="notice-desc">Bring US X-rays or MRI results. Digital files on USB or cloud link accepted.</div></div></div>
-        <div class="notice-row"><div class="notice-icon">👟</div><div class="notice-body"><div class="notice-title">Wear Comfortable Clothing</div><div class="notice-desc">Loose clothing allowing access to the area being examined.</div></div></div>
-        <div class="notice-row"><div class="notice-icon">💊</div><div class="notice-body"><div class="notice-title">Pain Medications</div><div class="notice-desc">Continue regular medications. Note any cortisone injections in the past 3 months.</div><span class="notice-tag tag-amber">Note recent cortisone injections</span></div></div>
-        <div class="notice-row"><div class="notice-icon">📋</div><div class="notice-body"><div class="notice-title">Documents to Bring</div><div class="notice-desc">Passport, orthopedic notes, imaging files.</div><span class="notice-tag tag-blue">English interpreter provided</span></div></div>
-      </div>
-    </div>
-    <div class="prep-card">
-      <div class="prep-title">🎒 General Preparation for All Appointments</div>
-      <div class="prep-grid">
-        <div class="prep-item"><div class="prep-item-icon">📄</div><div class="prep-item-body"><div class="prep-item-title">Medication List</div><div class="prep-item-desc">Names, dosages, frequency. Include supplements.</div></div></div>
-        <div class="prep-item"><div class="prep-item-icon">🛂</div><div class="prep-item-body"><div class="prep-item-title">Passport</div><div class="prep-item-desc">Required for all hospital registrations.</div></div></div>
-        <div class="prep-item"><div class="prep-item-icon">📁</div><div class="prep-item-body"><div class="prep-item-title">US Medical Records</div><div class="prep-item-desc">Recent results from the past 6 months.</div></div></div>
-        <div class="prep-item"><div class="prep-item-icon">💳</div><div class="prep-item-body"><div class="prep-item-title">Payment Method</div><div class="prep-item-desc">Major cards accepted. Itemized receipts provided.</div></div></div>
-        <div class="prep-item"><div class="prep-item-icon">🩺</div><div class="prep-item-body"><div class="prep-item-title">Known Allergies</div><div class="prep-item-desc">Communicated to each clinic in advance.</div></div></div>
-        <div class="prep-item"><div class="prep-item-icon">🗣</div><div class="prep-item-body"><div class="prep-item-title">Interpreter</div><div class="prep-item-desc">Mosim guide accompanies you to all appointments.</div></div></div>
-      </div>
-    </div>
-    <div class="emergency-card">
-      <div class="emergency-title">🚨 Emergency Contacts in Korea</div>
-      <div class="emergency-row"><span class="emergency-lbl">General Emergency</span><span class="emergency-val">119</span></div>
-      <div class="emergency-row"><span class="emergency-lbl">Police</span><span class="emergency-val">112</span></div>
-      <div class="emergency-row"><span class="emergency-lbl">Mosim 24/7 Line</span><span class="emergency-val">+82-10-XXXX-XXXX</span></div>
-      <div class="emergency-row"><span class="emergency-lbl">Nearest ER</span><span class="emergency-val">Samsung Medical · 12 min</span></div>
+<!-- PRICING -->
+<div class="pricing sec"><div class="wrap">
+  <div class="sec-h"><div class="label">Clear from the start</div><h2 style="margin-top:12px;">No hidden costs. No "sign up to see the price."</h2></div>
+
+  <div class="fee-block">
+    <div class="amt">$3,800<small>example · full 10 days</small></div>
+    <div>
+      <div class="who">This is everything Mosim charges.</div>
+      <ul>
+        <li>Planning &amp; itinerary</li>
+        <li>Private car &amp; driver</li>
+        <li>Personal interpreter</li>
+        <li>Everyday meals</li>
+        <li>Concierge beside you</li>
+        <li>24/7 support</li>
+      </ul>
     </div>
   </div>
-</div>
 
-<div class="tab-panel" id="tp3">
-  <div class="cost-section">
-    <div class="group-selector">
-      <div class="group-label">How many travelers?</div>
-      <div class="group-tabs">
-        <div class="g-tab" onclick="setGroup(1,this)"><div class="g-tab-num">1</div><div class="g-tab-lbl">person</div></div>
-        <div class="g-tab" onclick="setGroup(2,this)"><div class="g-tab-num">2</div><div class="g-tab-lbl">people</div></div>
-        <div class="g-tab" onclick="setGroup(3,this)"><div class="g-tab-num">3</div><div class="g-tab-lbl">people</div></div>
-        <div class="g-tab active" onclick="setGroup(4,this)"><div class="g-tab-num">4</div><div class="g-tab-lbl">people</div></div>
-      </div>
+  <div class="compare">
+    <div class="ctitle" style="margin-top:34px;"><b>Your medical care</b> — paid directly to the hospital (we arrange it, never mark it up):</div>
+    <div class="bar-row bar-kr">
+      <div class="blab"><span>In Korea (estimated)</span><b>~ $12,800</b></div>
+      <div class="bar"><i style="width:34%"></i></div>
     </div>
-    <div class="concierge-card">
-      <div class="cc-eyebrow">Mosim Concierge Fee</div>
-      <div class="cc-duration-tabs">
-        <button class="dur-tab active" onclick="setDuration(10,this)">10 days</button>
-        <button class="dur-tab" onclick="setDuration(14,this)">14 days</button>
-      </div>
-      <div class="cc-price-row"><div class="cc-price-big" id="ccPrice">$4,800</div><div class="cc-price-sub">total</div></div>
-      <div class="cc-price-per" id="ccPer">$1,200 per person · 4 people · 10 days</div>
-      <div class="incl-excl">
-        <div class="ie-block"><div class="ie-head incl">✓ Included</div><div class="ie-item">🚗 Dedicated private vehicle</div><div class="ie-item">👤 Full-time personal guide</div><div class="ie-item">🏥 Medical appointment booking</div><div class="ie-item">🗣 Medical interpretation</div><div class="ie-item">🎟 General admission tickets</div><div class="ie-item">📱 24/7 concierge support</div></div>
-        <div class="ie-block"><div class="ie-head excl">✕ Not Included</div><div class="ie-item">✈️ International flights</div><div class="ie-item">🏨 Hotel accommodation</div><div class="ie-item">🍽 Meals & dining</div><div class="ie-item">🏥 Medical procedure costs</div><div class="ie-item">🎵 Concerts & sports events</div><div class="ie-item">🛍 Personal shopping</div></div>
-      </div>
+    <div class="bar-row bar-us">
+      <div class="blab"><span>Typical in the U.S.</span><b>~ $37,500</b></div>
+      <div class="bar"><i style="width:100%"></i></div>
     </div>
-    <div class="add-card">
-      <div class="add-title">💳 Costs You Pay Directly</div>
-      <div class="add-subtitle">Estimates based on your group size and selected itinerary</div>
-      <div class="add-row"><div class="add-row-l"><div class="add-row-icon">✈️</div><div><div>Round-trip flights</div><span class="add-row-note">Economy avg. · US → Seoul</span></div></div><div class="add-row-v" id="flightCost">~$5,600</div></div>
-      <div class="add-row"><div class="add-row-l"><div class="add-row-icon">🏨</div><div><div>Hotel accommodation</div><span class="add-row-note">Mid-range Seoul · 12 nights</span></div></div><div class="add-row-v" id="hotelCost">~$2,400</div></div>
-      <div class="add-row"><div class="add-row-l"><div class="add-row-icon">🍽</div><div><div>Meals & dining</div><span class="add-row-note">$50–80/day per person</span></div></div><div class="add-row-v" id="mealCost">~$2,880</div></div>
-      <div class="add-row"><div class="add-row-l"><div class="add-row-icon">🏥</div><div><div>Medical procedures</div><span class="add-row-note">Checkup + dental + orthopedic × 4</span></div></div><div class="add-row-v" id="medCost">~$1,240</div></div>
-    </div>
-    <div class="total-card">
-      <div class="total-head">Total Estimated Cost</div>
-      <div class="total-rows">
-        <div class="total-row"><span class="total-row-l">Mosim Concierge Fee</span><span class="total-row-v" id="t-concierge">$4,800</span></div>
-        <div class="total-row"><span class="total-row-l">Flights (est.)</span><span class="total-row-v" id="t-flights">$5,600</span></div>
-        <div class="total-row"><span class="total-row-l">Hotel (est.)</span><span class="total-row-v" id="t-hotel">$2,400</span></div>
-        <div class="total-row"><span class="total-row-l">Meals (est.)</span><span class="total-row-v" id="t-meals">$2,880</span></div>
-        <div class="total-row"><span class="total-row-l">Medical (est.)</span><span class="total-row-v" id="t-medical">$1,240</span></div>
-      </div>
-      <div class="total-divider"></div>
-      <div class="grand-row">
-        <div><div class="grand-lbl">Total for <span id="grandGroup">4 people</span></div><div class="grand-sub">10-day trip · all estimates</div></div>
-        <div class="grand-val"><div class="grand-per">per person: <span id="grandPer">~$4,230</span></div><div class="grand-total" id="grandTotal">~$16,920</div></div>
-      </div>
-      <div class="compare-note">Equivalent medical costs in the US would exceed <span>$8,000+</span> for the same procedures.</div>
-    </div>
+    <div class="save">About <em>a third</em> of U.S. prices.</div>
+    <div class="est-note">Example estimates only — your hospital confirms the final quote before anything is decided.</div>
   </div>
-</div>
 
-<div class="tab-panel" id="tp4">
-  <div class="info-section">
-    <div class="tips-card">
-      <div class="tip-row"><div class="tip-ico">🚗</div><div class="tip-body"><div class="tip-head">All transport is private car</div><div class="tip-desc">No subway navigation required. Driver available 8 AM–9 PM daily.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">🏥</div><div class="tip-body"><div class="tip-head">English interpreters at every appointment</div><div class="tip-desc">Your Mosim guide accompanies you into every consultation room.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">🥗</div><div class="tip-body"><div class="tip-head">Dietary preferences honored throughout</div><div class="tip-desc">Low-sodium, diabetic-friendly, gluten-free, and non-spicy options confirmed at every meal.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">🚶</div><div class="tip-body"><div class="tip-head">Paced for your comfort</div><div class="tip-desc">Walking under 20 min per site. Rest days after every 2 activity days.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">📱</div><div class="tip-body"><div class="tip-head">24/7 WhatsApp concierge</div><div class="tip-desc">Your Mosim guide reachable any time — day or night.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">💊</div><div class="tip-body"><div class="tip-head">Medication & pharmacy guidance</div><div class="tip-desc">Most US medications have Korean equivalents at a fraction of the price.</div></div></div>
-      <div class="tip-row"><div class="tip-ico">🌡</div><div class="tip-body"><div class="tip-head">October weather in Seoul</div><div class="tip-desc">Mild and dry — 12–20°C (54–68°F). Light jacket for evenings.</div></div></div>
-    </div>
+  <div class="other">
+    <h3>Also handled, paid directly</h3>
+    <p><b>Hotel</b> (your choice of comfort) and <b>flights</b> — we book and arrange everything, you pay the provider directly, and we guide each payment safely.</p>
   </div>
-</div>
+</div></div>
 
-<div class="cta-block">
-  <div class="cta-title">Ready to confirm your journey?</div>
-  <div class="cta-sub">Your Mosim concierge will review this plan and reach out within 24 hours.</div>
-  <div class="cta-row">
-    <button class="btn-p" onclick="onBookNow()">Confirm &amp; Book</button>
-    <button class="btn-s" onclick="onModifyPlan()">Modify Plan ↗</button>
+<!-- INVITE -->
+<div class="invite sec" id="talk"><div class="wrap">
+  <h2>Want to make this real?</h2>
+  <p>Talk with us — no commitment, no pressure. Just answers, and a real person who's done this before.</p>
+  <div class="inrow">
+    <input id="lead-name" placeholder="Your name" autocomplete="name">
+    <input id="lead-email" placeholder="Your email" autocomplete="email" type="email">
+    <button class="btn" id="lead-send" type="button">Let's talk</button>
   </div>
-</div>
-</div>
+  <div class="fine">Your plan is yours to keep. We'll only ever reach out if you ask us to.</div>
+</div></div>
 
-<script src="js/state.js?v=2"></script>
+<script src="js/state.js"></script>
 <script>
-const COL={medical:'#B21464',culture:'#30b87a',cuisine:'#f07020',rest:'#c0c0c0',travel:'#9060d0'};
-const DAYS={
-  'Oct1':{type:'travel',badge:'Travel',btag:'bt',title:'Day 1 — Arrival & Settle In',slots:[{time:'2:00 PM',type:'travel',name:'Incheon Airport → Hotel',desc:'Private car. ~60 min.',tip:'Wheelchair-accessible confirmed'},{time:'4:00 PM',type:'rest',name:'Check-in & Rest',desc:'Lotte Hotel Seoul.'},{time:'7:00 PM',type:'cuisine',name:'Welcome Dinner',desc:'Mild Korean BBQ.'}]},
-  'Oct2':{type:'medical',badge:'Medical',btag:'bm',title:'Day 2 — Full Health Checkup',slots:[{time:'8:30 AM',type:'medical',name:'Samsung Medical Center',desc:'Blood work, imaging, cardiac.',tip:'Fast from midnight'},{time:'1:00 PM',type:'cuisine',name:'Post-checkup Lunch',desc:'Hospital café.'},{time:'4:00 PM',type:'rest',name:'Rest at Hotel',desc:'Free evening.'}]},
-  'Oct3':{type:'culture',badge:'Culture',btag:'bc',title:'Day 3 — Gyeongbokgung & Bukchon',slots:[{time:'9:30 AM',type:'culture',name:'Gyeongbokgung Palace',desc:'Private guide. Golf cart.',tip:'Early entry'},{time:'12:30 PM',type:'cuisine',name:'Samgyetang',desc:'Ginseng chicken soup.'},{time:'2:30 PM',type:'culture',name:'Bukchon Hanok Village',desc:'Flat route.'}]},
-  'Oct4':{type:'mixed',badge:'Medical+',btag:'bm',title:'Day 4 — Dental & Leisure',slots:[{time:'10:00 AM',type:'medical',name:'Bright Dental Seoul',desc:'Cleaning × 4.'},{time:'1:00 PM',type:'cuisine',name:'Insadong Lunch',desc:'Market alley.'},{time:'3:00 PM',type:'rest',name:'Free Afternoon',desc:'Shopping or rest.'}]},
-  'Oct5':{type:'rest',badge:'Rest',btag:'br',title:'Day 5 — Recovery Day',slots:[{time:'All Day',type:'rest',name:'Leisure at Hotel',desc:'Spa included.',tip:'Stream walk nearby'}]},
-  'Oct6':{type:'culture',badge:'Culture',btag:'bc',title:'Day 6 — Namsan & Han River',slots:[{time:'10:00 AM',type:'culture',name:'N Seoul Tower',desc:'Cable car.'},{time:'1:00 PM',type:'cuisine',name:'Namdaemun Lunch',desc:'Mild options.'},{time:'4:00 PM',type:'culture',name:'Han River Cruise',desc:'90-min. Seated.'}]},
-  'Oct7':{type:'culture',badge:'Culture',btag:'bc',title:'Day 7 — DMZ Day Tour',slots:[{time:'8:00 AM',type:'travel',name:'Depart for DMZ',desc:'Private coach.'},{time:'9:30 AM',type:'culture',name:'DMZ & 3rd Tunnel',desc:'English guide.',tip:'Flat shoes'},{time:'3:00 PM',type:'rest',name:'Return',desc:'Back by 4 PM.'}]},
-  'Oct8':{type:'medical',badge:'Medical',btag:'bm',title:'Day 8 — Orthopedic Consultation',slots:[{time:'9:00 AM',type:'medical',name:'Severance Hospital',desc:'Orthopedic.'},{time:'1:00 PM',type:'cuisine',name:'Yonsei Area Lunch',desc:'Café.'},{time:'3:30 PM',type:'culture',name:'Hongdae Walk',desc:'Street culture.'}]},
-  'Oct9':{type:'rest',badge:'Rest',btag:'br',title:'Day 9 — Free Day',slots:[{time:'All Day',type:'rest',name:'Personal Time',desc:'Concierge on call.'}]},
-  'Oct10':{type:'culture',badge:'Culture',btag:'bc',title:'Day 10 — Jeonju Day Trip',slots:[{time:'8:30 AM',type:'travel',name:'KTX to Jeonju',desc:'1hr 45min.'},{time:'11:00 AM',type:'culture',name:'Jeonju Hanok Village',desc:'Electric cart.'},{time:'1:00 PM',type:'cuisine',name:'Bibimbap',desc:'Jeonju specialty.'},{time:'5:00 PM',type:'travel',name:'Return KTX',desc:'Back by 7 PM.'}]},
-  'Oct11':{type:'culture',badge:'Culture',btag:'bc',title:'Day 11 — Insadong & Shopping',slots:[{time:'10:00 AM',type:'culture',name:'Insadong Art District',desc:'Crafts & galleries.'},{time:'1:00 PM',type:'cuisine',name:'Tea House Lunch',desc:'Temple food.'},{time:'3:00 PM',type:'culture',name:'Gyeonghuigung Palace',desc:'Peaceful.'}]},
-  'Oct12':{type:'medical',badge:'Medical',btag:'bm',title:'Day 12 — Final Check & Packing',slots:[{time:'10:00 AM',type:'medical',name:'Follow-up Consultation',desc:'Review results.'},{time:'1:00 PM',type:'cuisine',name:'Farewell Lunch',desc:'Hanwoo beef.'},{time:'5:00 PM',type:'rest',name:'Pack & Rest',desc:'Concierge assists.'}]},
-  'Oct13':{type:'travel',badge:'Depart',btag:'bt',title:'Day 13 — Departure',slots:[{time:'6:00 AM',type:'travel',name:'Hotel → Airport',desc:'Private car.',tip:'Allow 3 hrs'},{time:'10:30 AM',type:'travel',name:'Flight Home',desc:'Medical records emailed within 48 hrs.'}]}
-};
+  (function () {
+    var state = (window.kwState && kwState.loadAll()) || {};
 
-// 4 weeks. Oct 1, 2025 = Wednesday. Week rows are Sunday-based.
-const weekData = [
-  [{m:'Sep',d:21},{m:'Sep',d:22},{m:'Sep',d:23},{m:'Sep',d:24},{m:'Sep',d:25},{m:'Sep',d:26},{m:'Sep',d:27}],
-  [{m:'Sep',d:28},{m:'Sep',d:29},{m:'Sep',d:30},{m:'Oct',d:1},{m:'Oct',d:2},{m:'Oct',d:3},{m:'Oct',d:4}],
-  [{m:'Oct',d:5},{m:'Oct',d:6},{m:'Oct',d:7},{m:'Oct',d:8},{m:'Oct',d:9},{m:'Oct',d:10},{m:'Oct',d:11}],
-  [{m:'Oct',d:12},{m:'Oct',d:13},{m:'Oct',d:14},{m:'Oct',d:15},{m:'Oct',d:16},{m:'Oct',d:17},{m:'Oct',d:18}]
-];
+    // ---- recap chips from the planner choices ----
+    var CARE = { screening:'Screening', knees:'Knees', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
+    var LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible length' };
+    var PARTY = { solo:'Just you', couple:'You & your spouse', family:'With family' };
+    var PACE = { relaxed:'Relaxed pace', balanced:'Balanced pace', full:'Full days' };
 
-function buildCal(){
-  const body = document.getElementById('calBody');
+    var chips = [];
+    var care = (state.care && state.care.needs) || [];
+    if (care.length) chips.push(care.map(function (k) { return CARE[k] || k; }).join(' + '));
+    var trip = state.trip || {};
+    if (LENGTH[trip.length]) chips.push(LENGTH[trip.length]); else chips.push('Flexible length');
+    if (PARTY[trip.party]) chips.push(PARTY[trip.party]);
+    var comfort = state.comfort || {};
+    if (PACE[comfort.pace]) chips.push(PACE[comfort.pace]);
 
-  const lbl = document.createElement('div');
-  lbl.className = 'pre-label';
-  lbl.textContent = '🏠 Week before departure';
-  body.appendChild(lbl);
+    var recapEl = document.getElementById('recap');
+    chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
 
-  weekData.forEach(function(week, wi){
-    const row = document.createElement('div');
-    row.className = 'week-row';
-
-    week.forEach(function(item){
-      const key = item.m + item.d;
-      const info = DAYS[key];
-      const isTripDay = (item.m === 'Oct' && item.d >= 1 && item.d <= 13);
-      const cell = document.createElement('div');
-
-      if(isTripDay && info){
-        cell.className = 'c-day t-' + info.type;
-        cell.onclick = (function(k, c){ return function(){ openDet(k, c); }; })(key, cell);
-        const act = info.slots.slice(0,1).map(function(s){
-          return '<div class="c-act"><div class="a-dot" style="background:' + (COL[s.type]||'#aaa') + '"></div>' + s.name + '</div>';
+    // ---- itinerary renderer (the shape /api/schedule will return) ----
+    function renderItinerary(days) {
+      var cal = document.getElementById('cal');
+      cal.innerHTML = '';
+      days.forEach(function (d) {
+        var cell = document.createElement('div');
+        cell.className = 'cell ' + (d.cat || 'explore');
+        var slots = (d.slots || []).map(function (s) {
+          return '<div class="slot"><b>' + s.t + '</b> · ' + s.place + '</div>';
         }).join('');
-        cell.innerHTML = '<div class="c-day-num">' + item.d + '<span class="c-mo"> ' + item.m + '</span></div><div class="c-badge ' + info.btag + '">' + info.badge + '</div><div class="c-acts">' + act + '</div>';
-      } else {
-        cell.className = 'c-day inactive';
-        cell.innerHTML = '<div class="c-day-num">' + item.d + '<span class="c-mo"> ' + item.m + '</span></div>';
-      }
-      row.appendChild(cell);
+        cell.innerHTML = '<div class="d">' + d.day + '</div><h3>' + d.title + '</h3><div class="cat">' + d.cat + '</div>' + slots;
+        cal.appendChild(cell);
+      });
+    }
+
+    // Placeholder sample plan. TODO: replace with fetch('/api/schedule', {state}) once
+    // the Claude API key is set — renderItinerary() takes the returned JSON unchanged.
+    var SAMPLE = [
+      { day:'Day 1', title:'Arrival', cat:'travel', slots:[{t:'3:00 PM',place:'Incheon arrival'},{t:'Evening',place:'Car to hotel, Myeongdong'}] },
+      { day:'Day 2', title:'Health screening', cat:'care', slots:[{t:'9:00 AM',place:'Severance Hospital'},{t:'Afternoon',place:'Rest, Bukchon teahouse'}] },
+      { day:'Day 3', title:'Knee consultation', cat:'care', slots:[{t:'10:00 AM',place:'Orthopedic clinic'},{t:'Afternoon',place:'Gyeongbokgung walk'}] },
+      { day:'Day 4', title:'Rest & Insadong', cat:'rest', slots:[{t:'Late morning',place:'Insadong'},{t:'Afternoon',place:'Spa & recovery'}] },
+      { day:'Day 5', title:'Procedure', cat:'care', slots:[{t:'8:00 AM',place:'Hospital admission'},{t:'Day',place:'Recovery begins'}] },
+      { day:'Day 6', title:'Recovery', cat:'rest', slots:[{t:'All day',place:'Hospital rest'},{t:'Evening',place:'Concierge visit'}] },
+      { day:'Day 7', title:'Recovery', cat:'rest', slots:[{t:'Morning',place:'Gentle hotel rest'},{t:'Afternoon',place:'Short garden walk'}] },
+      { day:'Day 8', title:'Palace & city', cat:'explore', slots:[{t:'Morning',place:'Changdeokgung'},{t:'Lunch',place:'Korean BBQ (mild)'}] },
+      { day:'Day 9', title:'Follow-up', cat:'care', slots:[{t:'11:00 AM',place:'Follow-up check'},{t:'Afternoon',place:'Free & easy'}] },
+      { day:'Day 10', title:'Departure', cat:'travel', slots:[{t:'Morning',place:'Checkout'},{t:'Midday',place:'Car to Incheon'}] }
+    ];
+    renderItinerary(SAMPLE);
+
+    // ---- lead invite (UI only for now; backend wiring is the next step) ----
+    document.getElementById('lead-send').addEventListener('click', function () {
+      var name = document.getElementById('lead-name').value.trim();
+      var email = document.getElementById('lead-email').value.trim();
+      if (!email) { document.getElementById('lead-email').focus(); return; }
+      // TODO: POST to /api/lead with { name, email, state } — and STRIP state.care.note before sending (privacy rule).
+      this.textContent = 'Thank you — we’ll be in touch.';
+      this.disabled = true;
     });
-
-    body.appendChild(row);
-
-    if(wi < weekData.length - 1){
-      const sep = document.createElement('div');
-      sep.style.height = '5px';
-      body.appendChild(sep);
-    }
-  });
-}
-
-function openDet(key, cell){
-  const info = DAYS[key]; if(!info) return;
-  document.querySelectorAll('.c-day').forEach(function(c){ c.classList.remove('sel'); });
-  cell.classList.add('sel');
-  var d = key.replace('Oct','').replace('Sep','');
-  var mo = key.indexOf('Oct') === 0 ? 'October' : 'September';
-  document.getElementById('detDate').textContent = mo + ' ' + d + ', 2025';
-  document.getElementById('detTitle').textContent = info.title;
-  document.getElementById('detSlots').innerHTML = info.slots.map(function(s){
-    return '<div class="dslot"><div class="dslot-t">' + s.time + '</div>' +
-      '<div class="dslot-pip" style="background:' + (COL[s.type]||'#aaa') + '"></div>' +
-      '<div class="dslot-b"><div class="dslot-n">' + s.name + '</div>' +
-      '<div class="dslot-d">' + s.desc + '</div>' +
-      (s.tip ? '<div class="dslot-tip">💡 ' + s.tip + '</div>' : '') +
-      '</div></div>';
-  }).join('');
-  var p = document.getElementById('detPanel');
-  p.classList.add('open');
-  p.scrollIntoView({behavior:'smooth', block:'nearest'});
-}
-
-function closeDet(){
-  document.getElementById('detPanel').classList.remove('open');
-  document.querySelectorAll('.c-day').forEach(function(c){ c.classList.remove('sel'); });
-}
-
-function buildSched(){
-  var el = document.getElementById('schedList');
-  var themeMap = {medical:'Medical day',culture:'Culture day',rest:'Rest day',travel:'Travel',mixed:'Medical +'};
-  var html = '';
-  for(var d=1; d<=13; d++){
-    var info = DAYS['Oct'+d]; if(!info) continue;
-    var dbadge = (info.type==='medical'||info.type==='mixed') ? 'med' : '';
-    var dtagmed = (info.type==='medical'||info.type==='mixed') ? 'med' : '';
-    var slots = info.slots.map(function(s){
-      return '<div class="dslot"><div class="dslot-t">' + s.time + '</div>' +
-        '<div class="dslot-pip" style="background:' + (COL[s.type]||'#aaa') + '"></div>' +
-        '<div class="dslot-b"><div class="dslot-n">' + s.name + '</div>' +
-        '<div class="dslot-d">' + s.desc + '</div>' +
-        (s.tip ? '<div class="dslot-tip">💡 ' + s.tip + '</div>' : '') +
-        '</div></div>';
-    }).join('');
-    html += '<div class="day-card"><div class="day-hdr" onclick="toggleDay(this)">' +
-      '<div class="d-badge ' + dbadge + '">Oct ' + d + '</div>' +
-      '<div class="d-title">' + info.title + '</div>' +
-      '<div class="d-tag ' + dtagmed + '">' + (themeMap[info.type]||'') + '</div>' +
-      '<div class="d-chev' + (d===1?' open':'') + '">▼</div></div>' +
-      '<div class="day-body' + (d===1?' open':'') + '">' + slots + '</div></div>';
-  }
-  el.innerHTML = html;
-}
-
-function toggleDay(hdr){ var b=hdr.nextElementSibling, c=hdr.querySelector('.d-chev'), o=b.classList.contains('open'); b.classList.toggle('open',!o); c.classList.toggle('open',!o); }
-function toggleAppt(hdr){ var b=hdr.nextElementSibling, c=hdr.querySelector('.appt-chev'), o=b.classList.contains('open'); b.classList.toggle('open',!o); c.classList.toggle('open',!o); }
-function switchTab(idx){ document.querySelectorAll('.tab-btn').forEach(function(b,i){ b.classList.toggle('active',i===idx); }); document.querySelectorAll('.tab-panel').forEach(function(p,i){ p.classList.toggle('active',i===idx); }); }
-
-/* ─── Cost calculator ──────────────────────────────────────────
- * Per-person concierge unit price drops as the group grows.
- * Direct costs (flights / hotel / meals / medical) scale with
- * group size and trip length. All figures are estimates.
- * ───────────────────────────────────────────────────────────── */
-var cpp={1:2200,2:1800,3:1500,4:1200}, dm={10:1,14:1.4}, cg=4, cd=10;
-function fmt(n){ return '$'+n.toLocaleString(); }
-function updateCost(){
-  var ppu=cpp[cg], mult=dm[cd], conc=Math.round(ppu*cg*mult);
-  var nights=cd+1, rooms=cg<=2?1:2;
-  var fl=1400*cg, ht=200*rooms*nights, ml=Math.round(60*cg*cd), md=310*cg;
-  var grand=conc+fl+ht+ml+md, perP=Math.round(grand/cg);
-  document.getElementById('ccPrice').textContent=fmt(conc);
-  document.getElementById('ccPer').textContent=fmt(ppu)+' per person · '+cg+' people · '+cd+' days';
-  document.getElementById('flightCost').textContent='~'+fmt(fl);
-  document.getElementById('hotelCost').textContent='~'+fmt(ht);
-  document.getElementById('mealCost').textContent='~'+fmt(ml);
-  document.getElementById('medCost').textContent='~'+fmt(md);
-  document.getElementById('t-concierge').textContent=fmt(conc);
-  document.getElementById('t-flights').textContent='~'+fmt(fl);
-  document.getElementById('t-hotel').textContent='~'+fmt(ht);
-  document.getElementById('t-meals').textContent='~'+fmt(ml);
-  document.getElementById('t-medical').textContent='~'+fmt(md);
-  document.getElementById('grandGroup').textContent=cg+(cg===1?' person':' people');
-  document.getElementById('grandPer').textContent='~'+fmt(perP);
-  document.getElementById('grandTotal').textContent='~'+fmt(grand);
-}
-function setGroup(n,el){ cg=n; document.querySelectorAll('.g-tab').forEach(function(t){ t.classList.remove('active'); }); el.classList.add('active'); updateCost(); }
-function setDuration(d,el){ cd=d; document.querySelectorAll('.dur-tab').forEach(function(t){ t.classList.remove('active'); }); el.classList.add('active'); updateCost(); }
-
-/* ─── Hero stats from kw.state (graceful — keeps defaults if empty) ─── */
-function bindHeroFromState(){
-  if(!window.kwState) return;
-  var s = window.kwState.loadAll();
-  var trip = s.trip || {}, contact = s.contact || {};
-  var adults = parseInt(trip.adults,10)||0, children = parseInt(trip.children,10)||0;
-  var people = adults + children;
-  var nights = parseInt(trip.nights,10) || 12;   // default 12 to match demo
-  if(people > 0){
-    document.getElementById('h-sub').textContent =
-      nights + ' nights · ' + people + (people===1?' person':' people') + ' · AI-curated by Mosim';
-  }
-  // Short arrival label for the title — monthLabel ('May 2026' / 'Flexible
-  // dates') is preferred over the long formatted date range.
-  var arrival = trip.monthLabel || contact.when || '';
-  if(arrival){
-    document.getElementById('h-title').textContent = 'Korea, ' + arrival;
-  }
-}
-
-/* ─── Concierge fee payment ─────────────────────────────────────
- * Requires a saved itinerary (see setupSave). Creates a payment
- * group for it and sends the user to the shareable /pay page.
- * ───────────────────────────────────────────────────────────── */
-async function goToPayment(itineraryId) {
-  const supa = await window.kwAuth.init();
-  const { data: { session } } = await supa.auth.getSession();
-  if (!session) { window.location.href = '/signup.html?next=result&save=1'; return; }
-  const r = await fetch('/api/payment-group', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
-    body: JSON.stringify({ itinerary_id: itineraryId })
-  });
-  const b = await r.json();
-  if (!r.ok) { alert(b.error || 'Could not start payment'); return; }
-  window.location.href = '/pay?g=' + encodeURIComponent(b.token);
-}
-function onBookNow(){
-  alert('Please save your itinerary first, then use "Pay concierge fee".');
-}
-function onModifyPlan(){
-  window.location.href = 'step1.html';
-}
-
-/* ─── boot ─────────────────────────────────────────────────── */
-buildCal(); buildSched(); updateCost(); bindHeroFromState();
+  })();
 </script>
-<script>
-// Saved-itinerary viewer: if ?itin=<id> is in URL, load it from Supabase,
-// sync its `state` into kwState so the hero re-binds to the saved values,
-// show the banner, and set document.title.
-(async function loadSavedItinerary() {
-  const params = new URLSearchParams(window.location.search);
-  const itinId = params.get('itin');
-  if (!itinId) return;
-
-  // Wait for kwAuth to be available
-  let t = 0;
-  while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
-  if (!window.kwAuth) return;
-
-  const supa = await window.kwAuth.init();
-  const { data, error } = await supa
-    .from('itineraries')
-    .select('state, title')
-    .eq('id', itinId)
-    .single();
-
-  if (error || !data) {
-    document.body.innerHTML = '<div style="padding:40px;text-align:center;font-size:19px;color:#a00">Could not load this itinerary. It may have been deleted, or you may not have access.</div>';
-    return;
-  }
-
-  if (data.title) document.title = data.title + ' — K-Wellness';
-
-  // Sync saved state into sessionStorage so existing bindHeroFromState() works
-  if (data.state && window.kwState) {
-    try {
-      sessionStorage.setItem('kw.state.v1', JSON.stringify(data.state));
-      if (typeof bindHeroFromState === 'function') bindHeroFromState();
-    } catch (e) {
-      console.warn('[itin viewer] sync state failed', e);
-    }
-  }
-
-  // Show banner
-  const banner = document.getElementById('kw-itin-banner');
-  if (banner) banner.style.display = 'block';
-
-  // Owner can pay the concierge fee from the viewer.
-  const u = await window.kwAuth.getUser();
-  if (u) {
-    const bar = document.createElement('div');
-    bar.style = 'max-width:760px;margin:16px auto;text-align:center';
-    bar.innerHTML = '<button id="kw-pay-btn" style="padding:14px 22px;background:#B21464;color:#fff;border:0;border-radius:10px;font-size:19px;font-weight:600;cursor:pointer">Pay concierge fee →</button>';
-    document.querySelector('#kw-itin-banner')?.after(bar);
-    document.getElementById('kw-pay-btn').addEventListener('click', () => goToPayment(itinId));
-  }
-})();
-</script>
-<script>
-(async function setupSave() {
-  const cta = document.getElementById('kw-save-cta');
-  const btn = document.getElementById('kw-save-btn');
-  const msg = document.getElementById('kw-save-msg');
-  if (!cta || !btn || !msg) return;
-
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('itin')) return; // viewer mode — no save CTA
-
-  let t = 0;
-  while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
-  if (!window.kwAuth) return;
-  const user = await window.kwAuth.getUser();
-
-  function titleFromState(state) {
-    const when = state?.trip?.when || state?.trip?.monthLabel || state?.contact?.when || '';
-    const interest = (Array.isArray(state?.medical) && state.medical[0])
-      || (state?.medical && Object.keys(state.medical)[0])
-      || (state?.contact?.interest)
-      || 'Wellness';
-    const cap = s => String(s).charAt(0).toUpperCase() + String(s).slice(1).toLowerCase();
-    const base = `${cap(interest)} trip — ${when || 'Korea'}`;
-    return base.slice(0, 120);
-  }
-
-  async function doSave() {
-    btn.disabled = true; msg.style.color = ''; msg.textContent = 'Saving...';
-    const state = (window.kwState && window.kwState.loadAll) ? window.kwState.loadAll() : {};
-    const schedule = (window.kwSchedule && window.kwSchedule.generate) ? window.kwSchedule.generate(state) : { days: [] };
-    const title = titleFromState(state);
-    const supa = await window.kwAuth.init();
-    const { data: { session } } = await supa.auth.getSession();
-    if (!session) {
-      msg.style.color = '#a00';
-      msg.textContent = 'Sign-in expired. Please sign in again.';
-      btn.disabled = false;
-      return;
-    }
-    const r = await fetch('/api/save-itinerary', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'Authorization': 'Bearer ' + session.access_token
-      },
-      body: JSON.stringify({ state, schedule, title })
-    });
-    const body = await r.json();
-    if (!r.ok) {
-      msg.style.color = '#a00';
-      msg.textContent = body.error || 'Failed to save';
-      btn.disabled = false;
-      return;
-    }
-    msg.style.color = '#0a6';
-    msg.innerHTML = `Saved ✓ &nbsp; <a href="/me.html?tab=itineraries" style="color:#B21464;">View in My Page</a>`;
-    btn.textContent = 'Pay concierge fee →';
-    btn.disabled = false;
-    btn.replaceWith(btn.cloneNode(true));      // drop old click listeners
-    document.getElementById('kw-save-btn').addEventListener('click', () => goToPayment(body.id));
-  }
-
-  if (!user) {
-    cta.style.display = 'block';
-    btn.textContent = 'Sign up to save';
-    btn.addEventListener('click', () => {
-      window.location.href = '/signup.html?next=result&save=1';
-    });
-    return;
-  }
-
-  cta.style.display = 'block';
-  btn.addEventListener('click', doSave);
-
-  // Auto-save when user returns from signup with ?save=1
-  if (params.get('save') === '1') {
-    await doSave();
-  }
-})();
-</script>
-<script type="module" src="/js/auth.js"></script>
-<script src="/js/nav-auth.js" defer></script>
-
 </body>
 </html>
