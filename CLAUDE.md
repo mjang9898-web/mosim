@@ -61,8 +61,9 @@ mosim-site/
 - 빌드 후 산출물 (`js/step*.js`)는 gitignore됨 — 소스는 `.jsx`, 배포 시 Vercel이 `npm run build`로 자동 컴파일
 
 ### 디자인
-- 본문 19px 이하 금지. 회색은 `--ink-3` 이하로 옅게 가지 않기 (design.md 참고)
-- 마젠타(`#B21464`) 외 핑크 사용 금지
+- **design.md v2(Warm Trust 팔레트)가 기준** — 아이보리·남색·골드 + Fraunces 세리프. 옛 마젠타 K-Wellness는 `legacy-2026-06-01` 태그에 보존
+- 본문 19px 이하 금지. 회색은 `--ink-2`보다 옅게 가지 않기
+- 핑크/마젠타 폐기 — 골드(`#C39A3F`)는 액센트로만. 헤드라인은 Fraunces serif
 - 새 컬러 도입 전 design.md §2 팔레트와 충돌 확인
 
 ### 커밋
