@@ -31,6 +31,7 @@ const HASHED_BASENAMES = [
   'me-status.js',
   'me-profile.js',
   'me-settings.js',
+  'me-overview.js',
 ];
 
 // 1. Compute SHA-256 short hash (8 chars) of each built JS file.

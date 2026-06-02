@@ -5,8 +5,8 @@
   "type": "module",
   "description": "K-Wellness Concierge — 5-step funnel + AI itinerary",
   "scripts": {
-    "build": "esbuild js/step1-trip-shared.jsx js/step1-trip-v1.jsx js/step2-medical.jsx js/step3-culture.jsx js/step4-cuisine.jsx js/me-itineraries.jsx js/me-status.jsx js/me-profile.jsx js/me-settings.jsx --outdir=js --loader:.jsx=jsx --jsx=transform --minify --target=es2020 && node scripts/post-build.mjs",
-    "dev":   "esbuild js/step1-trip-shared.jsx js/step1-trip-v1.jsx js/step2-medical.jsx js/step3-culture.jsx js/step4-cuisine.jsx js/me-itineraries.jsx js/me-status.jsx js/me-profile.jsx js/me-settings.jsx --outdir=js --loader:.jsx=jsx --jsx=transform --sourcemap --watch=forever",
+    "build": "esbuild js/step1-trip-shared.jsx js/step1-trip-v1.jsx js/step2-medical.jsx js/step3-culture.jsx js/step4-cuisine.jsx js/me-itineraries.jsx js/me-status.jsx js/me-profile.jsx js/me-settings.jsx js/me-overview.jsx --outdir=js --loader:.jsx=jsx --jsx=transform --minify --target=es2020 && node scripts/post-build.mjs",
+    "dev":   "esbuild js/step1-trip-shared.jsx js/step1-trip-v1.jsx js/step2-medical.jsx js/step3-culture.jsx js/step4-cuisine.jsx js/me-itineraries.jsx js/me-status.jsx js/me-profile.jsx js/me-settings.jsx js/me-overview.jsx --outdir=js --loader:.jsx=jsx --jsx=transform --sourcemap --watch=forever",
     "test":  "node --test"
   },
   "dependencies": {

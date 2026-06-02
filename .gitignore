@@ -44,6 +44,7 @@ build/
 /js/me-status.js
 /js/me-profile.js
 /js/me-settings.js
+/js/me-overview.js
 /js/*.js.map
 
 # ── Local dev artifacts ──────────────────────────
