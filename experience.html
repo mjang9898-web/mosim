@@ -36,8 +36,11 @@
 
   .cat{padding:46px 0 0;}
   .cat-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:14px; margin-bottom:24px;}
+  .cat-l{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
   .cat-head h2{font-size:28px; font-weight:600;}
   .cat-head .blurb{font-size:16px; color:var(--ink-2);}
+  .more-link{font-size:15px; font-weight:600; color:var(--gold); text-decoration:none; white-space:nowrap;}
+  .more-link:hover{color:var(--navy);}
   .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
   .card{background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; cursor:pointer; text-align:left; transition:box-shadow .15s, transform .15s;}
   .card:hover{box-shadow:0 22px 44px -26px rgba(27,42,74,.4); transform:translateY(-2px);}
@@ -125,7 +128,7 @@
 
   <div id="cats"></div>
 
-  <div class="gate">
+  <div class="gate" id="gate">
     <div class="label" style="color:var(--gold-soft);">More to explore</div>
     <h2 style="margin-top:14px;">This is just a taste.</h2>
     <p>Members see the full collection — over a hundred experiences across Korea, each with photos, details, and our notes. Create a free account to explore them all.</p>
@@ -165,7 +168,7 @@
 <script>
 (function () {
   var EXP = [
-    { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history.", items:[
+    { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history.", more:'14 more', items:[
       { code:'gyeongbokgung', name:'Korean Royal Palace Tour', eyebrow:'Palace', meta:'Half day · with historian', image:'/assets/culture-heritage/gyeongbokgung.webp', folder:'culture-heritage',
         heroEyebrow:'Royal palace · Joseon dynasty seat', tagline:"The grandest of Seoul's five royal palaces — where the kings of Korea held court for five hundred years.",
         facts:[['Built','1395 — the founding palace of the Joseon dynasty'],['Highlights','Geunjeongjeon throne hall · Gyeonghoeru lotus pavilion · changing of the royal guard'],['Best time','Mid-morning · cherry blossoms in April · maple foliage in late November'],['Tour length','Half day · accompanied by a private Korean-history scholar'],['Good to know','Closed Tuesdays. Hanbok wearers enter free of charge.']], yt:'7tNzW7GEHZo', vtitle:'A walking tour of Gyeongbokgung Palace · 4K' },
@@ -179,7 +182,7 @@
         heroEyebrow:'City mountain temple · 1,200 years', tagline:"A working mountain temple in the heart of Gangnam — and a 23-metre standing Buddha that looks down across the skyscrapers below.",
         facts:[['Founded','794 · patron temple of the Joseon royal family'],['Highlights','Mireukdaebul standing Buddha (23 m) · Panjeon scripture hall · woodblock Tripitaka'],['Best time','Weekday mornings · the Lotus Lantern Festival in May'],['Tour length','90 min · optional templestay for foreign visitors on Thursdays'],['Good to know','Free entry. Halls require quiet — bow at the threshold.']], yt:'374gCD1LcJM', vtitle:"Is Gangnam's Bongeunsa Temple Worth the Visit?" }
     ]},
-    { key:'Famous', blurb:'The icons — K-pop, the skyline, the river, the border.', items:[
+    { key:'Famous', blurb:'The icons — K-pop, the skyline, the river, the border.', more:'12 more', items:[
       { code:'kpop-concert', name:'K-Pop Concert with VIP Access', eyebrow:'K-pop', meta:'3 hours · soundcheck pass', image:'/assets/culture-famous/kpop-concert.webp', folder:'culture-famous',
         heroEyebrow:'Live K-pop concert · VIP access', tagline:"A reserved seat in the front sections of a live K-pop concert — with a soundcheck pass, official lightstick, and a curator who briefs you on every member and song.",
         facts:[['Format','Reserved seating · soundcheck where offered · merchandise pre-purchased'],['Highlights','Gocheok Sky Dome · KSPO Dome · Inspire Arena · official lightstick included'],['Best time','Year-round, subject to tour schedules · weekend dates ~3 months ahead'],['Tour length','3 hours · private car to the venue · meet-up before doors'],['Good to know','Lineup confirmed at booking. Most venues subway-accessible.']], yt:'LBWmBK2TIQs', vtitle:"[4K] IVE world tour 'Show What I Am' · KSPO Dome Seoul" },
@@ -193,7 +196,7 @@
         heroEyebrow:'Demilitarized Zone · Private border tour', tagline:"A pre-cleared private day to the world's most fortified border — the truce village, the infiltration tunnels, and a vantage looking straight into the North.",
         facts:[['Format','Pre-cleared private tour · security-cleared guide · passport check'],['Highlights','Imjingak Peace Park · Third Infiltration Tunnel · Dora Observatory · Dorasan Station'],['Best time','Year-round · tours run Tue–Sun · JSA subject to conditions'],['Tour length','Full day · pickup 07:30 · return 17:00 · private vehicle'],['Good to know','Passport mandatory. Dress code applies. JSA access not always available.']], yt:'0Zuyg1CI78c', vtitle:'DMZ tour · Imjingak, Third Infiltration Tunnel, Dora Observatory' }
     ]},
-    { key:'Shop', blurb:'Markets, K-beauty, and Seoul\'s design districts.', items:[
+    { key:'Shop', blurb:'Markets, K-beauty, and Seoul\'s design districts.', more:'12 more', items:[
       { code:'myeongdong', name:'Main Shopping Street & K-Beauty', eyebrow:'District', meta:'3 hours · with stylist', image:'/assets/culture-shop/myeongdong.webp', folder:'culture-shop',
         heroEyebrow:'K-Beauty epicenter · Main shopping street', tagline:"The K-beauty mecca every visitor walks at least once — neon-lit cosmetics flagships, tax-free shopping, and the city's most famous street-food alley.",
         facts:[['Vibe','K-Beauty mecca · tourist epicenter · late-night neon'],['Highlights','Olive Young flagship · Innisfree / Etude / Laneige · Myeongdong Cathedral · street-food alley'],['Best time','Weekday late afternoon · evening for the lit signage'],['Tour length','3 hours · with a personal K-beauty stylist'],['Good to know','Tax-free at every cosmetics shop with passport. Heavy crowds Fri–Sun.']], yt:'4HzRgqQkygc', vtitle:'[4K] Myeongdong Shopping Area · 1 hour walking tour' },
@@ -207,7 +210,7 @@
         heroEyebrow:'Concept café district · Industrial chic', tagline:"Korea's Brooklyn — old shoe-factory brick converted into the country's most photographed cafés, indie fashion brands, and weekend brunches.",
         facts:[['Vibe','Warehouse-conversion cafés · emerging Korean designers · hipster energy'],['Highlights','Café streets in old factories · Daelim Changgo gallery · SM Town HQ · Seoul Forest'],['Best time','Weekday afternoon for cafés · Saturday morning for brunch'],['Tour length','3 hours · self-paced with a local map'],['Good to know','Most boutiques closed Mondays. Mobile payment everywhere.']], yt:'AWzn-Jfie9A', vtitle:'Seongsu — The Brooklyn of Seoul · 4K Walking Tour' }
     ]},
-    { key:'Cuisine', blurb:'From royal hansik to a street-food snack.', items:[
+    { key:'Cuisine', blurb:'From royal hansik to a street-food snack.', more:'50+ more', items:[
       { code:'bibimbap', name:'Bibimbap — Mixed Rice', eyebrow:'Rice bowl', meta:'Lunch · 45 min', image:'/assets/cuisine-hansik/bibimbap.webp', folder:'cuisine-hansik',
         heroEyebrow:'Mixed rice bowl · Jeonju heritage', tagline:"Korea's most beloved one-bowl meal — seasonal namul vegetables, sesame-oil rice, beef, a sunny egg, and a spoon of gochujang stirred together at the table.",
         facts:[['Course','Lunch · 45 minutes · single-bowl meal'],['Profile','Comforting · gentle heat · umami · sesame-forward'],['Where','Jeonju (origin) · hansik tables across Korea · home kitchens'],['Contains','Soy · Sesame · Eggs · Beef (often) · Gochujang'],['Dietary','Vegetarian & vegan on request · gluten-free with tamari · pork-free']], yt:'L_sDgKqIXbY', vtitle:'How to make bibimbap & dolsot bibimbap',
@@ -240,7 +243,8 @@
         '<div class="body"><div class="eyebrow">' + it.eyebrow + '</div>' +
         '<h3>' + it.name + '</h3><div class="meta">' + it.meta + '</div></div></div>';
     }).join('');
-    sec.innerHTML = '<div class="cat-head"><h2>' + cat.key + '</h2><span class="blurb">' + cat.blurb + '</span></div>' +
+    sec.innerHTML = '<div class="cat-head"><div class="cat-l"><h2>' + cat.key + '</h2><span class="blurb">' + cat.blurb + '</span></div>' +
+      '<a class="more-link" href="#gate">' + cat.more + ' →</a></div>' +
       '<div class="grid">' + cards + '</div>';
     catsEl.appendChild(sec);
   });
