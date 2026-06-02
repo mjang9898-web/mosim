@@ -175,7 +175,7 @@ function MeOverview() {
       <div style={{display:'flex', gap:24, marginTop:20, flexWrap:'wrap'}}>
         <a href="?tab=itineraries" style={{fontSize:16, color:'#1B2A4A', textDecoration:'none', fontWeight:500}}>All itineraries →</a>
         <a href="?tab=profile" style={{fontSize:16, color:'#1B2A4A', textDecoration:'none', fontWeight:500}}>Edit profile →</a>
-        <a href="/step1.html" style={{fontSize:16, color:'#C39A3F', textDecoration:'none', fontWeight:600}}>Plan another trip →</a>
+        <a href="/step1.html" onClick={(e) => { if (!window.confirm('Start a fresh plan? This clears your current selections so you begin from scratch.')) { e.preventDefault(); return; } try { sessionStorage.removeItem('mosim.state.v1'); } catch (x) {} }} style={{fontSize:16, color:'#C39A3F', textDecoration:'none', fontWeight:600}}>Start a fresh plan ↺</a>
       </div>
     </div>
   );
