@@ -30,9 +30,9 @@ function MeSettings() {
 
   return (
     <div style={{display:'flex', flexDirection:'column', gap:24, maxWidth:560}}>
-      <section style={{background:'#fff', border:'1px solid #e2e2e2', borderRadius:12, padding:24}}>
+      <section style={{background:'#fff', border:'1px solid #E5DBC8', borderRadius:12, padding:24}}>
         <h2 style={{margin:'0 0 8px', fontSize:22}}>Notifications</h2>
-        <label style={{display:'flex', alignItems:'center', gap:10, fontSize:19, color:'#444', marginTop:12}}>
+        <label style={{display:'flex', alignItems:'center', gap:10, fontSize:19, color:'#54514B', marginTop:12}}>
           <input
             type="checkbox"
             checked={emailUpdates}
@@ -41,14 +41,14 @@ function MeSettings() {
           />
           Email me when my itinerary status changes
         </label>
-        <p style={{fontSize:13, color:'#999', margin:'8px 0 0'}}>
+        <p style={{fontSize:13, color:'#8A8479', margin:'8px 0 0'}}>
           (Coming soon — for now we'll always email you on major updates.)
         </p>
       </section>
 
-      <section style={{background:'#fff', border:'1px solid #e2e2e2', borderRadius:12, padding:24}}>
-        <h2 style={{margin:'0 0 8px', fontSize:22, color:'#a00'}}>Danger zone</h2>
-        <p style={{fontSize:15, color:'#666', margin:'0 0 16px'}}>
+      <section style={{background:'#fff', border:'1px solid #E5DBC8', borderRadius:12, padding:24}}>
+        <h2 style={{margin:'0 0 8px', fontSize:22, color:'#A4452F'}}>Danger zone</h2>
+        <p style={{fontSize:15, color:'#8A8479', margin:'0 0 16px'}}>
           Deleting your account removes your profile and saved itineraries.
           Past lead inquiries are kept but anonymized.
         </p>
@@ -56,7 +56,7 @@ function MeSettings() {
           onClick={onDelete}
           disabled={deleting}
           style={{
-            padding:'12px 20px', background:'#fff', color:'#a00', border:'1px solid #a00',
+            padding:'12px 20px', background:'#fff', color:'#A4452F', border:'1px solid #A4452F',
             borderRadius:10, fontSize:19, cursor:'pointer'
           }}
         >

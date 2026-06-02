@@ -50,10 +50,10 @@ function MeProfile() {
     setMsg(error ? { kind:'err', text: error.message } : { kind:'ok', text:'Saved.' });
   }
 
-  if (loading) return <div style={{padding:20, color:'#777'}}>Loading...</div>;
+  if (loading) return <div style={{padding:20, color:'#8A8479'}}>Loading...</div>;
 
   return (
-    <form onSubmit={onSave} style={{background:'#fff', border:'1px solid #e2e2e2', borderRadius:12, padding:28, maxWidth:560}}>
+    <form onSubmit={onSave} style={{background:'#fff', border:'1px solid #E5DBC8', borderRadius:12, padding:28, maxWidth:560}}>
       <div style={{display:'flex', flexDirection:'column', gap:18}}>
         <Field label="Email (read-only)">
           <input value={user.email} disabled style={inputStyleDisabled} />
@@ -75,7 +75,7 @@ function MeProfile() {
         </Field>
       </div>
       <button type="submit" disabled={saving} style={btnStyle}>{saving ? 'Saving...' : 'Save'}</button>
-      {msg && <div style={{marginTop:12, color: msg.kind === 'err' ? '#a00' : '#0a6', fontSize:15}}>{msg.text}</div>}
+      {msg && <div style={{marginTop:12, color: msg.kind === 'err' ? '#A4452F' : '#5C7C63', fontSize:15}}>{msg.text}</div>}
     </form>
   );
 }
@@ -83,14 +83,14 @@ function MeProfile() {
 function Field({label, children}) {
   return (
     <label style={{display:'flex', flexDirection:'column', gap:6}}>
-      <span style={{fontSize:15, color:'#444'}}>{label}</span>
+      <span style={{fontSize:15, color:'#54514B'}}>{label}</span>
       {children}
     </label>
   );
 }
-const inputStyle = { padding:'12px 14px', fontSize:19, border:'1px solid #e2e2e2', borderRadius:10, fontFamily:'inherit' };
-const inputStyleDisabled = { ...inputStyle, background:'#f5f5f5', color:'#777' };
-const btnStyle = { marginTop:24, padding:'14px 22px', background:'#B21464', color:'#fff', border:0, borderRadius:10, fontSize:19, fontWeight:600, cursor:'pointer' };
+const inputStyle = { padding:'12px 14px', fontSize:19, border:'1px solid #E5DBC8', borderRadius:10, fontFamily:'inherit' };
+const inputStyleDisabled = { ...inputStyle, background:'#FBF8F2', color:'#8A8479' };
+const btnStyle = { marginTop:24, padding:'14px 22px', background:'#1B2A4A', color:'#fff', border:0, borderRadius:10, fontSize:19, fontWeight:600, cursor:'pointer' };
 
 const root = document.getElementById('me-profile-root');
 if (root) {
