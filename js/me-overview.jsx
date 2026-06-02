@@ -32,6 +32,7 @@ function MeOverview() {
   const [itin, setItin] = useState(undefined); // undefined=loading, null=none
   const [payg, setPayg] = useState(null);
   const [err, setErr]   = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -154,7 +155,18 @@ function MeOverview() {
               <div style={{fontSize:14, color:'#8A8479'}}>Balance due</div>
               <div style={{fontSize:28, fontWeight:600, color:'#1B2A4A', fontFamily:'Lora, serif'}}>${due.toLocaleString()}</div>
               <div style={{fontSize:13, color:'#8A8479', margin:'2px 0 14px'}}>${Number(payg.amount_paid).toLocaleString()} of ${Number(payg.total_amount).toLocaleString()} paid</div>
-              <a href={payg.share_token ? `/pay.html?g=${payg.share_token}` : '#'} style={{display:'inline-block', padding:'11px 22px', background:'#1B2A4A', color:'#fff', borderRadius:10, textDecoration:'none', fontSize:15, fontWeight:600}}>Pay now</a>
+              <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
+                <a href={payg.share_token ? `/pay.html?g=${payg.share_token}` : '#'} style={{display:'inline-block', padding:'11px 22px', background:'#1B2A4A', color:'#fff', borderRadius:10, textDecoration:'none', fontSize:15, fontWeight:600}}>Pay now</a>
+                {payg.share_token && (
+                  <button onClick={() => { navigator.clipboard.writeText(window.location.origin + '/pay.html?g=' + payg.share_token); setCopied(true); setTimeout(() => setCopied(false), 2500); }}
+                    style={{padding:'11px 20px', background:'#fff', color:'#1B2A4A', border:'1.5px solid #C39A3F', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer'}}>
+                    {copied ? 'Link copied ✓' : 'Split the cost'}
+                  </button>
+                )}
+              </div>
+              {payg.share_token && (
+                <p style={{fontSize:13, color:'#8A8479', margin:'12px 0 0', lineHeight:1.5}}>Paying with others? Share that link — each person pays their share, no account needed.</p>
+              )}
             </div>
           )}
         </div>
