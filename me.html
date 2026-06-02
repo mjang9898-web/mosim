@@ -2,48 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>My Page — K-Wellness Concierge</title>
+<title>My Page — Mosim</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink-1:#1a1a1a; --ink-2:#444; --ink-3:#777; --bg-1:#fff; --bg-2:#f5f5f5; --bg-3:#fafafa;
-    --magenta:#B21464; --border:#e2e2e2;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin:0; min-height:100vh; background: var(--bg-3); color: var(--ink-1);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-  header.me-head {
-    background:#fff; border-bottom: 1px solid var(--border);
-    padding: 20px 28px; display:flex; align-items:center; justify-content: space-between;
-  }
-  header.me-head a.brand { font-weight:700; font-size:19px; color: var(--ink-1); text-decoration:none; }
-  header.me-head .right { display:flex; align-items:center; gap:16px; }
-  header.me-head .greeting { font-size:19px; color: var(--ink-2); }
-  header.me-head button.signout {
-    font: inherit; font-size:15px; padding:8px 14px;
-    background:#fff; border:1px solid var(--border); border-radius:8px; cursor:pointer;
-  }
-  header.me-head button.signout:hover { background: var(--bg-2); }
-  nav.tabs { background:#fff; border-bottom:1px solid var(--border); padding: 0 28px; display:flex; gap: 28px; }
-  nav.tabs a {
-    display:inline-block; padding: 14px 0; font-size:19px; color: var(--ink-2);
-    text-decoration:none; border-bottom: 2px solid transparent;
-  }
-  nav.tabs a[aria-current="page"] { color: var(--ink-1); border-bottom-color: var(--magenta); }
-  main { padding: 28px; max-width: 960px; margin: 0 auto; }
-  main section { display:none; }
-  main section.active { display:block; }
-  .placeholder {
-    padding: 40px; background:#fff; border:1px solid var(--border); border-radius:12px;
-    color: var(--ink-3); text-align:center; font-size:19px;
-  }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --gold:#C39A3F; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; min-height:100vh; background:var(--ivory); color:var(--navy);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  header.me-head{ background:rgba(247,242,234,.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+    padding:18px 28px; display:flex; align-items:center; justify-content:space-between; }
+  header.me-head a.brand{ font-family:'Lora',Georgia,serif; font-weight:600; font-size:24px; color:var(--navy); text-decoration:none; }
+  header.me-head a.brand .dot{ color:var(--gold); }
+  header.me-head .right{ display:flex; align-items:center; gap:16px; }
+  header.me-head .greeting{ font-size:17px; color:var(--ink); }
+  header.me-head button.signout{ font:inherit; font-size:15px; font-weight:500; padding:9px 16px;
+    background:#fff; border:1.5px solid var(--line); border-radius:999px; cursor:pointer; color:var(--navy); }
+  header.me-head button.signout:hover{ background:var(--ivory-soft); border-color:var(--gold); }
+  nav.tabs{ background:rgba(247,242,234,.9); border-bottom:1px solid var(--line); padding:0 28px; display:flex; gap:28px; }
+  nav.tabs a{ display:inline-block; padding:14px 0; font-size:17px; color:var(--ink); text-decoration:none; border-bottom:2px solid transparent; font-weight:500; }
+  nav.tabs a[aria-current="page"]{ color:var(--navy); border-bottom-color:var(--gold); font-weight:600; }
+  main{ padding:32px 28px; max-width:980px; margin:0 auto; }
+  main section{ display:none; }
+  main section.active{ display:block; }
+  .placeholder{ padding:48px; background:#fff; border:1px solid var(--line); border-radius:16px;
+    color:var(--ink-2); text-align:center; font-size:19px; }
+  h1,h2,h3{ font-family:'Lora',Georgia,serif; }
 </style>
 </head>
 <body>
 <header class="me-head">
-  <a class="brand" href="/">K-Wellness</a>
+  <a class="brand" href="/index.html">Mosim<span class="dot">.</span></a>
   <div class="right">
     <span id="greeting" class="greeting"></span>
     <button id="signout" class="signout" type="button">Sign out</button>
