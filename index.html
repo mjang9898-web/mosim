@@ -7,7 +7,7 @@
 <meta name="description" content="Full private concierge for Americans seeking medical care in Korea — screening, knees, dental, eyes. We arrange everything and stay beside you, from your first question to your flight home.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E;
@@ -17,7 +17,7 @@
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
   .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
-  h1,h2,h3,.brand{font-family:'Fraunces',Georgia,serif;}
+  h1,h2,h3,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
   .label{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold);}
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border-radius:10px; padding:16px 30px; text-decoration:none; display:inline-block; min-height:44px;}
@@ -44,7 +44,7 @@
   /* image band (placeholder until licensed photography) */
   .band{margin:60px 0 0; aspect-ratio:16/6.5; border-radius:20px; position:relative; overflow:hidden;
     background:linear-gradient(135deg,#EFE6D2 0%, #E3D3B2 40%, #C2AE84 68%, #5E6B86 100%); box-shadow:0 28px 70px -34px rgba(27,42,74,.45);}
-  .band .cap{position:absolute; left:30px; bottom:24px; color:#fff; font-family:'Fraunces',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.35);}
+  .band .cap{position:absolute; left:30px; bottom:24px; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.35);}
 
   /* sections */
   section.blk{padding:96px 0;}
@@ -54,9 +54,11 @@
 
   /* how it works */
   .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:36px; margin-top:60px;}
-  .step .num{font-family:'Fraunces',serif; font-size:30px; color:var(--gold); font-weight:600;}
+  .step .num{font-family:'Lora',serif; font-size:30px; color:var(--gold); font-weight:600;}
   .step h3{font-size:22px; font-weight:600; margin:14px 0 8px;}
   .step p{font-size:19px; color:var(--ink); line-height:1.55;}
+  .howfee{text-align:center; max-width:48em; margin:50px auto 0; font-size:19px; color:var(--ink); line-height:1.65; text-wrap:balance;}
+  .howfee strong{color:var(--navy); font-weight:600;}
 
   /* difference */
   .diff{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--ivory-soft);}
@@ -68,7 +70,7 @@
   /* about teaser */
   .about{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
   .about .frame{aspect-ratio:5/4; border-radius:18px; background:linear-gradient(150deg,#EFE6D2,#CDBC95 70%,#6E7A92); position:relative; box-shadow:0 24px 60px -30px rgba(27,42,74,.45);}
-  .about .frame .cap{position:absolute; bottom:16px; left:18px; color:#fff; font-family:'Fraunces',serif; font-size:15px; text-shadow:0 1px 10px rgba(0,0,0,.4);}
+  .about .frame .cap{position:absolute; bottom:16px; left:18px; color:#fff; font-family:'Lora',serif; font-size:15px; text-shadow:0 1px 10px rgba(0,0,0,.4);}
   .about h2{font-size:clamp(28px,3.4vw,36px); font-weight:600; line-height:1.12;}
   .about p{font-size:19px; color:var(--ink); line-height:1.65; margin:18px 0 24px;}
 
@@ -123,19 +125,20 @@
       <a href="#how" class="btn-text">See how it works →</a>
     </div>
   </section>
-  <div id="care" class="care-line">Health screening <span class="sep">·</span> Knees &amp; joints <span class="sep">·</span> Dental <span class="sep">·</span> Eyes</div>
+  <div id="care" class="care-line">Health screening <span class="sep">·</span> Knees &amp; joints <span class="sep">·</span> Dental <span class="sep">·</span> Eyes <span class="sep">·</span> <a href="medical.html" style="color:var(--gold); font-weight:600; text-decoration:none;">&amp; more →</a></div>
   <div class="band" role="img" aria-label="A warm moment of care in Korea"><div class="cap">Looked after, the way you should be.</div></div>
 </div>
 
 <!-- HOW IT WORKS -->
 <section id="how" class="blk"><div class="wrap">
   <div class="center"><div class="label">How it works</div><h2 style="margin-top:16px;">Three steps. We carry the rest.</h2>
-    <p class="lede">You never have to figure out a thing on your own.</p></div>
+    <p class="lede">Our AI shapes the perfect plan — and a real person carries it out, right beside you.</p></div>
   <div class="steps">
-    <div class="step"><div class="num">01</div><h3>We talk</h3><p>Tell us what you need — in your language, with no rush. We listen first.</p></div>
-    <div class="step"><div class="num">02</div><h3>We arrange everything</h3><p>Hospital, doctors, appointments, flights, hotel, your day-by-day plan — all handled.</p></div>
-    <div class="step"><div class="num">03</div><h3>We're beside you</h3><p>A real person meets you, interprets, and stays with you — from landing to flight home.</p></div>
+    <div class="step"><div class="num">01</div><h3>Tell us</h3><p>Share what you need — in your language, with no rush. We listen first.</p></div>
+    <div class="step"><div class="num">02</div><h3>We plan &amp; arrange it</h3><p>Our AI drafts your best-fit itinerary — then we book every hospital, doctor, flight, and hotel.</p></div>
+    <div class="step"><div class="num">03</div><h3>We're beside you</h3><p>A real person meets you, interprets, and accompanies you — from landing to flight home.</p></div>
   </div>
+  <p class="howfee"><strong>One clear fee — our concierge.</strong> You pay hospitals and hotels directly, with no markup from us. Mosim charges only for the planning and the people beside you.</p>
 </div></section>
 
 <!-- THE DIFFERENCE -->
