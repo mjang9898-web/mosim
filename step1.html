@@ -20,10 +20,13 @@
   .nav-in{display:flex; align-items:center; justify-content:space-between;}
   .brand{font-weight:600; font-size:22px; color:var(--navy); text-decoration:none;} .brand .dot{color:var(--gold);}
   .exit{font-size:15px; color:var(--ink); text-decoration:none; white-space:nowrap;}
+  @media(max-width:600px){ .exit{display:none;} }
   .nav-right{display:flex; align-items:center; gap:18px;}
-  .nav-signin{ font-size:15px; font-weight:600; color:var(--navy); border:1.5px solid var(--line); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
-  .nav-signin:hover{ border-color:var(--gold); }
-  .nav-cta{font-size:15px; font-weight:600; color:var(--navy); border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap;}
+  .nav-signin{ font-size:15px; font-weight:600; color:var(--navy); background:#fff; border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
+  .nav-signin:hover{ background:var(--ivory-soft); }
+  .nav-cta{ font-size:15px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
+  .nav-cta:hover{ background:var(--navy-soft); }
+  .nav-div{ width:1px; height:22px; background:var(--line); display:inline-block; flex:none; }
 
   .head{text-align:center; padding:50px 0 6px;}
   .step-label{font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold);}
@@ -66,6 +69,7 @@
   <div class="nav-right">
     <a href="index.html" class="exit">Save &amp; exit</a>
     <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
+    <span class="nav-div" aria-hidden="true"></span>
     <a href="/step1.html" class="nav-cta">Plan my trip</a>
   </div>
 </div></nav>
