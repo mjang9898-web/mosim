@@ -15,11 +15,13 @@ export default function handler(req, res) {
   }
   const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
   const PAYPAL_ENV = process.env.PAYPAL_ENV || 'sandbox';
+  const PAYMENT_MOCK = process.env.PAYMENT_MOCK === '1';
   res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
   return res.status(200).json({
     supabaseUrl: SUPABASE_URL,
     supabaseAnonKey: SUPABASE_ANON_KEY,
     paypalClientId: PAYPAL_CLIENT_ID,
-    paypalEnv: PAYPAL_ENV
+    paypalEnv: PAYPAL_ENV,
+    paymentMock: PAYMENT_MOCK
   });
 }

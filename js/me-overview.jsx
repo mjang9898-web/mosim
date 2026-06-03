@@ -33,14 +33,19 @@ function MeOverview() {
   const [payg, setPayg] = useState(null);
   const [err, setErr]   = useState(null);
   const [copied, setCopied] = useState(false);
+  const [supa, setSupa] = useState(null);
+  const [mock, setMock] = useState(false);   // test-payment mode (PAYMENT_MOCK)
+  const [setupBusy, setSetupBusy] = useState(false);
 
   useEffect(() => {
     (async () => {
       let t = 0;
       while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
       const client = await window.kwAuth.init();
+      setSupa(client);
       const user = await window.kwAuth.getUser();
       setName((user && user.user_metadata && user.user_metadata.name) || (user && user.email && user.email.split('@')[0]) || '');
+      fetch('/api/config').then(r => r.json()).then(c => setMock(!!c.paymentMock)).catch(() => {});
       const { data, error } = await client
         .from('itineraries')
         .select('id, title, state, schedule, status, created_at')
@@ -57,6 +62,25 @@ function MeOverview() {
       }
     })();
   }, []);
+
+  async function setupPayment() {
+    if (!supa || !itin) return;
+    setSetupBusy(true);
+    try {
+      const { data: { session } } = await supa.auth.getSession();
+      const r = await fetch('/api/payment-group', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + (session && session.access_token) },
+        body: JSON.stringify({ itinerary_id: itin.id })
+      });
+      const b = await r.json();
+      if (r.ok && b.token) { window.location.href = '/pay.html?g=' + b.token; return; }
+      alert(b.error || 'Could not set up payment.');
+    } catch (e) {
+      alert('Could not set up payment.');
+    }
+    setSetupBusy(false);
+  }
 
   if (err) return <div style={{padding:20, color:'#A4452F'}}>Could not load: {err}</div>;
   if (itin === undefined) return <div style={{padding:20, color:'#8A8479'}}>Loading your dashboard…</div>;
@@ -143,7 +167,20 @@ function MeOverview() {
 
         <div style={card}>
           <div style={label}>Payment</div>
-          {!payg && <p style={{margin:'14px 0 0', fontSize:16, color:'#54514B', lineHeight:1.55}}>No payment due yet — your concierge will send a clear quote.</p>}
+          {!payg && (
+            <div style={{marginTop:14}}>
+              <p style={{margin:0, fontSize:16, color:'#54514B', lineHeight:1.55}}>No payment due yet — your concierge will send a clear quote.</p>
+              {mock && (
+                <div style={{marginTop:14, paddingTop:14, borderTop:'1px dashed #E5DBC8'}}>
+                  <div style={{fontSize:13, color:'#8A8479', marginBottom:8}}>Test mode</div>
+                  <button onClick={setupPayment} disabled={setupBusy}
+                    style={{padding:'11px 20px', background:'#fff', color:'#1B2A4A', border:'1.5px solid #C39A3F', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer'}}>
+                    {setupBusy ? 'Setting up…' : 'Set up a test payment'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           {payg && paid && (
             <div style={{marginTop:14}}>
               <div style={{fontSize:22, fontWeight:700, color:'#5C7C63'}}>Paid in full ✓</div>

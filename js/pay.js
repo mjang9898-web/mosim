@@ -85,6 +85,54 @@
     });
   }
 
+  // Test mode: a single "Pay (test)" button that records the payment without PayPal.
+  function mountMockButton() {
+    const host = $('paypal-buttons');
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:14px;color:#8A8479;margin-bottom:10px;';
+    note.textContent = 'Test mode — no real payment is taken.';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Pay (test)';
+    btn.style.cssText = 'width:100%;font-size:18px;font-weight:600;padding:14px;border:0;border-radius:10px;background:#1B2A4A;color:#fff;cursor:pointer;min-height:48px;';
+    btn.addEventListener('click', async () => {
+      $('msg').textContent = '';
+      const amt = parseFloat($('amount').value);
+      const max = parseFloat($('amount').max);
+      if (!amt || amt <= 0 || amt > max) {
+        $('msg').style.color = '#a00';
+        $('msg').textContent = 'Enter an amount between $0.01 and ' + fmt(max) + '.';
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Processing…';
+      try {
+        const r = await fetch('/api/paypal-order', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'mock-pay', token, amount: $('amount').value })
+        });
+        const b = await r.json();
+        if (!r.ok) {
+          $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Test payment failed';
+          btn.disabled = false; btn.textContent = 'Pay (test)'; return;
+        }
+        try {
+          render(await loadSummary());
+        } catch (_) {
+          $('total').textContent = fmt(b.total); $('paid').textContent = fmt(b.paid); $('balance').textContent = fmt(b.balance);
+          if (b.status === 'paid' || b.balance <= 0) { $('payArea').style.display = 'none'; $('paidArea').style.display = 'block'; }
+        }
+        $('msg').style.color = '#0a6';
+        $('msg').textContent = b.status === 'paid' ? 'Fully paid ✓ (test)' : 'Test payment received ✓';
+        if (!(b.status === 'paid' || b.balance <= 0)) { btn.disabled = false; btn.textContent = 'Pay (test)'; }
+      } catch (e) {
+        $('msg').style.color = '#a00'; $('msg').textContent = 'Test payment error.';
+        btn.disabled = false; btn.textContent = 'Pay (test)';
+      }
+    });
+    host.appendChild(note);
+    host.appendChild(btn);
+  }
+
   $('copyBtn') && $('copyBtn').addEventListener('click', () => {
     navigator.clipboard.writeText(location.href)
       .then(() => { $('copyBtn').textContent = 'Link copied ✓'; })
@@ -98,8 +146,12 @@
       const [summary, cfg] = await Promise.all([loadSummary(), fetch('/api/config').then(r => r.json())]);
       render(summary);
       if (summary.balance > 0 && summary.status !== 'paid') {
-        await loadPayPalSdk(cfg.paypalClientId);
-        mountButtons();
+        if (cfg.paymentMock) {
+          mountMockButton();
+        } else {
+          await loadPayPalSdk(cfg.paypalClientId);
+          mountButtons();
+        }
       }
     } catch (e) {
       showError('This payment link is invalid or has expired.');

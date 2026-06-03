@@ -15,7 +15,9 @@ const supa = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
 
 function groupSize(state) {
   const t = state?.trip || {};
-  const n = (parseInt(t.adults, 10) || 0) + (parseInt(t.children, 10) || 0);
+  const ps = parseInt(t.partySize, 10);            // current planner model
+  if (Number.isFinite(ps) && ps > 0) return ps;
+  const n = (parseInt(t.adults, 10) || 0) + (parseInt(t.children, 10) || 0); // legacy
   return n > 0 ? n : 1;
 }
 

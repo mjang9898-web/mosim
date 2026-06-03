@@ -9,6 +9,10 @@ const supa = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE
   auth: { persistSession: false, autoRefreshToken: false }
 });
 
+// Temporary test mode: when set, the page lets you complete payments WITHOUT PayPal
+// (no real money). Flip PAYMENT_MOCK off once real PayPal credentials are in place.
+const PAYMENT_MOCK = process.env.PAYMENT_MOCK === '1';
+
 async function loadGroup(token) {
   const { data, error } = await supa
     .from('payment_groups')
@@ -31,6 +35,28 @@ export default async function handler(req, res) {
     const g = await loadGroup(token);
     if (!g) return res.status(404).json({ error: 'Payment link not found' });
     const balance = Number(g.total_amount) - Number(g.amount_paid);
+
+    // ── Test mode: record the payment directly, no PayPal involved ──
+    if (action === 'mock-pay') {
+      if (!PAYMENT_MOCK) return res.status(400).json({ error: 'Test payments are disabled' });
+      if (balance <= 0) return res.status(409).json({ error: 'Already fully paid' });
+      const v = normalizeAmount(amount, balance);
+      if (!v.ok) return res.status(400).json({ error: v.error });
+      const fakeId = 'MOCK-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+      const { data, error } = await supa.rpc('record_payment', {
+        p_token: token,
+        p_amount: v.amount,
+        p_payer_name: 'Test Payer',
+        p_payer_email: 'test@mosim.local',
+        p_order_id: fakeId,
+        p_capture_id: fakeId
+      });
+      if (error) {
+        console.error('[paypal-order] mock record_payment failed', error);
+        return res.status(500).json({ error: 'Could not record test payment' });
+      }
+      return res.status(200).json({ ok: true, mock: true, ...data });
+    }
 
     if (action === 'create') {
       if (balance <= 0) return res.status(409).json({ error: 'Already fully paid' });
