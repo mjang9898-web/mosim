@@ -12,7 +12,11 @@
   *{ box-sizing:border-box; }
   body{ margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
     background:var(--ivory); color:var(--navy);
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:24px; }
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:92px 24px 24px; }
+  .topnav{ position:fixed; top:0; left:0; right:0; display:flex; justify-content:flex-end; align-items:center; gap:16px; padding:16px 24px; border-bottom:1px solid var(--line); background:var(--ivory); z-index:10; }
+  .nav-signin{ font-size:15px; color:var(--ink); text-decoration:none; font-weight:500; }
+  .nav-signin:hover{ color:var(--navy); }
+  .nav-cta{ font-size:15px; font-weight:600; color:var(--navy); border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; }
   .brand-top{ font-family:'Lora',Georgia,serif; font-weight:600; font-size:26px; color:var(--navy); text-decoration:none; margin-bottom:26px; }
   .brand-top .dot{ color:var(--gold); }
   .card{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:38px 34px; max-width:430px; width:100%; box-shadow:0 24px 60px -34px rgba(27,42,74,.4); }
@@ -35,6 +39,7 @@
 </style>
 </head>
 <body>
+<nav class="topnav"><a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a><a href="/step1.html" class="nav-cta">Plan my trip</a></nav>
 <a href="/index.html" class="brand-top">Mosim<span class="dot">.</span></a>
 <div class="card">
   <h1>Create your account</h1>
@@ -119,5 +124,6 @@
     msg.textContent = "Check your email to confirm your account, then you're in.";
   });
 </script>
+<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');}}catch(x){}})();</script>
 </body>
 </html>

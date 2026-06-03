@@ -20,6 +20,10 @@
   .nav-in{display:flex; align-items:center; justify-content:space-between;}
   .brand{font-weight:600; font-size:22px; color:var(--navy); text-decoration:none;} .brand .dot{color:var(--gold);}
   .exit{font-size:15px; color:var(--ink); text-decoration:none;}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .nav-signin{font-size:15px; color:var(--ink); text-decoration:none; font-weight:500;}
+  .nav-signin:hover{color:var(--navy);}
+  .nav-cta{font-size:15px; font-weight:600; color:var(--navy); border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none;}
 
   .head{text-align:center; padding:50px 0 6px;}
   .step-label{font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold);}
@@ -52,7 +56,11 @@
 
 <nav><div class="wrap nav-in">
   <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
-  <a href="index.html" class="exit">Save &amp; exit</a>
+  <div class="nav-right">
+    <a href="index.html" class="exit">Save &amp; exit</a>
+    <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
+    <a href="/step1.html" class="nav-cta">Plan my trip</a>
+  </div>
 </div></nav>
 
 <div class="wrap">
@@ -163,5 +171,6 @@
     });
   })();
 </script>
+<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');}}catch(x){}})();</script>
 </body>
 </html>

@@ -66,6 +66,7 @@
     <a href="experience.html">Experience</a>
     <a href="our-story.html" class="active">Our story</a>
     <a href="faq.html">FAQ</a>
+    <a id="nav-auth" href="/signin.html">Sign in</a>
     <a href="step1.html" class="nav-cta">Plan my trip</a>
   </div>
 </div></nav>
@@ -111,6 +112,8 @@
     <a href="index.html#how">How it works</a><a href="medical.html">Medical</a><a href="experience.html">Experience</a><a href="our-story.html">Our story</a><a href="faq.html">FAQ</a><a href="signin.html">Sign in</a>
   </div>
 </div></footer>
+
+<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');}}catch(x){}})();</script>
 
 </body>
 </html>
