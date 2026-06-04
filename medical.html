@@ -82,9 +82,8 @@
   .dr-eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .dr-body h2{font-size:32px; font-weight:600; margin:8px 0 14px; line-height:1.12;}
   .dr-pos{font-size:18px; color:var(--ink); line-height:1.65;}
-  .dr-gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:24px 0;}
-  .dr-gallery .g{aspect-ratio:1; border-radius:10px; background:#E7D9BC center/cover no-repeat;}
-  .dr-gallery .g.main{grid-column:span 2; grid-row:span 2; aspect-ratio:auto;}
+  .dr-gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:24px 0;}
+  .dr-gallery .g{aspect-ratio:4/3; border-radius:10px; background:#E7D9BC center/cover no-repeat;}
   .dr-h{font-family:'Lora',serif; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-2); margin:26px 0 12px;}
   .hosp{display:flex; flex-wrap:wrap; gap:8px;}
   .hosp span{background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:14px; color:var(--navy);}
@@ -196,7 +195,7 @@
       ],
       addons:[{n:'NK-cell immunity panel',p:'$220'},{n:'Microbiome / SIBO screen',p:'$180'},{n:'Stress hormone curve (cortisol)',p:'$140'},{n:'Concierge transport (3 days)',p:'$280'}] },
 
-    { code:'ortho', eyebrow:'Knees & joints', name:'Knees & joints',
+    { code:'ortho', eyebrow:'Knees & joints', name:'Knees & joints', gallery:['/assets/medical-drawer/ortho-d1.webp','/assets/medical-drawer/ortho-d2.webp'],
       desc:'Orthopedics for the aches that make life smaller — knees, hips, spine. Back to moving freely.',
       price:'500', duration:'1–2 hours',
       positioning:"Korea is a global leader in stem-cell knee and joint regenerative care — the first country to approve commercial autologous cell therapy for cartilage. Includes MRI-guided diagnosis and a phased recovery plan.",
@@ -208,7 +207,7 @@
       ],
       addons:[{n:'Sports-medicine physiotherapy (3 visits)',p:'$420'},{n:'Body-composition + gait analysis',p:'$220'},{n:'Knee brace (custom-fit)',p:'$180'},{n:'In-home physio (Seoul · 1 visit)',p:'$240'}] },
 
-    { code:'dental', eyebrow:'Dental', name:'Dental',
+    { code:'dental', eyebrow:'Dental', name:'Dental', gallery:['/assets/medical-drawer/dental-d1.webp','/assets/medical/card-dental.webp'],
       desc:'The dental work that’s unthinkable back home — implants, crowns, restorative — by trusted hands.',
       price:'220', duration:'1–3 visits',
       positioning:"Korea offers the world's best price-quality ratio on implants, crowns, and orthodontics — Seoul dental hubs run 6-day-a-week clinics with German materials at a third of US prices.",
@@ -253,10 +252,10 @@
   var body = document.getElementById('dr-body'), crumb = document.getElementById('dr-crumb');
   function openDrawer(m) {
     crumb.textContent = m.name;
+    var imgs = m.gallery || [P + m.code + '.webp', P + m.code + '-2.webp'];
     var gallery = '<div class="dr-gallery">' +
-      [1,2,3,4].map(function (i) {
-        var f = P + m.code + (i === 1 ? '' : '-' + i) + '.webp';
-        return '<div class="g' + (i === 1 ? ' main' : '') + '" style="background-image:url(\'' + f + '\')"></div>';
+      imgs.slice(0,2).map(function (f) {
+        return '<div class="g" style="background-image:url(\'' + f + '\')"></div>';
       }).join('') + '</div>';
     var hosp = '<div class="dr-h">Trusted partner hospitals</div><div class="hosp">' +
       m.hospitals.map(function (h) { return '<span>' + h + '</span>'; }).join('') + '</div>';
