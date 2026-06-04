@@ -22,13 +22,14 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
   h1,h2,h3,h4,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
   .label{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold);}
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:16px 30px; text-decoration:none; display:inline-block; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
   .btn:hover{background:var(--navy-soft);}
-  .btn-gold{background:var(--gold); color:#23304a;}
+  .btn-gold{background:var(--gold); color:var(--navy);}
   .btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--gold);}
 
   nav{position:sticky; top:0; background:rgba(247,242,234,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:20; border-bottom:1px solid var(--line);}
@@ -55,8 +56,8 @@
   .cat-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:14px; margin-bottom:24px;}
   .cat-l{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
   .cat-head h2{font-size:28px; font-weight:600;}
-  .cat-head .blurb{font-size:16px; color:var(--ink-2);}
-  .more-link{font-size:15px; font-weight:600; color:var(--gold); text-decoration:none; white-space:nowrap;}
+  .cat-head .blurb{font-size:18px; color:var(--ink);}
+  .more-link{font-size:15px; font-weight:600; color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; white-space:nowrap;}
   .more-link:hover{color:var(--navy);}
   .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
   .card{background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; cursor:pointer; text-align:left; transition:box-shadow .15s, transform .15s;}
@@ -65,7 +66,7 @@
   .card .body{padding:16px 18px 20px;}
   .card .eyebrow{font-size:11.5px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:var(--gold);}
   .card h3{font-size:18px; font-weight:600; margin:7px 0 6px; line-height:1.25;}
-  .card .meta{font-size:14px; color:var(--ink-2);}
+  .card .meta{font-size:15px; color:var(--ink-2);}
 
   /* member gate */
   .gate{margin:64px 0 0; background:var(--navy); color:#fff; border-radius:20px; padding:48px 40px; text-align:center;}
@@ -89,7 +90,7 @@
   .drawer.open{transform:none;}
   .dr-top{display:flex; align-items:center; justify-content:space-between; padding:18px 28px; border-bottom:1px solid var(--line); flex:none;}
   .dr-top .crumb{font-size:14px; color:var(--ink-2);}
-  .dr-close{width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:22px; color:var(--navy); cursor:pointer; line-height:1;}
+  .dr-close{width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:22px; color:var(--navy); cursor:pointer; line-height:1;}
   .dr-body{overflow-y:auto; padding:28px 28px 40px;}
   .dr-eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .dr-body h2{font-size:30px; font-weight:600; margin:8px 0 12px; line-height:1.14;}
@@ -102,7 +103,7 @@
   .dr-vtitle{font-size:13px; color:var(--ink-2); font-style:italic; margin-bottom:18px;}
   .dr-h{font-family:'Lora',serif; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-2); margin:24px 0 10px;}
   .facts{list-style:none;}
-  .facts li{display:grid; grid-template-columns:130px 1fr; gap:14px; padding:11px 0; border-top:1px solid var(--line); font-size:15px;}
+  .facts li{display:grid; grid-template-columns:130px 1fr; gap:14px; padding:11px 0; border-top:1px solid var(--line); font-size:16px;}
   .facts li .fl{font-weight:600; color:var(--navy);}
   .facts li .fv{color:var(--ink); line-height:1.55;}
   .diet{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
@@ -129,6 +130,7 @@
     .nav-signin, .nav-cta{ padding:8px 14px; } }
   @media(max-width:520px){ .grid{grid-template-columns:1fr;} .facts li{grid-template-columns:1fr; gap:2px;} }
   @media(max-width:560px){ .dr-foot{flex-direction:column; align-items:stretch; gap:12px;} .dr-foot .btn{white-space:nowrap; text-align:center; padding:14px 24px;} }
+  @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
 </head>
 <body>
@@ -269,7 +271,7 @@
     sec.className = 'cat';
     var cards = cat.items.map(function (it) {
       byCode[it.code] = { cat: cat.key, it: it };
-      return '<div class="card" data-code="' + it.code + '">' +
+      return '<div class="card" data-code="' + it.code + '" role="button" tabindex="0" aria-label="' + it.name + '">' +
         '<div class="photo" style="background-image:url(\'' + it.image + '\')"></div>' +
         '<div class="body"><div class="eyebrow">' + it.eyebrow + '</div>' +
         '<h3>' + it.name + '</h3><div class="meta">' + it.meta + '</div></div></div>';
@@ -283,6 +285,8 @@
   // ---- drawer ----
   var scrim = document.getElementById('scrim'), drawer = document.getElementById('drawer');
   var body = document.getElementById('dr-body'), crumb = document.getElementById('dr-crumb'), catEl = document.getElementById('dr-cat');
+  var drClose = document.getElementById('dr-close');
+  var lastTrigger = null;
 
   function spiceDots(n) {
     var d = '';
@@ -291,8 +295,9 @@
     return '<div class="spice"><span class="lab">Spice</span><span class="dots">' + d + '</span><span class="lab">' + labs[n] + '</span></div>';
   }
 
-  function openDrawer(code) {
+  function openDrawer(code, trigger) {
     var rec = byCode[code]; if (!rec) return;
+    lastTrigger = trigger || null;
     var it = rec.it;
     catEl.textContent = rec.cat; crumb.textContent = it.name;
     var imgs = it.gallery || [1,2,3,4,5,6].map(function (i) {
@@ -318,17 +323,23 @@
     body.scrollTop = 0;
     scrim.classList.add('open'); drawer.classList.add('open');
     document.body.style.overflow = 'hidden';
+    drClose.focus();
   }
   function closeDrawer() {
     scrim.classList.remove('open'); drawer.classList.remove('open');
     body.innerHTML = ''; // stop the youtube iframe
     document.body.style.overflow = '';
+    if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
   }
   catsEl.addEventListener('click', function (e) {
-    var card = e.target.closest('.card'); if (card) openDrawer(card.getAttribute('data-code'));
+    var card = e.target.closest('.card'); if (card) openDrawer(card.getAttribute('data-code'), card);
+  });
+  catsEl.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    var card = e.target.closest('.card'); if (card) { e.preventDefault(); openDrawer(card.getAttribute('data-code'), card); }
   });
   scrim.addEventListener('click', closeDrawer);
-  document.getElementById('dr-close').addEventListener('click', closeDrawer);
+  drClose.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 })();
 </script>

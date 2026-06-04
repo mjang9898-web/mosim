@@ -21,6 +21,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:84px;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 36px;}
   h1,h2,h3,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
@@ -55,9 +56,9 @@
   .cal{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
   .cell{background:#fff; border:1px solid var(--line); border-radius:12px; padding:15px 15px 16px; min-height:158px; border-top:3px solid var(--line);}
   .cell .d{font-size:11px; font-weight:600; letter-spacing:1px; color:var(--ink-2); text-transform:uppercase;}
-  .cell h3{font-size:16px; font-weight:600; color:var(--navy); margin:7px 0 4px; line-height:1.18;}
+  .cell h3{font-size:18px; font-weight:600; color:var(--navy); margin:7px 0 4px; line-height:1.18;}
   .cell .cat{font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; margin-bottom:11px;}
-  .slot{font-size:13px; color:var(--ink); line-height:1.4; padding:3px 0; border-top:1px solid #F0EADC;}
+  .slot{font-size:14px; color:var(--ink); line-height:1.4; padding:3px 0; border-top:1px solid #F0EADC;}
   .slot b{color:var(--ink-2); font-weight:600;}
   .care{border-top-color:var(--care);} .care .cat{color:var(--care);}
   .rest{border-top-color:var(--rest);} .rest .cat{color:var(--rest);}
@@ -88,7 +89,7 @@
   .est-note{font-size:14px; color:var(--ink-2); font-style:italic; margin-top:18px; text-align:center;}
   .other{margin-top:30px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 26px;}
   .other h3{font-size:18px; font-weight:600; margin-bottom:6px;}
-  .other p{font-size:15px; color:var(--ink-2); line-height:1.55;}
+  .other p{font-size:17px; color:var(--ink); line-height:1.55;}
   .other p b{color:var(--navy); font-weight:600;}
 
   .invite{background:var(--navy); color:#fff; text-align:center;}
@@ -96,7 +97,7 @@
   .invite p{color:#D7DCE6; font-size:19px; margin:16px auto 28px; max-width:30em; line-height:1.6;}
   .inrow{display:flex; gap:12px; justify-content:center; max-width:520px; margin:0 auto; flex-wrap:wrap;}
   .inrow input{flex:1; min-width:180px; height:54px; border-radius:10px; border:none; padding:0 18px; font-size:17px; font-family:'Inter',sans-serif;}
-  .inrow .btn{background:var(--gold); color:#23304a; font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
+  .inrow .btn{background:var(--gold); color:var(--navy); font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
   .invite .fine{color:#9FA9BC; font-size:14px; margin-top:18px;}
 
   /* sticky proceed bar — always-available CTA while scrolling */

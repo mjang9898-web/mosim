@@ -22,6 +22,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
   h1,h2,h3,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
@@ -74,6 +75,7 @@
     .navlinks a{ padding:13px 0; width:100%; font-size:17px; }
     .nav-signin, .nav-cta{ padding:8px 14px; } }
   @media(max-width:560px){ .faq-item p{padding-left:0;} }
+  @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
 </head>
 <body>

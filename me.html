@@ -30,9 +30,12 @@
   header.me-head button.signout{ font:inherit; font-size:15px; font-weight:500; padding:9px 16px;
     background:#fff; border:1.5px solid var(--line); border-radius:999px; cursor:pointer; color:var(--navy); }
   header.me-head button.signout:hover{ background:var(--ivory-soft); border-color:var(--gold); }
-  nav.tabs{ background:rgba(247,242,234,.9); border-bottom:1px solid var(--line); padding:0 28px; display:flex; gap:28px; }
-  nav.tabs a{ display:inline-block; padding:14px 0; font-size:17px; color:var(--ink); text-decoration:none; border-bottom:2px solid transparent; font-weight:500; }
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
+  nav.tabs{ background:rgba(247,242,234,.9); border-bottom:1px solid var(--line); padding:0 28px; display:flex; gap:28px; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  nav.tabs::-webkit-scrollbar{ display:none; }
+  nav.tabs a{ display:inline-block; padding:14px 0; font-size:17px; color:var(--ink); text-decoration:none; border-bottom:2px solid transparent; font-weight:500; white-space:nowrap; flex:none; }
   nav.tabs a[aria-current="page"]{ color:var(--navy); border-bottom-color:var(--gold); font-weight:600; }
+  @media(max-width:430px){ nav.tabs{ gap:18px; } }
   main{ padding:32px 28px; max-width:980px; margin:0 auto; }
   main section{ display:none; }
   main section.active{ display:block; }

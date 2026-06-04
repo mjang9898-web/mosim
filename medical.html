@@ -22,6 +22,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
   h1,h2,h3,h4,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
@@ -59,7 +60,7 @@
   .card .body{padding:24px 26px 26px;}
   .card .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .card h3{font-size:25px; font-weight:600; margin:8px 0 8px;}
-  .card .desc{font-size:17px; color:var(--ink); line-height:1.5;}
+  .card .desc{font-size:19px; color:var(--ink); line-height:1.5;}
   .card .foot{display:flex; align-items:baseline; justify-content:space-between; margin-top:18px;}
   .card .price{font-family:'Lora',serif; font-size:19px; font-weight:600; color:var(--navy);}
   .card .price span{font-size:14px; color:var(--ink-2); font-weight:400; font-family:'Inter';}
@@ -68,7 +69,7 @@
   /* "more is possible" */
   .more{margin:36px 0 0; background:var(--ivory-soft); border:1px solid var(--line); border-radius:16px; padding:30px 34px; text-align:center;}
   .more h3{font-size:22px; font-weight:600; margin-bottom:8px;}
-  .more p{font-size:18px; color:var(--ink); line-height:1.6; max-width:46em; margin:0 auto; text-wrap:balance;}
+  .more p{font-size:19px; color:var(--ink); line-height:1.6; max-width:46em; margin:0 auto; text-wrap:balance;}
 
   /* closing cta */
   .closing{text-align:center; padding:72px 0 88px;}
@@ -85,31 +86,31 @@
   .drawer{position:fixed; top:0; right:0; height:100%; width:min(680px,94vw); background:var(--ivory); box-shadow:-20px 0 60px -30px rgba(0,0,0,.5); transform:translateX(100%); transition:transform .28s ease; z-index:50; display:flex; flex-direction:column;}
   .drawer.open{transform:none;}
   .dr-top{display:flex; align-items:center; justify-content:space-between; padding:18px 28px; border-bottom:1px solid var(--line); flex:none;}
-  .dr-top .crumb{font-size:14px; color:var(--ink-2);}
-  .dr-close{width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:22px; color:var(--navy); cursor:pointer; line-height:1;}
+  .dr-top .crumb{font-size:14px; color:var(--ink);}
+  .dr-close{width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:22px; color:var(--navy); cursor:pointer; line-height:1;}
   .dr-body{overflow-y:auto; padding:30px 28px 40px;}
   .dr-eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .dr-body h2{font-size:32px; font-weight:600; margin:8px 0 14px; line-height:1.12;}
-  .dr-pos{font-size:18px; color:var(--ink); line-height:1.65;}
+  .dr-pos{font-size:19px; color:var(--ink); line-height:1.65;}
   .dr-gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:24px 0;}
   .dr-gallery .g{aspect-ratio:4/3; border-radius:10px; background:#E7D9BC center/cover no-repeat;}
   .dr-h{font-family:'Lora',serif; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-2); margin:26px 0 12px;}
   .hosp{display:flex; flex-wrap:wrap; gap:8px;}
-  .hosp span{background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:14px; color:var(--navy);}
+  .hosp span{background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:15px; color:var(--navy);}
   .tier{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin-bottom:12px;}
   .tier .th{display:flex; align-items:baseline; justify-content:space-between; gap:12px;}
   .tier .tn{font-family:'Lora',serif; font-size:20px; font-weight:600;}
   .tier .tp{font-family:'Lora',serif; font-size:20px; font-weight:600; color:var(--care); white-space:nowrap;}
   .tier .tp small{font-size:13px; color:var(--ink-2); font-weight:400; font-family:'Inter';}
-  .tier .td{font-size:14px; color:var(--ink-2); margin-top:2px;}
-  .tier .tb{font-size:15px; color:var(--ink); line-height:1.5; margin:10px 0 12px;}
+  .tier .td{font-size:15px; color:var(--ink-2); margin-top:2px;}
+  .tier .tb{font-size:16px; color:var(--ink); line-height:1.5; margin:10px 0 12px;}
   .tier ul{list-style:none;}
-  .tier li{font-size:14.5px; color:var(--ink); padding:3px 0 3px 18px; position:relative;}
+  .tier li{font-size:16px; color:var(--ink); padding:3px 0 3px 18px; position:relative;}
   .tier li:before{content:""; position:absolute; left:2px; top:10px; width:5px; height:5px; border-radius:50%; background:var(--gold);}
   .addons{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
-  .addon{display:flex; justify-content:space-between; gap:10px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:14.5px;}
+  .addon{display:flex; justify-content:space-between; gap:10px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:16px;}
   .addon .ap{color:var(--ink-2); white-space:nowrap;}
-  .dr-disc{font-size:13px; color:var(--ink-2); font-style:italic; line-height:1.55; margin-top:22px;}
+  .dr-disc{font-size:14px; color:var(--ink-2); line-height:1.55; margin-top:22px;}
   .dr-foot{flex:none; border-top:1px solid var(--line); padding:16px 28px; background:var(--ivory-soft); display:flex; justify-content:space-between; align-items:center; gap:14px;}
   .dr-foot .note{font-size:14px; color:var(--ink-2);}
   .dr-foot .btn{white-space:nowrap; flex:none;}
@@ -124,6 +125,7 @@
     .nav-signin, .nav-cta{ padding:8px 14px; }
     .cards{grid-template-columns:1fr;} .addons{grid-template-columns:1fr;} }
   @media(max-width:560px){ .dr-foot{flex-direction:column; align-items:stretch; gap:12px;} .dr-foot .btn{white-space:nowrap; text-align:center; padding:14px 24px;} }
+  @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
 </head>
 <body>
@@ -246,20 +248,29 @@
   MED.forEach(function (m) {
     var el = document.createElement('div');
     el.className = 'card';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', m.name);
     el.innerHTML =
       '<div class="photo" style="background-image:url(\'/assets/medical/card-' + m.code + '.webp\')"></div>' +
       '<div class="body"><div class="eyebrow">' + m.eyebrow + '</div>' +
       '<h3>' + m.name + '</h3><div class="desc">' + m.desc + '</div>' +
       '<div class="foot"><span class="price">From $' + m.price + ' <span>· ' + m.duration + '</span></span>' +
       '<span class="view">View details →</span></div></div>';
-    el.addEventListener('click', function () { openDrawer(m); });
+    el.addEventListener('click', function () { openDrawer(m, el); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); openDrawer(m, el); }
+    });
     cardsEl.appendChild(el);
   });
 
   // ---- drawer ----
   var scrim = document.getElementById('scrim'), drawer = document.getElementById('drawer');
   var body = document.getElementById('dr-body'), crumb = document.getElementById('dr-crumb');
-  function openDrawer(m) {
+  var drClose = document.getElementById('dr-close');
+  var lastTrigger = null;
+  function openDrawer(m, trigger) {
+    lastTrigger = trigger || null;
     crumb.textContent = m.name;
     var imgs = m.gallery || [P + m.code + '.webp', P + m.code + '-2.webp'];
     var gallery = '<div class="dr-gallery">' +
@@ -283,13 +294,15 @@
     body.scrollTop = 0;
     scrim.classList.add('open'); drawer.classList.add('open');
     document.body.style.overflow = 'hidden';
+    drClose.focus();
   }
   function closeDrawer() {
     scrim.classList.remove('open'); drawer.classList.remove('open');
     document.body.style.overflow = '';
+    if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
   }
   scrim.addEventListener('click', closeDrawer);
-  document.getElementById('dr-close').addEventListener('click', closeDrawer);
+  drClose.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 })();
 </script>

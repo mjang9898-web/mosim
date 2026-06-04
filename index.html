@@ -25,6 +25,7 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
   h1,h2,h3,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
@@ -55,7 +56,7 @@
   .hero h1{font-weight:600; font-size:clamp(38px,5.2vw,56px); line-height:1.06; letter-spacing:-.5px; text-wrap:balance;}
   .hero .sub{font-size:21px; line-height:1.6; color:var(--ink); margin:28px auto 0; max-width:30em; text-wrap:balance;}
   .cta-row{margin-top:40px; display:flex; flex-direction:column; align-items:center; gap:20px;}
-  .care-line{max-width:760px; margin:64px auto 0; text-align:center; color:var(--ink-2); font-size:16px;}
+  .care-line{max-width:760px; margin:64px auto 0; text-align:center; color:var(--ink); font-size:17px;}
   .care-line .sep{color:var(--gold); margin:0 12px;}
 
   /* image band (AI concept image — replace with licensed photography later) */
@@ -67,9 +68,10 @@
     background:radial-gradient(78% 96% at 0% 100%, rgba(0,0,0,.5), rgba(0,0,0,0) 62%), linear-gradient(to top, rgba(27,42,74,.5), rgba(27,42,74,0) 52%);}
   .band .cap{position:absolute; left:30px; bottom:24px; max-width:60%; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.5); z-index:2; opacity:0; transition:opacity .5s ease;}
   .band .cap.active{opacity:1;}
-  .band-dots{position:absolute; right:24px; bottom:22px; display:flex; gap:9px; z-index:2;}
-  .band-dot{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.5); border:0; padding:0; cursor:pointer; transition:background .2s;}
-  .band-dot.on{background:#fff;}
+  .band-dots{position:absolute; right:18px; bottom:14px; display:flex; gap:4px; z-index:2;}
+  .band-dot{width:30px; height:30px; padding:0; background:none; border:0; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;}
+  .band-dot::after{content:''; width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.55); transition:background .2s;}
+  .band-dot.on::after{background:#fff;}
 
   /* sections */
   section.blk{padding:96px 0;}
@@ -133,6 +135,7 @@
     .about{grid-template-columns:1fr;}
     section.blk{padding:64px 0;}
   }
+  @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
 </head>
 <body>
@@ -163,7 +166,7 @@
       <a href="#how" class="btn-text">See how it works →</a>
     </div>
   </section>
-  <div id="care" class="care-line">Health screening <span class="sep">·</span> Knees &amp; joints <span class="sep">·</span> Dental <span class="sep">·</span> Eyes <span class="sep">·</span> <a href="medical.html" style="color:var(--gold); font-weight:600; text-decoration:none;">&amp; more →</a></div>
+  <div id="care" class="care-line">Health screening <span class="sep">·</span> Knees &amp; joints <span class="sep">·</span> Dental <span class="sep">·</span> Eyes <span class="sep">·</span> <a href="medical.html" style="color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;">&amp; more →</a></div>
   <div class="band" role="group" aria-label="Warm moments of care in Korea">
     <div class="band-slide active" style="background-image:url('assets/landing/hero-care.jpg'); background-position:center 38%;"></div>
     <div class="band-slide" style="background-image:url('assets/landing/hero-welcome.jpg'); background-position:center 46%;"></div>
