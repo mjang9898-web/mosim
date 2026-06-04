@@ -56,7 +56,8 @@
   .band-slide.active{opacity:1;}
   .band::before{content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:1;
     background:radial-gradient(78% 96% at 0% 100%, rgba(0,0,0,.5), rgba(0,0,0,0) 62%), linear-gradient(to top, rgba(27,42,74,.5), rgba(27,42,74,0) 52%);}
-  .band .cap{position:absolute; left:30px; bottom:24px; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.5); z-index:2;}
+  .band .cap{position:absolute; left:30px; bottom:24px; max-width:60%; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.5); z-index:2; opacity:0; transition:opacity .5s ease;}
+  .band .cap.active{opacity:1;}
   .band-dots{position:absolute; right:24px; bottom:22px; display:flex; gap:9px; z-index:2;}
   .band-dot{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.5); border:0; padding:0; cursor:pointer; transition:background .2s;}
   .band-dot.on{background:#fff;}
@@ -158,7 +159,9 @@
     <div class="band-slide active" style="background-image:url('assets/landing/hero-care.jpg'); background-position:center 38%;"></div>
     <div class="band-slide" style="background-image:url('assets/landing/hero-welcome.jpg'); background-position:center 46%;"></div>
     <div class="band-slide" style="background-image:url('assets/landing/hero-care3.jpg'); background-position:center 40%;"></div>
-    <div class="cap">Looked after, the way you should be.</div>
+    <div class="cap active">Beside you, every step.</div>
+    <div class="cap">Welcomed the moment you land.</div>
+    <div class="cap">World-class care, made simple.</div>
     <div class="band-dots">
       <button class="band-dot on" type="button" aria-label="Show image 1"></button>
       <button class="band-dot" type="button" aria-label="Show image 2"></button>
@@ -231,13 +234,13 @@
 <script>(function(){var b=document.getElementById('nav-burger'),m=document.getElementById('navlinks');if(!b||!m)return;b.addEventListener('click',function(){var open=m.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');});})();</script>
 <script>(function(){
   var band=document.querySelector('.band'); if(!band) return;
-  var slides=band.querySelectorAll('.band-slide'), dots=band.querySelectorAll('.band-dot');
+  var slides=band.querySelectorAll('.band-slide'), dots=band.querySelectorAll('.band-dot'), caps=band.querySelectorAll('.cap');
   if(slides.length<2) return;
   var i=0, t=null, reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function show(n){ slides[i].classList.remove('active'); if(dots[i]) dots[i].classList.remove('on');
+  function show(n){ slides[i].classList.remove('active'); if(dots[i]) dots[i].classList.remove('on'); if(caps[i]) caps[i].classList.remove('active');
     i=((n%slides.length)+slides.length)%slides.length;
-    slides[i].classList.add('active'); if(dots[i]) dots[i].classList.add('on'); }
-  function start(){ if(reduce||t) return; t=setInterval(function(){ show(i+1); }, 5500); }
+    slides[i].classList.add('active'); if(dots[i]) dots[i].classList.add('on'); if(caps[i]) caps[i].classList.add('active'); }
+  function start(){ if(reduce||t) return; t=setInterval(function(){ show(i+1); }, 3000); }
   function stop(){ if(t){ clearInterval(t); t=null; } }
   for(var k=0;k<dots.length;k++){ (function(idx){ dots[idx].addEventListener('click',function(){ stop(); show(idx); start(); }); })(k); }
   band.addEventListener('mouseenter',stop); band.addEventListener('mouseleave',start);
