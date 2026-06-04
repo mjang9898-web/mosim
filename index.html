@@ -49,10 +49,12 @@
   .care-line{max-width:760px; margin:64px auto 0; text-align:center; color:var(--ink-2); font-size:16px;}
   .care-line .sep{color:var(--gold); margin:0 12px;}
 
-  /* image band (placeholder until licensed photography) */
+  /* image band (AI concept image — replace with licensed photography later) */
   .band{margin:60px 0 0; aspect-ratio:16/6.5; border-radius:20px; position:relative; overflow:hidden;
-    background:linear-gradient(135deg,#EFE6D2 0%, #E3D3B2 40%, #C2AE84 68%, #5E6B86 100%); box-shadow:0 28px 70px -34px rgba(27,42,74,.45);}
-  .band .cap{position:absolute; left:30px; bottom:24px; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.35);}
+    background:#E3D3B2 url('assets/landing/hero-care.jpg') center 38%/cover no-repeat; box-shadow:0 28px 70px -34px rgba(27,42,74,.45);}
+  .band::before{content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(to top, rgba(27,42,74,.58), rgba(27,42,74,0) 52%);}
+  .band .cap{position:absolute; left:30px; bottom:24px; color:#fff; font-family:'Lora',serif; font-size:22px; text-shadow:0 1px 14px rgba(0,0,0,.45); z-index:1;}
 
   /* sections */
   section.blk{padding:96px 0;}
@@ -77,8 +79,9 @@
 
   /* about teaser */
   .about{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
-  .about .frame{aspect-ratio:5/4; border-radius:18px; background:linear-gradient(150deg,#EFE6D2,#CDBC95 70%,#6E7A92); position:relative; box-shadow:0 24px 60px -30px rgba(27,42,74,.45);}
-  .about .frame .cap{position:absolute; bottom:16px; left:18px; color:#fff; font-family:'Lora',serif; font-size:15px; text-shadow:0 1px 10px rgba(0,0,0,.4);}
+  .about .frame{aspect-ratio:5/4; border-radius:18px; overflow:hidden; background:#CDBC95 url('assets/landing/seoul-care.jpg') center/cover no-repeat; position:relative; box-shadow:0 24px 60px -30px rgba(27,42,74,.45);}
+  .about .frame::before{content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(to top, rgba(27,42,74,.5), rgba(27,42,74,0) 50%);}
+  .about .frame .cap{position:absolute; bottom:16px; left:18px; color:#fff; font-family:'Lora',serif; font-size:15px; text-shadow:0 1px 10px rgba(0,0,0,.45); z-index:1;}
   .about h2{font-size:clamp(28px,3.4vw,36px); font-weight:600; line-height:1.12;}
   .about p{font-size:19px; color:var(--ink); line-height:1.65; margin:18px 0 24px;}
 
@@ -110,6 +113,7 @@
     .navlinks a{ padding:13px 0; width:100%; font-size:17px; }
     .nav-signin, .nav-cta{ padding:8px 14px; }
     .hero{padding:64px 0 16px;}
+    .band .cap{font-size:18px; left:20px; bottom:16px;}
     .steps,.diff-grid{grid-template-columns:1fr; gap:30px;}
     .about{grid-template-columns:1fr;}
     section.blk{padding:64px 0;}
