@@ -5,7 +5,8 @@ import crypto from 'node:crypto';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const FEE_PER_PERSON = 1200;
+const BASE_FEE = 1200;   // concierge fee per traveler for a one-week (7-day) trip
+const BASE_DAYS = 7;     // the fee is prorated from this baseline to the actual trip length
 
 const supa = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -21,6 +22,26 @@ function groupSize(state) {
   return n > 0 ? n : 1;
 }
 
+// Number of days in the trip. The finalized day-by-day itinerary is the source
+// of truth; fall back to the planner's rough length range, then the 7-day base.
+function tripDays(state, schedule) {
+  if (Array.isArray(schedule) && schedule.length > 0) return schedule.length;
+  const t = state?.trip || {};
+  const explicit = parseInt(t.days, 10);
+  if (Number.isFinite(explicit) && explicit > 0) return explicit;
+  const byRange = { under1w: 5, '1to2w': 10, '2plus': 16 };
+  return byRange[t.length] || BASE_DAYS;
+}
+
+// $1,200 for a 7-day trip, prorated to the actual number of days, per traveler.
+function perPersonFee(days) {
+  return Math.round((BASE_FEE / BASE_DAYS) * days);
+}
+
+function computeTotal(state, schedule) {
+  return perPersonFee(tripDays(state, schedule)) * groupSize(state);
+}
+
 export default async function handler(req, res) {
   if (!supa) return res.status(500).json({ error: 'Server not configured' });
 
@@ -34,10 +55,13 @@ export default async function handler(req, res) {
       .single();
     if (!g) return res.status(404).json({ error: 'Payment link not found' });
     const { data: itin } = await supa
-      .from('itineraries').select('title, state').eq('id', g.itinerary_id).single();
+      .from('itineraries').select('title, state, schedule').eq('id', g.itinerary_id).single();
+    const days = tripDays(itin?.state, itin?.schedule);
     return res.status(200).json({
       title: itin?.title || 'Mosim concierge',
       people: groupSize(itin?.state),
+      days,
+      perPerson: perPersonFee(days),
       total: Number(g.total_amount),
       paid: Number(g.amount_paid),
       balance: Math.max(0, Number(g.total_amount) - Number(g.amount_paid)),
@@ -57,7 +81,7 @@ export default async function handler(req, res) {
     if (!itinerary_id) return res.status(400).json({ error: 'itinerary_id required' });
 
     const { data: itin } = await supa
-      .from('itineraries').select('id, user_id, state').eq('id', itinerary_id).single();
+      .from('itineraries').select('id, user_id, state, schedule').eq('id', itinerary_id).single();
     if (!itin || itin.user_id !== user.id) {
       return res.status(403).json({ error: 'Not your itinerary' });
     }
@@ -68,7 +92,7 @@ export default async function handler(req, res) {
     if (existing) return res.status(200).json({ token: existing.share_token });
 
     const shareToken = crypto.randomBytes(24).toString('hex');
-    const total = FEE_PER_PERSON * groupSize(itin.state);
+    const total = computeTotal(itin.state, itin.schedule);
     const { data, error } = await supa
       .from('payment_groups')
       .insert({ itinerary_id, share_token: shareToken, total_amount: total })
