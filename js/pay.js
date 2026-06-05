@@ -4,6 +4,14 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+  // Consent gate — the pay buttons stay blocked until the terms box is ticked.
+  const consented = () => { const c = $('consent'); return !c || c.checked; };
+  function warnConsent() {
+    $('msg').style.color = '#a00';
+    $('msg').textContent = 'Please agree to the terms to continue.';
+    const c = $('consent'); if (c) c.focus();
+  }
+
   function showError(text) {
     $('error').textContent = text;
     $('error').style.display = 'block';
@@ -46,8 +54,13 @@
 
   function mountButtons() {
     window.paypal.Buttons({
+      onClick: (data, actions) => {
+        if (!consented()) { warnConsent(); return actions.reject(); }
+        return actions.resolve();
+      },
       createOrder: async () => {
         $('msg').textContent = '';
+        if (!consented()) { warnConsent(); throw new Error('consent required'); }
         const amt = parseFloat($('amount').value);
         const max = parseFloat($('amount').max);
         if (!amt || amt <= 0 || amt > max) {
@@ -100,6 +113,7 @@
     btn.style.cssText = 'width:100%;font-size:18px;font-weight:600;padding:14px;border:0;border-radius:10px;background:#1B2A4A;color:#fff;cursor:pointer;min-height:48px;';
     btn.addEventListener('click', async () => {
       $('msg').textContent = '';
+      if (!consented()) { warnConsent(); return; }
       const amt = parseFloat($('amount').value);
       const max = parseFloat($('amount').max);
       if (!amt || amt <= 0 || amt > max) {

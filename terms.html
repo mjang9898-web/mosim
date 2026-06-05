@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:site_name" content="Mosim">
+<meta property="og:title" content="Mosim — You're never alone in Korea.">
+<meta property="og:description" content="World-class medical care in Korea — fully arranged, with someone beside you the whole way.">
+<meta property="og:image" content="https://mosim-site.vercel.app/og-image.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mosim — Payment, Refund &amp; Cancellation</title>
+<meta name="description" content="How Mosim's concierge fee works, and our refund and cancellation terms — in plain, honest language.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --care:#5C7C63; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-padding-top:84px; -webkit-text-size-adjust:100%;}
+  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;}
+  :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
+  .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
+  h1,h2,h3,.brand{font-family:'Lora',Georgia,serif;}
+  a{color:inherit;}
+  .label{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold);}
+  .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:16px 30px; text-decoration:none; display:inline-block; min-height:44px;}
+  .btn:hover{background:var(--navy-soft);}
+
+  nav{position:sticky; top:0; background:rgba(247,242,234,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:20; border-bottom:1px solid var(--line);}
+  .nav-in{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:18px 0; position:relative;}
+  .brand{font-weight:600; font-size:24px; color:var(--navy); text-decoration:none; justify-self:start;} .brand .dot{color:var(--gold);}
+  .navlinks{display:flex; gap:30px; align-items:center; justify-self:center;}
+  .navlinks a{font-size:16px; color:var(--ink); text-decoration:none; font-weight:500;}
+  .nav-actions{justify-self:end; display:flex; align-items:center; gap:14px;}
+  .nav-signin{ font-size:15px; font-weight:600; color:var(--navy); background:#fff; border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
+  .nav-signin:hover{ background:var(--ivory-soft); }
+  .nav-cta{ font-size:15px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
+  .nav-cta:hover{ background:var(--navy-soft); }
+  .nav-div{ width:1px; height:22px; background:var(--ink-2); display:inline-block; flex:none; }
+  .nav-burger{ display:none; background:none; border:0; cursor:pointer; padding:8px; width:44px; height:44px; flex:none; flex-direction:column; justify-content:center; gap:5px; }
+  .nav-burger span{ display:block; width:22px; height:2px; background:var(--navy); border-radius:2px; }
+
+  .hero{max-width:760px; margin:0 auto; text-align:center; padding:72px 0 8px;}
+  .hero h1{font-size:clamp(32px,4.6vw,46px); font-weight:600; line-height:1.12; text-wrap:balance;}
+  .hero p{font-size:20px; color:var(--ink); margin:18px auto 0; max-width:34em; line-height:1.6; text-wrap:balance;}
+  .updated{font-size:15px; color:var(--ink-2); margin-top:14px;}
+
+  .doc{max-width:760px; margin:0 auto; padding:36px 0 0;}
+  .sec{margin-top:46px;}
+  .sec > .label{display:block; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line);}
+  .sec h2{font-size:26px; font-weight:600; line-height:1.2; margin-bottom:8px;}
+  .doc p{font-size:19px; color:var(--ink); line-height:1.7; margin-top:14px; max-width:64ch;}
+  .doc p strong{color:var(--navy); font-weight:600;}
+  .doc h3{font-size:19px; font-weight:600; color:var(--navy); margin-top:24px;}
+  .lead{font-size:20px; color:var(--navy); line-height:1.65; margin-top:6px;}
+
+  .tiers{list-style:none; margin:18px 0 0; border-top:1px solid var(--line); max-width:64ch;}
+  .tiers li{display:flex; justify-content:space-between; gap:18px; align-items:baseline; padding:14px 2px; border-bottom:1px solid var(--line); font-size:19px;}
+  .tiers .when{color:var(--ink);}
+  .tiers .amt{font-weight:600; color:var(--navy); white-space:nowrap;}
+  .note{font-size:16px; color:var(--ink-2); margin-top:12px; line-height:1.55;}
+
+  .callout{background:#fff; border:1px solid var(--line); border-left:4px solid var(--care); border-radius:12px; padding:20px 22px; margin-top:22px;}
+  .callout h3{margin-top:0; color:var(--care);}
+  .callout p{margin-top:8px;}
+
+  .closing{text-align:center; padding:56px 0 88px; margin-top:30px;}
+  .closing h2{font-size:clamp(24px,3.2vw,30px); font-weight:600; text-wrap:balance;}
+  .closing p{font-size:19px; color:var(--ink); margin:14px auto 26px; max-width:32em; line-height:1.6; text-wrap:balance;}
+
+  footer{background:var(--ivory); border-top:1px solid var(--line); padding:40px 0;}
+  .foot-in{display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;}
+  .foot-links{display:flex; gap:24px; flex-wrap:wrap;} .foot-links a{color:var(--ink); font-size:16px; text-decoration:none;}
+
+  @media(max-width:860px){ .wrap{padding:0 24px;}
+    .nav-burger{ display:flex; }
+    .nav-in{ display:flex; align-items:center; gap:10px; }
+    .nav-actions{ margin-left:auto; }
+    .navlinks{ display:none; position:absolute; justify-self:stretch; top:100%; left:0; right:0; flex-direction:column; align-items:flex-start; gap:0; background:var(--ivory); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 24px 12px; box-shadow:0 16px 28px -18px rgba(27,42,74,.45); z-index:30; }
+    .navlinks.open{ display:flex; }
+    .navlinks a{ padding:13px 0; width:100%; font-size:17px; }
+    .nav-signin, .nav-cta{ padding:8px 14px; } }
+  @media(max-width:520px){ .tiers li{flex-direction:column; gap:2px;} }
+  @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap nav-in">
+  <button class="nav-burger" id="nav-burger" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
+  <div class="navlinks" id="navlinks">
+    <a href="index.html#how">How it works</a>
+    <a href="medical.html">Medical</a>
+    <a href="experience.html">Experience</a>
+    <a href="our-story.html">Our story</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+  <div class="nav-actions">
+    <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
+    <span class="nav-div" aria-hidden="true"></span>
+    <a href="step1.html" class="nav-cta">Plan my trip</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="label">Our promise, in plain words</div>
+    <h1 style="margin-top:16px;">Payment, refund &amp; cancellation</h1>
+    <p>How our concierge fee works, and what happens if your plans change — written to be clear, not to trap you.</p>
+    <div class="updated">Last updated: June 2026</div>
+  </section>
+
+  <div class="doc">
+
+    <section class="sec">
+      <span class="label">1 · Payment terms</span>
+      <h2>One simple fee.</h2>
+      <p class="lead">Mosim charges a single concierge fee. It is <strong>US $1,200 per traveler for a one-week (7-day) trip.</strong> If your trip is shorter or longer, we simply <strong>prorate it to your actual number of days</strong> — that's about $170 a day per traveler — so you only pay for the days we're by your side.</p>
+
+      <h3>What the fee covers</h3>
+      <p>Planning your trip before you go (our team and our AI tools), and a Mosim companion <strong>physically beside you in Korea</strong>, from the moment you arrive until you fly home — interpreting, transportation, going with you to the hospital, and helping with daily needs.</p>
+
+      <h3>What the fee does <em>not</em> cover</h3>
+      <p>The fee is for Mosim's service only. It does <strong>not</strong> include your medical care, your hotel, or your flights. Those are billed to you <strong>directly by the hospital, hotel, and airline.</strong> Mosim never collects that money, never adds a markup, and never takes a cut — you always see the real costs as they are.</p>
+
+      <h3>Currency and how you pay</h3>
+      <p>The fee is charged in <strong>US dollars (USD)</strong>, by card or PayPal. After we talk with you, we send a secure payment link — there's no cold checkout to figure out on your own. If you're traveling with others, the fee <strong>can be split among travelers.</strong></p>
+
+      <h3>What paying means</h3>
+      <p>When you pay the concierge fee, you're telling us you'd like Mosim to <strong>begin arranging your trip.</strong> That's our signal to start planning for you.</p>
+    </section>
+
+    <section class="sec">
+      <span class="label">2 · Refund policy</span>
+      <h2>We want you to feel safe saying yes.</h2>
+
+      <h3>Changed your mind?</h3>
+      <p>If we <strong>haven't started your planning yet</strong>, you get a <strong>full refund — whatever the dates.</strong> Just reach out.</p>
+
+      <h3>Once your trip has begun</h3>
+      <p>After your trip has begun — generally from your departure — the concierge fee is <strong>non-refundable</strong>, because the service is being delivered to you in real time.</p>
+
+      <h3>Our good-faith promise</h3>
+      <p>Numbers can't cover every situation. If a rule ever feels unfair to you, <strong>talk to us.</strong> We'd always rather make it right than hide behind a policy.</p>
+
+      <div class="callout">
+        <h3>If your health changes</h3>
+        <p>You're traveling for your health, and your health comes first. <strong>If your doctor advises against travel, or your condition prevents the trip, we will handle your refund generously, case by case</strong> — even beyond the windows below. You should never feel trapped by a payment when your health is the reason you can't go. Please just reach out as early as you can, and we'll take care of you.</p>
+      </div>
+
+      <h3>If Mosim cancels</h3>
+      <p>If we ever have to cancel, or we can't deliver the service we promised, <strong>you get a full refund of your concierge fee — every dollar.</strong></p>
+    </section>
+
+    <section class="sec">
+      <span class="label">3 · Cancellation policy</span>
+      <h2>The sooner you tell us, the more comes back.</h2>
+      <p>Once we've begun arranging your trip, how much of your concierge fee is refunded depends on how early you let us know — because the closer to departure, the more we've already arranged and committed for you. Timing is counted from your <strong>departure date from the US:</strong></p>
+
+      <ul class="tiers">
+        <li><span class="when">14 or more days before departure</span><span class="amt">Full refund — 100%</span></li>
+        <li><span class="when">7 to 13 days before departure</span><span class="amt">70% refunded</span></li>
+        <li><span class="when">3 to 6 days before departure</span><span class="amt">30% refunded</span></li>
+        <li><span class="when">Fewer than 3 days, including departure day</span><span class="amt">No refund</span></li>
+      </ul>
+      <p class="note">These tiers apply to Mosim's concierge fee only. Any refunds for hospitals, hotels, or flights follow <strong>those providers'</strong> own policies, since you paid them directly.</p>
+
+      <h3>How to cancel</h3>
+      <p>It's simple: <strong>just contact your Mosim person.</strong> One message or call is enough — no forms, no runaround. We'll walk you through everything.</p>
+    </section>
+
+  </div>
+
+  <section class="closing">
+    <h2>Questions about any of this?</h2>
+    <p>Ask us anything before you decide — there's no commitment, just a real person who's happy to explain.</p>
+    <a href="index.html#contact" class="btn">Contact us</a>
+  </section>
+</div>
+
+<footer><div class="wrap foot-in">
+  <a href="index.html" class="brand" style="font-size:21px;">Mosim<span class="dot">.</span></a>
+  <div class="foot-links">
+    <a href="index.html#how">How it works</a><a href="medical.html">Medical</a><a href="experience.html">Experience</a><a href="our-story.html">Our story</a><a href="faq.html">FAQ</a><a href="terms.html">Terms</a><a href="signin.html">Sign in</a>
+  </div>
+</div></footer>
+
+<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');}}catch(x){}})();</script>
+<script>(function(){var b=document.getElementById('nav-burger'),m=document.getElementById('navlinks');if(!b||!m)return;b.addEventListener('click',function(){var open=m.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');});})();</script>
+
+</body>
+</html>

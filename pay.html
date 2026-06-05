@@ -39,6 +39,9 @@
     button.copy{ font-size:17px; font-weight:600; padding:11px 18px; border:1.5px solid var(--gold); color:var(--navy); background:#fff; border-radius:10px; cursor:pointer; min-height:44px; }
     button.copy:hover{ background:var(--ivory-soft); }
     .paid{ color:var(--care); font-size:22px; font-weight:700; }
+    .consent{ display:flex; gap:10px; align-items:flex-start; margin:16px 0 14px; font-size:15px; color:var(--ink); line-height:1.5; cursor:pointer; }
+    .consent input{ width:20px; height:20px; margin-top:1px; flex:none; accent-color:var(--navy); cursor:pointer; }
+    .consent a{ color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:2px; }
     .topnav{ display:flex; justify-content:flex-end; align-items:center; gap:16px; padding:16px 24px; border-bottom:1px solid var(--line); }
     .nav-signin{ font-size:15px; font-weight:600; color:var(--navy); background:#fff; border:1.5px solid var(--gold); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
     .nav-signin:hover{ background:var(--ivory-soft); }
@@ -63,6 +66,10 @@
       <div id="payArea">
         <label for="amount">Amount to pay (USD)</label>
         <input type="number" id="amount" min="1" step="0.01" />
+        <label class="consent" id="consentWrap">
+          <input type="checkbox" id="consent" />
+          <span>I agree to Mosim's <a href="/terms" target="_blank" rel="noopener">Payment, Refund &amp; Cancellation terms</a>.</span>
+        </label>
         <div id="msg"></div>
         <div id="paypal-buttons"></div>
       </div>
