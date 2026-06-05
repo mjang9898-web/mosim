@@ -201,7 +201,7 @@
 
 <div class="result-bar" id="resultBar"><div class="rb-in">
   <span class="rb-label">Like this plan? Let's make it real — together.</span>
-  <button class="rb-btn" id="rb-cta" type="button">Let's go to Korea</button>
+  <button class="rb-btn" id="rb-cta" type="button">Let's plan it together</button>
 </div></div>
 
 <script src="js/state.js"></script>
@@ -258,14 +258,40 @@
     ];
     renderItinerary(SAMPLE);
 
-    // ---- lead invite (UI only for now; backend wiring is the next step) ----
+    // ---- lead invite → POST /api/lead ----
     document.getElementById('lead-send').addEventListener('click', function () {
+      var btn = this;
       var name = document.getElementById('lead-name').value.trim();
       var email = document.getElementById('lead-email').value.trim();
       if (!email) { document.getElementById('lead-email').focus(); return; }
-      // TODO: POST to /api/lead with { name, email, state } — and STRIP state.care.note before sending (privacy rule).
-      this.textContent = 'Thank you — we’ll be in touch.';
-      this.disabled = true;
+
+      // Strip the private care note before it ever leaves the browser (privacy promise).
+      var safeState;
+      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
+      if (safeState.care) delete safeState.care.note;
+      var interest = ((safeState.care && safeState.care.needs) || []).join(', ');
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      var headers = { 'content-type': 'application/json' };
+      try {
+        var raw = localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');
+        var sess = raw ? JSON.parse(raw) : null;
+        var tok = sess && (sess.access_token || (sess.currentSession && sess.currentSession.access_token));
+        if (tok) headers.authorization = 'Bearer ' + tok;
+      } catch (e) {}
+
+      fetch('/api/lead', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ name: name, email: email, interest: interest, state: safeState })
+      }).then(function (r) {
+        if (r.ok) { btn.textContent = 'Thank you — we’ll be in touch.'; }
+        else { btn.disabled = false; btn.textContent = 'Try again'; }
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Try again';
+      });
     });
 
     // ---- sticky proceed bar ----
