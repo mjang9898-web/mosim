@@ -181,7 +181,7 @@
     document.getElementById('continue').addEventListener('click', function () {
       var data = { pace: single.pace, mobility: single.mobility, spice: single.spice, food: foodSelected() };
       if (window.kwState) kwState.saveStep('comfort', data);
-      window.location.href = 'result.html';
+      window.location.href = 'loading.html';
     });
   })();
 </script>
