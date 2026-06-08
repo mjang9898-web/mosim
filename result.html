@@ -99,6 +99,9 @@
   .inrow input{flex:1; min-width:180px; height:54px; border-radius:10px; border:none; padding:0 18px; font-size:17px; font-family:'Inter',sans-serif;}
   .inrow .btn{background:var(--gold); color:var(--navy); font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
   .invite .fine{color:#9FA9BC; font-size:14px; margin-top:18px;}
+  .invite .fine a{color:#D9BD7E; text-decoration:underline; text-underline-offset:2px;}
+  .inrow .btn-ghost{background:transparent; color:#fff; border:1.5px solid var(--gold);}
+  .inrow .btn-ghost:hover{background:rgba(255,255,255,.07);}
 
   /* sticky proceed bar — always-available CTA while scrolling */
   .result-bar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:30; transition:transform .25s ease;}
@@ -118,7 +121,7 @@
 <nav><div class="wrap nav-in">
   <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
   <div class="nav-right">
-    <a href="#talk" class="nav-save">Email me this plan</a>
+    <a href="#talk" class="nav-save">Save my plan</a>
     <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
     <span class="nav-div" aria-hidden="true"></span>
     <a href="/step1.html" class="nav-cta">Plan my trip</a>
@@ -189,19 +192,28 @@
 
 <!-- INVITE -->
 <div class="invite sec" id="talk"><div class="wrap">
-  <h2>Want to make this real?</h2>
-  <p>Talk with us — no commitment, no pressure. Just answers, and a real person who's done this before.</p>
-  <div class="inrow">
-    <input id="lead-name" placeholder="Your name" autocomplete="name">
-    <input id="lead-email" placeholder="Your email" autocomplete="email" type="email">
-    <button class="btn" id="lead-send" type="button">Let's talk</button>
+  <div id="cta-guest">
+    <h2>Save your plan.</h2>
+    <p>Create a free account to keep this itinerary, follow your trip, and pick up whenever you're ready — no commitment.</p>
+    <div class="inrow">
+      <a class="btn" href="/signup.html?next=result&amp;save=1">Create a free account</a>
+      <a class="btn btn-ghost" href="/signin.html?next=result&amp;save=1">Sign in</a>
+    </div>
+    <div class="fine">Your plan stays on your private page. Questions? <a href="/index.html#contact">Contact us</a>.</div>
   </div>
-  <div class="fine">Your plan is yours to keep. We'll only ever reach out if you ask us to.</div>
+  <div id="cta-member" style="display:none">
+    <h2>Saved to your page.</h2>
+    <p>Your itinerary is waiting in My Page — review it anytime, and continue whenever you're ready.</p>
+    <div class="inrow">
+      <a class="btn" href="/me.html">Go to My Page</a>
+    </div>
+    <div class="fine">Questions? <a href="/index.html#contact">Contact us</a>.</div>
+  </div>
 </div></div>
 
 <div class="result-bar" id="resultBar"><div class="rb-in">
-  <span class="rb-label">Like this plan? Let's make it real — together.</span>
-  <button class="rb-btn" id="rb-cta" type="button">Let's plan it together</button>
+  <span class="rb-label" id="rb-label">Like this plan? Save it to your free account.</span>
+  <button class="rb-btn" id="rb-cta" type="button">Save my plan</button>
 </div></div>
 
 <script src="js/state.js"></script>
@@ -302,48 +314,32 @@
         }).catch(function () {});
     })();
 
-    // ---- lead invite → POST /api/lead ----
-    document.getElementById('lead-send').addEventListener('click', function () {
-      var btn = this;
-      var name = document.getElementById('lead-name').value.trim();
-      var email = document.getElementById('lead-email').value.trim();
-      if (!email) { document.getElementById('lead-email').focus(); return; }
-
-      // Strip the private care note before it ever leaves the browser (privacy promise).
-      var safeState;
-      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
-      if (safeState.care) delete safeState.care.note;
-      var interest = ((safeState.care && safeState.care.needs) || []).join(', ');
-
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-
-      var headers = { 'content-type': 'application/json' };
+    // ---- post-itinerary CTA: self-serve (save via account), not a human chat ----
+    function authToken() {
       try {
         var raw = localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');
-        var sess = raw ? JSON.parse(raw) : null;
-        var tok = sess && (sess.access_token || (sess.currentSession && sess.currentSession.access_token));
-        if (tok) headers.authorization = 'Bearer ' + tok;
-      } catch (e) {}
-
-      fetch('/api/lead', {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({ name: name, email: email, interest: interest, state: safeState })
-      }).then(function (r) {
-        if (r.ok) { btn.textContent = 'Thank you — we’ll be in touch.'; }
-        else { btn.disabled = false; btn.textContent = 'Try again'; }
-      }).catch(function () {
-        btn.disabled = false; btn.textContent = 'Try again';
-      });
-    });
+        var s = raw ? JSON.parse(raw) : null;
+        var t = s && (s.access_token || (s.currentSession && s.currentSession.access_token));
+        var e = s && (s.expires_at || (s.currentSession && s.currentSession.expires_at));
+        if (t && (!e || e * 1000 > Date.now())) return t;
+      } catch (x) {}
+      return null;
+    }
+    var member = !!authToken();
+    if (member) {
+      var g = document.getElementById('cta-guest'); if (g) g.style.display = 'none';
+      var m = document.getElementById('cta-member'); if (m) m.style.display = 'block';
+      var ns = document.querySelector('.nav-save'); if (ns) { ns.textContent = 'My Page'; ns.setAttribute('href', '/me.html'); }
+      var rl = document.getElementById('rb-label'); if (rl) rl.textContent = 'Your plan is saved to your page.';
+      var rc = document.getElementById('rb-cta'); if (rc) rc.textContent = 'Go to My Page';
+    }
 
     // ---- sticky proceed bar ----
     var bar = document.getElementById('resultBar');
     document.getElementById('rb-cta').addEventListener('click', function () {
+      if (member) { window.location.href = '/me.html'; return; }
       var talk = document.getElementById('talk');
-      talk.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(function () { document.getElementById('lead-email').focus(); }, 450);
+      if (talk) talk.scrollIntoView({ behavior: 'smooth' });
     });
     // hide the bar once the invite section is on screen (no redundant overlap)
     if ('IntersectionObserver' in window) {
