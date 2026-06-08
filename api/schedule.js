@@ -1,181 +1,77 @@
+// POST /api/schedule  — body: the planner state (care/trip/experiences/comfort)
+// → { schedule: [ { day, title, cat, slots:[{t,place}] } ] }   cat ∈ care|rest|explore|travel
 import Anthropic from '@anthropic-ai/sdk';
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const client = ANTHROPIC_API_KEY ? new Anthropic({ apiKey: ANTHROPIC_API_KEY }) : null;
 
 const MODEL = 'claude-sonnet-4-6';
+const CATS = ['care', 'rest', 'explore', 'travel'];
 
-const SYSTEM_PROMPT = `You are the AI scheduler for K-Wellness Concierge, a high-end Korean medical-wellness tourism service designed for senior international guests (mostly 55-80, often traveling with adult children). Your job is to generate a personalized 7-day itinerary in Korea — Seoul-centered with select day trips — based on the guest's intake selections.
+// Large, static instruction block. Sent as a cached system prompt so repeat
+// calls only pay the ~0.1× cache-read rate on this prefix.
+const SYSTEM_PROMPT = `You are the itinerary planner for Mosim — a full-service medical-travel concierge that takes older American travelers (typically 55–80) to Korea for planned medical care and stays beside them the whole way. You design a warm, gentle, realistic day-by-day plan, Seoul-centered, built AROUND the traveler's care.
 
-# Input shape
+# Output
+Return ONLY a single JSON object — no prose, no markdown, no code fences:
+{"days":[{"day":"Day 1","title":"Arrival in Seoul","cat":"travel","slots":[{"t":"Afternoon","place":"Arrive at Incheon — your Mosim companion meets you"},{"t":"Evening","place":"Private car to your Seoul hotel, settle in"}]}]}
+- Each day has: "day" (e.g. "Day 1"), "title" (short, warm), "cat" (EXACTLY one of: care, rest, explore, travel), and "slots" (2–4 items; each {"t": a time or part of day, "place": a specific place or activity in plain, senior-friendly English}).
+- cat meaning: care = medical appointments, screening, procedures; rest = recovery, spa, gentle low-effort days; explore = sightseeing, experiences, dining outings; travel = arrival and departure days.
 
-The user message contains a JSON object with up to five sections:
+# Hard rules
+- Day 1 is ALWAYS arrival (land at Incheon / ICN, private car to the Seoul hotel) — cat "travel". The final day is ALWAYS departure (checkout, car to Incheon) — cat "travel".
+- Build the plan AROUND the care selected: schedule appointments in the first days, and ALWAYS place a rest/recovery day right after any procedure. Never put two heavy care days back-to-back without recovery between them.
+- Choose the number of days from trip length: under1w → 6 days, 1to2w → 10, 2plus → 14, unsure → 8. Adjust by at most ±2 only if the care clearly needs more recovery. Keep the total between 5 and 16.
+- Honor pace and mobility: relaxed / "I tire easily" / cane / wheelchair → only 2 slots a day, more rest days, gentle step-free activities; balanced → 3 slots; full days → 3–4. For cane or wheelchair, choose easy, accessible places.
+- Only include experiences the traveler picked. If experiences include "minimal", keep sightseeing to almost none — mostly care and rest, with at most one very easy outing.
+- Reflect food preferences in dining slots (mild vs. loves spicy; honor no-shellfish / no-pork / vegetarian / diabetic and any custom note).
+- Use REAL, well-known Seoul places. Hospitals by need: screening → Severance, Asan Medical Center, Samsung Medical Center, Seoul National University Hospital; knees/joints → SNU Bundang, Asan, Severance orthopedics; dental → Seoul National Univ. Dental, Yonsei Dental; eyes → BGN Eye Hospital, Dream Eye Center. Sights: Gyeongbokgung, Changdeokgung & Huwon garden, Bukchon Hanok Village, Insadong, Gwangjang / Namdaemun markets, N Seoul Tower, Han River parks, Cheonggyecheon; day trips: Nami Island, Suwon Hwaseong, the west coast.
+- A Mosim companion is always with them (interpreting, transport, hospital accompaniment). You may mention this lightly, but keep each slot concrete.
 
-- contact: { name, email, from, when, interest, note }
-- trip: arrival/departure dates, party composition, hotel tier, party type, travel class
-- medical: selected medical and wellness procedures (key codes listed below)
-- culture: selected cultural activities (key codes listed below)
-- cuisine: selected dining and beverage preferences, plus allergens, dietary restrictions, spice tolerance
+# Safety (important)
+You are NOT a doctor. Never give medical advice, diagnoses, dosages, or promise outcomes. Describe appointment LOGISTICS and experiences only — e.g. "Health screening at Severance", never "this will cure you". Keep medical slots factual and calm.
 
-Any section may be missing or partial. Be resilient.
+# Input label maps (codes → meaning)
+care.needs: screening = comprehensive health screening; knees = knees & joints (orthopedics / regenerative); dental = dental (implants, crowns, restorative); eyes = eyes (cataract / vision / laser); unsure = not sure yet — include a gentle "care guidance" consult early so the doctors help them decide.
+trip.length: under1w | 1to2w | 2plus | unsure. trip.party: solo | couple | family. trip.stay: cozy | comfort | premium hotel. trip.when.season (spring/summer/autumn/winter) may hint at seasonal touches (spring blossoms, autumn foliage) — optional.
+experiences: heritage = palaces / hanok / quiet history; cuisine = Korean food experiences; markets = markets & shopping at an easy pace; nature = gardens, temples, fresh air; spa = spa & gentle recovery; beyond = one day trip beyond Seoul; minimal = keep it light, here for care not sightseeing.
+comfort.pace: relaxed | balanced | full. comfort.mobility: walks_fine | tires_easily | cane_walker | wheelchair. comfort.spice: mild | some | love. comfort.food: list of restrictions plus any free-text note.
 
-# Selection code → activity description (label maps)
+Return only the JSON object described above.`;
 
-Medical / wellness codes:
-- dermatology   → Skin conditioning & IV nutrient drip
-- aesthetic     → Aesthetic procedure consultation
-- oriental      → Hanbang pulse reading & herbal prescription
-- wellness      → Wellness restoration program
-- checkup       → Comprehensive health screening
-- spa           → Premium spa treatment
-- mental        → Meditation & mental restoration
-
-Culture codes:
-- heritage      → Gyeongbokgung / Changdeokgung hanbok walk
-- crafts        → Traditional craft class (hanji or ceramics)
-- modern        → Han River night view and K-pop live performance
-- tea           → Traditional tea ceremony
-- temple        → Templestay (one night, optional)
-- royal         → Royal court ritual viewing
-- performance   → Nanta or Jeongdong Theatre performance
-
-Cuisine codes:
-- hansik        → Royal-court hanjeongsik tasting (central Seoul)
-- street        → Gwangjang Market night-food tour
-- grill         → Premium hanwoo omakase
-- finedining    → Michelin-starred Korean fine dining
-- drinks        → Traditional liquor & yakju pairing
-- packages      → Curated dining package
-
-When the guest selected a code, prefer the canonical label above. You may refine wording (add a venue name, neighborhood, or qualifier) but keep the essence.
-
-# Day theming defaults
-
-Use these as a starting frame, then adjust to fit what the guest actually selected:
-
-- Day 1 — Arrival & Welcome: Incheon Airport pickup, hotel check-in, welcome tea or light orientation. No heavy activity.
-- Day 2 — Medical Diagnostics & Consultation: lead with checkup or oriental if selected; opening physician consult.
-- Day 3 — Cultural Immersion (Heritage): palaces, hanok villages, royal museum, hanbok experience.
-- Day 4 — Restoration & Wellness: spa, meditation, light cultural item, in-room dining.
-- Day 5 — Deep Procedure / Signature Experience: the guest's primary medical focus, or a signature cultural item.
-- Day 6 — Open / Personalized Day: use this slot for anything that did not fit, optional day trip (Jeonju, Suwon, Andong), free time, shopping.
-- Day 7 — Closing & Departure: closing consultation, aftercare briefing, hotel checkout, Incheon Airport send-off.
-
-Always include arrival logistics on Day 1 and departure logistics on Day 7.
-
-# Planning rules
-
-1. Personalize. Incorporate every selected item somewhere across the week if reasonable. Do not silently drop the guest's choices.
-2. Honor the note field. If the guest mentions mobility limits, language preferences, low energy, allergies, religious observance, or accompanying children, accommodate them.
-3. Pace for seniors. No more than two demanding activities per day. Include rest gaps. Schedule heavy medical on rested days. Avoid back-to-back early mornings.
-4. Respect allergens and diets. If allergens are listed, do not schedule a meal that conflicts. If diets include 'vegetarian' or 'halal', adjust cuisine items accordingly.
-5. Spice tolerance. If 'mild' or unset, avoid signature spicy dishes; if 'spicy', highlight them.
-6. Vary cuisine across the week. Rotate hanjeongsik, market street food, hanwoo, fine dining, light cafe meals. Do not repeat the same dining style on consecutive days.
-7. Be concrete. Name venues, neighborhoods, or styles where reasonable (e.g., "Bukchon Hanok Village walk" not "cultural visit"). Stay grounded in plausible real Seoul venues; you do not need exact addresses.
-8. Keep momentum. Each day should have a clear theme reflected in the title.
-9. No medical procedure on departure day. Day 7 is logistics and aftercare only.
-10. If hotel tier is heritage or hanok, lean into that in references; if luxury chain, keep it neutral.
-
-# Output format
-
-Return ONLY a JSON object matching this exact shape:
-
-{
-  "days": [
-    {
-      "day": <integer 1 to 7>,
-      "title": "<short day title, max 50 chars>",
-      "items": [
-        { "time": "<e.g. '09:00' or 'Morning'>", "label": "<one-line activity description, max 90 chars>" }
-      ]
-    }
-  ]
+function safePayload(state) {
+  // Privacy: the free-text care note is client-only — never send it onward.
+  let s = {};
+  try { s = JSON.parse(JSON.stringify(state || {})); } catch (e) { s = {}; }
+  if (s.care && typeof s.care === 'object') delete s.care.note;
+  return s;
 }
 
-- Exactly 7 entries in 'days', numbered 1 through 7 in order.
-- Each day has 3 to 5 items.
-- Times use 24-hour clock ('09:00', '14:30') when an exact slot makes sense; use 'Morning', 'Afternoon', 'Evening', or 'All day' for fluid moments.
-- Labels are concise itinerary lines for a luxury concierge briefing — no marketing language, no emojis, no bullet glyphs.
-- All output in English regardless of guest origin.
-- Do not include markdown, prose commentary, or any field other than 'days'.
-
-# Tone
-
-You are writing for a concierge to read aloud to the guest. Calm, precise, dignified. Avoid superlatives ('amazing', 'incredible'). Avoid filler ('enjoy', 'experience'). Each line should read as an instruction or a venue.`;
-
-const SCHEDULE_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['days'],
-  properties: {
-    days: {
-      type: 'array',
-      items: {
-        type: 'object',
-        additionalProperties: false,
-        required: ['day', 'title', 'items'],
-        properties: {
-          day: { type: 'integer' },
-          title: { type: 'string' },
-          items: {
-            type: 'array',
-            items: {
-              type: 'object',
-              additionalProperties: false,
-              required: ['time', 'label'],
-              properties: {
-                time: { type: 'string' },
-                label: { type: 'string' }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-function arrayify(v) {
-  if (!v) return [];
-  if (Array.isArray(v)) return v;
-  return [v];
+function extractJSON(text) {
+  let t = String(text || '').trim();
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) t = fence[1].trim();
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a >= 0 && b > a) t = t.slice(a, b + 1);
+  return JSON.parse(t);
 }
 
-function buildMetadata(state) {
-  const contact = state.contact || {};
-  const trip = state.trip || {};
-  const cuisine = state.cuisine || {};
-  return {
-    guestName: contact.name ? String(contact.name).split(' ')[0] : 'Guest',
-    arrival: trip.dates || contact.when || 'TBD',
-    hotel: trip['hotel-tier'] || trip.hotel || 'Heritage hanok',
-    origin: trip.origin || contact.from || '',
-    interest: contact.interest || '',
-    note: contact.note || '',
-    adults: trip.adults || '',
-    children: trip.children || '',
-    partyType: trip['party-type'] || '',
-    travelClass: trip['travel-class'] || '',
-    hotelTier: trip['hotel-tier'] || '',
-    medicalSelections: collectLabels(state.medical),
-    cultureSelections: collectLabels(state.culture),
-    cuisineSelections: collectLabels(state.cuisine, ['allergens', 'diets', 'spice']),
-    allergens: arrayify(cuisine.allergens),
-    diets: arrayify(cuisine.diets),
-    spice: cuisine.spice || ''
-  };
-}
-
-function collectLabels(stepData, skip = []) {
-  if (!stepData || typeof stepData !== 'object') return [];
-  const out = [];
-  for (const k of Object.keys(stepData)) {
-    if (skip.includes(k)) continue;
-    const v = stepData[k];
-    if (Array.isArray(v)) out.push(...v.map(String));
-    else if (typeof v === 'string' && v) out.push(v);
-  }
-  return out;
+// Coerce the model output into the exact shape result.html expects.
+function normalize(parsed) {
+  const days = Array.isArray(parsed?.days) ? parsed.days : [];
+  return days.map((d, i) => {
+    const cat = CATS.includes(d?.cat) ? d.cat : 'explore';
+    const slots = Array.isArray(d?.slots) ? d.slots
+      .filter((s) => s && (s.place || s.t))
+      .map((s) => ({ t: String(s.t || '').slice(0, 40), place: String(s.place || '').slice(0, 160) }))
+      : [];
+    return {
+      day: String(d?.day || ('Day ' + (i + 1))).slice(0, 24),
+      title: String(d?.title || 'Your day in Korea').slice(0, 80),
+      cat,
+      slots: slots.length ? slots : [{ t: '', place: 'A gentle day, planned with you' }]
+    };
+  }).filter((d) => d.title);
 }
 
 export default async function handler(req, res) {
@@ -183,16 +79,13 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
   if (!client) {
     console.error('[api/schedule] ANTHROPIC_API_KEY not set');
     return res.status(500).json({ error: 'Server not configured' });
   }
 
-  const state = req.body || {};
-  const userJson = JSON.stringify(state);
-
-  if (userJson.length > 32_000) {
+  const state = safePayload(req.body);
+  if (JSON.stringify(state).length > 8000) {
     return res.status(413).json({ error: 'State payload too large' });
   }
 
@@ -203,54 +96,34 @@ export default async function handler(req, res) {
       system: [
         { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }
       ],
-      output_config: {
-        format: { type: 'json_schema', schema: SCHEDULE_SCHEMA }
-      },
       messages: [
-        { role: 'user', content: 'Guest selections (JSON):\n' + userJson }
+        { role: 'user', content: 'Here is the traveler’s plan. Generate their itinerary as the JSON object described.\n\n' + JSON.stringify(state) }
       ]
     });
 
-    const textBlock = response.content.find((b) => b.type === 'text');
-    if (!textBlock || !textBlock.text) {
-      console.error('[api/schedule] no text block in response, stop_reason=', response.stop_reason);
-      return res.status(502).json({ error: 'Empty response from model', stop_reason: response.stop_reason });
+    const textBlock = (response.content || []).find((b) => b.type === 'text');
+    if (!textBlock) {
+      return res.status(502).json({ error: 'Empty response from model' });
     }
 
     let parsed;
     try {
-      parsed = JSON.parse(textBlock.text);
+      parsed = extractJSON(textBlock.text);
     } catch (e) {
-      console.error('[api/schedule] JSON parse failed:', textBlock.text.slice(0, 800));
+      console.error('[api/schedule] JSON parse failed:', String(textBlock.text).slice(0, 600));
       return res.status(502).json({ error: 'Model returned invalid JSON' });
     }
 
-    if (!parsed || !Array.isArray(parsed.days)) {
-      return res.status(502).json({ error: 'Model response missing days array' });
+    const days = normalize(parsed);
+    if (!days.length) {
+      return res.status(502).json({ error: 'Model response had no days' });
     }
 
-    const schedule = { ...buildMetadata(state), days: parsed.days };
-
-    return res.status(200).json({
-      schedule,
-      usage: {
-        input_tokens: response.usage.input_tokens,
-        output_tokens: response.usage.output_tokens,
-        cache_read_input_tokens: response.usage.cache_read_input_tokens || 0,
-        cache_creation_input_tokens: response.usage.cache_creation_input_tokens || 0
-      }
-    });
+    return res.status(200).json({ schedule: days });
   } catch (e) {
-    if (e instanceof Anthropic.RateLimitError) {
-      console.error('[api/schedule] rate limited');
-      return res.status(429).json({ error: 'Rate limited, retry shortly' });
-    }
-    if (e instanceof Anthropic.APIError) {
-      console.error(`[api/schedule] Anthropic API error ${e.status}:`, e.message);
-      const status = e.status >= 500 ? 502 : 500;
-      return res.status(status).json({ error: 'Schedule generation failed', detail: e.message });
-    }
-    console.error('[api/schedule] unexpected:', e);
-    return res.status(500).json({ error: 'Internal server error' });
+    const status = e?.status;
+    if (status === 429) return res.status(429).json({ error: 'Rate limited, retry shortly' });
+    console.error('[api/schedule] generation failed:', e?.message || e);
+    return res.status(502).json({ error: 'Schedule generation failed' });
   }
 }

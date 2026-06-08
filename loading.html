@@ -99,9 +99,36 @@
     { src:'/assets/slides/08-cherry-blossom.jpg',           eyebrow:'Moments',    t:'The things you came for, too' }
   ];
 
-  var TOTAL = 6000;                          // total time on this screen (ms)
-  var STEP_GAP = TOTAL / 4;                  // 4 reassurance steps
+  var MIN_MS = 5200;                         // minimum time on screen so the wait feels real
+  var MAX_MS = 32000;                        // hard cap — proceed even if the API is slow/unreachable
+  var STEP_GAP = MIN_MS / 4;                 // 4 reassurance steps
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Kick off the real AI itinerary now; the animation below covers the wait ──
+  var planState = (window.kwState && kwState.loadAll()) || {};
+  var safeState; try { safeState = JSON.parse(JSON.stringify(planState)); } catch (e) { safeState = {}; }
+  if (safeState.care) delete safeState.care.note;   // privacy: never send the free-text note
+  var startedAt = Date.now();
+  var schedulePromise = fetch('/api/schedule', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(safeState)
+  }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { return (j && Array.isArray(j.schedule) && j.schedule.length) ? j.schedule : null; })
+    .catch(function () { return null; });
+
+  var settled = false;
+  function go(schedule) {
+    if (settled) return; settled = true;
+    try {
+      if (schedule) sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(schedule));
+      else sessionStorage.removeItem('mosim.schedule.v1');   // result.html falls back to its sample
+    } catch (e) {}
+    window.location.href = 'result.html';
+  }
+  // Go when the plan is ready AND the minimum time has passed; hard cap as a safety net.
+  schedulePromise.then(function (schedule) {
+    setTimeout(function () { go(schedule); }, Math.max(0, MIN_MS - (Date.now() - startedAt)));
+  });
+  setTimeout(function () { go(null); }, MAX_MS);
 
   var frame = document.getElementById('frame');
   var capEl = document.getElementById('cap');
@@ -129,25 +156,22 @@
     }, 160);
   }
 
-  function goToResult() { window.location.href = 'result.html'; }
-
-  // ── Reduced motion: show first frame, then move on calmly ──
+  // ── Reduced motion: show the first frame; go() (above) handles the redirect ──
   if (reduce) {
     show(0); steps.forEach(function (li) { li.classList.add('done'); });
     bar.style.transition = 'none'; bar.style.width = '100%';
-    setTimeout(goToResult, 1400);
     return;
   }
 
-  // Slideshow
+  // Slideshow keeps cycling until go() navigates away.
   show(0);
-  var slideTimer = setInterval(function () {
+  setInterval(function () {
     cur = (cur + 1) % SLIDES.length;
     show(cur);
-  }, TOTAL / SLIDES.length);
+  }, MIN_MS / SLIDES.length);
 
-  // Progress bar fills over the full duration
-  bar.style.transition = 'width ' + TOTAL + 'ms linear';
+  // Progress bar fills over the minimum display time
+  bar.style.transition = 'width ' + MIN_MS + 'ms linear';
   requestAnimationFrame(function () { bar.style.width = '100%'; });
 
   // Reassurance steps tick over one by one
@@ -157,17 +181,11 @@
       li.classList.add('active');
     }, idx * STEP_GAP);
   });
-  setTimeout(function () { steps.forEach(function (li) { li.classList.remove('active'); li.classList.add('done'); }); }, TOTAL - 300);
+  setTimeout(function () { steps.forEach(function (li) { li.classList.remove('active'); li.classList.add('done'); }); }, MIN_MS - 300);
 
-  // Advance to the itinerary when the moment is up.
-  // ── When the real AI is wired: POST kwState to /api/schedule here, stash the
-  //    returned plan (e.g. sessionStorage), and call goToResult() once BOTH the
-  //    response has arrived AND a minimum display time (~TOTAL) has elapsed. ──
-  var done = setTimeout(function () { clearInterval(slideTimer); goToResult(); }, TOTAL);
-
-  // Manual skip — clean up the timers first.
-  document.getElementById('skip').addEventListener('click', function () {
-    clearInterval(slideTimer); clearTimeout(done);
+  // Manual skip — go straight to the result (uses the sample plan).
+  document.getElementById('skip').addEventListener('click', function (e) {
+    e.preventDefault(); go(null);
   });
 })();
 </script>

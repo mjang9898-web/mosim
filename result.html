@@ -242,8 +242,7 @@
       });
     }
 
-    // Placeholder sample plan. TODO: replace with fetch('/api/schedule', {state}) once
-    // the Claude API key is set — renderItinerary() takes the returned JSON unchanged.
+    // Fallback sample plan — used only if the AI plan from the loading screen is missing.
     var SAMPLE = [
       { day:'Day 1', title:'Arrival', cat:'travel', slots:[{t:'3:00 PM',place:'Incheon arrival'},{t:'Evening',place:'Car to hotel, Myeongdong'}] },
       { day:'Day 2', title:'Health screening', cat:'care', slots:[{t:'9:00 AM',place:'Severance Hospital'},{t:'Afternoon',place:'Rest, Bukchon teahouse'}] },
@@ -256,7 +255,16 @@
       { day:'Day 9', title:'Follow-up', cat:'care', slots:[{t:'11:00 AM',place:'Follow-up check'},{t:'Afternoon',place:'Free & easy'}] },
       { day:'Day 10', title:'Departure', cat:'travel', slots:[{t:'Morning',place:'Checkout'},{t:'Midday',place:'Car to Incheon'}] }
     ];
-    renderItinerary(SAMPLE);
+    // Prefer the AI itinerary generated on the loading screen; fall back to the sample.
+    var plan = SAMPLE;
+    try {
+      var stashed = sessionStorage.getItem('mosim.schedule.v1');
+      if (stashed) {
+        var parsedPlan = JSON.parse(stashed);
+        if (Array.isArray(parsedPlan) && parsedPlan.length) plan = parsedPlan;
+      }
+    } catch (e) {}
+    renderItinerary(plan);
 
     // ---- lead invite → POST /api/lead ----
     document.getElementById('lead-send').addEventListener('click', function () {
