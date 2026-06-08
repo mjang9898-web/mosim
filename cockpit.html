@@ -4,25 +4,19 @@
 <meta charset="utf-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:site_name" content="Mosim">
-<meta property="og:title" content="Mosim — You're never alone in Korea.">
-<meta property="og:description" content="World-class medical care in Korea — fully arranged, with someone beside you the whole way.">
-<meta property="og:image" content="https://mosim-site.vercel.app/og-image.jpg">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Mosim — Cockpit">
 <title>Cockpit — Mosim</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <style>
   :root {
     --ink-1:#1d1d1f; --ink-2:#2a2a2c; --ink-3:#4a4a4d; --bg:#fafafa; --bg-1:#fff; --bg-soft:#f5f5f7;
-    --accent:#B21464; --gold:#b48a3a; --border:#e2e2e2;
+    --navy:#1B2A4A; --gold:#C39A3F; --border:#e2e2e2;
   }
   * { box-sizing: border-box; }
   body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink-1);
     font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  header.cp-head { background:#fff; border-bottom:1px solid var(--border); padding:20px 28px;
+  header.cp-head { background:#fff; border-bottom:1px solid var(--border); padding:18px 28px;
     display:flex; align-items:center; justify-content:space-between; }
   header.cp-head .brand { font-weight:700; font-size:19px; }
   header.cp-head .brand .sub { color:var(--ink-3); font-weight:500; }
@@ -31,25 +25,31 @@
   header.cp-head button.signout { font:inherit; font-size:15px; padding:8px 14px; background:#fff;
     border:1px solid var(--border); border-radius:8px; cursor:pointer; }
   header.cp-head button.signout:hover { background:var(--bg-soft); }
-  main { max-width:1000px; margin:0 auto; padding:32px 28px; }
+  main { max-width:1160px; margin:0 auto; padding:32px 28px; }
   h1.cp-title { font-size:26px; margin:0 0 4px; }
-  p.cp-lede { font-size:17px; color:var(--ink-3); margin:0 0 28px; }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .tile { background:var(--bg-1); border:1px solid var(--border); border-radius:14px; padding:24px;
-    display:flex; flex-direction:column; gap:10px; }
-  .tile .num { font-size:13px; font-weight:700; color:var(--ink-3); letter-spacing:.04em; }
-  .tile h2 { font-size:21px; margin:0; }
-  .tile .desc { font-size:15px; color:var(--ink-2); margin:0; line-height:1.5; }
-  .tile .metric { font-size:28px; font-weight:700; color:var(--ink-1); margin-top:6px; }
-  .tile .metric .ph { color:var(--ink-3); font-weight:500; font-size:19px; }
-  .badge { align-self:flex-start; display:inline-block; padding:4px 11px; border-radius:999px;
-    font-size:13px; font-weight:600; }
-  .b-active { background:#e9f7ef; color:#1b6e3d; }
-  .b-frozen { background:#eef2ff; color:#3744a6; }
-  .b-foundation { background:#fff4e5; color:#7a4a00; }
-  .b-planned { background:#eee; color:#666; }
-  .cp-note { margin-top:28px; font-size:13px; color:var(--ink-3); border-top:1px solid var(--border); padding-top:16px; }
-  @media (max-width:720px) { .grid { grid-template-columns:1fr; } main { padding:24px 18px; } }
+  p.cp-lede { font-size:16px; color:var(--ink-3); margin:0 0 24px; }
+
+  .filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .filters button { font:inherit; font-size:14px; padding:7px 14px; border:1px solid var(--border);
+    background:#fff; border-radius:999px; cursor:pointer; color:var(--ink-2); }
+  .filters button.on { background:var(--navy); color:#fff; border-color:var(--navy); }
+
+  table.trips { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  table.trips th { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3);
+    padding:12px 14px; border-bottom:1px solid var(--border); background:var(--bg-soft); }
+  table.trips td { padding:14px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:top; }
+  table.trips tr:last-child td { border-bottom:none; }
+  tr.reserved { background:#FFF8EC; }
+  .cust .nm { font-weight:600; } .cust .em { color:var(--ink-3); font-size:13px; }
+  .chips { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
+  .chip { font-size:12px; border:1px solid var(--border); border-radius:999px; padding:2px 9px; color:var(--ink-2); }
+  select.st { font:inherit; font-size:13px; padding:6px 8px; border:1px solid var(--border); border-radius:8px; background:#fff; text-transform:capitalize; }
+  .pay-ok { color:#1b6e3d; font-weight:600; } .pay-due { color:#8a4a00; }
+  .act a, .act button { font:inherit; font-size:13px; color:var(--navy); text-decoration:none; border:none; background:none;
+    cursor:pointer; padding:0; display:block; margin-bottom:5px; white-space:nowrap; }
+  .act a:hover { text-decoration:underline; }
+  .empty { padding:44px; text-align:center; color:var(--ink-3); background:#fff; border:1px solid var(--border); border-radius:12px; }
+  @media (max-width:760px) { main { padding:22px 14px; } table.trips { font-size:13px; } }
 </style>
 </head>
 <body>
@@ -62,62 +62,100 @@
 </header>
 
 <main>
-  <h1 class="cp-title">Departments</h1>
-  <p class="cp-lede">Four departments on one shared backbone. You're the connective tissue.</p>
-
-  <div class="grid">
-    <section class="tile">
-      <span class="num">DEPT 01</span>
-      <h2>Development</h2>
-      <span class="badge b-active">Active</span>
-      <p class="desc">AI build team — front &amp; back end. <code>mosim-orchestrator</code> + 4 agents (frontend · backend · visual-qa · content).</p>
-      <div class="metric">4 <span class="ph">agents</span></div>
-    </section>
-
-    <section class="tile">
-      <span class="num">DEPT 02</span>
-      <h2>Itinerary</h2>
-      <span class="badge b-frozen">Design frozen</span>
-      <p class="desc">Customer trip planner — Medical · Food · Culture&amp;Experience · Logistics, composed by an itinerary specialist. Build cost-deferred (Claude API).</p>
-      <div class="metric">6 <span class="ph">specialists · planned</span></div>
-    </section>
-
-    <section class="tile">
-      <span class="num">DEPT 03</span>
-      <h2>Finance</h2>
-      <span class="badge b-foundation">Foundation</span>
-      <p class="desc">Revenue &amp; accounting. PayPal + payment groups are live; reconciliation, invoicing and reports come next.</p>
-      <div class="metric"><span class="ph">revenue — coming</span></div>
-    </section>
-
-    <section class="tile">
-      <span class="num">DEPT 04</span>
-      <h2>HR</h2>
-      <span class="badge b-planned">Planned</span>
-      <p class="desc">People ops for human staff — onboarding, payroll, attendance. Starts when the first hire happens.</p>
-      <div class="metric">0 <span class="ph">employees</span></div>
-    </section>
-  </div>
-
-  <p class="cp-note">Shell — live metrics (itineraries, concierge revenue) and founder-only role gating are follow-ups (need a founder-authenticated aggregate API; RLS scopes normal reads to the owner).</p>
+  <h1 class="cp-title">Reservations &amp; trips</h1>
+  <p class="cp-lede">Every traveler's plan and where it stands. <b>Reserved</b> trips (highlighted) need a call within a day.</p>
+  <div class="filters" id="filters"></div>
+  <div id="dash"><div class="empty">Loading…</div></div>
 </main>
 
 <script type="module" src="/js/auth.js"></script>
 <script>
-  // Login gate. NOTE: founder-only role gating is a TODO — for now any signed-in
-  // user reaches the shell, which shows no sensitive data (status tiles only).
-  (async function () {
-    let t = 0;
-    while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
-    if (!window.kwAuth) { window.location.replace('/signin.html?next=cockpit'); return; }
-    const user = await window.kwAuth.getUser();
-    if (!user) { window.location.replace('/signin.html?next=cockpit'); return; }
-    document.getElementById('greeting').textContent = user.user_metadata?.name || user.email;
-    document.getElementById('signout').addEventListener('click', async () => {
-      await window.kwAuth.signOut();
-      window.location.href = '/';
-    });
-  })();
+(async function () {
+  let t = 0;
+  while (!window.kwAuth && t < 120) { await new Promise(r => setTimeout(r, 50)); t++; }
+  if (!window.kwAuth) { location.replace('/signin.html?next=cockpit'); return; }
+  const client = await window.kwAuth.init();
+  const { data: { session } } = await client.auth.getSession();
+  const user = session && session.user;
+  if (!user) { location.replace('/signin.html?next=cockpit'); return; }
+  document.getElementById('greeting').textContent = (user.user_metadata && user.user_metadata.name) || user.email;
+  document.getElementById('signout').addEventListener('click', async () => { await window.kwAuth.signOut(); location.href = '/'; });
+
+  const token = session.access_token;
+  const dash = document.getElementById('dash');
+  const esc = (s) => String(s == null ? '' : s).replace(/[<>&"]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;' }[c]));
+  const CARE = { screening:'Screening', knees:'Knees', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
+  const STATUSES = ['new','reserved','reviewing','quoted','booked','archived'];
+  const cap = (s) => s ? s[0].toUpperCase() + s.slice(1) : s;
+  const fmtDate = (s) => { try { return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch (e) { return ''; } };
+
+  let trips = [], filter = 'all';
+
+  async function load() {
+    dash.innerHTML = '<div class="empty">Loading…</div>';
+    let r;
+    try { r = await fetch('/api/admin/trips', { headers: { authorization: 'Bearer ' + token } }); }
+    catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
+    if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; document.getElementById('filters').innerHTML = ''; return; }
+    if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load trips.</div>'; return; }
+    trips = (await r.json()).trips || [];
+    render();
+  }
+
+  function render() {
+    const c = {}; trips.forEach((x) => { c[x.status] = (c[x.status] || 0) + 1; });
+    const fkeys = ['all','reserved','reviewing','quoted','booked','new'];
+    document.getElementById('filters').innerHTML = fkeys.map((f) => {
+      const n = f === 'all' ? trips.length : (c[f] || 0);
+      return '<button data-f="' + f + '" class="' + (filter === f ? 'on' : '') + '">' + (f === 'all' ? 'All' : cap(f)) + ' ' + n + '</button>';
+    }).join('');
+    document.querySelectorAll('#filters button').forEach((b) => b.addEventListener('click', () => { filter = b.dataset.f; render(); }));
+
+    const rows = trips.filter((x) => filter === 'all' || x.status === filter);
+    if (!rows.length) { dash.innerHTML = '<div class="empty">No trips here yet.</div>'; return; }
+    dash.innerHTML = '<table class="trips"><thead><tr><th>Customer</th><th>Trip</th><th>Status</th><th>Payment</th><th>Saved</th><th></th></tr></thead><tbody>'
+      + rows.map(rowHtml).join('') + '</tbody></table>';
+    document.querySelectorAll('select.st').forEach((sel) => sel.addEventListener('change', () => updateStatus(sel.dataset.id, sel.value, sel)));
+  }
+
+  function rowHtml(x) {
+    const care = (x.care || []).map((k) => '<span class="chip">' + esc(CARE[k] || k) + '</span>').join('');
+    const opts = STATUSES.map((s) => '<option value="' + s + '"' + (s === x.status ? ' selected' : '') + '>' + s + '</option>').join('');
+    const pay = x.payment
+      ? (x.payment.status === 'paid'
+          ? '<span class="pay-ok">Paid ✓</span>'
+          : '<span class="pay-due">$' + Number(x.payment.paid).toLocaleString() + ' / $' + Number(x.payment.total).toLocaleString() + '</span>')
+      : '<span style="color:#aaa">—</span>';
+    const email = x.customer.email;
+    const acts = [
+      email ? '<a href="mailto:' + esc(email) + '?subject=' + encodeURIComponent('Your Mosim trip') + '">Email customer</a>' : '',
+      x.payment && x.payment.token ? '<a href="/pay.html?g=' + esc(x.payment.token) + '" target="_blank" rel="noopener">Payment link</a>' : ''
+    ].filter(Boolean).join('');
+    return '<tr class="' + (x.status === 'reserved' ? 'reserved' : '') + '">'
+      + '<td class="cust"><div class="nm">' + esc(x.customer.name || '—') + '</div><div class="em">' + esc(email || '') + '</div>' + (x.customer.phone ? '<div class="em">' + esc(x.customer.phone) + '</div>' : '') + '</td>'
+      + '<td><div style="font-weight:600">' + esc(x.title || 'Korea trip') + '</div><div style="color:#888;font-size:13px">' + (x.days ? x.days + '-day' : '') + (x.length ? (x.days ? ' · ' : '') + esc(x.length) : '') + '</div><div class="chips">' + care + '</div></td>'
+      + '<td><select class="st" data-id="' + x.id + '">' + opts + '</select></td>'
+      + '<td>' + pay + '</td>'
+      + '<td style="color:#888;white-space:nowrap">' + fmtDate(x.created_at) + '</td>'
+      + '<td class="act">' + acts + '</td>'
+      + '</tr>';
+  }
+
+  async function updateStatus(id, status, sel) {
+    sel.disabled = true;
+    try {
+      const r = await fetch('/api/admin/trip-status', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify({ itinerary_id: id, status })
+      });
+      if (r.ok) { const x = trips.find((tt) => tt.id === id); if (x) x.status = status; render(); }
+      else alert('Could not update status.');
+    } catch (e) { alert('Could not update status.'); }
+    sel.disabled = false;
+  }
+
+  load();
+})();
 </script>
 </body>
 </html>
