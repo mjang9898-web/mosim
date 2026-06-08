@@ -124,6 +124,6 @@ export default async function handler(req, res) {
     const status = e?.status;
     if (status === 429) return res.status(429).json({ error: 'Rate limited, retry shortly' });
     console.error('[api/schedule] generation failed:', e?.message || e);
-    return res.status(502).json({ error: 'Schedule generation failed' });
+    return res.status(502).json({ error: 'Schedule generation failed', _debug: { status: e?.status || null, type: e?.type || e?.name || null, message: String(e?.message || e).slice(0, 300) } });
   }
 }
