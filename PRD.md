@@ -89,6 +89,16 @@ Design spec: `docs/superpowers/specs/2026-05-29-split-payment-design.md`
 - **언어 일관성 미정**: 결과 페이지만 한국어, 나머지 영어. 타깃이 영미권이라면 결과도 영어로 통일 검토
 - **결제 범위**: 컨시어지 수수료(`$1,200 × 인원`)는 `/pay?g=<token>` 페이지에서 PayPal로 분담 결제. 항공·호텔·의료 실비는 고객이 벤더에게 직접 결제 — Mosim 범위 밖. 자세한 설계는 §3-a 참고
 
+## 7-b. 예약 → 결제 → 여행 부킹 (2026-06-08 확장, 승인됨)
+
+AI 일정 이후의 인게이지먼트/부킹 단계. 컨시어지 수수료-only 모델 유지(호텔·항공·의료 실비는 고객이 벤더에 직접 결제). 전체 설계: [docs/superpowers/specs/2026-06-08-reserve-purchase-bookings-design.md](./docs/superpowers/specs/2026-06-08-reserve-purchase-bookings-design.md)
+
+- **여정**: Plan→Save → ① **Reserve**(무료·의향, `status: reserved`, Mosim 알림) → ② Mosim이 일정·병원 가능 확인(`reviewing→quoted`) → ③ **Purchase**(기존 `/pay` 분할·링크) → `booked` → ④ **Travel bookings**(호텔·항공).
+- **상태 모델**: `STAGES = ['new','reserved','reviewing','quoted','booked']` (기존에 `reserved` 1개 삽입).
+- **인건비**: 사람은 ②(예약한 진짜 의향 고객)부터만 투입 — 모든 방문자 아님.
+- **Travel bookings(Phase 2)**: ⓐ Mosim이 호텔·항공 링크 게시→고객 직접 결제, ⓑ 고객 직접 부킹 후 확인서 업로드(Supabase Storage). `bookings` 테이블 신설.
+- **Phase 1(지금)**: Reserve 액션 + 상태 흐름 + My Page 표시 + 기존 결제 연결(새 인프라 0). **Phase 2**: Travel bookings + 업로드 + cockpit 링크 게시.
+
 ## 8. 참고
 
 - 디자인 시스템: [design.md](./design.md)
