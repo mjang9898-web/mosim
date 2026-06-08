@@ -266,6 +266,42 @@
     } catch (e) {}
     renderItinerary(plan);
 
+    // ---- Auto-save the plan for signed-in travelers so it lives in My Page ----
+    (function () {
+      var tok = null;
+      try {
+        var raw = localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');
+        var sess = raw ? JSON.parse(raw) : null;
+        tok = sess && (sess.access_token || (sess.currentSession && sess.currentSession.access_token));
+        var exp = sess && (sess.expires_at || (sess.currentSession && sess.currentSession.expires_at));
+        if (exp && exp * 1000 <= Date.now()) tok = null;       // expired session
+      } catch (e) { tok = null; }
+      if (!tok) return;                                        // only signed-in users
+      if (sessionStorage.getItem('mosim.schedule.saved')) return;  // save once per plan
+
+      var safeState;
+      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
+      if (safeState.care) delete safeState.care.note;          // privacy: never persist the free-text note
+
+      var title = (chips[0] ? ('Korea trip — ' + chips[0]) : 'Your Korea trip').slice(0, 120);
+
+      fetch('/api/save-itinerary', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + tok },
+        body: JSON.stringify({ state: safeState, schedule: plan, title: title })
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j || !j.ok) return;
+          try { sessionStorage.setItem('mosim.schedule.saved', j.id || '1'); } catch (e) {}
+          var t = document.createElement('div');
+          t.textContent = '✓ Saved to your page';
+          t.style.cssText = 'position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#1B2A4A;color:#fff;font-size:15px;font-weight:600;padding:10px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);z-index:40;opacity:0;transition:opacity .4s;';
+          document.body.appendChild(t);
+          requestAnimationFrame(function () { t.style.opacity = '1'; });
+          setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 500); }, 3500);
+        }).catch(function () {});
+    })();
+
     // ---- lead invite → POST /api/lead ----
     document.getElementById('lead-send').addEventListener('click', function () {
       var btn = this;

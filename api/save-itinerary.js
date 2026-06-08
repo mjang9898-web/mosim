@@ -29,12 +29,19 @@ export default async function handler(req, res) {
   const { state, schedule, title } = req.body || {};
   if (!state || !schedule) return res.status(400).json({ error: 'state and schedule are required' });
 
+  // Privacy: the free-text care note is client-only and must never be persisted.
+  let safeState = state;
+  try {
+    safeState = JSON.parse(JSON.stringify(state));
+    if (safeState && safeState.care && typeof safeState.care === 'object') delete safeState.care.note;
+  } catch (e) { safeState = state; }
+
   const { data, error } = await admin
     .from('itineraries')
     .insert({
       user_id: user.id,
       title: (title || '').slice(0, 120) || null,
-      state,
+      state: safeState,
       schedule,
       status: 'new'
     })

@@ -91,13 +91,16 @@
 <script>
 (function () {
   // ── Slides (warm care + Korea) ──────────────────────────────────────────────
+  // Photos from the K-Wellness waiting page (assets/slides/*).
   var SLIDES = [
-    { src:'/assets/landing/hero-care.jpg',                  eyebrow:'Care',       t:'Someone beside you, the whole way' },
-    { src:'/assets/landing/hero-welcome.jpg',               eyebrow:'Arrival',    t:'A warm welcome the moment you land' },
-    { src:'/assets/landing/seoul-care.jpg',                 eyebrow:'Your pace',  t:'Seoul, gently — never rushed' },
-    { src:'/assets/slides/06-gyeongbokgung-pond.jpg',       eyebrow:'Rest',       t:'Calm days between appointments' },
-    { src:'/assets/slides/08-cherry-blossom.jpg',           eyebrow:'Moments',    t:'The things you came for, too' }
+    { src:'/assets/slides/06-gyeongbokgung-pond.jpg', eyebrow:'Place · Seoul',     t:'Gyeongbokgung' },
+    { src:'/assets/slides/07-hanbok-palace.jpg',      eyebrow:'Culture · Heritage', t:'Hanbok at the Palace' },
+    { src:'/assets/slides/08-cherry-blossom.jpg',     eyebrow:'Season · Spring',   t:'Cherry Blossom Road' },
+    { src:'/assets/slides/01-korean-table-feast.jpg', eyebrow:'Cuisine · Seoul',   t:'A Korean Feast' },
+    { src:'/assets/slides/05-myeongdong-street.jpg',  eyebrow:'Place · Seoul',     t:'Myeongdong' },
+    { src:'/assets/slides/09-n-seoul-tower.jpg',      eyebrow:'Place · Namsan',    t:'N Seoul Tower' }
   ];
+  var SLIDE_MS = 5000;   // each photo stays ~5 seconds
 
   var MIN_MS = 5200;                         // minimum time on screen so the wait feels real
   var MAX_MS = 32000;                        // hard cap — proceed even if the API is slow/unreachable
@@ -121,6 +124,7 @@
     try {
       if (schedule) sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(schedule));
       else sessionStorage.removeItem('mosim.schedule.v1');   // result.html falls back to its sample
+      sessionStorage.removeItem('mosim.schedule.saved');     // a new plan should save fresh to My Page
     } catch (e) {}
     window.location.href = 'result.html';
   }
@@ -168,7 +172,7 @@
   setInterval(function () {
     cur = (cur + 1) % SLIDES.length;
     show(cur);
-  }, MIN_MS / SLIDES.length);
+  }, SLIDE_MS);
 
   // Progress bar fills over the minimum display time
   bar.style.transition = 'width ' + MIN_MS + 'ms linear';
