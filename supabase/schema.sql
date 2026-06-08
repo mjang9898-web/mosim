@@ -20,8 +20,13 @@ create table if not exists public.itineraries (
   title       text,
   state       jsonb not null,
   schedule    jsonb not null,
-  status      text default 'new'
+  status      text default 'new',
+  flight_status text not null default 'none',   -- admin: none | pending | booked
+  stay_status   text not null default 'none'    -- admin: none | pending | booked
 );
+-- (added 2026-06-08 for the cockpit Flight/Stay tracking; applied via dashboard)
+alter table public.itineraries add column if not exists flight_status text not null default 'none';
+alter table public.itineraries add column if not exists stay_status   text not null default 'none';
 
 create index if not exists itineraries_user_id_created_idx
   on public.itineraries(user_id, created_at desc);

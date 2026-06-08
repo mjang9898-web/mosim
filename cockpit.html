@@ -43,7 +43,7 @@
   .cust .nm { font-weight:600; } .cust .em { color:var(--ink-3); font-size:13px; }
   .chips { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
   .chip { font-size:12px; border:1px solid var(--border); border-radius:999px; padding:2px 9px; color:var(--ink-2); }
-  select.st { font:inherit; font-size:13px; padding:6px 8px; border:1px solid var(--border); border-radius:8px; background:#fff; text-transform:capitalize; }
+  select.st, select.bk { font:inherit; font-size:13px; padding:6px 8px; border:1px solid var(--border); border-radius:8px; background:#fff; text-transform:capitalize; }
   .pay-ok { color:#1b6e3d; font-weight:600; } .pay-due { color:#8a4a00; }
   .act a, .act button { font:inherit; font-size:13px; color:var(--navy); text-decoration:none; border:none; background:none;
     cursor:pointer; padding:0; display:block; margin-bottom:5px; white-space:nowrap; }
@@ -86,6 +86,7 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&"]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;' }[c]));
   const CARE = { screening:'Screening', knees:'Knees', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
   const STATUSES = ['new','reserved','reviewing','quoted','booked','archived'];
+  const BK = ['none','pending','booked'];   // flight / stay status
   const cap = (s) => s ? s[0].toUpperCase() + s.slice(1) : s;
   const fmtDate = (s) => { try { return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch (e) { return ''; } };
 
@@ -113,9 +114,9 @@
 
     const rows = trips.filter((x) => filter === 'all' || x.status === filter);
     if (!rows.length) { dash.innerHTML = '<div class="empty">No trips here yet.</div>'; return; }
-    dash.innerHTML = '<table class="trips"><thead><tr><th>Customer</th><th>Trip</th><th>Status</th><th>Payment</th><th>Saved</th><th></th></tr></thead><tbody>'
+    dash.innerHTML = '<table class="trips"><thead><tr><th>Customer</th><th>Trip</th><th>Status</th><th>Payment</th><th>Flight</th><th>Stay</th><th>Saved</th><th></th></tr></thead><tbody>'
       + rows.map(rowHtml).join('') + '</tbody></table>';
-    document.querySelectorAll('select.st').forEach((sel) => sel.addEventListener('change', () => updateStatus(sel.dataset.id, sel.value, sel)));
+    document.querySelectorAll('select[data-field]').forEach((sel) => sel.addEventListener('change', () => updateField(sel.dataset.id, sel.dataset.field, sel.value, sel)));
   }
 
   function rowHtml(x) {
@@ -134,23 +135,33 @@
     return '<tr class="' + (x.status === 'reserved' ? 'reserved' : '') + '">'
       + '<td class="cust"><div class="nm">' + esc(x.customer.name || '—') + '</div><div class="em">' + esc(email || '') + '</div>' + (x.customer.phone ? '<div class="em">' + esc(x.customer.phone) + '</div>' : '') + '</td>'
       + '<td><div style="font-weight:600">' + esc(x.title || 'Korea trip') + '</div><div style="color:#888;font-size:13px">' + (x.days ? x.days + '-day' : '') + (x.length ? (x.days ? ' · ' : '') + esc(x.length) : '') + '</div><div class="chips">' + care + '</div></td>'
-      + '<td><select class="st" data-id="' + x.id + '">' + opts + '</select></td>'
+      + '<td><select class="st" data-id="' + x.id + '" data-field="status">' + opts + '</select></td>'
       + '<td>' + pay + '</td>'
+      + bkCell(x.id, 'flight_status', x.flight_status)
+      + bkCell(x.id, 'stay_status', x.stay_status)
       + '<td style="color:#888;white-space:nowrap">' + fmtDate(x.created_at) + '</td>'
       + '<td class="act">' + acts + '</td>'
       + '</tr>';
   }
 
-  async function updateStatus(id, status, sel) {
+  function bkCell(id, field, val) {
+    const v = val || 'none';
+    const color = v === 'booked' ? '#1b6e3d' : v === 'pending' ? '#8a4a00' : '#999';
+    const opts = BK.map((s) => '<option value="' + s + '"' + (s === v ? ' selected' : '') + '>' + s + '</option>').join('');
+    return '<td><select class="bk" data-id="' + id + '" data-field="' + field + '" style="color:' + color + '">' + opts + '</select></td>';
+  }
+
+  async function updateField(id, field, value, sel) {
     sel.disabled = true;
     try {
+      const body = { itinerary_id: id }; body[field] = value;
       const r = await fetch('/api/admin/trip-status', {
         method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
-        body: JSON.stringify({ itinerary_id: id, status })
+        body: JSON.stringify(body)
       });
-      if (r.ok) { const x = trips.find((tt) => tt.id === id); if (x) x.status = status; render(); }
-      else alert('Could not update status.');
-    } catch (e) { alert('Could not update status.'); }
+      if (r.ok) { const x = trips.find((tt) => tt.id === id); if (x) x[field] = value; render(); }
+      else alert('Could not update.');
+    } catch (e) { alert('Could not update.'); }
     sel.disabled = false;
   }
 

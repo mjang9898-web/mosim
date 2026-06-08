@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   try {
     const { data: itins, error } = await admin
       .from('itineraries')
-      .select('id, user_id, title, state, schedule, status, created_at')
+      .select('id, user_id, title, state, schedule, status, flight_status, stay_status, created_at')
       .order('created_at', { ascending: false })
       .limit(200);
     if (error) throw error;
@@ -53,6 +53,8 @@ export default async function handler(req, res) {
         id: it.id,
         title: it.title,
         status: it.status,
+        flight_status: it.flight_status || 'none',
+        stay_status: it.stay_status || 'none',
         created_at: it.created_at,
         customer: { name: prof.name || (st.contact && st.contact.name) || null, email: emailById[it.user_id] || null, phone: prof.phone || null },
         care: (st.care && st.care.needs) || [],
