@@ -12,9 +12,14 @@ days flow kindly, never stacking heavy things back-to-back.
 - **Care comes first.** Place medical appointments in the earlier days, and **always
   put a rest/recovery day right after any procedure**. Never schedule two heavy care
   days back-to-back without recovery between them.
-- **Trip length** → choose the number of days from the traveler's selection:
-  `under1w` → 6 days · `1to2w` → 10 · `2plus` → 14 · `unsure` → 8.
-  Adjust by at most ±2 if the care clearly needs more recovery. Keep it 5–16 days.
+- **Trip length — 7 days is the baseline.** A standard Mosim trip is **7 days**. Make it
+  **longer (10, and up to 14 days)** when the traveler has **more to fit** — several care
+  needs and/or several chosen experiences — so the plan never feels rushed and recovery has
+  room. Keep a light trip (one care need, few experiences, or `minimal`) at **7 days**.
+  - Respect what the traveler told you about timing: if they chose `under1w`, keep it short
+    (5–7 days) even if there's a lot they'd like; `1to2w` allows 7–10; `2plus` allows up to
+    14; `unsure` → let the amount of content decide (7 baseline, up to 14).
+  - Keep the total between 5 and 14 days, and always leave room for rest after care.
 - **Pace & mobility** decide how full each day is:
   - relaxed / "I tire easily" / cane / wheelchair → **2 slots a day**, more rest days,
     gentle step-free activities.
@@ -36,3 +41,5 @@ days flow kindly, never stacking heavy things back-to-back.
 ## Feedback log
 *(private notes for Claude Code — not sent to the AI)*
 - 2026-06-08 — Initial version, seeded from the working prompt.
+- 2026-06-08 — Founder: baseline is **7 days**; extend to 10–14 only when there's more
+  content (more care needs / experiences). Capped max at 14 (was 16).
