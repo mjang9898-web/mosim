@@ -3,7 +3,7 @@
 (function () {
 const { useEffect, useState } = React;
 
-const STAGES = ['new', 'reviewing', 'quoted', 'booked'];
+const STAGES = ['new', 'reserved', 'reviewing', 'quoted', 'booked'];
 
 function MeStatus() {
   const [latest, setLatest] = useState(undefined);
@@ -37,10 +37,11 @@ function MeStatus() {
 
   const stageIdx = STAGES.indexOf(latest.status) >= 0 ? STAGES.indexOf(latest.status) : 0;
   const explainer = {
-    new:        "We've received your itinerary. A specialist will review within 48 hours.",
-    reviewing:  "Our concierge is hand-crafting your detailed plan now.",
-    quoted:     "A quote is on its way to your email. Reply to lock in your booking.",
-    booked:     "You're all set. We'll send pre-arrival details one week before your trip."
+    new:        "Your plan is saved. Reserve it from your Overview whenever you're ready.",
+    reserved:   "Reserved — we're confirming your care and dates, and we'll reach out shortly.",
+    reviewing:  "We're lining up your care and dates with the hospitals.",
+    quoted:     "Confirmed and ready — your concierge fee quote is on its way.",
+    booked:     "You're all set. We'll send pre-arrival details before your trip."
   }[latest.status] || '';
 
   return (

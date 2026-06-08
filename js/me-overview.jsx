@@ -3,12 +3,13 @@
 (function () {
 const { useEffect, useState } = React;
 
-const STAGES = ['new', 'reviewing', 'quoted', 'booked'];
+const STAGES = ['new', 'reserved', 'reviewing', 'quoted', 'booked'];
 const STATUS_LINE = {
-  new:        "We've received your plan. A specialist reviews it within 48 hours.",
-  reviewing:  "Your concierge is hand-crafting your detailed plan right now.",
-  quoted:     "A quote is on its way to your email — reply to lock it in.",
-  booked:     "You're all set. We'll send pre-arrival details a week before you fly."
+  new:        "Your plan is saved. Reserve it when you're ready and we'll take it from there.",
+  reserved:   "Reserved — we're confirming your care and dates, and we'll be in touch shortly.",
+  reviewing:  "We're lining up your care and dates with the hospitals.",
+  quoted:     "Confirmed and ready — your concierge fee quote is on its way.",
+  booked:     "You're booked. We'll send pre-arrival details before you fly."
 };
 const CARE   = { screening:'Health screening', knees:'Knees & joints', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
 const LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible' };
@@ -20,7 +21,7 @@ const label = { fontSize:12.5, fontWeight:600, letterSpacing:'1.6px', textTransf
 
 function StatusBadge({ status }) {
   const colors = {
-    new:{bg:'#ECEEF3',fg:'#2A3C5E'}, reviewing:{bg:'#FAF0DA',fg:'#8A6A1F'},
+    new:{bg:'#ECEEF3',fg:'#2A3C5E'}, reserved:{bg:'#E7EBF3',fg:'#2A3C5E'}, reviewing:{bg:'#FAF0DA',fg:'#8A6A1F'},
     quoted:{bg:'#E7F0E9',fg:'#3F6147'}, booked:{bg:'#EFE8DA',fg:'#6E5A2E'}, archived:{bg:'#ECE7DD',fg:'#8A8479'}
   };
   const c = colors[status] || colors.new;
@@ -36,6 +37,7 @@ function MeOverview() {
   const [supa, setSupa] = useState(null);
   const [mock, setMock] = useState(false);   // test-payment mode (PAYMENT_MOCK)
   const [setupBusy, setSetupBusy] = useState(false);
+  const [reserving, setReserving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -80,6 +82,23 @@ function MeOverview() {
       alert('Could not set up payment.');
     }
     setSetupBusy(false);
+  }
+
+  async function reserveTrip() {
+    if (!supa || !itin) return;
+    setReserving(true);
+    try {
+      const { data: { session } } = await supa.auth.getSession();
+      const r = await fetch('/api/reserve', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + (session && session.access_token) },
+        body: JSON.stringify({ itinerary_id: itin.id })
+      });
+      const b = await r.json();
+      if (r.ok) setItin({ ...itin, status: b.status || 'reserved' });
+      else alert(b.error || 'Could not reserve.');
+    } catch (e) { alert('Could not reserve.'); }
+    setReserving(false);
   }
 
   if (err) return <div style={{padding:20, color:'#A4452F'}}>Could not load: {err}</div>;
@@ -145,6 +164,21 @@ function MeOverview() {
           </div>
         )}
         <a href={`/result.html?itin=${itin.id}`} style={{display:'inline-block', padding:'13px 26px', background:'#1B2A4A', color:'#fff', borderRadius:10, textDecoration:'none', fontSize:16, fontWeight:600}}>View full itinerary →</a>
+
+        {itin.status === 'new' && (
+          <div style={{marginTop:20, paddingTop:20, borderTop:'1px solid #E5DBC8'}}>
+            <p style={{margin:'0 0 13px', fontSize:16, color:'#54514B', lineHeight:1.55}}>Ready to make this real? <b style={{color:'#1B2A4A'}}>Reserve your trip</b> — it's free, with no commitment. It tells us you're serious so we can confirm your care and dates.</p>
+            <button onClick={reserveTrip} disabled={reserving}
+              style={{padding:'13px 28px', background:'#C39A3F', color:'#1B2A4A', border:'none', borderRadius:10, fontSize:16, fontWeight:700, cursor:'pointer'}}>
+              {reserving ? 'Reserving…' : 'Reserve this trip'}
+            </button>
+          </div>
+        )}
+        {itin.status === 'reserved' && (
+          <div style={{marginTop:20, paddingTop:20, borderTop:'1px solid #E5DBC8'}}>
+            <p style={{margin:0, fontSize:16, color:'#3F6147', fontWeight:600, lineHeight:1.55}}>✓ Reserved — we're confirming your care and dates, and your concierge will reach out shortly.</p>
+          </div>
+        )}
       </div>
 
       {/* row: status + payment */}
