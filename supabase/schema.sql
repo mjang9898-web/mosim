@@ -88,3 +88,33 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- 8) bookings (Phase 2 travel bookings — hotel/flight) — added 2026-06-09, applied via dashboard.
+-- One flexible container for: Mosim-posted links (kind='link'), customer uploads
+-- (kind='upload'), and FUTURE external/automated booking refs (kind='ref' +
+-- provider/external_ref/meta — the empty slots for a booking-site integration).
+create table if not exists public.bookings (
+  id           uuid primary key default gen_random_uuid(),
+  itinerary_id uuid not null references public.itineraries(id) on delete cascade,
+  category     text not null default 'other',   -- 'flight' | 'stay' | 'other'
+  kind         text not null,                    -- 'link' | 'upload' | 'ref'
+  label        text,
+  url          text,                             -- booking/pay link (kind='link')
+  file_path    text,                             -- storage path (kind='upload')
+  provider     text,                             -- future integration: 'tripcom','duffel',...
+  external_ref text,                             -- future: provider booking id / PNR
+  meta         jsonb not null default '{}',
+  status       text not null default 'pending',  -- 'pending' | 'booked' | 'cancelled'
+  created_by   text not null default 'mosim',    -- 'mosim' | 'customer' | 'system'
+  created_at   timestamptz not null default now()
+);
+create index if not exists bookings_itinerary_idx on public.bookings(itinerary_id);
+alter table public.bookings enable row level security;
+create policy "bookings own read" on public.bookings for select
+  using (exists (select 1 from public.itineraries i where i.id = bookings.itinerary_id and i.user_id = auth.uid()));
+create policy "bookings own upload" on public.bookings for insert
+  with check (kind = 'upload' and created_by = 'customer'
+    and exists (select 1 from public.itineraries i where i.id = bookings.itinerary_id and i.user_id = auth.uid()));
+-- private storage bucket 'bookings' (customer confirmations); files keyed under <uid>/...
+-- insert into storage.buckets (id, name, public) values ('bookings','bookings', false) on conflict (id) do nothing;
+-- storage.objects policies: authenticated users may insert/select files under their own <uid> prefix.
