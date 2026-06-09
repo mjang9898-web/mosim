@@ -49,6 +49,12 @@
     cursor:pointer; padding:0; display:block; margin-bottom:5px; white-space:nowrap; }
   .act a:hover { text-decoration:underline; }
   .empty { padding:44px; text-align:center; color:var(--ink-3); background:#fff; border:1px solid var(--border); border-radius:12px; }
+  .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.42); z-index:50; align-items:flex-start; justify-content:center; padding:56px 16px; overflow:auto; }
+  .modal { background:#fff; border-radius:14px; max-width:640px; width:100%; padding:24px; box-shadow:0 30px 80px -30px rgba(0,0,0,.5); }
+  .modal h2 { font-size:20px; margin:0; }
+  .modal input, .modal select { font:inherit; font-size:14px; padding:9px 11px; border:1px solid var(--border); border-radius:9px; background:#fff; }
+  .modal input { flex:1; min-width:140px; }
+  .modal .addbtn { font:inherit; font-size:14px; font-weight:600; color:#fff; background:var(--navy); border:none; border-radius:9px; padding:9px 18px; cursor:pointer; }
   @media (max-width:760px) { main { padding:22px 14px; } table.trips { font-size:13px; } }
 </style>
 </head>
@@ -67,6 +73,26 @@
   <div class="filters" id="filters"></div>
   <div id="dash"><div class="empty">Loading…</div></div>
 </main>
+
+<div class="modal-bg" id="bk-modal">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+      <h2 id="bk-title">Travel bookings</h2>
+      <button id="bk-close" style="font:inherit; font-size:22px; border:none; background:none; cursor:pointer; color:#888; line-height:1;">&times;</button>
+    </div>
+    <p style="color:#777; font-size:14px; margin:0 0 16px;">Post hotel/flight booking links for the customer, or view what they've uploaded.</p>
+    <div id="bk-list" style="margin-bottom:16px;">Loading…</div>
+    <div style="border-top:1px solid var(--border); padding-top:14px;">
+      <div style="font-size:13px; font-weight:600; color:#666; margin-bottom:8px;">Add a booking link</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <select id="bk-newcat"><option value="stay">Hotel</option><option value="flight">Flight</option><option value="other">Other</option></select>
+        <input id="bk-newlabel" placeholder="Label (e.g. Lotte Hotel Seoul)">
+        <input id="bk-newurl" placeholder="https://...">
+        <button id="bk-add" class="addbtn">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="module" src="/js/auth.js"></script>
 <script>
@@ -117,6 +143,7 @@
     dash.innerHTML = '<table class="trips"><thead><tr><th>Customer</th><th>Trip</th><th>Status</th><th>Payment</th><th>Flight</th><th>Stay</th><th>Saved</th><th></th></tr></thead><tbody>'
       + rows.map(rowHtml).join('') + '</tbody></table>';
     document.querySelectorAll('select[data-field]').forEach((sel) => sel.addEventListener('change', () => updateField(sel.dataset.id, sel.dataset.field, sel.value, sel)));
+    document.querySelectorAll('button.bk-open').forEach((b) => b.addEventListener('click', () => openBookings(b.dataset.id, b.dataset.title)));
   }
 
   function rowHtml(x) {
@@ -129,6 +156,7 @@
       : '<span style="color:#aaa">—</span>';
     const email = x.customer.email;
     const acts = [
+      '<button class="bk-open" data-id="' + x.id + '" data-title="' + esc(x.title || 'Korea trip') + '">Bookings</button>',
       email ? '<a href="mailto:' + esc(email) + '?subject=' + encodeURIComponent('Your Mosim trip') + '">Email customer</a>' : '',
       x.payment && x.payment.token ? '<a href="/pay.html?g=' + esc(x.payment.token) + '" target="_blank" rel="noopener">Payment link</a>' : ''
     ].filter(Boolean).join('');
@@ -163,6 +191,60 @@
       else alert('Could not update.');
     } catch (e) { alert('Could not update.'); }
     sel.disabled = false;
+  }
+
+  // ── Bookings modal: post hotel/flight links + view customer uploads ──
+  const modal = document.getElementById('bk-modal');
+  let bkCurrentId = null;
+  document.getElementById('bk-close').addEventListener('click', () => { modal.style.display = 'none'; });
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+  document.getElementById('bk-add').addEventListener('click', addLink);
+
+  async function openBookings(id, title) {
+    bkCurrentId = id;
+    document.getElementById('bk-title').textContent = 'Travel bookings — ' + title;
+    document.getElementById('bk-list').textContent = 'Loading…';
+    modal.style.display = 'flex';
+    await loadBk();
+  }
+  async function loadBk() {
+    const list = document.getElementById('bk-list');
+    let r;
+    try { r = await fetch('/api/admin/bookings?itinerary_id=' + encodeURIComponent(bkCurrentId), { headers: { authorization: 'Bearer ' + token } }); }
+    catch (e) { list.textContent = 'Could not load.'; return; }
+    if (!r.ok) { list.textContent = 'Could not load.'; return; }
+    const bks = (await r.json()).bookings || [];
+    if (!bks.length) { list.innerHTML = '<div style="color:#999;font-size:14px">No bookings yet.</div>'; return; }
+    list.innerHTML = bks.map(bkItem).join('');
+    list.querySelectorAll('button.bk-del').forEach((b) => b.addEventListener('click', () => delLink(b.dataset.id)));
+  }
+  function bkItem(b) {
+    const who = b.kind === 'link' ? 'Mosim' : 'Customer';
+    const right = b.kind === 'link'
+      ? ((b.url ? '<a href="' + esc(b.url) + '" target="_blank" rel="noopener">Open</a>' : '') + ' <button class="bk-del" data-id="' + b.id + '" style="color:#A4452F;border:none;background:none;cursor:pointer;font:inherit;font-size:13px">Delete</button>')
+      : (b.signed_url ? '<a href="' + esc(b.signed_url) + '" target="_blank" rel="noopener">View file</a>' : '<span style="color:#999">file</span>');
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-top:1px solid #eee;font-size:14px">'
+      + '<span><b style="text-transform:capitalize;color:#888;font-size:12px;margin-right:8px">' + esc(b.category) + '</b>' + esc(b.label || (b.kind === 'link' ? 'Link' : 'Confirmation')) + ' <span style="color:#aaa;font-size:12px">· ' + who + '</span></span>'
+      + '<span style="display:flex;gap:12px;align-items:center;flex:none">' + right + '</span></div>';
+  }
+  async function addLink() {
+    const cat = document.getElementById('bk-newcat').value;
+    const label = document.getElementById('bk-newlabel').value.trim();
+    const url = document.getElementById('bk-newurl').value.trim();
+    if (!url) { alert('Enter a URL (https://...).'); return; }
+    const btn = document.getElementById('bk-add'); btn.disabled = true;
+    try {
+      const r = await fetch('/api/admin/booking-link', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ itinerary_id: bkCurrentId, category: cat, label: label, url: url }) });
+      if (r.ok) { document.getElementById('bk-newlabel').value = ''; document.getElementById('bk-newurl').value = ''; await loadBk(); }
+      else { const e = await r.json().catch(() => ({})); alert(e.error || 'Could not add.'); }
+    } catch (e) { alert('Could not add.'); }
+    btn.disabled = false;
+  }
+  async function delLink(id) {
+    if (!window.confirm('Delete this link?')) return;
+    const r = await fetch('/api/admin/booking-link', { method: 'DELETE', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ id: id }) });
+    if (r.ok) await loadBk();
+    else alert('Could not delete.');
   }
 
   load();
