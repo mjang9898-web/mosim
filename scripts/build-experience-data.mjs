@@ -80,6 +80,27 @@ if (typeof CUISINE_DETAILS !== 'object') throw new Error('CUISINE_DETAILS shape 
 const ALLERGEN_NAME = Object.fromEntries(ALLERGENS.map(a => [a.code, a.name]));
 const DIET_NAME     = Object.fromEntries(DIETS.map(d => [d.code, d.name]));
 
+// Hand-curated hero/gallery imagery from the original experience.html EXP.
+// The funnel sources use plainer stock images for these cards; preserve the
+// founder's chosen variants here so regenerating doesn't revert them.
+const IMAGE_OVERRIDES = {
+  'golf':         { image: '/assets/culture-famous/golf-night.webp',     gallery: ['/assets/culture-famous/golf-d1.webp','/assets/culture-famous/golf-d2.webp','/assets/culture-famous/golf-d3.webp','/assets/culture-famous/golf-d4.webp','/assets/culture-famous/golf-d5.webp','/assets/culture-famous/golf-d6.webp'] },
+  'bibimbap':     { image: '/assets/cuisine-hansik/bibimbap-v2.webp',     gallery: ['/assets/cuisine-hansik/bibimbap-g1.webp','/assets/cuisine-hansik/bibimbap-g2.webp','/assets/cuisine-hansik/bibimbap-g3.webp','/assets/cuisine-hansik/bibimbap-g4.webp','/assets/cuisine-hansik/bibimbap-g5.webp'] },
+  'samgyeopsal':  { image: '/assets/cuisine-grill/samgyeopsal-v3.webp',   gallery: ['/assets/cuisine-grill/samgyeopsal-g1.webp','/assets/cuisine-grill/samgyeopsal-g2.webp','/assets/cuisine-grill/samgyeopsal-g3.webp','/assets/cuisine-grill/samgyeopsal-g4.webp','/assets/cuisine-grill/samgyeopsal-g5.webp'] },
+  'tteokbokki':   { image: '/assets/cuisine-street/tteokbokki-v2.webp',   gallery: ['/assets/cuisine-street/tteokbokki-g1.webp','/assets/cuisine-street/tteokbokki-g2.webp','/assets/cuisine-street/tteokbokki-g3.webp'] },
+  'tea-ceremony': { image: '/assets/cuisine-drinks/tea-ceremony-v2.webp', gallery: ['/assets/cuisine-drinks/tea-ceremony-g1.webp','/assets/cuisine-drinks/tea-ceremony-g2.webp','/assets/cuisine-drinks/tea-ceremony-g3.webp','/assets/cuisine-drinks/tea-ceremony-g4.webp','/assets/cuisine-drinks/tea-ceremony-g5.webp'] },
+};
+
+// Apply a curated image/gallery override (mutates + returns the card).
+function applyOverride(card) {
+  const o = IMAGE_OVERRIDES[card.code];
+  if (o) {
+    if (o.image)   { card.image = o.image; card.folder = folderOf(o.image); }
+    if (o.gallery) card.gallery = o.gallery;
+  }
+  return card;
+}
+
 // /assets/culture-heritage/x.webp -> culture-heritage
 function folderOf(image) {
   const m = /\/assets\/([^/]+)\//.exec(image || '');
@@ -102,7 +123,7 @@ function cultureSector(pageId) {
       droppedCulture.push(pageId + '/' + item.code + ' (no CULTURE_DETAILS)');
       continue;
     }
-    out.push({
+    out.push(applyOverride({
       code: item.code,
       name: item.name,
       eyebrow: item.eyebrow,
@@ -115,7 +136,7 @@ function cultureSector(pageId) {
       facts: factPairs(d.facts),
       yt: d.youtubeId,
       vtitle: d.videoTitle,
-    });
+    }));
   }
   return out;
 }
@@ -157,7 +178,7 @@ function cuisineSector() {
           notes: dt.notes || '',
         };
       }
-      out.push(card);
+      out.push(applyOverride(card));
     }
   }
   return out;
