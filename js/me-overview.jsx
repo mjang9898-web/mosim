@@ -135,6 +135,16 @@ function MeOverview() {
     else alert('Could not open the file.');
   }
 
+  async function deleteBooking(b) {
+    if (!supa || !window.confirm('Remove this confirmation?')) return;
+    try {
+      if (b.file_path) await supa.storage.from('bookings').remove([b.file_path]);
+      const { error } = await supa.from('bookings').delete().eq('id', b.id);
+      if (error) throw error;
+      setBookings((arr) => arr.filter((x) => x.id !== b.id));
+    } catch (e) { alert('Could not remove: ' + (e.message || e)); }
+  }
+
   if (err) return <div style={{padding:20, color:'#A4452F'}}>Could not load: {err}</div>;
   if (itin === undefined) return <div style={{padding:20, color:'#8A8479'}}>Loading your dashboard…</div>;
 
@@ -301,7 +311,10 @@ function MeOverview() {
           {bookings.filter((b) => b.kind === 'upload').map((b) => (
             <div key={b.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, padding:'11px 0', borderTop:'1px solid #F0EADC'}}>
               <span style={{fontSize:15, color:'#1B2A4A'}}><b style={{textTransform:'capitalize', color:'#8A8479', fontWeight:600, fontSize:12.5, marginRight:8}}>{b.category}</b>{b.label || 'Confirmation'}</span>
-              <button onClick={() => viewUpload(b.file_path)} style={{fontSize:14, fontWeight:600, color:'#1B2A4A', background:'none', border:'none', cursor:'pointer', textDecoration:'underline'}}>View</button>
+              <span style={{display:'flex', gap:14, alignItems:'center', flex:'none'}}>
+                <button onClick={() => viewUpload(b.file_path)} style={{fontSize:14, fontWeight:600, color:'#1B2A4A', background:'none', border:'none', cursor:'pointer', textDecoration:'underline'}}>View</button>
+                <button onClick={() => deleteBooking(b)} style={{fontSize:14, fontWeight:600, color:'#A4452F', background:'none', border:'none', cursor:'pointer'}}>Remove</button>
+              </span>
             </div>
           ))}
 

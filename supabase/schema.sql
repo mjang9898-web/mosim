@@ -115,6 +115,9 @@ create policy "bookings own read" on public.bookings for select
 create policy "bookings own upload" on public.bookings for insert
   with check (kind = 'upload' and created_by = 'customer'
     and exists (select 1 from public.itineraries i where i.id = bookings.itinerary_id and i.user_id = auth.uid()));
+create policy "bookings own delete" on public.bookings for delete
+  using (kind = 'upload' and created_by = 'customer'
+    and exists (select 1 from public.itineraries i where i.id = bookings.itinerary_id and i.user_id = auth.uid()));
 -- private storage bucket 'bookings' (customer confirmations); files keyed under <uid>/...
 -- insert into storage.buckets (id, name, public) values ('bookings','bookings', false) on conflict (id) do nothing;
 -- storage.objects policies: authenticated users may insert/select files under their own <uid> prefix.
