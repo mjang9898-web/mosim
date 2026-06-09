@@ -27,14 +27,70 @@
     'mental':            'Meditation & mental restoration'
   };
 
+  // Step 3 · Experiences — culture card code -> human label (each card's name
+  // from js/step3-culture.jsx CULTURE_PAGES). Selections persist as an array
+  // of these codes in state.experiences.
   var CULTURE_LABELS = {
-    'heritage':          'Gyeongbokgung / Changdeokgung hanbok walk',
-    'crafts':            'Traditional craft class (hanji · ceramics)',
-    'modern':            'Han River night view & K-pop live',
-    'tea':               'Traditional tea ceremony',
-    'temple':            'Templestay (one night)',
-    'royal':             'Royal court ritual viewing',
-    'performance':       'Nanta / Jeongdong Theatre performance'
+    // Heritage
+    'gyeongbokgung':     'Korean Royal Palace Tour',
+    'changdeokgung':     'Royal Garden Palace Visit',
+    'deoksugung':        'Evening Lantern Palace Walk',
+    'changgyeonggung':   'Moonlit Palace Night Opening',
+    'jongmyo':           'Royal Ancestral Shrine',
+    'huwon':             "The King's Secret Garden Walk",
+    'bukchon':           'Traditional Hanok Village Stroll',
+    'bongeunsa':         'City Mountain Temple Visit',
+    'jogyesa':           'Flower Lantern Temple Visit',
+    'haeinsa':           'Tripitaka Templestay Overnight',
+    'meditation':        'Buddhist Meditation Session',
+    'tea':               'Private Tea Ceremony',
+    'calligraphy':       'Brush Calligraphy with Master',
+    'hanbok':            'Royal Dress Fitting & Photoshoot',
+    'royalcuisine':      'Royal Court Cuisine Tasting',
+    'nationalmuseum':    'National History Museum',
+    'warmemorial':       'War Memorial & Monument',
+    'cheonggye':         'Cheonggyecheon Stream Walk',
+    // Shop
+    'seongsu':           'Brooklyn-of-Seoul Café & Boutique Walk',
+    'myeongdong':        'Main Shopping Street & K-Beauty',
+    'apgujeong':         'Designer Luxury Boutique Row',
+    'coex':              'Starfield Library & Mega Mall',
+    'garosugil':         'Tree-lined Boutique Avenue',
+    'hongdae':           'Youth Street Fashion Quarter',
+    'ikseondong':        'Hanok Alleys, Cafés & Boutiques',
+    'gwangjang':         'Traditional Street Food Market',
+    'namdaemun':         'Largest Night Market',
+    'ddp':               'Modern Design Plaza & Shopping',
+    'ddm':               'Midnight Fashion Wholesale',
+    'kbeauty':           'K-Beauty Flagship Tour',
+    'insadong':          'Traditional Craft & Antique Lanes',
+    'hannam':            'Boutique Gallery & Concept Row',
+    'commonground':      'Container Market & Pop-ups',
+    'taxfree':           'Tax-Free Designer Outlet Day',
+    // Famous
+    'baseball':          'KBO Baseball with Private Box',
+    'golf':              'Signature Golf Course Round',
+    'kpop-concert':      'K-Pop Concert with VIP Access',
+    'hybe':              'K-Pop Label Studio Tour',
+    'smtown':            'K-Pop Artists Museum',
+    'kpop-class':        'K-Pop Dance Class',
+    'namsan-tower':      'N Seoul Tower at Sunset',
+    'lotte':             'Skyscraper SkyDeck at Sunset',
+    'hanriver-yacht':    'Han River Sunset Yacht Cruise',
+    'hanriver':          'Han River Sunrise Kayak',
+    'forestbath':        'Mountain Forest Bathing',
+    'dmz':               'Border Zone Private Tour',
+    'royalmusic':        'Royal Court Music Recital',
+    'bboy':              'B-Boy Showcase in Hongdae',
+    'nanta':             'Non-Verbal Drum Show',
+    'pansori':           'Korean Epic Vocal Performance',
+    // Beyond Seoul
+    'jeju':              'Jeju Island',
+    'busan':             'Busan',
+    'gyeongju':          'Gyeongju',
+    'jeonju':            'Jeonju',
+    'gangwon':           'Gangwon-do',
+    'incheon':           'Incheon'
   };
 
   var CUISINE_LABELS = {
@@ -52,7 +108,8 @@
     var contact = state.contact || {};
     var trip = state.trip || {};
     var medical = state.medical || {};
-    var culture = state.culture || {};
+    // Step 3 · Experiences — an array of culture card codes (state.experiences).
+    var experiences = Array.isArray(state.experiences) ? state.experiences : [];
     var cuisine = state.cuisine || {};
 
     var guestName = contact.name ? contact.name.split(' ')[0] : 'Guest';
@@ -61,7 +118,7 @@
 
     // Collect selected items per step (with sensible fallbacks)
     var medItems = collect(medical, MED_LABELS, ['Orientation consultation']);
-    var cultureItems = collect(culture, CULTURE_LABELS, ['Gyeongbokgung hanbok walk', 'Bukchon Hanok Village tour']);
+    var cultureItems = collect(experiences, CULTURE_LABELS, ['Korean Royal Palace Tour', 'Traditional Hanok Village Stroll']);
     var cuisineItems = collect(cuisine, CUISINE_LABELS, ['Royal-court hanjeongsik tasting', 'Gwangjang Market night tour']);
 
     var days = [
@@ -149,6 +206,15 @@
   function collect(stepData, labels, fallback) {
     if (!stepData) return fallback.slice();
     var out = [];
+    // Array of codes (e.g. Step 3 experiences): map each code -> label.
+    if (Array.isArray(stepData)) {
+      stepData.forEach(function (code) {
+        if (labels[code]) out.push(labels[code]);
+        else if (code) out.push(prettify(code));
+      });
+      if (out.length === 0) return fallback.slice();
+      return out;
+    }
     Object.keys(stepData).forEach(function (k) {
       var v = stepData[k];
       if (Array.isArray(v)) {

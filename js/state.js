@@ -24,7 +24,8 @@
       stay: '',        // 'cozy'|'comfort'|'premium'
       arrival: 'ICN'   // constant — not asked
     },
-    // Step 3 · Experiences — ['heritage','cuisine','markets','nature','spa','beyond'] | ['minimal']
+    // Step 3 · Experiences — array of culture card codes, e.g.
+    // ['gyeongbokgung','bukchon','tea','jeju'].  See js/step3-culture.jsx CULTURE_PAGES.
     experiences: [],
     // Step 4 · Comfort & food
     comfort: { pace: '', mobility: '', spice: '', food: [] }

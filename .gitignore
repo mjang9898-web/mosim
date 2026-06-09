@@ -57,3 +57,6 @@ coverage/
 
 # Brainstorming visual companion
 .superpowers/
+
+# orchestrator intermediate artifacts (screenshots, specs-in-progress)
+_workspace/

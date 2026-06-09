@@ -10,157 +10,6 @@ const { useState } = React;
 // the drawer's hero photo keeps the full-size original.
 const thumbUrl = (path) => path && path.replace(/\/([^/]+\.webp)$/, '/thumbs/$1');
 
-// ─── Curated packages — for guests who want a pre-set bundle ──────────
-// Selecting a package replaces the current basket with its codes.
-const PACKAGES = [
-  {
-    id: 'classic',
-    palette: 'classic',
-    letter: 'A',
-    eyebrow: 'Most popular',
-    name: 'The Classic Seoul',
-    desc: 'Everything a first-time American visitor wants: palaces, hanok, hanbok, market street food, and the city skyline.',
-    tagline: "Everything a first-time American visitor wants in one carefully sequenced week — Joseon palaces, hanok village mornings, a hanbok photoshoot in a royal courtyard, market street food at dusk, and a final-day glimpse of the world's most fortified border.",
-    concept: "Designed as a first introduction to Korea — wide-angle, low-friction, multigenerational. Heavy on iconic visuals, light on hiking and physical exertion. The pace stays balanced so two generations travelling together can both keep up.",
-    chips: ['Royal Palace', 'Hanok Village', 'Hanbok shoot', 'Tea ceremony', 'Namsan Tower', 'Gwangjang Market', 'DMZ tour'],
-    codes: ['gyeongbokgung', 'bukchon', 'hanbok', 'tea', 'namsan-tower', 'gwangjang', 'dmz'],
-    duration: '7 experiences · 10 days',
-    pace: 'Balanced · 2–3 cultural touchpoints every other day, with rest days woven in',
-    perfectFor: 'First-time visitors · multi-generational families · senior couples',
-    season: 'Year-round · cherry blossoms in April · autumn foliage in November',
-    itinerary: [
-      { label: 'Day 1',  stops: [
-        { kind: 'arrival',  name: 'Incheon Airport',     detail: 'Hotel check-in' },
-      ]},
-      { label: 'Day 2',  stops: [
-        { kind: 'medical',  code: 'checkup',             label: 'Health screening' },
-      ]},
-      { label: 'Day 3',  stops: [
-        { kind: 'culture',  code: 'gyeongbokgung' },
-      ]},
-      { label: 'Day 4',  stops: [
-        { kind: 'culture',  code: 'bukchon' },
-        { kind: 'culture',  code: 'hanbok' },
-      ]},
-      { label: 'Day 5',  stops: [
-        { kind: 'culture',  code: 'tea' },
-      ]},
-      { label: 'Day 6',  stops: [
-        { kind: 'culture',  code: 'gwangjang' },
-      ]},
-      { label: 'Day 7',  stops: [
-        { kind: 'culture',  code: 'namsan-tower' },
-      ]},
-      { label: 'Day 8',  stops: [
-        { kind: 'culture',  code: 'dmz' },
-      ]},
-      { label: 'Day 9',  stops: [
-        { kind: 'medical',  code: 'iv',                  label: 'IV nutrient therapy' },
-      ]},
-      { label: 'Day 10', stops: [
-        { kind: 'departure', name: 'Incheon Airport',    detail: 'Flight home' },
-      ]},
-    ],
-  },
-  {
-    id: 'kwave',
-    palette: 'kwave',
-    letter: 'B',
-    eyebrow: 'For the K-Wave fan',
-    name: 'K-Pop & City Life',
-    desc: 'The modern Seoul most American visitors come for — concerts, dance, shopping, and skyline sunsets.',
-    tagline: "The modern Seoul most American visitors come for — VIP concert seating, a label studio tour at HYBE, a private K-pop dance class with the choreographers who train the idols, and skyline sunsets above the Han.",
-    concept: "Built around the live K-pop calendar — concert dates anchor the week and the rest of the experiences are slotted in around them. The pace is one full evening anchor most days, with afternoon walks through the city's youngest fashion districts.",
-    chips: ['K-Pop concert', 'HYBE tour', 'Dance class', 'Hongdae fashion', 'Seongsu walk', 'SkyDeck sunset', 'Han River yacht'],
-    codes: ['kpop-concert', 'hybe', 'kpop-class', 'hongdae', 'seongsu', 'lotte', 'hanriver-yacht'],
-    duration: '7 experiences · 10 days',
-    pace: 'Curious explorer · evening anchors with shopping and café afternoons between',
-    perfectFor: 'K-pop fans · 20s–30s travellers · younger family members',
-    season: 'Year-round · tour cycles announced ~3 months in advance',
-    itinerary: [
-      { label: 'Day 1',  stops: [
-        { kind: 'arrival',  name: 'Incheon Airport',     detail: 'Hotel check-in' },
-      ]},
-      { label: 'Day 2',  stops: [
-        { kind: 'medical',  code: 'derm',                label: 'K-Beauty derm consult' },
-      ]},
-      { label: 'Day 3',  stops: [
-        { kind: 'culture',  code: 'hybe' },
-      ]},
-      { label: 'Day 4',  stops: [
-        { kind: 'culture',  code: 'kpop-class' },
-      ]},
-      { label: 'Day 5',  stops: [
-        { kind: 'culture',  code: 'seongsu' },
-      ]},
-      { label: 'Day 6',  stops: [
-        { kind: 'culture',  code: 'hongdae' },
-        { kind: 'medical',  code: 'aesthetic',           label: 'Aesthetic injectables' },
-      ]},
-      { label: 'Day 7',  stops: [
-        { kind: 'culture',  code: 'lotte' },
-      ]},
-      { label: 'Day 8',  stops: [
-        { kind: 'culture',  code: 'hanriver-yacht' },
-      ]},
-      { label: 'Day 9',  stops: [
-        { kind: 'culture',  code: 'kpop-concert' },
-      ]},
-      { label: 'Day 10', stops: [
-        { kind: 'departure', name: 'Incheon Airport',    detail: 'Flight home' },
-      ]},
-    ],
-  },
-  {
-    id: 'quiet',
-    palette: 'quiet',
-    letter: 'C',
-    eyebrow: 'Quiet & reflective',
-    name: 'Heritage & Stillness',
-    desc: 'A slower, deeper week — templestay, meditation, royal music, calligraphy, and the secret garden of kings.',
-    tagline: "A slower, deeper week — a 24-hour templestay with a Buddhist monk, brush calligraphy with a living master, a private royal-court music recital, and Korea's UNESCO epic vocal art performed for you in a heritage hall.",
-    concept: "Designed for the visitor who wants Korea's interior life, not its skyline. One anchor experience per day, ample silence between, and a final two-day templestay that closes the trip. Best paired with a wellness or spa add-on.",
-    chips: ['Templestay', 'Meditation', 'Tea ceremony', "King's Garden", 'Calligraphy', 'Royal Court Music', 'Pansori'],
-    codes: ['haeinsa', 'meditation', 'tea', 'huwon', 'calligraphy', 'royalmusic', 'pansori'],
-    duration: '7 experiences · 10 days',
-    pace: 'Slow & contemplative · one anchor experience per day with generous rest and meditation',
-    perfectFor: 'Wellness seekers · meditation practitioners · senior couples',
-    season: 'Best in October–November (foliage) or April–May (mild)',
-    itinerary: [
-      { label: 'Day 1',  stops: [
-        { kind: 'arrival',  name: 'Incheon Airport',     detail: 'Hotel check-in' },
-      ]},
-      { label: 'Day 2',  stops: [
-        { kind: 'medical',  code: 'hanbang',             label: 'Hanbang diagnosis' },
-      ]},
-      { label: 'Day 3',  stops: [
-        { kind: 'culture',  code: 'huwon' },
-      ]},
-      { label: 'Day 4',  stops: [
-        { kind: 'culture',  code: 'tea' },
-      ]},
-      { label: 'Day 5',  stops: [
-        { kind: 'culture',  code: 'calligraphy' },
-      ]},
-      { label: 'Day 6',  stops: [
-        { kind: 'culture',  code: 'royalmusic' },
-      ]},
-      { label: 'Day 7',  stops: [
-        { kind: 'culture',  code: 'meditation' },
-        { kind: 'medical',  code: 'iv',                  label: 'IV nutrient therapy' },
-      ]},
-      { label: 'Day 8',  stops: [
-        { kind: 'culture',  code: 'haeinsa',             label: 'Templestay (overnight)' },
-      ]},
-      { label: 'Day 9',  stops: [
-        { kind: 'culture',  code: 'pansori' },
-      ]},
-      { label: 'Day 10', stops: [
-        { kind: 'departure', name: 'Incheon Airport',    detail: 'Flight home' },
-      ]},
-    ],
-  },
-];
 
 // ─── 50 cultural experiences ──────────────────────────────────────────
 // Spread across 3 thematic pages: Heritage / Shop / Famous.
@@ -293,13 +142,6 @@ const CULTURE_PAGES = [
         image: '/assets/culture-beyond/incheon.webp',
       },
     ],
-  },
-  {
-    id: 'packages',
-    eyebrow: 'Page Ⅴ',
-    label: 'Packages',
-    kind: 'packages',
-    items: [],   // packages page renders PACKAGES instead
   },
 ];
 
@@ -1655,24 +1497,29 @@ const CULTURE_DETAILS = {
   },
 };
 
-// Pace options + the helper line shown beneath the selector.
-const PACE = [
-  { id: 'slow',     label: 'Slow & contemplative', hint: 'Slow & contemplative — a gentle pace with generous rest, roughly one cultural moment every other day.' },
-  { id: 'balanced', label: 'Balanced',             hint: 'Balanced — typically 1 cultural moment per day, paired with rest or cuisine.' },
-  { id: 'curious',  label: 'Curious explorer',     hint: 'Curious explorer — two cultural touchpoints most days, with room to wander.' },
-  { id: 'max',      label: 'Maximum immersion',    hint: 'Maximum immersion — a full, active week with multiple experiences daily.' },
-];
-
 function Step3Culture() {
   const [pageIdx, setPageIdx] = useState(0);
-  const [selected, setSelected] = useState(() => new Set());  // no pre-selection
-  const [notes, setNotes] = useState('');
-  const [pace, setPace] = useState('balanced');
+  // Hydrate the basket from the experiences array persisted by an earlier visit.
+  const [selected, setSelected] = useState(() => {
+    let prior = [];
+    try {
+      if (window.kwState) {
+        const s = window.kwState.loadStep('experiences');
+        if (Array.isArray(s)) prior = s;
+      }
+    } catch (e) {}
+    return new Set(prior);
+  });
   const [detailCode, setDetailCode] = useState(null);
-  const [detailPkgId, setDetailPkgId] = useState(null);
 
   const currentPage = CULTURE_PAGES[pageIdx];
   const allSelectedItems = CULTURE_PAGES.flatMap(p => p.items.filter(it => selected.has(it.code)));
+
+  // Persist the selected experience codes (array) on every change, so the
+  // page's Continue button (and the result page) always read current picks.
+  React.useEffect(() => {
+    if (window.kwState) window.kwState.saveStep('experiences', Array.from(selected));
+  }, [selected]);
 
   const toggle = code => {
     setSelected(prev => {
@@ -1683,81 +1530,23 @@ function Step3Culture() {
   };
   const clearAll = () => setSelected(new Set());
 
-  // Which package is "active" — defined as: the basket exactly matches a
-  // package's codes (set equality). Lets us highlight the selected pkg
-  // and toggle re-selection.
-  const activePkgId = (() => {
-    for (const p of PACKAGES) {
-      if (p.codes.length !== selected.size) continue;
-      if (p.codes.every(c => selected.has(c))) return p.id;
-    }
-    return null;
-  })();
-  const applyPackage = (pkg) => {
-    if (activePkgId === pkg.id) {
-      setSelected(new Set());
-    } else {
-      setSelected(new Set(pkg.codes));
-    }
-  };
-
-  // Click a card body to open the right-side detail drawer. Only the
-  // experiences listed in CULTURE_DETAILS open the drawer today; the
-  // rest fall back to the placeholder until their content is written.
+  // Click a card body to open the right-side detail drawer — but ONLY when a
+  // CULTURE_DETAILS entry exists. Cards without detail content are
+  // selection-only: clicking the body toggles the basket, no drawer, no alert.
   const openDetail = (item) => {
     if (CULTURE_DETAILS[item.code]) {
       setDetailCode(item.code);
       return;
     }
-    alert('Detail page for "' + item.name + '" — coming soon.');
+    toggle(item.code);
   };
   const detailItem = detailCode
     ? CULTURE_PAGES.flatMap(p => p.items).find(it => it.code === detailCode)
     : null;
 
-  const openPackageDetail = (pkg) => setDetailPkgId(pkg.id);
-  const detailPkg = detailPkgId ? PACKAGES.find(p => p.id === detailPkgId) : null;
-
-  const onContinue = () => {
-    const culture = {
-      selected: allSelectedItems.map((it) => it.name),   // names → result page
-      selectedCodes: Array.from(selected).join(','),      // codes (string, internal)
-      notes: notes.trim(),
-      pace: pace,
-    };
-    if (window.kwState) window.kwState.saveStep('culture', culture);
-    window.location.href = 'step4.html';
-  };
-  const goBack = () => { window.location.href = 'step2.html'; };
-
   return (
-    <div className="kw-screen">
-      <BrandNav active="culture" />
-
-      <div className="kw-wrap">
-        <StepBar active={2} />
-
-        <header className="kw-page-hero">
-          <SectionEyebrow num="03" label="Step 03 of 05" />
-          <h1>What culture would you like <span className="kw-accent">to receive?</span></h1>
-          <p>
-            From Seoul day-trips to Jeju weekends — pick what calls to you.
-          </p>
-        </header>
-
-        {/* ── Sub-step Ⅰ — Choose your experiences ─────────────────── */}
-        <div className="kw-substep">
-          <div className="kw-substep-l">
-            <span className="kw-substep-numeral">Step Ⅰ</span>
-            <span className="kw-substep-title">Choose your experiences</span>
-          </div>
-          <span className="kw-substep-hint">
-            Five curated pages — Heritage, Shop, Famous, Beyond Seoul, Packages.
-          </span>
-        </div>
-
-        <section className="kw-q-row kw-q-row-full">
-          <div className="kw-q-input">
+    <>
+    <div className="kw-q-input">
 
             {/* Page tabs */}
             <div className="kw-pagetabs">
@@ -1772,20 +1561,18 @@ function Step3Culture() {
                     <span className="kw-pagetab-num">{p.eyebrow}</span>
                     <span className="kw-pagetab-label">
                       {p.label}
-                      {p.kind !== 'packages' && (
-                        <span className="kw-pagetab-count">
-                          {p.kind === 'cities'
-                            ? `${p.items.length} cities`
-                            : `${p.items.length}${pageSelCount > 0 ? ` · ${pageSelCount} picked` : ''}`}
-                        </span>
-                      )}
+                      <span className="kw-pagetab-count">
+                        {p.kind === 'cities'
+                          ? `${p.items.length} cities`
+                          : `${p.items.length}${pageSelCount > 0 ? ` · ${pageSelCount} picked` : ''}`}
+                      </span>
                     </span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Page content — items grid · curated packages · or city cards */}
+            {/* Page content — items grid or city cards */}
             {currentPage.kind === 'cities' ? (
               <div className="kw-city-grid">
                 {currentPage.items.map(c => (
@@ -1818,49 +1605,6 @@ function Step3Culture() {
                   </div>
                 ))}
               </div>
-            ) : currentPage.kind === 'packages' ? (
-              <>
-                <div className="kw-pkg-band">
-                  <span className="kw-pkg-band-title">Not sure where to start?</span>
-                  <span className="kw-pkg-band-hint">
-                    Pick a ready-made package — selecting one replaces your basket.
-                  </span>
-                </div>
-
-                <div className="kw-pkg-grid">
-                  {PACKAGES.map(p => {
-                    const active = activePkgId === p.id;
-                    return (
-                      <div
-                        key={p.id}
-                        className={`kw-pkg kw-pkg-${p.palette} ${active ? 'is-selected' : ''}`}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => openPackageDetail(p)}
-                      >
-                        <div className="kw-pkg-banner">
-                          <span className="kw-pkg-banner-letter">{p.letter}</span>
-                          <span className="kw-pkg-banner-cap">{p.eyebrow}</span>
-                        </div>
-                        <div className="kw-pkg-body">
-                          <div className="kw-pkg-name">{p.name}</div>
-                          <p className="kw-pkg-desc">{p.desc}</p>
-                          <div className="kw-pkg-includes">
-                            {p.chips.map(c => (
-                              <span key={c} className="kw-pkg-chip">{c}</span>
-                            ))}
-                          </div>
-                          <div className="kw-pkg-foot">
-                            <span className="kw-pkg-meta">{p.duration}</span>
-                            <span className="kw-pkg-cta-link">
-                              {active ? '✓ Selected · view details →' : 'View details →'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
             ) : (
               <div className="kw-cul-grid">
               {currentPage.items.map(it => {
@@ -1959,114 +1703,18 @@ function Step3Culture() {
               </div>
             </div>
 
-          </div>
-        </section>
-
-        {/* ── Sub-step Ⅱ — Your preferences ──────────────────────── */}
-        <div className="kw-substep">
-          <div className="kw-substep-l">
-            <span className="kw-substep-numeral">Step Ⅱ</span>
-            <span className="kw-substep-title">Your preferences</span>
-          </div>
-          <span className="kw-substep-hint">
-            Pace, interests, and anything else.
-          </span>
-        </div>
-
-        {/* 01. NOTES */}
-        <section className="kw-q-row">
-          <div>
-            <SectionEyebrow num="01" label="Notes" />
-            <h2 className="kw-q-title">Anything you'd love to do?</h2>
-            <p className="kw-q-help">
-              A specific master you want to study with, a temple you've read about,
-              a memory you'd like to recreate. Tell us.
-            </p>
-          </div>
-          <div className="kw-q-input">
-            <div className="kw-notes-card">
-              <div className="kw-notes-card-head">
-                <span className="kw-notes-card-label">
-                  <span className="kw-notes-card-pen">✎</span>
-                  Write your cultural notes here
-                </span>
-                <span className="kw-notes-card-secure">• Optional</span>
-              </div>
-              <textarea
-                className="kw-textarea"
-                rows={5}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. I've been wanting to study calligraphy with Kim Jong-won. Hoping to see the cherry blossoms at Changdeokgung at night. Open to anything quiet and contemplative."
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* 02. PACE */}
-        <section className="kw-q-row">
-          <div>
-            <SectionEyebrow num="02" label="Pace" />
-            <h2 className="kw-q-title">How active should your week feel?</h2>
-            <p className="kw-q-help">
-              Affects how many cultural touchpoints we thread between medical and rest days.
-            </p>
-          </div>
-          <div className="kw-q-input" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-            <div className="kw-segmented" style={{ display: 'inline-flex', background: 'var(--kw-bg-soft)', padding: 4, borderRadius: 12, gap: 4 }}>
-              {PACE.map((p) => (
-                <button
-                  key={p.id}
-                  className={pace === p.id ? 'is-active' : ''}
-                  style={pace === p.id ? pillBtnActive : pillBtn}
-                  onClick={() => setPace(p.id)}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-            <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--kw-ink-3)', textAlign: 'right' }}>
-              {(PACE.find((p) => p.id === pace) || PACE[1]).hint}
-            </p>
-          </div>
-        </section>
-
-        {detailItem && (
-          <CultureDetailDrawer
-            item={detailItem}
-            detail={CULTURE_DETAILS[detailItem.code]}
-            isSelected={selected.has(detailItem.code)}
-            onToggle={() => toggle(detailItem.code)}
-            onClose={() => setDetailCode(null)}
-          />
-        )}
-
-        {detailPkg && (
-          <PackageDetailDrawer
-            pkg={detailPkg}
-            allItems={CULTURE_PAGES.flatMap(p => p.items)}
-            isActive={activePkgId === detailPkg.id}
-            onApply={() => { applyPackage(detailPkg); setDetailPkgId(null); }}
-            onClose={() => setDetailPkgId(null)}
-          />
-        )}
-
-        {/* Action bar */}
-        <div className="kw-actionbar">
-          <div className="kw-actionbar-l">
-            <button className="kw-cta kw-cta-ghost kw-cta-sm"
-                    style={{ height: 50, fontSize: 15, padding: '0 22px' }}
-                    onClick={goBack}>
-              ← Back to Medical
-            </button>
-            <span className="kw-actionbar-note">Your answers carry through to the next steps.</span>
-          </div>
-          <button className="kw-cta kw-cta-lg" onClick={onContinue}>
-            Continue to Cuisine &nbsp;›
-          </button>
-        </div>
-      </div>
     </div>
+
+      {detailItem && (
+        <CultureDetailDrawer
+          item={detailItem}
+          detail={CULTURE_DETAILS[detailItem.code]}
+          isSelected={selected.has(detailItem.code)}
+          onToggle={() => toggle(detailItem.code)}
+          onClose={() => setDetailCode(null)}
+        />
+      )}
+    </>
   );
 }
 
@@ -2195,164 +1843,5 @@ function CultureDetailDrawer({ item, detail, isSelected, onToggle, onClose }) {
     </>
   );
 }
-
-// ─── ItineraryDay — one day column inside the package itinerary ─────
-function ItineraryDay({ day, allItems }) {
-  return (
-    <div className="kw-itin-day">
-      <div className="kw-itin-day-chip">{day.label}</div>
-      <ol className="kw-itin-stops">
-        {day.stops.map((stop, i) => {
-          const culture = stop.kind === 'culture' && stop.code
-            ? allItems.find(it => it.code === stop.code)
-            : null;
-          const name = stop.label || culture?.name || stop.name;
-          const detail = stop.detail
-            || culture?.meta
-            || (stop.kind === 'medical' ? 'Medical' : null);
-          const marker = stop.kind === 'arrival' || stop.kind === 'departure'
-            ? '✈' : stop.kind === 'medical' ? '➕' : '●';
-          return (
-            <li key={i} className={`kw-itin-stop kw-itin-stop-${stop.kind}`}>
-              <span className="kw-itin-stop-marker" aria-hidden="true">{marker}</span>
-              <div className="kw-itin-stop-text">
-                <span className="kw-itin-stop-name">{name}</span>
-                {detail && <span className="kw-itin-stop-detail">{detail}</span>}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
-    </div>
-  );
-}
-
-// ─── PackageDetailDrawer — right-side panel for curated packages ──────
-// Different content shape from CultureDetailDrawer: shows trip concept,
-// pace, duration, who it's for, and the list of bundled experiences with
-// their hero photos. Footer toggles the basket to exactly the package.
-function PackageDetailDrawer({ pkg, allItems, isActive, onApply, onClose }) {
-  React.useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [onClose]);
-
-  const facts = [
-    { label: 'Concept',      value: pkg.concept },
-    { label: 'Duration',     value: pkg.duration },
-    { label: 'Pace',         value: pkg.pace },
-    { label: 'Perfect for',  value: pkg.perfectFor },
-    { label: 'Season',       value: pkg.season },
-  ];
-
-  return (
-    <>
-      <div className="kw-drawer-scrim" onClick={onClose} />
-      <aside
-        className={`kw-drawer kw-pkg-${pkg.palette}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={`${pkg.name} package details`}
-      >
-        <header className="kw-drawer-top">
-          <nav className="kw-drawer-crumb" aria-label="Breadcrumb">
-            <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
-              ← Step 3 · Culture
-            </a>
-            <span className="kw-drawer-crumb-sep" aria-hidden="true">/</span>
-            <span className="kw-drawer-crumb-now">Package · {pkg.name}</span>
-          </nav>
-          <button className="kw-drawer-close" onClick={onClose} aria-label="Close package details">×</button>
-        </header>
-
-        <div className="kw-drawer-body">
-          <section className="kw-pkg-detail-hero">
-            <span className="kw-detail-eyebrow">{pkg.eyebrow} · curated package</span>
-            <h2 className="kw-detail-title">{pkg.name}</h2>
-            <p className="kw-detail-tagline">{pkg.tagline}</p>
-            <dl className="kw-detail-facts">
-              {facts.map(f => (
-                <div key={f.label} className="kw-detail-fact-row">
-                  <dt>{f.label}</dt>
-                  <dd>{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-
-          <section className="kw-detail-section">
-            <h3 className="kw-detail-h3">Trip itinerary</h3>
-            <div className="kw-itin">
-              {/* Row 1 — Days 1 → 5 left to right (chips on top) */}
-              <div className="kw-itin-row">
-                {pkg.itinerary.slice(0, 5).map((day) => (
-                  <ItineraryDay key={day.label} day={day} allItems={allItems} />
-                ))}
-              </div>
-
-              {/* Row 2 — Days 6 → 10 reversed so Day 6 sits under Day 5 (right).
-                  Chips render at BOTTOM via flex-direction: column-reverse so the
-                  pink road meanders cleanly: top rail across row 1 → U-turn on
-                  right → bottom rail across row 2 back to the left. */}
-              <div className="kw-itin-row kw-itin-row-rev">
-                {pkg.itinerary.slice(5, 10).slice().reverse().map((day) => (
-                  <ItineraryDay key={day.label} day={day} allItems={allItems} />
-                ))}
-              </div>
-            </div>
-            <p className="kw-itin-foot">
-              A suggested rhythm — your concierge re-sequences stops to fit your dates and medical appointments.
-            </p>
-          </section>
-        </div>
-
-        <footer className="kw-drawer-foot">
-          <div className="kw-drawer-foot-l">
-            <span className="kw-drawer-foot-label">Your basket</span>
-            <span className="kw-drawer-foot-meta">
-              {isActive
-                ? `✓ This package is in your basket · ${pkg.codes.length} experiences`
-                : `Apply this package to replace your basket with ${pkg.codes.length} experiences`}
-            </span>
-          </div>
-          <div className="kw-drawer-foot-r">
-            <button
-              className="kw-cta kw-cta-ghost"
-              style={{ height: 50, fontSize: 15, padding: '0 22px' }}
-              onClick={onClose}
-            >
-              Close
-            </button>
-            <button className="kw-cta kw-cta-lg" onClick={onApply}>
-              {isActive ? '✓ Remove this package' : 'Apply this package'} &nbsp;›
-            </button>
-          </div>
-        </footer>
-      </aside>
-    </>
-  );
-}
-
-// Inline pill styles for the segmented Pace control (matches Step 2)
-const pillBtn = {
-  height: 40, padding: '0 18px',
-  border: 'none', borderRadius: 9,
-  background: 'transparent',
-  fontSize: 14, fontWeight: 600,
-  color: 'var(--kw-ink-3)',
-  cursor: 'pointer',
-};
-const pillBtnActive = {
-  ...pillBtn,
-  background: '#fff',
-  color: 'var(--kw-ink)',
-  boxShadow: '0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04)',
-};
 
 window.Step3Culture = Step3Culture;
