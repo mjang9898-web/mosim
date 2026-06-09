@@ -57,8 +57,9 @@
   .cat-l{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
   .cat-head h2{font-size:28px; font-weight:600;}
   .cat-head .blurb{font-size:18px; color:var(--ink);}
-  .more-link{font-size:15px; font-weight:600; color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; white-space:nowrap;}
+  .more-link{font-size:15px; font-weight:600; color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; white-space:nowrap; background:none; border:0; padding:0; cursor:pointer; font-family:inherit;}
   .more-link:hover{color:var(--navy);}
+  .more-link:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:3px;}
   .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
   .card{background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; cursor:pointer; text-align:left; transition:box-shadow .15s, transform .15s;}
   .card:hover{box-shadow:0 22px 44px -26px rgba(27,42,74,.4); transform:translateY(-2px);}
@@ -185,6 +186,7 @@
   </div>
 </div></footer>
 
+<script src="js/experience-data.js"></script>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Experience details">
   <div class="dr-top">
@@ -200,85 +202,63 @@
 
 <script>
 (function () {
-  var EXP = [
-    { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history.", more:'14 more', items:[
-      { code:'gyeongbokgung', name:'Korean Royal Palace Tour', eyebrow:'Palace', meta:'Half day · with historian', image:'/assets/culture-heritage/gyeongbokgung.webp', folder:'culture-heritage',
-        heroEyebrow:'Royal palace · Joseon dynasty seat', tagline:"The grandest of Seoul's five royal palaces — where the kings of Korea held court for five hundred years.",
-        facts:[['Built','1395 — the founding palace of the Joseon dynasty'],['Highlights','Geunjeongjeon throne hall · Gyeonghoeru lotus pavilion · changing of the royal guard'],['Best time','Mid-morning · cherry blossoms in April · maple foliage in late November'],['Tour length','Half day · accompanied by a private Korean-history scholar'],['Good to know','Closed Tuesdays. Hanbok wearers enter free of charge.']], yt:'7tNzW7GEHZo', vtitle:'A walking tour of Gyeongbokgung Palace · 4K' },
-      { code:'changdeokgung', name:'Royal Garden Palace Visit', eyebrow:'Palace', meta:'3 hours · UNESCO', image:'/assets/culture-heritage/changdeokgung.webp', folder:'culture-heritage',
-        heroEyebrow:'UNESCO World Heritage · Joseon royal villa', tagline:"The palace built to flow with the mountain behind it — and home of Huwon, the only secret garden of Korean kings open to the public.",
-        facts:[['Built','1405 — the second royal palace of Joseon'],['Highlights','Injeongjeon throne hall · Nakseonjae quarters · Huwon back garden'],['Best time','Autumn foliage in October–November · cherry-blossom season in April'],['Tour length','3 hours · with a timed English Secret-Garden ticket'],['Good to know','Only 50 advance Huwon tickets are sold per slot. UNESCO since 1997.']], yt:'bliX8MrQdRE', vtitle:'Walking through the history of Changdeokgung Palace' },
-      { code:'bukchon', name:'Traditional Hanok Village Stroll', eyebrow:'Hanok', meta:'2 hours · walking', image:'/assets/culture-heritage/bukchon.webp', folder:'culture-heritage',
-        heroEyebrow:'Hanok village · Living heritage', tagline:"Nine hundred tile-roof hanok houses still lived in — a five-hundred-year residential village between Gyeongbokgung and Changdeokgung.",
-        facts:[['Era','Joseon-era residential quarter for nobility · most extant hanok rebuilt 1920s'],['Highlights','Bukchon-ro 11-gil tile-roof view · Gahoe-dong artisan workshops · Bukchon Cultural Center'],['Best time','Early morning (8–10am) or weekday — the village is still residential'],['Tour length','2 hours · self-paced walking · local-guide option available'],['Good to know','Photography on streets only. Hanbok-wear grants free palace entry nearby.']], yt:'osiAdxNVZUs', vtitle:"Bukchon — Seoul's most beautiful hanok village walking tour" },
-      { code:'bongeunsa', name:'City Mountain Temple Visit', eyebrow:'Temple', meta:'90 min · meditation', image:'/assets/culture-heritage/bongeunsa.webp', folder:'culture-heritage',
-        heroEyebrow:'City mountain temple · 1,200 years', tagline:"A working mountain temple in the heart of Gangnam — and a 23-metre standing Buddha that looks down across the skyscrapers below.",
-        facts:[['Founded','794 · patron temple of the Joseon royal family'],['Highlights','Mireukdaebul standing Buddha (23 m) · Panjeon scripture hall · woodblock Tripitaka'],['Best time','Weekday mornings · the Lotus Lantern Festival in May'],['Tour length','90 min · optional templestay for foreign visitors on Thursdays'],['Good to know','Free entry. Halls require quiet — bow at the threshold.']], yt:'374gCD1LcJM', vtitle:"Is Gangnam's Bongeunsa Temple Worth the Visit?" }
-    ]},
-    { key:'Famous', blurb:'The icons — the ballpark, the skyline, the fairway, the border.', more:'12 more', items:[
-      { code:'baseball', name:'KBO Baseball with Private Box', eyebrow:'Sports', meta:'3 hours · with snacks', image:'/assets/culture-famous/baseball.webp', folder:'culture-famous',
-        heroEyebrow:'KBO league night · Private box', tagline:"Korea's loudest, friendliest night out — synchronized cheer squads, fried chicken from your seat, and a private skybox between the dugouts.",
-        facts:[['Format','KBO regular-season home game · private skybox for 6–12 guests · catering and beer on tap'],['Highlights','Choreographed cheer leaders · the seventh-inning chicken-and-beer ritual · home-run fireworks · LG Twins / Doosan Bears / Kiwoom rivalries'],['Best time','April–October season · Friday or Saturday for the loudest crowd'],['Tour length','3 hours · with snacks · bilingual host explains the cheer chants'],['Good to know','Jamsil Stadium (LG/Doosan) is the most accessible. Roof closes for rain — game continues.']], yt:'g5TFhKWwSHY', vtitle:'Korean baseball with cheerleaders · Kia vs Doosan at Jamsil Stadium · 4K' },
-      { code:'namsan-tower', name:'N Seoul Tower at Sunset', eyebrow:'View', meta:'2 hours · cable car', image:'/assets/culture-famous/namsan-tower.webp', folder:'culture-famous',
-        heroEyebrow:'N Seoul Tower · Sunset over the city', tagline:"Seoul's signature skyline view — a cable car up Namsan mountain, the locked-love-padlock terraces, and the slow rotation of the city as the sun crosses the river.",
-        facts:[['Format','Cable car ascent · observatory deck · padlock terrace · rotating restaurant'],['Highlights','Namsan Cable Car · 360° observatory · love-padlock fences · N Grill restaurant'],['Best time','Arrive 90 minutes before sunset · winter for the clearest air'],['Tour length','2 hours · with cable car · pickup from Myeongdong base'],['Good to know','Cable car runs to midnight. Observatory deck heated in winter.']], yt:'4fDA5Q5Chyk', vtitle:'[4K] Namsan Cable Car & N Seoul Tower, Korea' },
-      { code:'golf', name:'Signature Golf Course Round', eyebrow:'Golf', meta:'Full day · 18 holes', image:'/assets/culture-famous/golf-night.webp', folder:'culture-famous', gallery:['/assets/culture-famous/golf-d1.webp','/assets/culture-famous/golf-d2.webp','/assets/culture-famous/golf-d3.webp','/assets/culture-famous/golf-d4.webp','/assets/culture-famous/golf-d5.webp','/assets/culture-famous/golf-d6.webp'],
-        heroEyebrow:'Signature course · Full 18-hole round', tagline:"A round at one of Korea's signature mountain or seaside courses — a caddy who reads every break, a clubhouse lunch, and your private driver from hotel to first tee.",
-        facts:[['Format','18 holes · with caddy · clubhouse lunch · clubs and shoes on request'],['Highlights','Sky 72 (Incheon) · Nine Bridges (Jeju, top 100 world) · Pinx (Jeju) · South Cape (Namhae) · seasonal foliage tee boxes'],['Best time','April–June and September–November · early morning tee-off for cooler play'],['Tour length','Full day · door-to-door with private driver'],['Good to know','Most premier courses require advance booking. Korean caddies expected — gratuity in cash. Bring passport for ID at check-in.']], yt:'_0JsFz7LOwk', vtitle:'South Korea golf · Go Around at Nine Bridges, Jeju · Golf Channel' },
-      { code:'dmz', name:'Border Zone Private Tour', eyebrow:'History', meta:'Full day · pre-cleared', image:'/assets/culture-famous/dmz.webp', folder:'culture-famous',
-        heroEyebrow:'Demilitarized Zone · Private border tour', tagline:"A pre-cleared private day to the world's most fortified border — the truce village, the infiltration tunnels, and a vantage looking straight into the North.",
-        facts:[['Format','Pre-cleared private tour · security-cleared guide · passport check'],['Highlights','Imjingak Peace Park · Third Infiltration Tunnel · Dora Observatory · Dorasan Station'],['Best time','Year-round · tours run Tue–Sun · JSA subject to conditions'],['Tour length','Full day · pickup 07:30 · return 17:00 · private vehicle'],['Good to know','Passport mandatory. Dress code applies. JSA access not always available.']], yt:'0Zuyg1CI78c', vtitle:'DMZ tour · Imjingak, Third Infiltration Tunnel, Dora Observatory' }
-    ]},
-    { key:'Shop', blurb:'Markets, K-beauty, and Seoul\'s design districts.', more:'12 more', items:[
-      { code:'myeongdong', name:'Main Shopping Street & K-Beauty', eyebrow:'District', meta:'3 hours · with stylist', image:'/assets/culture-shop/myeongdong.webp', folder:'culture-shop',
-        heroEyebrow:'K-Beauty epicenter · Main shopping street', tagline:"The K-beauty mecca every visitor walks at least once — neon-lit cosmetics flagships, tax-free shopping, and the city's most famous street-food alley.",
-        facts:[['Vibe','K-Beauty mecca · tourist epicenter · late-night neon'],['Highlights','Olive Young flagship · Innisfree / Etude / Laneige · Myeongdong Cathedral · street-food alley'],['Best time','Weekday late afternoon · evening for the lit signage'],['Tour length','3 hours · with a personal K-beauty stylist'],['Good to know','Tax-free at every cosmetics shop with passport. Heavy crowds Fri–Sun.']], yt:'4HzRgqQkygc', vtitle:'[4K] Myeongdong Shopping Area · 1 hour walking tour' },
-      { code:'gwangjang', name:'Traditional Street Food Market', eyebrow:'Market', meta:'90 min · with foodie', image:'/assets/culture-shop/gwangjang.webp', folder:'culture-shop',
-        heroEyebrow:'Traditional street food market · 1905', tagline:"Korea's most beloved street-food institution — 110 years of bindaetteok and mayak gimbap, served on communal benches that haven't moved in three generations.",
-        facts:[['Vibe',"Korea's 110-year street-food temple · standing-room communal benches"],['Highlights','Bindaetteok mungbean pancake row · mayak gimbap stalls · live octopus · second-floor textiles'],['Best time','Mid-afternoon · weekday for shorter waits'],['Tour length','90 min · with a foodie guide to navigate the stalls'],['Good to know','Cash recommended at stalls (most take cards now). Communal seating only.']], yt:'oPMcMU6Gros', vtitle:"Best Korean Street Food Tour at Seoul's Gwangjang Market" },
-      { code:'insadong', name:'Traditional Craft & Antique Lanes', eyebrow:'Crafts', meta:'3 hours · with curator', image:'/assets/culture-shop/insadong.webp', folder:'culture-shop',
-        heroEyebrow:'Traditional crafts + antiques · Cultural quarter', tagline:"Seoul's most important traditional-culture street — antique galleries, calligraphy brushes, hand-thrown celadon, and tea houses tucked into hanok courtyards.",
-        facts:[['Vibe','Traditional craft + antique + brush + Korean tea district'],['Highlights','Ssamziegil spiraling mall · antique stores · calligraphy shops · hanok tea houses'],['Best time','Weekday afternoon · weekend pedestrian-only street fairs'],['Tour length','3 hours · with a cultural-craft curator'],['Good to know','Many shops closed Mondays. Combine with Jogyesa Temple 5 min walk.']], yt:'Rf7PcLSGEIU', vtitle:'Seoul Walking Tour, Insa-dong Ssamziegil · 4K' },
-      { code:'seongsu', name:'Café & Boutique Walk', eyebrow:'District', meta:'3 hours · self-paced', image:'/assets/culture-shop/seongsu.webp', folder:'culture-shop',
-        heroEyebrow:'Concept café district · Industrial chic', tagline:"Korea's Brooklyn — old shoe-factory brick converted into the country's most photographed cafés, indie fashion brands, and weekend brunches.",
-        facts:[['Vibe','Warehouse-conversion cafés · emerging Korean designers · hipster energy'],['Highlights','Café streets in old factories · Daelim Changgo gallery · SM Town HQ · Seoul Forest'],['Best time','Weekday afternoon for cafés · Saturday morning for brunch'],['Tour length','3 hours · self-paced with a local map'],['Good to know','Most boutiques closed Mondays. Mobile payment everywhere.']], yt:'AWzn-Jfie9A', vtitle:'Seongsu — The Brooklyn of Seoul · 4K Walking Tour' }
-    ]},
-    { key:'Cuisine', blurb:'From royal hansik to a street-food snack.', more:'50+ more', items:[
-      { code:'bibimbap', name:'Bibimbap — Mixed Rice', eyebrow:'Rice bowl', meta:'Lunch · 45 min', image:'/assets/cuisine-hansik/bibimbap-v2.webp', folder:'cuisine-hansik', gallery:['/assets/cuisine-hansik/bibimbap-g1.webp','/assets/cuisine-hansik/bibimbap-g2.webp','/assets/cuisine-hansik/bibimbap-g3.webp','/assets/cuisine-hansik/bibimbap-g4.webp','/assets/cuisine-hansik/bibimbap-g5.webp'],
-        heroEyebrow:'Mixed rice bowl · Jeonju heritage', tagline:"Korea's most beloved one-bowl meal — seasonal namul vegetables, sesame-oil rice, beef, a sunny egg, and a spoon of gochujang stirred together at the table.",
-        facts:[['Course','Lunch · 45 minutes · single-bowl meal'],['Profile','Comforting · gentle heat · umami · sesame-forward'],['Where','Jeonju (origin) · hansik tables across Korea · home kitchens'],['Contains','Soy · Sesame · Eggs · Beef (often) · Gochujang'],['Dietary','Vegetarian & vegan on request · gluten-free with tamari · pork-free']], yt:'L_sDgKqIXbY', vtitle:'How to make bibimbap & dolsot bibimbap',
-        diet:{ spice:2, suitable:['halal','hindu','kosher','vegetarian on request'], contains:'Soy · Sesame · Eggs', notes:'Beef can be omitted for a vegetarian bowl; the egg can be dropped for a vegan version.' } },
-      { code:'samgyeopsal', name:'Samgyeopsal — Pork Belly Grill', eyebrow:'BBQ', meta:'Dinner · 90 min · communal', image:'/assets/cuisine-grill/samgyeopsal-v3.webp', folder:'cuisine-grill', gallery:['/assets/cuisine-grill/samgyeopsal-g1.webp','/assets/cuisine-grill/samgyeopsal-g2.webp','/assets/cuisine-grill/samgyeopsal-g3.webp','/assets/cuisine-grill/samgyeopsal-g4.webp','/assets/cuisine-grill/samgyeopsal-g5.webp'],
-        heroEyebrow:'Pork-belly grill · The communal Korean dinner', tagline:"Thick-cut unmarinated pork belly grilled at your table — eaten by wrapping a slice in lettuce with garlic, kimchi, and ssamjang. Korea's most-shared meal.",
-        facts:[['Course','Dinner · 90 minutes · table grill · share-plate for 2–6'],['Profile','Pork fat · garlic · sesame · the lettuce wrap balances the richness'],['Where','Mapo District (the home of samgyeopsal) · every Korean BBQ house'],['Contains','Pork · Soy · Sesame · Garlic · ssamjang'],['Dietary','Pork-led · gluten-free with tamari · not halal or kosher']], yt:'23tRGHUX3qM', vtitle:'Grilled pork belly (Samgyeopsal-gui) · Maangchi',
-        diet:{ spice:0, suitable:['gluten-free','hindu'], contains:'Pork · Soy · Sesame · Garlic', notes:'Pork-only dish. Chicken or beef substitutions available for halal at specialty restaurants in Itaewon.' } },
-      { code:'tteokbokki', name:'Tteokbokki — Spicy Rice Cakes', eyebrow:'Street', meta:'Snack · spicy · iconic', image:'/assets/cuisine-street/tteokbokki-v2.webp', folder:'cuisine-street', gallery:['/assets/cuisine-street/tteokbokki-g1.webp','/assets/cuisine-street/tteokbokki-g2.webp','/assets/cuisine-street/tteokbokki-g3.webp'],
-        heroEyebrow:'Spicy rice cakes · The icon of Korean street food', tagline:"Chewy cylindrical rice cakes simmered in a sticky-sweet-spicy gochujang sauce with fish cake, scallion, and a boiled egg — the country's most recognised street snack.",
-        facts:[['Course','Snack · 15 minutes · share-plate from a market stall'],['Profile','Spicy · sweet · chewy · the gochujang sauce coats the rice cakes'],['Where','Sindang-dong (the home of tteokbokki) · Myeongdong · every market alley'],['Contains','Rice cake · Wheat (fish cake) · Soy · Eggs · Gochujang'],['Dietary','Vegan with mushroom broth & no fish cake · contains wheat']], yt:'TA3Uo3a9674', vtitle:'Spicy rice cake (Tteokbokki) · Maangchi',
-        diet:{ spice:3, suitable:['hindu','pescatarian'], contains:'Wheat · Soy · Fish · Eggs', notes:'A vegan version without fish cake / egg is available — request when ordering. Rosé version adds dairy.' } },
-      { code:'tea-ceremony', name:'Private Korean Tea Ceremony', eyebrow:'Tea', meta:'90 min · with master', image:'/assets/cuisine-drinks/tea-ceremony-v2.webp', folder:'cuisine-drinks', gallery:['/assets/cuisine-drinks/tea-ceremony-g1.webp','/assets/cuisine-drinks/tea-ceremony-g2.webp','/assets/cuisine-drinks/tea-ceremony-g3.webp','/assets/cuisine-drinks/tea-ceremony-g4.webp','/assets/cuisine-drinks/tea-ceremony-g5.webp'],
-        heroEyebrow:'Darye · Korean tea ceremony', tagline:"A private session of darye — Korea's thousand-year tea practice — with a tea master who pours green, semi-fermented, and aged teas in measured stages.",
-        facts:[['Course','Cultural tasting · 90 minutes · private session for 2–6'],['Profile','Meditative · understated · the etiquette is the experience'],['Where',"O'sulloc tea house · Insadong tea rooms · hanok tea suites · temple stays"],['Contains','Tea · Spring water · sometimes Honey · Pine-nut garnish'],['Dietary','Naturally vegan & gluten-free · halal & kosher friendly · alcohol-free']], yt:'0ro7FRqyq00', vtitle:'Korean Tea Ceremony · Tea Master Youngmi Yi',
-        diet:{ spice:0, suitable:['vegan','vegetarian','halal','kosher','gluten-free','temple'], contains:'None', notes:'The most universally accommodating cultural tasting on the trip. Caffeine-free options available on request.' } }
-    ]}
+  // Sector order + blurbs (cards themselves come from window.EXPERIENCE_DATA,
+  // generated from the funnel source by scripts/build-experience-data.mjs).
+  var SECTORS = [
+    { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history." },
+    { key:'Famous',   blurb:'The icons — the ballpark, the skyline, the fairway, the border.' },
+    { key:'Shop',     blurb:"Markets, K-beauty, and Seoul's design districts." },
+    { key:'Cuisine',  blurb:'From royal hansik to a street-food snack.' }
   ];
+  var DATA = window.EXPERIENCE_DATA || {};
+  var PREVIEW = 4; // cards shown before "more"
 
   // ---- render categories ----
   var catsEl = document.getElementById('cats');
   var byCode = {};
-  EXP.forEach(function (cat) {
+
+  function cardHTML(it) {
+    byCode[it.code] = { cat: it._sector, it: it };
+    return '<div class="card" data-code="' + it.code + '" role="button" tabindex="0" aria-label="' + it.name + '">' +
+      '<div class="photo" style="background-image:url(\'' + it.image + '\')"></div>' +
+      '<div class="body"><div class="eyebrow">' + it.eyebrow + '</div>' +
+      '<h3>' + it.name + '</h3><div class="meta">' + it.meta + '</div></div></div>';
+  }
+
+  SECTORS.forEach(function (s) {
+    var items = (DATA[s.key] || []).map(function (it) { it._sector = s.key; return it; });
+    if (!items.length) return;
     var sec = document.createElement('section');
     sec.className = 'cat';
-    var cards = cat.items.map(function (it) {
-      byCode[it.code] = { cat: cat.key, it: it };
-      return '<div class="card" data-code="' + it.code + '" role="button" tabindex="0" aria-label="' + it.name + '">' +
-        '<div class="photo" style="background-image:url(\'' + it.image + '\')"></div>' +
-        '<div class="body"><div class="eyebrow">' + it.eyebrow + '</div>' +
-        '<h3>' + it.name + '</h3><div class="meta">' + it.meta + '</div></div></div>';
-    }).join('');
-    sec.innerHTML = '<div class="cat-head"><div class="cat-l"><h2>' + cat.key + '</h2><span class="blurb">' + cat.blurb + '</span></div>' +
-      '<a class="more-link" href="#gate">' + cat.more + ' →</a></div>' +
-      '<div class="grid">' + cards + '</div>';
+
+    var hasMore = items.length > PREVIEW;
+    var extra = items.length - PREVIEW;
+    var head = '<div class="cat-head"><div class="cat-l"><h2>' + s.key + '</h2><span class="blurb">' + s.blurb + '</span></div>' +
+      (hasMore
+        ? '<button type="button" class="more-link" aria-expanded="false">' + extra + ' more →</button>'
+        : '') +
+      '</div>';
+    sec.innerHTML = head + '<div class="grid">' + items.map(cardHTML).join('') + '</div>';
+
+    // Hide the cards past the preview until expanded.
+    var cardEls = sec.querySelectorAll('.grid .card');
+    for (var i = PREVIEW; i < cardEls.length; i++) cardEls[i].hidden = true;
+
+    if (hasMore) {
+      var btn = sec.querySelector('.more-link');
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        for (var j = PREVIEW; j < cardEls.length; j++) cardEls[j].hidden = expanded;
+        if (expanded) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.textContent = extra + ' more →';
+        } else {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.textContent = 'Show less ↑';
+        }
+      });
+    }
+
     catsEl.appendChild(sec);
   });
 
@@ -300,6 +280,16 @@
     lastTrigger = trigger || null;
     var it = rec.it;
     catEl.textContent = rec.cat; crumb.textContent = it.name;
+    // Defensive: a card missing detail (no facts) must never crash the drawer.
+    if (!it.facts || !it.facts.length) {
+      body.innerHTML = '<div class="dr-eyebrow">' + (it.eyebrow || '') + '</div><h2>' + it.name + '</h2>' +
+        '<p class="dr-tag">Full details for this experience are coming soon — your concierge can tell you everything.</p>';
+      body.scrollTop = 0;
+      scrim.classList.add('open'); drawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      drClose.focus();
+      return;
+    }
     var imgs = it.gallery || [1,2,3,4,5,6].map(function (i) {
       return '/assets/' + it.folder + '/' + it.code + (i === 1 ? '' : '-' + i) + '.webp';
     });
