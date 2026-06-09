@@ -2,6 +2,7 @@
 // GET   /api/payment-group?token=<t>                            → public summary by token
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'node:crypto';
+import { adminEmails } from './_lib/admin.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -82,7 +83,9 @@ export default async function handler(req, res) {
 
     const { data: itin } = await supa
       .from('itineraries').select('id, user_id, state, schedule').eq('id', itinerary_id).single();
-    if (!itin || itin.user_id !== user.id) {
+    // The owner OR a Mosim admin (concierge invoicing from the cockpit) may set up payment.
+    const isAdmin = adminEmails().includes((user.email || '').toLowerCase());
+    if (!itin || (itin.user_id !== user.id && !isAdmin)) {
       return res.status(403).json({ error: 'Not your itinerary' });
     }
 

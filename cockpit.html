@@ -144,6 +144,7 @@
       + rows.map(rowHtml).join('') + '</tbody></table>';
     document.querySelectorAll('select[data-field]').forEach((sel) => sel.addEventListener('change', () => updateField(sel.dataset.id, sel.dataset.field, sel.value, sel)));
     document.querySelectorAll('button.bk-open').forEach((b) => b.addEventListener('click', () => openBookings(b.dataset.id, b.dataset.title)));
+    document.querySelectorAll('button.bk-pay').forEach((b) => b.addEventListener('click', () => setupPayment(b.dataset.id, b)));
   }
 
   function rowHtml(x) {
@@ -158,7 +159,8 @@
     const acts = [
       '<button class="bk-open" data-id="' + x.id + '" data-title="' + esc(x.title || 'Korea trip') + '">Bookings</button>',
       email ? '<a href="mailto:' + esc(email) + '?subject=' + encodeURIComponent('Your Mosim trip') + '">Email customer</a>' : '',
-      x.payment && x.payment.token ? '<a href="/pay.html?g=' + esc(x.payment.token) + '" target="_blank" rel="noopener">Payment link</a>' : ''
+      x.payment && x.payment.token ? '<a href="/pay.html?g=' + esc(x.payment.token) + '" target="_blank" rel="noopener">Payment link</a>' : '',
+      !x.payment ? '<button class="bk-pay" data-id="' + x.id + '">Set up payment</button>' : ''
     ].filter(Boolean).join('');
     return '<tr class="' + (x.status === 'reserved' ? 'reserved' : '') + '">'
       + '<td class="cust"><div class="nm">' + esc(x.customer.name || '—') + '</div><div class="em">' + esc(email || '') + '</div>' + (x.customer.phone ? '<div class="em">' + esc(x.customer.phone) + '</div>' : '') + '</td>'
@@ -191,6 +193,21 @@
       else alert('Could not update.');
     } catch (e) { alert('Could not update.'); }
     sel.disabled = false;
+  }
+
+  // ── Set up the concierge-fee payment for a trip (Mosim invoices) ──
+  async function setupPayment(id, btn) {
+    if (!window.confirm('Create a concierge-fee payment request for this trip?')) return;
+    btn.disabled = true; btn.textContent = 'Setting up…';
+    try {
+      const r = await fetch('/api/payment-group', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify({ itinerary_id: id })
+      });
+      const b = await r.json();
+      if (r.ok && b.token) { await load(); }   // refetch — Payment column + link now populated
+      else { alert(b.error || 'Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
+    } catch (e) { alert('Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
   }
 
   // ── Bookings modal: post hotel/flight links + view customer uploads ──

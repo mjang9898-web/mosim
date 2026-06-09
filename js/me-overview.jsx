@@ -247,16 +247,11 @@ function MeOverview() {
           <div style={label}>Payment</div>
           {!payg && (
             <div style={{marginTop:14}}>
-              <p style={{margin:0, fontSize:16, color:'#54514B', lineHeight:1.55}}>No payment due yet — your concierge will send a clear quote.</p>
-              {mock && (
-                <div style={{marginTop:14, paddingTop:14, borderTop:'1px dashed #E5DBC8'}}>
-                  <div style={{fontSize:13, color:'#8A8479', marginBottom:8}}>Test mode</div>
-                  <button onClick={setupPayment} disabled={setupBusy}
-                    style={{padding:'11px 20px', background:'#fff', color:'#1B2A4A', border:'1.5px solid #C39A3F', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer'}}>
-                    {setupBusy ? 'Setting up…' : 'Set up a test payment'}
-                  </button>
-                </div>
-              )}
+              <p style={{margin:0, fontSize:16, color:'#54514B', lineHeight:1.55}}>
+                {itin.status === 'quoted'
+                  ? "Your trip is confirmed — we'll send your concierge-fee payment link here shortly."
+                  : "No payment due yet — your concierge will confirm your dates and send a clear quote."}
+              </p>
             </div>
           )}
           {payg && paid && (
