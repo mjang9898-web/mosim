@@ -35,20 +35,20 @@
 **글꼴 — 2종만**
 ```css
 /* 디스플레이·헤드라인·브랜드: 따뜻한 세리프 */
-font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+font-family: 'Lora', Georgia, serif;
 /* 본문·UI·라벨: 깨끗한 산세리프 */
 font-family: 'Inter', -apple-system, system-ui, sans-serif;
 ```
-- 헤드라인은 **Fraunces serif**(따뜻함·격·차별화 — 경쟁사 지오메트릭 산세리프와 갈라치는 핵심).
+- 헤드라인은 **Lora serif**(따뜻함·격·차별화 — 경쟁사 지오메트릭 산세리프와 갈라치는 핵심). Google Fonts로 `Lora:wght@400;500;600` 로드, Georgia 폴백.
 - 본문은 **Inter**, **19px 이상**(시니어 최소).
 
 **스케일**
 
 | 클래스 | 크기 / 글꼴 | 용도 |
 |---|---|---|
-| `.display` | clamp(40px, 6vw, 60px) / Fraunces 600 | Hero h1 |
-| `.h2` | clamp(30px, 3.6vw, 44px) / Fraunces 600 | 섹션 헤더 |
-| `.h3` | 19~22px / Fraunces 600 | 카드 제목 |
+| `.display` | clamp(40px, 6vw, 60px) / Lora 600 | Hero h1 |
+| `.h2` | clamp(30px, 3.6vw, 44px) / Lora 600 | 섹션 헤더 |
+| `.h3` | 19~22px / Lora 600 | 카드 제목 |
 | `.lede` | 20px / Inter 400 | 부제 |
 | `.body` | 19px / Inter 400, line-height 1.6 | 기본 본문 |
 | `.label` | 12.5px / Inter 600, letter-spacing 2.4px, UPPERCASE, 골드 | 섹션 라벨(eyebrow) |
@@ -83,6 +83,6 @@ font-family: 'Inter', -apple-system, system-ui, sans-serif;
 - [ ] 회색이 `--ink-2`보다 옅지 않은가?
 - [ ] 탭 타깃 44×44 이상인가?
 - [ ] 핑크/마젠타 안 썼는가? (폐기됨 — 골드 액센트만)
-- [ ] 헤드라인에 Fraunces serif 썼는가?
+- [ ] 헤드라인에 Lora serif 썼는가?
 - [ ] 첫 화면이 "한 메시지"로 비워졌는가? (정보 과다 ❌)
 - [ ] himedi식 배지·마켓플레이스 느낌 아닌가?
