@@ -38,6 +38,9 @@ function MeOverview() {
   const [mock, setMock] = useState(false);   // test-payment mode (PAYMENT_MOCK)
   const [setupBusy, setSetupBusy] = useState(false);
   const [reserving, setReserving] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [uid, setUid] = useState(null);
+  const [bkBusy, setBkBusy] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -46,6 +49,7 @@ function MeOverview() {
       const client = await window.kwAuth.init();
       setSupa(client);
       const user = await window.kwAuth.getUser();
+      setUid(user && user.id);
       setName((user && user.user_metadata && user.user_metadata.name) || (user && user.email && user.email.split('@')[0]) || '');
       fetch('/api/config').then(r => r.json()).then(c => setMock(!!c.paymentMock)).catch(() => {});
       const { data, error } = await client
@@ -61,6 +65,11 @@ function MeOverview() {
           .select('total_amount, amount_paid, status, share_token')
           .eq('itinerary_id', data.id).maybeSingle();
         setPayg(pg || null);
+        const { data: bks } = await client
+          .from('bookings')
+          .select('id, category, kind, label, url, file_path, status, created_by, created_at')
+          .eq('itinerary_id', data.id).order('created_at', { ascending: true });
+        setBookings(bks || []);
       }
     })();
   }, []);
@@ -99,6 +108,31 @@ function MeOverview() {
       else alert(b.error || 'Could not reserve.');
     } catch (e) { alert('Could not reserve.'); }
     setReserving(false);
+  }
+
+  async function uploadBooking(file, category) {
+    if (!supa || !itin || !uid || !file) return;
+    setBkBusy(true);
+    try {
+      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 80);
+      const path = uid + '/' + itin.id + '/' + Date.now() + '-' + safe;
+      const up = await supa.storage.from('bookings').upload(path, file, { upsert: false });
+      if (up.error) throw up.error;
+      const ins = await supa.from('bookings').insert({
+        itinerary_id: itin.id, category: category, kind: 'upload', created_by: 'customer',
+        label: file.name.slice(0, 120), file_path: path, status: 'booked'
+      }).select('id, category, kind, label, url, file_path, status, created_by, created_at').single();
+      if (ins.error) throw ins.error;
+      setBookings((b) => b.concat([ins.data]));
+    } catch (e) { alert('Upload failed: ' + (e.message || e)); }
+    setBkBusy(false);
+  }
+
+  async function viewUpload(file_path) {
+    if (!supa) return;
+    const { data } = await supa.storage.from('bookings').createSignedUrl(file_path, 3600);
+    if (data && data.signedUrl) window.open(data.signedUrl, '_blank');
+    else alert('Could not open the file.');
   }
 
   if (err) return <div style={{padding:20, color:'#A4452F'}}>Could not load: {err}</div>;
@@ -242,6 +276,49 @@ function MeOverview() {
           )}
         </div>
       </div>
+
+      {itin.status === 'booked' && (
+        <div style={{...card, marginTop:18}}>
+          <div style={label}>Travel bookings</div>
+          <p style={{margin:'10px 0 16px', fontSize:15, color:'#54514B', lineHeight:1.55}}>Your hotel and flights — book the options we recommend, or upload a confirmation if you've booked your own. You pay the provider directly; Mosim never marks them up.</p>
+
+          {bookings.filter((b) => b.kind === 'link').length > 0 && (
+            <div style={{marginBottom:18}}>
+              <div style={{fontSize:12.5, fontWeight:600, color:'#8A8479', letterSpacing:'.5px', textTransform:'uppercase', marginBottom:6}}>Recommended by Mosim</div>
+              {bookings.filter((b) => b.kind === 'link').map((b) => (
+                <div key={b.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, padding:'11px 0', borderTop:'1px solid #F0EADC'}}>
+                  <span style={{fontSize:15, color:'#1B2A4A'}}><b style={{textTransform:'capitalize', color:'#8A8479', fontWeight:600, fontSize:12.5, marginRight:8}}>{b.category}</b>{b.label || 'Booking'}</span>
+                  <a href={b.url} target="_blank" rel="noopener" style={{fontSize:14, fontWeight:600, color:'#fff', background:'#1B2A4A', padding:'8px 16px', borderRadius:8, textDecoration:'none', whiteSpace:'nowrap'}}>Book →</a>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{fontSize:12.5, fontWeight:600, color:'#8A8479', letterSpacing:'.5px', textTransform:'uppercase', marginBottom:6}}>Your confirmations</div>
+          {bookings.filter((b) => b.kind === 'upload').length === 0 && (
+            <p style={{fontSize:14, color:'#8A8479', margin:'0 0 6px'}}>None yet. Booked your own hotel or flight? Upload the confirmation so we have it on file.</p>
+          )}
+          {bookings.filter((b) => b.kind === 'upload').map((b) => (
+            <div key={b.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, padding:'11px 0', borderTop:'1px solid #F0EADC'}}>
+              <span style={{fontSize:15, color:'#1B2A4A'}}><b style={{textTransform:'capitalize', color:'#8A8479', fontWeight:600, fontSize:12.5, marginRight:8}}>{b.category}</b>{b.label || 'Confirmation'}</span>
+              <button onClick={() => viewUpload(b.file_path)} style={{fontSize:14, fontWeight:600, color:'#1B2A4A', background:'none', border:'none', cursor:'pointer', textDecoration:'underline'}}>View</button>
+            </div>
+          ))}
+
+          <div style={{marginTop:16, paddingTop:16, borderTop:'1px solid #E5DBC8', display:'flex', gap:10, alignItems:'center', flexWrap:'wrap'}}>
+            <select id="bk-cat" style={{fontSize:14, padding:'9px 10px', border:'1.5px solid #E5DBC8', borderRadius:9, background:'#fff'}}>
+              <option value="stay">Hotel</option>
+              <option value="flight">Flight</option>
+              <option value="other">Other</option>
+            </select>
+            <label style={{fontSize:14, fontWeight:600, color:'#1B2A4A', background:'#fff', border:'1.5px solid #C39A3F', borderRadius:9, padding:'9px 16px', cursor: bkBusy ? 'default' : 'pointer'}}>
+              {bkBusy ? 'Uploading…' : 'Upload a confirmation'}
+              <input type="file" accept="image/*,application/pdf" disabled={bkBusy} style={{display:'none'}}
+                onChange={(e) => { const f = e.target.files[0]; const cat = (document.getElementById('bk-cat') || {}).value || 'other'; if (f) uploadBooking(f, cat); e.target.value = ''; }} />
+            </label>
+          </div>
+        </div>
+      )}
 
       <div style={{display:'flex', gap:24, marginTop:20, flexWrap:'wrap'}}>
         <a href="?tab=itineraries" style={{fontSize:16, color:'#1B2A4A', textDecoration:'none', fontWeight:500}}>All itineraries →</a>
