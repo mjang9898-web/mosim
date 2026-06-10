@@ -18,6 +18,11 @@ const admin = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
 
 const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost'];
 
+// PostHog (marketing analytics — ?action=analytics). Personal key is server-side only.
+const PH_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
+const PH_HOST = 'https://us.posthog.com';
+const PH_PROJECT = '463716';
+
 export default async function handler(req, res) {
   if (!admin) return res.status(500).json({ error: 'Server not configured' });
 
@@ -38,7 +43,56 @@ export default async function handler(req, res) {
   if (action === 'overview') return handleOverview(req, res);
   if (action === 'members') return handleMembers(req, res);
   if (action === 'finance') return handleFinance(req, res);
+  if (action === 'analytics') return handleAnalytics(req, res);
   return handleTrips(req, res);
+}
+
+// --- analytics (PostHog Query API / HogQL — funnel + sources, anonymous) ---
+async function phHogql(query) {
+  const r = await fetch(`${PH_HOST}/api/projects/${PH_PROJECT}/query/`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + PH_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: { kind: 'HogQLQuery', query } })
+  });
+  if (!r.ok) throw new Error('PostHog ' + r.status + ': ' + (await r.text()).slice(0, 200));
+  return (await r.json()).results || [];
+}
+async function handleAnalytics(req, res) {
+  if (!PH_KEY) return res.status(503).json({ error: 'Analytics not configured yet' });
+  const days = Math.min(Math.max(parseInt(req.query.days, 10) || 30, 1), 90);
+  const since = `now() - INTERVAL ${days} DAY`;
+  try {
+    const [ov, fn, sr] = await Promise.all([
+      phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE event='$pageview' AND timestamp > ${since}`),
+      phHogql(`SELECT
+                 uniqIf(distinct_id, properties.$current_url LIKE '%step1%') AS s1,
+                 uniqIf(distinct_id, properties.$current_url LIKE '%step2%') AS s2,
+                 uniqIf(distinct_id, properties.$current_url LIKE '%step3%') AS s3,
+                 uniqIf(distinct_id, properties.$current_url LIKE '%step4%') AS s4,
+                 uniqIf(distinct_id, properties.$current_url LIKE '%result%') AS rs
+               FROM events WHERE event='$pageview' AND timestamp > ${since}`),
+      phHogql(`SELECT coalesce(nullIf(properties.$referring_domain, ''), '$direct') AS src,
+                      uniq(distinct_id) AS v, count() AS pv
+               FROM events WHERE event='$pageview' AND timestamp > ${since}
+               GROUP BY src ORDER BY v DESC LIMIT 8`)
+    ]);
+    const o = ov[0] || [0, 0]; const f = fn[0] || [0, 0, 0, 0, 0];
+    return res.status(200).json({
+      days,
+      overview: { pageviews: Number(o[0]) || 0, visitors: Number(o[1]) || 0 },
+      funnel: [
+        { step: 'Care (step 1)', visitors: Number(f[0]) || 0 },
+        { step: 'Trip (step 2)', visitors: Number(f[1]) || 0 },
+        { step: 'Experiences (step 3)', visitors: Number(f[2]) || 0 },
+        { step: 'Comfort (step 4)', visitors: Number(f[3]) || 0 },
+        { step: 'AI plan (result)', visitors: Number(f[4]) || 0 }
+      ],
+      sources: sr.map((row) => ({ source: row[0] === '$direct' ? 'Direct / none' : row[0], visitors: Number(row[1]) || 0, views: Number(row[2]) || 0 }))
+    });
+  } catch (e) {
+    console.error('[admin/trips analytics] failed', e?.message || e);
+    return res.status(502).json({ error: 'Analytics query failed', detail: String(e?.message || e).slice(0, 200) });
+  }
 }
 
 // --- whoami ---------------------------------------------------------------
