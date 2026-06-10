@@ -69,27 +69,48 @@
   .incl li::before{content:""; position:absolute; left:0; top:.62em; width:9px; height:9px; border-radius:50%; background:var(--gold);}
   .incl li b{display:block; color:var(--navy); font-weight:600; margin-bottom:2px;}
 
-  /* How it works — horizontal roadmap (3 phases × 2 nodes) */
+  /* How it works — serpentine 4×2 process flow.
+     Two explicit flex rows (robust): arrows are real flex children in the
+     gutters, vertically centered by align-items:center — no magic offsets. */
   .roadmap{margin-top:38px;}
-  .road{display:grid; grid-template-columns:repeat(3,1fr); column-gap:30px; row-gap:0;}
-  .phase{display:flex; flex-direction:column;}
-  .phase-lab{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:18px;}
-  /* the two nodes within a phase, sitting on a shared horizontal segment */
-  .nodes{position:relative; display:grid; grid-template-columns:1fr 1fr;}
-  /* continuous path line running behind every node marker, edge to edge */
-  .nodes::before{content:""; position:absolute; left:0; right:0; top:11px; height:3px; background:var(--line); z-index:0;}
-  /* extend the line across the column gap so the road reads as one continuous path */
-  .phase:not(:last-child) .nodes::after{content:""; position:absolute; left:100%; width:30px; top:11px; height:3px; background:var(--line); z-index:0;}
-  .node{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 6px;}
-  .dot{width:25px; height:25px; border-radius:50%; background:var(--ivory); border:3px solid var(--navy); position:relative; z-index:1;}
-  .node b{display:block; font-family:'Lora',Georgia,serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.2; margin-top:14px;}
-  .node span{display:block; font-size:16px; color:var(--ink); line-height:1.4; margin-top:4px;}
-  /* gold-accented payment nodes (3 & 4 — the whole middle phase) */
-  .node.pay .dot{background:var(--gold); border-color:var(--gold); display:flex; align-items:center; justify-content:center;}
-  .node.pay .dot::after{content:"$"; font-family:'Lora',Georgia,serif; font-size:15px; font-weight:600; color:#fff; line-height:1;}
-  .node.pay b{color:var(--gold);}
-  /* highlight the middle (pay) phase line in gold */
-  .phase-pay .nodes::before{background:var(--gold-soft);}
+  /* soft warm tint band behind the rows so the cards lift off the page.
+     --flow-gap = horizontal gutter between cards (= arrow slot width). */
+  .flow{position:relative; background:var(--ivory-soft); border:1px solid var(--line); border-radius:22px; padding:40px 36px; --flow-gap:26px;}
+  .flow-rows{display:flex; flex-direction:column;}
+  /* a flow row: cards + inter-card arrows, all centered on one another */
+  .flow-row{display:flex; align-items:center; gap:0;}
+  .flow-row.top{flex-direction:row;}            /* 1 → 2 → 3 → 4 */
+  .flow-row.bot{flex-direction:row-reverse;}    /* DOM 5,6,7,8 → visually 5(right)..8(left) */
+  /* equal card sizing so columns line up between the two rows (card5 under card4) */
+  .flow-row .step{flex:1 1 0; min-width:0;}
+
+  .step{position:relative; background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px 22px 24px; text-align:center; box-shadow:0 14px 30px -22px rgba(27,42,74,.35);}
+  .step-ic{width:54px; height:54px; margin:0 auto 16px; position:relative; display:flex; align-items:center; justify-content:center;}
+  .step-ic svg{width:34px; height:34px; stroke:var(--navy); stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+  /* subtle accent badge behind the icon, echoing the reference's circle/check */
+  .step-ic::before{content:""; position:absolute; right:2px; top:-2px; width:20px; height:20px; border-radius:50%; background:rgba(195,154,63,.16); z-index:0;}
+  .step .step-no{display:block; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:7px;}
+  .step b{display:block; font-family:'Lora',Georgia,serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.22;}
+  .step span{display:block; font-size:15px; color:var(--ink); line-height:1.4; margin-top:5px;}
+
+  /* payment steps (4 & 6) — gold treatment so the "fee vs. direct" contrast reads */
+  .step.pay{border-color:var(--gold-soft); box-shadow:0 14px 30px -20px rgba(195,154,63,.55);}
+  .step.pay .step-ic svg{stroke:var(--gold);}
+  .step.pay .step-ic::before{background:rgba(195,154,63,.3);}
+  .step.pay .step b{color:var(--navy);}
+
+  /* serpentine connector arrows — bold gold chevrons sitting in the gutters.
+     Each arrow is a flex child occupying the gutter slot; align-items:center on
+     the row keeps it vertically centered on the cards automatically. */
+  .flow-arrow{flex:0 0 var(--flow-gap); align-self:center; display:flex; align-items:center; justify-content:center; color:var(--gold); pointer-events:none;}
+  .flow-arrow svg{width:24px; height:24px; stroke:currentColor; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+  /* row-reverse flips the chevrons too, so bottom-row arrows already point left */
+
+  /* the wrap (4 → 5): a clear DOWN arrow on the right column, between the rows */
+  .flow-down{display:flex; justify-content:flex-end; align-items:center; height:var(--flow-gap); margin:6px 0;}
+  /* center the arrow over the right column: a box one card wide, arrow centered */
+  .flow-down i{flex:0 0 calc((100% - 3*var(--flow-gap)) / 4); display:flex; align-items:center; justify-content:center; color:var(--gold);}
+  .flow-down svg{width:24px; height:24px; stroke:currentColor; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round;}
 
   /* Comparison */
   .compare{margin-top:30px; background:var(--ivory-soft); border:1px solid var(--line); border-radius:18px; padding:34px 40px;}
@@ -127,15 +148,24 @@
     .fee-block{grid-template-columns:1fr; gap:28px; padding:30px 26px;}
     .compare{padding:28px 26px;}
   }
-  /* Roadmap mobile reflow: 3 phases stack as compact blocks,
-     each keeping its 2 nodes on a short horizontal segment (no vertical timeline) */
-  @media(max-width:600px){
-    .road{grid-template-columns:1fr; row-gap:32px;}
-    .phase-lab{margin-bottom:14px;}
-    /* drop the cross-phase connector — each block is its own mini road */
-    .phase:not(:last-child) .nodes::after{display:none;}
-    .node b{font-size:19px;}
-    .node span{font-size:16px;}
+  /* Flow tablet reflow (<900px): collapse both rows into one natural 2-col grid
+     in reading order 1..8; drop the serpentine arrows (only valid 4-wide) */
+  @media(max-width:900px){
+    .flow{padding:32px 24px;}
+    .flow-rows{display:grid; grid-template-columns:repeat(2,1fr); gap:24px 20px;}
+    .flow-row{display:contents;}            /* steps become direct grid items */
+    .flow-row .step{flex:none;}
+    .flow-arrow, .flow-down{display:none;}
+  }
+  /* Flow mobile reflow (≤520px): tighter 2-col card grid, no arrows */
+  @media(max-width:520px){
+    .flow{padding:24px 16px; border-radius:18px;}
+    .flow-rows{gap:16px 14px;}
+    .step{padding:22px 14px 20px; border-radius:16px;}
+    .step-ic{width:46px; height:46px; margin-bottom:12px;}
+    .step-ic svg{width:30px; height:30px;}
+    .step b{font-size:19px;}
+    .step span{font-size:15px;}
   }
   @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
@@ -149,9 +179,9 @@
     <a href="index.html#how">How it works</a>
     <a href="medical.html">Medical</a>
     <a href="experience.html">Experience</a>
+    <a href="pricing.html" class="active">Pricing</a>
     <a href="our-story.html">Our story</a>
     <a href="faq.html">FAQ</a>
-    <a href="pricing.html" class="active">Pricing</a>
   </div>
   <div class="nav-actions">
     <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
@@ -191,39 +221,95 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS — HORIZONTAL ROADMAP -->
-  <section class="sec">
+  <!-- HOW IT WORKS — SERPENTINE 4×2 PROCESS FLOW -->
+  <section class="sec" style="max-width:1080px;">
     <div class="sec-h">
       <span class="label">How it works</span>
       <h2>Your journey, start to finish.</h2>
     </div>
     <div class="roadmap">
-      <div class="road">
+      <div class="flow">
+        <div class="flow-rows">
 
-        <div class="phase">
-          <div class="phase-lab">Before you go</div>
-          <div class="nodes">
-            <div class="node"><span class="dot"></span><b>Plan</b><span>your care &amp; trip</span></div>
-            <div class="node"><span class="dot"></span><b>Reserve</b><span>free</span></div>
+          <!-- ROW A — steps 1 → 4, left to right. Arrows are flex children. -->
+          <div class="flow-row top">
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3h6v3H9z"/><path d="M8 11h8M8 15h5"/></svg></span>
+              <span class="step-no">Step 1</span>
+              <b>Plan your trip</b>
+              <span>your care &amp; dates</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/></svg></span>
+              <span class="step-no">Step 2</span>
+              <b>Reserve</b>
+              <span>free</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="6"/><path d="M9.5 10l1.8 1.8L15 8"/><path d="M8.5 15l-1.6 5 5.1-2.4L17 20l-1.5-5"/></svg></span>
+              <span class="step-no">Step 3</span>
+              <b>Mosim confirms</b>
+              <span>care &amp; plan locked</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step pay">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span>
+              <span class="step-no">Step 4 · Payment</span>
+              <b>Pay the fee</b>
+              <span>$1,200 · one fee to Mosim</span>
+            </div>
           </div>
-        </div>
 
-        <div class="phase phase-pay">
-          <div class="phase-lab">Pay</div>
-          <div class="nodes">
-            <div class="node pay"><span class="dot"></span><b>Pay Mosim</b><span>$1,200 · one fee</span></div>
-            <div class="node pay"><span class="dot"></span><b>Book direct</b><span>no markup</span></div>
+          <!-- WRAP — down arrow on the right column, connecting step 4 → step 5 -->
+          <div class="flow-down" aria-hidden="true"><i><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></i></div>
+
+          <!-- ROW B — DOM order 5,6,7,8; row-reverse renders 5(right) … 8(left).
+               Arrows point left after the reverse flip. -->
+          <div class="flow-row bot">
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4 18-7z"/></svg></span>
+              <span class="step-no">Step 5</span>
+              <b>Travel links sent</b>
+              <span>hotel &amp; flight options</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step pay">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l7-4 7 4v13"/><path d="M4 21h16M9 21v-5h6v5M9 12h.01M15 12h.01"/></svg></span>
+              <span class="step-no">Step 6 · Payment</span>
+              <b>Book direct</b>
+              <span>no markup — paid to vendors</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2.4"/><path d="M12 7.4l-2 5 1.5 1.5V21M12 7.4l2.4 4.6L17 13M10 12.4L7 14"/></svg></span>
+              <span class="step-no">Step 7</span>
+              <b>Beside you in Korea</b>
+              <span>every appointment</span>
+            </div>
+
+            <span class="flow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+
+            <div class="step">
+              <span class="step-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg></span>
+              <span class="step-no">Step 8</span>
+              <b>Home again</b>
+              <span>door to door</span>
+            </div>
           </div>
-        </div>
 
-        <div class="phase">
-          <div class="phase-lab">Travel</div>
-          <div class="nodes">
-            <div class="node"><span class="dot"></span><b>Beside you</b><span>in Korea</span></div>
-            <div class="node"><span class="dot"></span><b>Home</b><span>landing to flight home</span></div>
-          </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -261,7 +347,7 @@
 <footer><div class="wrap foot-in">
   <a href="index.html" class="brand" style="font-size:21px;">Mosim<span class="dot">.</span></a>
   <div class="foot-links">
-    <a href="index.html#how">How it works</a><a href="medical.html">Medical</a><a href="experience.html">Experience</a><a href="our-story.html">Our story</a><a href="faq.html">FAQ</a><a href="pricing.html">Pricing</a><a href="terms.html">Terms</a><a href="signin.html">Sign in</a>
+    <a href="index.html#how">How it works</a><a href="medical.html">Medical</a><a href="experience.html">Experience</a><a href="pricing.html">Pricing</a><a href="our-story.html">Our story</a><a href="faq.html">FAQ</a><a href="terms.html">Terms</a><a href="signin.html">Sign in</a>
   </div>
 </div></footer>
 
