@@ -7,10 +7,17 @@ create table if not exists public.profiles (
   name            text,
   phone           text,
   language        text default 'en',
-  origin_country  text,
+  origin_country  text,                  -- ISO-2 code (e.g. 'US')
+  city            text,
+  emergency_name  text,
+  emergency_phone text,
   created_at      timestamptz default now(),
   updated_at      timestamptz default now()
 );
+-- (added 2026-06-10 for the richer Profile tab; applied via dashboard)
+alter table public.profiles add column if not exists city            text;
+alter table public.profiles add column if not exists emergency_name  text;
+alter table public.profiles add column if not exists emergency_phone text;
 
 -- 2) itineraries (saved 7-day plans)
 create table if not exists public.itineraries (
