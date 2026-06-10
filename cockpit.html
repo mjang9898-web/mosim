@@ -399,7 +399,7 @@
   async function loadLeads() {
     dash.innerHTML = '<div class="empty">Loading…</div>';
     let r;
-    try { r = await fetch('/api/admin/leads', { headers: { authorization: 'Bearer ' + token } }); }
+    try { r = await fetch('/api/admin/trips?action=leads', { headers: { authorization: 'Bearer ' + token } }); }
     catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
     if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; return; }
     if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load leads.</div>'; return; }
@@ -437,7 +437,7 @@
     const prev = (leads.find((l) => l.id === id) || {}).status;
     sel.disabled = true;
     try {
-      const r = await fetch('/api/admin/lead-status', {
+      const r = await fetch('/api/admin/trips?action=lead-status', {
         method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
         body: JSON.stringify({ id: id, status: status })
       });
@@ -451,7 +451,7 @@
   async function loadAdmins() {
     dash.innerHTML = '<div class="empty">Loading…</div>';
     let r;
-    try { r = await fetch('/api/admin/whoami', { headers: { authorization: 'Bearer ' + token } }); }
+    try { r = await fetch('/api/admin/trips?action=whoami', { headers: { authorization: 'Bearer ' + token } }); }
     catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
     if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; return; }
     if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load admins.</div>'; return; }

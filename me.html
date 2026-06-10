@@ -107,7 +107,7 @@
       const { data: { session } } = await client.auth.getSession();
       const token = session && session.access_token;
       if (token) {
-        const r = await fetch('/api/admin/whoami', { headers: { authorization: 'Bearer ' + token } });
+        const r = await fetch('/api/admin/trips?action=whoami', { headers: { authorization: 'Bearer ' + token } });
         if (r.ok) document.getElementById('cockpit-link').style.display = '';
       }
     } catch (e) { /* never block My Page on the admin probe */ }

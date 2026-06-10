@@ -1,7 +1,11 @@
-// GET /api/admin/trips  — admin only. Lists all itineraries enriched with the
-// customer (name/email/phone), care/trip summary, and payment status.
+// /api/admin/trips — admin only. Multiplexes several cockpit admin actions via
+// ?action= to stay under the Hobby plan's 12-serverless-function cap:
+//   (default, GET) → trips list (itineraries enriched w/ customer + payment)
+//   ?action=whoami      GET  → { isAdmin, email, admins }
+//   ?action=leads       GET  → { leads } (newest-first, no `state` PII)
+//   ?action=lead-status POST → { ok } (update a lead's triage status)
 import { createClient } from '@supabase/supabase-js';
-import { getAdminUser } from '../_lib/admin.js';
+import { getAdminUser, adminEmails } from '../_lib/admin.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -9,13 +13,66 @@ const admin = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
   : null;
 
+const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost'];
+
 export default async function handler(req, res) {
-  if (req.method !== 'GET') { res.setHeader('Allow', 'GET'); return res.status(405).json({ error: 'Method not allowed' }); }
   if (!admin) return res.status(500).json({ error: 'Server not configured' });
 
+  const action = (req.query && req.query.action) || '';
+
+  // Method gate per action (default/whoami/leads = GET, lead-status = POST)
+  const wantsPost = action === 'lead-status';
+  const allowed = wantsPost ? 'POST' : 'GET';
+  if (req.method !== allowed) { res.setHeader('Allow', allowed); return res.status(405).json({ error: 'Method not allowed' }); }
+
+  // Same admin gate for every action.
   const me = await getAdminUser(req, admin);
   if (!me) return res.status(403).json({ error: 'Admins only' });
 
+  if (action === 'whoami') return handleWhoami(req, res, me);
+  if (action === 'leads') return handleLeads(req, res);
+  if (action === 'lead-status') return handleLeadStatus(req, res);
+  return handleTrips(req, res);
+}
+
+// --- whoami ---------------------------------------------------------------
+function handleWhoami(req, res, me) {
+  return res.status(200).json({ isAdmin: true, email: me.email, admins: adminEmails() });
+}
+
+// --- leads (list, no `state` PII) -----------------------------------------
+async function handleLeads(req, res) {
+  try {
+    const { data, error } = await admin
+      .from('leads')
+      .select('id, created_at, name, email, origin_from, travel_when, interest, note, status')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return res.status(200).json({ leads: data });
+  } catch (e) {
+    console.error('[admin/trips?leads] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to load leads' });
+  }
+}
+
+// --- lead-status (triage update) ------------------------------------------
+async function handleLeadStatus(req, res) {
+  const { id, status } = req.body || {};
+  if (!id) return res.status(400).json({ error: 'id required' });
+  if (!LEAD_STATUSES.includes(status)) return res.status(400).json({ error: 'bad status' });
+  try {
+    const { error } = await admin.from('leads').update({ status }).eq('id', id);
+    if (error) throw error;
+    return res.status(200).json({ ok: true });
+  } catch (e) {
+    console.error('[admin/trips?lead-status] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to update status' });
+  }
+}
+
+// --- trips (default) ------------------------------------------------------
+async function handleTrips(req, res) {
   try {
     const { data: itins, error } = await admin
       .from('itineraries')
