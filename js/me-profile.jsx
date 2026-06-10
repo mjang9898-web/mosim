@@ -36,7 +36,7 @@ const COMPLETE_KEYS = ['name','phone','origin_country','city','emergency_phone']
 function MeProfile() {
   const [supa, setSupa]   = useState(null);
   const [user, setUser]   = useState(null);
-  const [form, setForm]   = useState({ name:'', phone:'', language:'en', origin_country:'', city:'', emergency_name:'', emergency_phone:'' });
+  const [form, setForm]   = useState({ name:'', phone:'', language:'en', origin_country:'', city:'', emergency_name:'', emergency_phone:'', emergency_email:'' });
   const [createdAt, setCreatedAt] = useState(null);
   const [trips, setTrips] = useState(null);   // { count, status }
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ function MeProfile() {
         setForm({
           name:data.name||'', phone:data.phone||'', language:data.language||'en',
           origin_country:data.origin_country||'', city:data.city||'',
-          emergency_name:data.emergency_name||'', emergency_phone:data.emergency_phone||''
+          emergency_name:data.emergency_name||'', emergency_phone:data.emergency_phone||'', emergency_email:data.emergency_email||''
         });
         setCreatedAt(data.created_at);
       }
@@ -79,6 +79,7 @@ function MeProfile() {
       city: form.city || null,
       emergency_name: form.emergency_name || null,
       emergency_phone: form.emergency_phone || null,
+      emergency_email: form.emergency_email || null,
       updated_at: new Date().toISOString()
     }).eq('id', user.id);
     setSaving(false);
@@ -136,6 +137,9 @@ function MeProfile() {
               <Field label="Contact phone">
                 <input value={form.emergency_phone} onChange={e => setForm({...form, emergency_phone:e.target.value})} style={inputStyle} placeholder="+1 555 987 6543" />
               </Field>
+              <Field label="Contact email">
+                <input type="email" value={form.emergency_email} onChange={e => setForm({...form, emergency_email:e.target.value})} style={inputStyle} placeholder="name@example.com" />
+              </Field>
             </div>
           </div>
         </div>
@@ -157,7 +161,8 @@ function MeProfile() {
   ];
   const emRows = [
     ['Contact name', form.emergency_name || '—'],
-    ['Contact phone', form.emergency_phone || '—']
+    ['Contact phone', form.emergency_phone || '—'],
+    ['Contact email', form.emergency_email || '—']
   ];
 
   return (

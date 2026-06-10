@@ -11,6 +11,7 @@ create table if not exists public.profiles (
   city            text,
   emergency_name  text,
   emergency_phone text,
+  emergency_email text,
   created_at      timestamptz default now(),
   updated_at      timestamptz default now()
 );
@@ -18,6 +19,7 @@ create table if not exists public.profiles (
 alter table public.profiles add column if not exists city            text;
 alter table public.profiles add column if not exists emergency_name  text;
 alter table public.profiles add column if not exists emergency_phone text;
+alter table public.profiles add column if not exists emergency_email text;
 
 -- 2) itineraries (saved 7-day plans)
 create table if not exists public.itineraries (
