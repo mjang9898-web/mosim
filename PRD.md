@@ -34,7 +34,9 @@ Result — 7일 일정  (result.html) AI 생성된 일정 + 컨시어지 후속 
 ## 3-a. Concierge fee payment (split payment)
 
 After the funnel produces an itinerary on `result.html`, a logged-in user can pay the
-Mosim **concierge fee** (`$1,200 × group size`, adjustable per trip). Payment uses a
+Mosim **concierge fee** (`$1,200 per traveler · one-week (7-day) trip · prorated to the
+actual number of days`, ≈ $1,200 × group size for a standard week, adjustable per trip).
+Payment uses a
 shareable, **login-free** page `/pay?g=<token>` backed by a per-itinerary *payment group*
 that tracks total / paid / balance. Anyone with the link can pay part or all of the
 remaining balance via **PayPal** until the balance is $0 (e.g. an organizer pays for one
@@ -87,7 +89,7 @@ Design spec: `docs/superpowers/specs/2026-05-29-split-payment-design.md`
 - **JSX 프로토타입은 정적**: 원본 Claude Design 컴포넌트들이 useState 거의 없음. `interactive.js`가 클래스 토글 + DOM 스크랩으로 선택값 캡처. 견고성 필요 시 Next.js 재구현
 - **이미지 라이선스 미확보**: `assets/airlines/`, `assets/hotels/` 는 placeholder. 정식 런칭 전 교체
 - **언어 일관성 미정**: 결과 페이지만 한국어, 나머지 영어. 타깃이 영미권이라면 결과도 영어로 통일 검토
-- **결제 범위**: 컨시어지 수수료(`$1,200 × 인원`)는 `/pay?g=<token>` 페이지에서 PayPal로 분담 결제. 항공·호텔·의료 실비는 고객이 벤더에게 직접 결제 — Mosim 범위 밖. 자세한 설계는 §3-a 참고
+- **결제 범위**: 컨시어지 수수료(`인당 $1,200 · 1주(7일) 기준 · 실제 일수에 비례 prorate`, 표준 1주 기준 ≈ `$1,200 × 인원`)는 `/pay?g=<token>` 페이지에서 PayPal로 분담 결제. 항공·호텔·의료 실비는 고객이 벤더에게 직접 결제 — Mosim 범위 밖. 자세한 설계는 §3-a 참고
 
 ## 7-b. 예약 → 결제 → 여행 부킹 (2026-06-08 확장, 승인됨)
 
@@ -98,6 +100,17 @@ AI 일정 이후의 인게이지먼트/부킹 단계. 컨시어지 수수료-onl
 - **인건비**: 사람은 ②(예약한 진짜 의향 고객)부터만 투입 — 모든 방문자 아님.
 - **Travel bookings(Phase 2)**: ⓐ Mosim이 호텔·항공 링크 게시→고객 직접 결제, ⓑ 고객 직접 부킹 후 확인서 업로드(Supabase Storage). `bookings` 테이블 신설.
 - **Phase 1(지금)**: Reserve 액션 + 상태 흐름 + My Page 표시 + 기존 결제 연결(새 인프라 0). **Phase 2**: Travel bookings + 업로드 + cockpit 링크 게시.
+
+## 7-c. 정보성 페이지 (funnel 외)
+
+Funnel 단계 밖의 정적 정보 페이지. 같은 콘텐츠-페이지 chrome(Warm Trust, 공유 nav/footer) 사용.
+
+- `faq.html` — 자주 묻는 질문, `medical.html` — 진료 분야/시술별 가격, `experience.html`,
+  `our-story.html`, `terms.html`.
+- **`pricing.html` (2026-06-10 추가)** — 컨시어지 수수료를 funnel 진입 전에 공개하는 가격
+  안내 페이지. 캐노니컬 수치: `인당 $1,200 · 1주(7일) 기준 · 실제 일수 prorate(≈ $170/일)`,
+  포함 항목 6종, 한국 vs 미국 의료비 예시(~$12,800 vs ~$37,500). 환불/취소 정책은
+  중복하지 않고 `terms.html`이 소유. nav/footer에 "Pricing" 링크(FAQ 옆)로 전 콘텐츠 페이지에 노출.
 
 ## 8. 참고
 
