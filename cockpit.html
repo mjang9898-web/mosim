@@ -374,11 +374,68 @@
   }
 
   // ── Marketing view (placeholder) ──
-  function renderMarketing() {
-    dash.innerHTML = '<div class="placeholder">'
-      + '<h2>Marketing — coming soon</h2>'
-      + '<p>Dashboards and tools land here after the marketing-tool research wraps up.</p>'
+  async function renderMarketing() {
+    dash.innerHTML = '<div class="empty">Loading analytics…</div>';
+    let a;
+    try {
+      const r = await fetch('/api/admin/trips?action=analytics&days=30', { headers: { authorization: 'Bearer ' + token } });
+      if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.detail || e.error || ('HTTP ' + r.status)); }
+      a = await r.json();
+    } catch (e) {
+      dash.innerHTML = '<div class="empty">Could not load analytics.<div style="font-size:13px;color:#999;margin-top:6px">' + esc(String(e.message || e)) + '</div></div>';
+      return;
+    }
+    const n = (x) => Number(x || 0).toLocaleString();
+    const ph = 'https://us.posthog.com/project/463716';
+
+    // overview cards
+    let html = '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px">'
+      + '<div style="font-size:13px;color:var(--ink-3)">Anonymous pageviews · last ' + a.days + ' days · no personal or medical data</div>'
+      + '<a href="' + ph + '" target="_blank" rel="noopener" style="font-size:13px;color:var(--gold);font-weight:600">Deep dive in PostHog →</a></div>';
+    html += '<div class="cards">'
+      + '<div class="card"><div class="label">Pageviews</div><div class="big">' + n(a.overview.pageviews) + '</div></div>'
+      + '<div class="card"><div class="label">Visitors</div><div class="big">' + n(a.overview.visitors) + '</div></div>'
       + '</div>';
+
+    // funnel
+    const top = a.funnel[0] ? a.funnel[0].visitors : 0;
+    html += '<div class="card" style="margin-bottom:24px"><div class="label" style="margin-bottom:14px">Planner funnel — where visitors drop off</div>';
+    if (top === 0) {
+      html += '<div style="color:var(--ink-3);font-size:14px">No one has entered the planner yet in this window. As traffic comes in, each step fills here.</div>';
+    } else {
+      a.funnel.forEach((s, i) => {
+        const pct = top ? Math.round((s.visitors / top) * 100) : 0;
+        const prev = i > 0 ? a.funnel[i - 1].visitors : null;
+        const drop = (prev != null && prev > 0) ? Math.round((1 - s.visitors / prev) * 100) : null;
+        html += '<div style="display:flex;align-items:center;gap:12px;padding:7px 0">'
+          + '<div style="width:140px;flex:none;font-size:14px;color:var(--ink-2)">' + esc(s.step) + '</div>'
+          + '<div style="flex:1;background:#F1EADC;border-radius:6px;height:24px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:var(--navy);border-radius:6px;min-width:2px"></div></div>'
+          + '<div style="width:120px;flex:none;text-align:right;font-size:14px"><b style="color:var(--navy)">' + n(s.visitors) + '</b>'
+          + (drop != null && drop > 0 ? ' <span style="color:#A4452F;font-size:12px">↓' + drop + '%</span>' : '')
+          + '</div></div>';
+      });
+    }
+    html += '</div>';
+
+    // sources
+    html += '<div class="card"><div class="label" style="margin-bottom:10px">Top traffic sources</div>';
+    if (!a.sources.length) {
+      html += '<div style="color:var(--ink-3);font-size:14px">No sources yet.</div>';
+    } else {
+      html += '<table style="width:100%;border-collapse:collapse;font-size:14px">'
+        + '<thead><tr><th style="text-align:left;color:var(--ink-3);font-weight:600;padding:6px 0;border-bottom:1px solid var(--border)">Source</th>'
+        + '<th style="text-align:right;color:var(--ink-3);font-weight:600;padding:6px 0;border-bottom:1px solid var(--border)">Visitors</th>'
+        + '<th style="text-align:right;color:var(--ink-3);font-weight:600;padding:6px 0;border-bottom:1px solid var(--border)">Views</th></tr></thead><tbody>';
+      a.sources.forEach((s) => {
+        html += '<tr><td style="padding:8px 0;color:var(--navy);border-top:1px solid #F1EADC">' + esc(s.source) + '</td>'
+          + '<td style="padding:8px 0;text-align:right;border-top:1px solid #F1EADC"><b>' + n(s.visitors) + '</b></td>'
+          + '<td style="padding:8px 0;text-align:right;color:var(--ink-2);border-top:1px solid #F1EADC">' + n(s.views) + '</td></tr>';
+      });
+      html += '</tbody></table>';
+    }
+    html += '</div>';
+
+    dash.innerHTML = html;
   }
 
   // ── Members view ──
