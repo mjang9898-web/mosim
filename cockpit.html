@@ -82,8 +82,26 @@
     </div>
     <p style="color:#777; font-size:14px; margin:0 0 16px;">Post hotel/flight booking links for the customer, or view what they've uploaded.</p>
     <div id="bk-list" style="margin-bottom:16px;">Loading…</div>
+    <div style="border-top:1px solid var(--border); padding-top:14px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:600; color:#666; margin-bottom:2px;">⚡ Generate Expedia link</div>
+      <div style="font-size:12px; color:#aaa; margin-bottom:8px;">Curate for the customer — they book &amp; pay Expedia directly (familiar US brand). Auto-fills dates/guests from the trip.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:14px;">
+        <select id="xp-type"><option value="hotel">Hotel</option><option value="flight">Flight</option></select>
+        <span id="xp-hotel-fields" style="display:inline-flex;gap:8px;align-items:center">
+          <input id="xp-dest" value="Seoul, South Korea" style="width:150px">
+        </span>
+        <span id="xp-flight-fields" style="display:none;gap:8px;align-items:center">
+          <input id="xp-from" placeholder="From (e.g. JFK)" style="width:120px">
+          <input id="xp-to" value="ICN" style="width:64px">
+        </span>
+        <label style="color:#888">In <input id="xp-ci" type="date"></label>
+        <label style="color:#888">Out <input id="xp-co" type="date"></label>
+        <label style="color:#888">Guests <input id="xp-adults" type="number" min="1" value="2" style="width:52px"></label>
+        <button id="xp-gen" class="addbtn">Generate &amp; add</button>
+      </div>
+    </div>
     <div style="border-top:1px solid var(--border); padding-top:14px;">
-      <div style="font-size:13px; font-weight:600; color:#666; margin-bottom:8px;">Add a booking link</div>
+      <div style="font-size:13px; font-weight:600; color:#666; margin-bottom:8px;">Or add any link manually</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
         <select id="bk-newcat"><option value="stay">Hotel</option><option value="flight">Flight</option><option value="other">Other</option></select>
         <input id="bk-newlabel" placeholder="Label (e.g. Lotte Hotel Seoul)">
@@ -216,13 +234,75 @@
   document.getElementById('bk-close').addEventListener('click', () => { modal.style.display = 'none'; });
   modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
   document.getElementById('bk-add').addEventListener('click', addLink);
+  document.getElementById('xp-gen').addEventListener('click', generateExpedia);
+  document.getElementById('xp-type').addEventListener('change', toggleXpType);
+
+  // Expedia deep-link builder. affiliateParam stays '' until Mosim enrolls in the
+  // Expedia Travel Creator Program (affiliates.expediagroup.com); set it there to start
+  // earning ~4% hotel commission. Links work as plain Expedia links until then.
+  const EXPEDIA = {
+    base: 'https://www.expedia.com',
+    affiliateParam: '',  // e.g. 'clickref=mosim&...' once enrolled
+    hotel: function (dest, ci, co, adults) {
+      const p = new URLSearchParams();
+      p.set('destination', dest);
+      if (ci) p.set('startDate', ci);
+      if (co) p.set('endDate', co);
+      p.set('adults', String(adults || 2));
+      p.set('rooms', '1');
+      return this._wrap(this.base + '/Hotel-Search?' + p.toString());
+    },
+    flight: function (from, to, dep, ret, adults) {
+      const md = (iso) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[2] + '/' + m[3] + '/' + m[1] : ''; };
+      const leg1 = 'from:' + from + ',to:' + to + ',departure:' + md(dep) + 'TANYT';
+      const leg2 = 'from:' + to + ',to:' + from + ',departure:' + md(ret) + 'TANYT';
+      const qs = 'trip=roundtrip&leg1=' + encodeURIComponent(leg1) + '&leg2=' + encodeURIComponent(leg2)
+        + '&passengers=adults:' + (adults || 1) + '&mode=search';
+      return this._wrap(this.base + '/Flights-Search?' + qs);
+    },
+    _wrap: function (url) { return this.affiliateParam ? url + '&' + this.affiliateParam : url; }
+  };
+
+  function toggleXpType() {
+    const flight = document.getElementById('xp-type').value === 'flight';
+    document.getElementById('xp-hotel-fields').style.display = flight ? 'none' : 'inline-flex';
+    document.getElementById('xp-flight-fields').style.display = flight ? 'inline-flex' : 'none';
+  }
 
   async function openBookings(id, title) {
     bkCurrentId = id;
+    const trip = trips.find((t) => t.id === id) || {};
     document.getElementById('bk-title').textContent = 'Travel bookings — ' + title;
+    // pre-fill the Expedia generator from the trip
+    document.getElementById('xp-adults').value = (trip.partySize && trip.partySize > 0) ? trip.partySize : 2;
+    const d = (trip.when && trip.when.dates) || {};
+    document.getElementById('xp-ci').value = d.start || '';
+    document.getElementById('xp-co').value = d.end || '';
     document.getElementById('bk-list').textContent = 'Loading…';
     modal.style.display = 'flex';
     await loadBk();
+  }
+
+  function generateExpedia() {
+    const type = document.getElementById('xp-type').value;
+    const ci = document.getElementById('xp-ci').value;
+    const co = document.getElementById('xp-co').value;
+    const adults = parseInt(document.getElementById('xp-adults').value, 10) || 2;
+    let url, label, category;
+    if (type === 'hotel') {
+      const dest = document.getElementById('xp-dest').value.trim() || 'Seoul, South Korea';
+      url = EXPEDIA.hotel(dest, ci, co, adults);
+      label = 'Expedia — ' + dest.split(',')[0] + ' hotels' + (ci ? ' · ' + ci : '') + ' · ' + adults + ' guests';
+      category = 'stay';
+    } else {
+      const from = document.getElementById('xp-from').value.trim().toUpperCase();
+      const to = (document.getElementById('xp-to').value.trim() || 'ICN').toUpperCase();
+      if (!from) { alert('Enter the departure airport (e.g. JFK).'); return; }
+      url = EXPEDIA.flight(from, to, ci, co, adults);
+      label = 'Expedia — ' + from + '⇄' + to + (ci ? ' · ' + ci : '');
+      category = 'flight';
+    }
+    postBookingLink(category, label, url, document.getElementById('xp-gen'));
   }
   async function loadBk() {
     const list = document.getElementById('bk-list');
@@ -244,18 +324,24 @@
       + '<span><b style="text-transform:capitalize;color:#888;font-size:12px;margin-right:8px">' + esc(b.category) + '</b>' + esc(b.label || (b.kind === 'link' ? 'Link' : 'Confirmation')) + ' <span style="color:#aaa;font-size:12px">· ' + who + '</span></span>'
       + '<span style="display:flex;gap:12px;align-items:center;flex:none">' + right + '</span></div>';
   }
+  async function postBookingLink(category, label, url, btn) {
+    if (btn) btn.disabled = true;
+    let ok = false;
+    try {
+      const r = await fetch('/api/admin/booking-link', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ itinerary_id: bkCurrentId, category: category, label: label, url: url }) });
+      if (r.ok) { ok = true; await loadBk(); }
+      else { const e = await r.json().catch(() => ({})); alert(e.error || 'Could not add.'); }
+    } catch (e) { alert('Could not add.'); }
+    if (btn) btn.disabled = false;
+    return ok;
+  }
   async function addLink() {
     const cat = document.getElementById('bk-newcat').value;
     const label = document.getElementById('bk-newlabel').value.trim();
     const url = document.getElementById('bk-newurl').value.trim();
     if (!url) { alert('Enter a URL (https://...).'); return; }
-    const btn = document.getElementById('bk-add'); btn.disabled = true;
-    try {
-      const r = await fetch('/api/admin/booking-link', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ itinerary_id: bkCurrentId, category: cat, label: label, url: url }) });
-      if (r.ok) { document.getElementById('bk-newlabel').value = ''; document.getElementById('bk-newurl').value = ''; await loadBk(); }
-      else { const e = await r.json().catch(() => ({})); alert(e.error || 'Could not add.'); }
-    } catch (e) { alert('Could not add.'); }
-    btn.disabled = false;
+    const ok = await postBookingLink(cat, label, url, document.getElementById('bk-add'));
+    if (ok) { document.getElementById('bk-newlabel').value = ''; document.getElementById('bk-newurl').value = ''; }
   }
   async function delLink(id) {
     if (!window.confirm('Delete this link?')) return;

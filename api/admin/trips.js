@@ -61,6 +61,7 @@ export default async function handler(req, res) {
         length: (st.trip && st.trip.length) || null,
         party: (st.trip && st.trip.party) || null,
         partySize: (st.trip && st.trip.partySize) || null,
+        when: (st.trip && st.trip.when) || null,   // { mode, dates:{start,end}, season } — for pre-filling booking links
         days: Array.isArray(it.schedule) ? it.schedule.length : null,
         payment: pg ? { total: Number(pg.total_amount), paid: Number(pg.amount_paid), status: pg.status, token: pg.share_token } : null
       };
