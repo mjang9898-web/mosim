@@ -53,18 +53,54 @@
   .legend span{display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink);}
   .legend i{width:11px; height:11px; border-radius:3px; display:inline-block;}
 
-  .cal{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
-  .cell{background:#fff; border:1px solid var(--line); border-radius:12px; padding:15px 15px 16px; min-height:158px; border-top:3px solid var(--line);}
-  .cell .d{font-size:11px; font-weight:600; letter-spacing:1px; color:var(--ink-2); text-transform:uppercase;}
-  .cell h3{font-size:18px; font-weight:600; color:var(--navy); margin:7px 0 4px; line-height:1.18;}
-  .cell .cat{font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; margin-bottom:11px;}
-  .slot{font-size:14px; color:var(--ink); line-height:1.4; padding:3px 0; border-top:1px solid #F0EADC;}
-  .slot b{color:var(--ink-2); font-weight:600;}
-  .care{border-top-color:var(--care);} .care .cat{color:var(--care);}
-  .rest{border-top-color:var(--rest);} .rest .cat{color:var(--rest);}
-  .explore{border-top-color:var(--explore);} .explore .cat{color:var(--explore);}
-  .travel{border-top-color:var(--travel);} .travel .cat{color:var(--travel);}
-  .cal-note{text-align:center; color:var(--ink-2); font-size:15px; font-style:italic; margin-top:24px;}
+  /* category colour tokens reused by calendar cells, pills, accordion accents */
+  .care .cat{color:var(--care);} .rest .cat{color:var(--rest);}
+  .explore .cat{color:var(--explore);} .travel .cat{color:var(--travel);}
+
+  /* ---- Week calendar (overview, date mode only) ---- */
+  .calwrap{max-width:920px; margin:0 auto;}
+  .cal-month{text-align:center; font-family:'Lora',serif; font-size:20px; font-weight:600; color:var(--navy); margin:0 0 14px;}
+  .weekgrid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:8px;}
+  .wd{font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink-2); text-align:center; padding-bottom:4px;}
+  .ccell{background:var(--ivory-soft); border:1px solid var(--line); border-radius:10px; padding:8px 8px 10px; min-height:80px; display:flex; flex-direction:column; gap:3px; min-width:0; overflow:hidden;}
+  .ccell.empty{background:transparent; border:1px solid transparent;}
+  .ccell.muted{background:var(--ivory-soft); opacity:.55;}
+  .ccell .dnum{font-size:14px; font-weight:700; color:var(--ink-2); line-height:1;}
+  .ccell.trip{background:#fff; cursor:pointer; border-top:3px solid var(--line); transition:box-shadow .15s, transform .15s;}
+  .ccell.trip:hover{box-shadow:0 10px 24px -16px rgba(27,42,74,.45); transform:translateY(-1px);}
+  .ccell.trip:focus-visible{outline:2px solid var(--navy); outline-offset:2px;}
+  .ccell.trip .dnum{color:var(--navy);}
+  .ccell .ctitle2{font-size:13px; font-weight:600; color:var(--navy); line-height:1.2; margin-top:1px; min-width:0; overflow:hidden; text-overflow:ellipsis; word-break:break-word; overflow-wrap:anywhere;}
+  .ccell.trip.care{border-top-color:var(--care);} .ccell.trip.rest{border-top-color:var(--rest);}
+  .ccell.trip.explore{border-top-color:var(--explore);} .ccell.trip.travel{border-top-color:var(--travel);}
+  .ccell.trip.open-day{border-top-color:var(--travel); border-style:dashed;}
+  .ccell .dn{font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--ink-2); margin-top:auto;}
+
+  /* ---- Per-day accordion (detail) ---- */
+  .accord{max-width:920px; margin:36px auto 0; display:flex; flex-direction:column; gap:12px;}
+  .day{background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; border-left:4px solid var(--line);}
+  .day.care{border-left-color:var(--care);} .day.rest{border-left-color:var(--rest);}
+  .day.explore{border-left-color:var(--explore);} .day.travel{border-left-color:var(--travel);}
+  .day.open-day{border-left-color:var(--travel); border-left-style:dashed;}
+  .day-h{width:100%; background:none; border:none; text-align:left; cursor:pointer; display:flex; align-items:center; gap:14px; padding:20px 22px; font-family:'Inter',sans-serif;}
+  .day-h:hover{background:var(--ivory-soft);}
+  .day-h .dlab{font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink-2); flex:none;}
+  .day-h .dttl{font-family:'Lora',serif; font-size:21px; font-weight:600; color:var(--navy); flex:1; line-height:1.2;}
+  .day-h .pill{flex:none; font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 12px; border-radius:999px; background:var(--ivory-soft); border:1px solid var(--line);}
+  .pill.care{color:var(--care);} .pill.rest{color:var(--rest);} .pill.explore{color:var(--explore);} .pill.travel{color:var(--travel);}
+  .day-h .chev{flex:none; width:20px; height:20px; color:var(--ink-2); transition:transform .2s;}
+  .day-h[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .day-b{padding:0 22px 22px; border-top:1px solid var(--line);}
+  .day-b.collapsed{display:none;}
+  .drow{font-size:19px; color:var(--navy); line-height:1.5; padding:12px 0; border-bottom:1px solid #F0EADC; display:flex; gap:14px;}
+  .drow:last-child{border-bottom:none;}
+  .drow .dt{flex:none; min-width:96px; font-weight:600; color:var(--gold);}
+  .drow .dp{color:var(--ink);}
+  .day-b .open-msg{font-size:19px; color:var(--ink); line-height:1.6; padding:16px 0; font-style:italic;}
+  .meals{margin-top:14px; padding-top:16px; border-top:1px solid var(--line);}
+  .meals-h{font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--care); margin-bottom:6px;}
+  .meals .drow .dp{color:var(--navy);}
+  .cal-note{text-align:center; color:var(--ink-2); font-size:15px; font-style:italic; margin-top:28px;}
 
   .pricing{background:var(--ivory-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:center;}
@@ -116,7 +152,21 @@
   @media(max-width:600px){ .nav-save{display:none;} }
   @media(max-width:560px){ .rb-label{display:none;} .rb-in{justify-content:center;} .rb-btn{width:100%;} }
 
-  @media(max-width:760px){ .head h1{font-size:36px;} .cal{grid-template-columns:repeat(2,1fr);} .fee-block{grid-template-columns:1fr; gap:18px;} .fee-block ul{columns:1;} }
+  @media(max-width:760px){ .head h1{font-size:36px;} .fee-block{grid-template-columns:1fr; gap:18px;} .fee-block ul{columns:1;} }
+  @media(max-width:560px){
+    .weekgrid{gap:4px;}
+    .ccell{min-height:58px; padding:5px 4px 6px; border-radius:7px;}
+    .ccell .dnum{font-size:12px;}
+    .ccell .ctitle2{font-size:10px; line-height:1.15; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;}
+    .ccell .dn{display:none;}
+    .wd{font-size:10px; letter-spacing:0;}
+    .day-h{flex-wrap:wrap; gap:8px 12px; padding:16px 18px;}
+    .day-h .dttl{font-size:19px; flex-basis:100%; order:3;}
+    .day-h .chev{order:2; margin-left:auto;}
+    .day-b{padding:0 18px 18px;}
+    .drow{flex-direction:column; gap:2px;}
+    .drow .dt{min-width:0;}
+  }
 </style>
 <script src="js/analytics.js"></script>
 </head>
@@ -151,7 +201,11 @@
     <span><i style="background:var(--explore)"></i>Explore</span>
     <span><i style="background:var(--travel)"></i>Travel</span>
   </div>
-  <div class="cal" id="cal"></div>
+  <div class="calwrap" id="calwrap" hidden>
+    <div class="cal-month" id="calMonth"></div>
+    <div class="weekgrid" id="weekgrid"></div>
+  </div>
+  <div class="accord" id="accord"></div>
   <div class="cal-note">Your concierge fine-tunes every day with you — nothing is rushed, nothing is fixed.</div>
 </div></div>
 
@@ -242,7 +296,15 @@
     var care = (state.care && state.care.needs) || [];
     if (care.length) chips.push(care.map(function (k) { return CARE[k] || k; }).join(' + '));
     var trip = state.trip || {};
-    if (LENGTH[trip.length]) chips.push(LENGTH[trip.length]); else chips.push('Flexible length');
+    var tripWhen = trip.when || {};
+    // Date or season context up front
+    if (tripWhen.mode === 'dates' && tripWhen.dates && tripWhen.dates.start) {
+      // a real date chip is added by the calendar; show the length bucket here
+      if (LENGTH[trip.length]) chips.push(LENGTH[trip.length]); else chips.push('Flexible length');
+    } else {
+      if (tripWhen.season) chips.push(tripWhen.season.charAt(0).toUpperCase() + tripWhen.season.slice(1));
+      if (LENGTH[trip.length]) chips.push(LENGTH[trip.length]); else chips.push('Flexible length');
+    }
     if (PARTY[trip.party]) chips.push(PARTY[trip.party]);
     var comfort = state.comfort || {};
     if (PACE[comfort.pace]) chips.push(PACE[comfort.pace]);
@@ -250,19 +312,189 @@
     var recapEl = document.getElementById('recap');
     chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
 
-    // ---- itinerary renderer (the shape /api/schedule will return) ----
-    function renderItinerary(days) {
-      var cal = document.getElementById('cal');
-      cal.innerHTML = '';
-      days.forEach(function (d) {
-        var cell = document.createElement('div');
-        cell.className = 'cell ' + (d.cat || 'explore');
-        var slots = (d.slots || []).map(function (s) {
-          return '<div class="slot"><b>' + s.t + '</b> · ' + s.place + '</div>';
-        }).join('');
-        cell.innerHTML = '<div class="d">' + d.day + '</div><h3>' + d.title + '</h3><div class="cat">' + d.cat + '</div>' + slots;
-        cal.appendChild(cell);
+    // ===================================================================
+    //  Date-aware calendar + per-day accordion (Phase 1, client-side only)
+    // ===================================================================
+    var CATS = { care:1, rest:1, explore:1, travel:1 };
+    var MEAL_RE = /breakfast|lunch|dinner|brunch|meal|market|restaurant|food|tasting|hanjeongsik|bbq|caf[eé]/i;
+    var WD_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var WD_FULL  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var MON_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+
+    // Parse an ISO 'YYYY-MM-DD' as a LOCAL date (avoid UTC off-by-one).
+    function parseISO(s) {
+      if (typeof s !== 'string') return null;
+      var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!m) return null;
+      var d = new Date(+m[1], +m[2] - 1, +m[3]);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function addDays(d, n) { var r = new Date(d.getFullYear(), d.getMonth(), d.getDate()); r.setDate(r.getDate() + n); return r; }
+    function sameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    function daysBetweenInclusive(a, b) { return Math.round((b - a) / 86400000) + 1; }
+    function fmtLong(d) { return WD_FULL[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate(); }   // "Thursday, Jul 3"
+    function fmtShort(d) { return WD_SHORT[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate(); }   // "Thu, Jul 3"
+
+    // Heuristic: split a day's slots into meals vs. the rest.
+    function splitMeals(day) {
+      if (Array.isArray(day.meals) && day.meals.length) {
+        return { meals: day.meals.map(function (m) { return typeof m === 'string' ? { t:'', place:m } : m; }), rest: day.slots || [] };
+      }
+      var meals = [], rest = [];
+      (day.slots || []).forEach(function (s) {
+        if (MEAL_RE.test((s.t || '') + ' ' + (s.place || ''))) meals.push(s); else rest.push(s);
       });
+      return { meals: meals, rest: rest };
+    }
+
+    function slotRows(slots, isMeal) {
+      return slots.map(function (s) {
+        var t = s.t ? '<span class="dt">' + esc(s.t) + '</span>' : '';
+        return '<div class="drow">' + t + '<span class="dp">' + esc(s.place) + '</span></div>';
+      }).join('');
+    }
+
+    // Build the per-day accordion. `entries` = [{day, title, cat, date(Date|null), slots, openDay(bool)}]
+    function renderAccordion(entries) {
+      var accord = document.getElementById('accord');
+      accord.innerHTML = '';
+      entries.forEach(function (e, i) {
+        var cat = CATS[e.cat] ? e.cat : (e.openDay ? 'travel' : 'explore');
+        var open = i === 0;
+        var wrap = document.createElement('div');
+        wrap.className = 'day ' + cat + (e.openDay ? ' open-day' : '');
+        wrap.id = 'day-' + (i + 1);
+
+        var dateLabel = e.date ? (' · ' + fmtLong(e.date)) : '';
+        var header =
+          '<button class="day-h" type="button" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="day-b-' + (i + 1) + '">' +
+            '<span class="dlab">Day ' + (i + 1) + '</span>' +
+            '<span class="dttl">' + (e.date ? esc(fmtShort(e.date)) : '') + (e.date ? ' — ' : '') + esc(e.title) + '</span>' +
+            (e.openDay ? '' : '<span class="pill ' + cat + '">' + esc(cat) + '</span>') +
+            '<svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          '</button>';
+
+        var bodyInner;
+        if (e.openDay) {
+          bodyInner = '<div class="open-msg">Open day — your concierge tailors this around how you feel.</div>';
+        } else {
+          var sm = splitMeals(e);
+          bodyInner = slotRows(sm.rest, false);
+          if (sm.meals.length) {
+            bodyInner += '<div class="meals"><div class="meals-h">🍽 Meals</div>' + slotRows(sm.meals, true) + '</div>';
+          }
+        }
+        var body = '<div class="day-b' + (open ? '' : ' collapsed') + '" id="day-b-' + (i + 1) + '">' + bodyInner + '</div>';
+
+        wrap.innerHTML = header + body;
+        accord.appendChild(wrap);
+
+        var btn = wrap.querySelector('.day-h');
+        var bod = wrap.querySelector('.day-b');
+        btn.addEventListener('click', function () {
+          var nowOpen = btn.getAttribute('aria-expanded') !== 'true';
+          btn.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+          bod.classList.toggle('collapsed', !nowOpen);
+        });
+      });
+    }
+
+    function openDay(i) {
+      var btn = document.querySelector('#day-' + i + ' .day-h');
+      var bod = document.querySelector('#day-b-' + i);
+      if (btn && bod) { btn.setAttribute('aria-expanded', 'true'); bod.classList.remove('collapsed'); }
+      var el = document.getElementById('day-' + i);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Week calendar overview — only when we have real dates.
+    function renderCalendar(entries, start, lastTripDay) {
+      var wrap = document.getElementById('calwrap');
+      var grid = document.getElementById('weekgrid');
+      var monthEl = document.getElementById('calMonth');
+      grid.innerHTML = '';
+
+      // span from the Sunday of start's week to the Saturday of the last trip day's week
+      var gridStart = addDays(start, -start.getDay());
+      var gridEnd = addDays(lastTripDay, 6 - lastTripDay.getDay());
+
+      // month label (range)
+      var mLabel = MON_FULL[start.getMonth()] + ' ' + start.getFullYear();
+      if (start.getMonth() !== lastTripDay.getMonth() || start.getFullYear() !== lastTripDay.getFullYear()) {
+        var y2 = lastTripDay.getFullYear() === start.getFullYear() ? '' : ' ' + lastTripDay.getFullYear();
+        mLabel = MON_FULL[start.getMonth()] + (lastTripDay.getFullYear() !== start.getFullYear() ? ' ' + start.getFullYear() : '') +
+                 ' – ' + MON_FULL[lastTripDay.getMonth()] + ' ' + lastTripDay.getFullYear();
+      }
+      monthEl.textContent = mLabel;
+
+      WD_SHORT.forEach(function (w) { var h = document.createElement('div'); h.className = 'wd'; h.textContent = w; grid.appendChild(h); });
+
+      // map date -> entry index for quick lookup
+      var byDate = entries.map(function (e, i) { return { e:e, i:i }; }).filter(function (x) { return x.e.date; });
+
+      var cur = gridStart;
+      while (cur <= gridEnd) {
+        var cell = document.createElement('div');
+        var match = null;
+        for (var k = 0; k < byDate.length; k++) { if (sameDay(byDate[k].e.date, cur)) { match = byDate[k]; break; } }
+        if (match) {
+          var en = match.e, idx = match.i + 1;
+          var cat = CATS[en.cat] ? en.cat : (en.openDay ? 'travel' : 'explore');
+          cell.className = 'ccell trip ' + cat + (en.openDay ? ' open-day' : '');
+          cell.setAttribute('role', 'button');
+          cell.setAttribute('tabindex', '0');
+          cell.setAttribute('aria-label', 'Day ' + idx + ', ' + fmtLong(en.date) + ', ' + en.title);
+          cell.innerHTML = '<span class="dnum">' + cur.getDate() + '</span><span class="ctitle2">' + esc(en.title) + '</span><span class="dn">Day ' + idx + '</span>';
+          (function (d) {
+            cell.addEventListener('click', function () { openDay(d); });
+            cell.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openDay(d); } });
+          })(idx);
+        } else {
+          // empty leading/trailing cells vs muted in-range non-trip dates (none expected, but safe)
+          cell.className = 'ccell empty';
+          cell.innerHTML = '<span class="dnum" style="color:var(--ink-2);opacity:.5">' + cur.getDate() + '</span>';
+        }
+        grid.appendChild(cell);
+        cur = addDays(cur, 1);
+      }
+      wrap.hidden = false;
+    }
+
+    // Orchestrate: map schedule + dates into entries, reconcile length, render both.
+    function renderItinerary(days, tripState) {
+      var when = (tripState && tripState.when) || {};
+      var dates = when.dates || {};
+      var start = (when.mode === 'dates') ? parseISO(dates.start) : null;
+      var end = (when.mode === 'dates') ? parseISO(dates.end) : null;
+
+      var entries;
+      if (start && end && end >= start) {
+        var rangeDays = daysBetweenInclusive(start, end);
+        var n = Math.min(days.length, rangeDays);   // clamp if schedule longer than range
+        entries = [];
+        for (var i = 0; i < rangeDays; i++) {
+          var date = addDays(start, i);
+          if (i < n) {
+            var d = days[i];
+            entries.push({ title: d.title || ('Day ' + (i + 1)), cat: d.cat, slots: d.slots || [], date: date, openDay: false });
+          } else {
+            // schedule shorter than the date range → gentle open days
+            entries.push({ title: 'Open day', cat: 'travel', slots: [], date: date, openDay: true });
+          }
+        }
+        renderAccordion(entries);
+        renderCalendar(entries, start, addDays(start, rangeDays - 1));
+      } else {
+        // flexible / no valid dates → no calendar, accordion by schedule length
+        document.getElementById('calwrap').hidden = true;
+        entries = days.map(function (d, i) {
+          return { title: d.title || ('Day ' + (i + 1)), cat: d.cat, slots: d.slots || [], date: null, openDay: false };
+        });
+        renderAccordion(entries);
+      }
     }
 
     // Fallback sample plan — used only if the AI plan from the loading screen is missing.
@@ -287,7 +519,7 @@
         if (Array.isArray(parsedPlan) && parsedPlan.length) plan = parsedPlan;
       }
     } catch (e) {}
-    renderItinerary(plan);
+    renderItinerary(plan, trip);
 
     // ---- Auto-save the plan for signed-in travelers so it lives in My Page ----
     (function () {

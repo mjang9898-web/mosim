@@ -20,6 +20,28 @@ function safePayload(state) {
   return s;
 }
 
+// If the traveler picked explicit dates, derive an exact day count so the
+// itinerary length matches the result-page calendar (Day N → real dates).
+// Defensive: any parse issue → returns '' (instruction simply omitted).
+function tripDaysInstruction(state) {
+  try {
+    const when = state && state.trip && state.trip.when;
+    if (!when || when.mode !== 'dates') return '';
+    const start = when.dates && when.dates.start;
+    const end = when.dates && when.dates.end;
+    const ISO = /^\d{4}-\d{2}-\d{2}$/;
+    if (!ISO.test(start) || !ISO.test(end)) return '';
+    const s = Date.parse(start + 'T00:00:00Z');
+    const e = Date.parse(end + 'T00:00:00Z');
+    if (!Number.isFinite(s) || !Number.isFinite(e) || e < s) return '';
+    let n = Math.round((e - s) / 86400000) + 1; // inclusive day count
+    if (!Number.isFinite(n) || n < 3 || n > 21) return ''; // clamp to sane range
+    return `This trip is exactly ${n} days (arriving ${start}, departing ${end}). Return exactly ${n} day objects in "days", Day 1 = arrival day, Day ${n} = departure day.`;
+  } catch (e) {
+    return '';
+  }
+}
+
 function extractJSON(text) {
   let t = String(text || '').trim();
   const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
@@ -62,6 +84,12 @@ export default async function handler(req, res) {
     return res.status(413).json({ error: 'State payload too large' });
   }
 
+  const daysHint = tripDaysInstruction(state);
+  const userContent =
+    'Here is the traveler’s plan. Generate their itinerary as the JSON object described.\n\n'
+    + JSON.stringify(state)
+    + (daysHint ? '\n\n' + daysHint : '');
+
   try {
     const response = await client.messages.create({
       model: MODEL,
@@ -70,7 +98,7 @@ export default async function handler(req, res) {
         { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }
       ],
       messages: [
-        { role: 'user', content: 'Here is the traveler’s plan. Generate their itinerary as the JSON object described.\n\n' + JSON.stringify(state) }
+        { role: 'user', content: userContent }
       ]
     });
 
