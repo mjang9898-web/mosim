@@ -79,6 +79,19 @@
   .card.rev .rr:first-child { border-top:none; }
   .card.rev .rr b { font-size:17px; color:var(--navy); font-weight:700; }
   .card.rev .rr.out b { color:#8a4a00; }
+  /* Finance */
+  .fin-banner { font-size:13px; color:var(--ink-3); background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:18px; }
+  .card .big.amber { color:#8a4a00; }
+  .card .big.muted { color:var(--ink-3); }
+  .fin-sec { margin-bottom:28px; }
+  .fin-sec h2 { font-size:14px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin:0 0 10px; }
+  table.trips td.num, table.trips th.num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  table.trips td.amber { color:#8a4a00; }
+  tr.fees td { color:var(--ink-3); }
+  tr.fees .fees-note { font-size:12px; color:#999; }
+  .placeholder { background:#fff; border:1px solid var(--border); border-radius:12px; padding:64px 32px; text-align:center; max-width:520px; margin:32px auto; }
+  .placeholder h2 { font-size:22px; color:var(--navy); margin:0 0 10px; }
+  .placeholder p { font-size:15px; color:var(--ink-3); margin:0; line-height:1.5; }
   .recents { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .recent { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
   .recent h3 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin:0; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--bg-soft); }
@@ -112,6 +125,8 @@
 <main>
   <div class="views" id="views">
     <button data-view="overview" class="on" type="button">Overview</button>
+    <button data-view="finance" type="button">Finance</button>
+    <button data-view="marketing" type="button">Marketing</button>
     <button data-view="members" type="button">Members</button>
     <button data-view="trips" type="button">Trips</button>
     <button data-view="leads" type="button">Leads</button>
@@ -184,7 +199,7 @@
   const fmtDate = (s) => { try { return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch (e) { return ''; } };
 
   let trips = null, filter = 'all';
-  let leads = null, admins = null, overview = null, members = null, currentView = 'overview';
+  let leads = null, admins = null, overview = null, members = null, finance = null, currentView = 'overview';
   const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US');
   const fmtDateTime = (s) => { try { return new Date(s).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}); } catch (e) { return ''; } };
 
@@ -194,6 +209,8 @@
   const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost'];
   const VIEW_META = {
     overview: { title: 'Overview', lede: 'A snapshot of members, leads, trips, and concierge revenue.' },
+    finance:  { title: 'Finance', lede: 'Concierge revenue, payment methods, the transaction ledger, and open invoices.' },
+    marketing: { title: 'Marketing', lede: 'Campaigns, channels, and growth tools.' },
     members:  { title: 'Members', lede: 'Everyone who has created an account, newest first.' },
     trips:  { title: 'Reservations &amp; trips', lede: 'Every traveler’s plan and where it stands. <b>Reserved</b> trips (highlighted) need a call within a day.' },
     leads:  { title: 'Leads', lede: 'Everyone who reached out through the site. Triage each one with a status.' },
@@ -212,6 +229,8 @@
     filtersEl.innerHTML = '';                       // status pills are Trips-only
     filtersEl.style.display = view === 'trips' ? '' : 'none';
     if (view === 'overview') { if (overview) renderOverview(); else loadOverview(); }
+    else if (view === 'finance') { if (finance) renderFinance(); else loadFinance(); }
+    else if (view === 'marketing') { renderMarketing(); }
     else if (view === 'members') { if (members) renderMembers(); else loadMembers(); }
     else if (view === 'trips') { if (trips) render(); else loadTrips(); }
     else if (view === 'leads') { if (leads) renderLeads(); else loadLeads(); }
@@ -266,6 +285,99 @@
       + '<div class="recents">'
       + '<div class="recent"><h3>Recent signups</h3>' + signups + '</div>'
       + '<div class="recent"><h3>Recent leads</h3>' + recentLeads + '</div>'
+      + '</div>';
+  }
+
+  // ── Finance view (accounting dashboard) ──
+  async function loadFinance() {
+    dash.innerHTML = '<div class="empty">Loading…</div>';
+    let r;
+    try { r = await fetch('/api/admin/trips?action=finance', { headers: { authorization: 'Bearer ' + token } }); }
+    catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
+    if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; return; }
+    if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load finance.</div>'; return; }
+    finance = (await r.json()).finance || {};
+    renderFinance();
+  }
+
+  function renderFinance() {
+    const f = finance || {};
+    const s = f.summary || {};
+    const byMethod = f.byMethod || [];
+    const fees = f.fees || {};
+    const txns = f.transactions || [];
+    const recv = f.receivables || [];
+
+    const banner = '<div class="fin-banner">Sandbox / test data — real card &amp; PayPal totals appear once live payment keys are enabled.</div>';
+
+    const cards =
+      '<div class="card"><div class="label">Collected</div><div class="big">' + usd(s.collected) + '</div>'
+        + '<div class="sub">Invoiced ' + usd(s.invoiced) + '</div></div>'
+      + '<div class="card"><div class="label">Outstanding</div><div class="big amber">' + usd(s.outstanding) + '</div>'
+        + '<div class="sub">Across open invoices</div></div>'
+      + '<div class="card"><div class="label">Refunded</div><div class="big muted">' + usd(s.refunded) + '</div>'
+        + '<div class="sub">Returned to customers</div></div>'
+      + '<div class="card"><div class="label">Net</div><div class="big">' + usd(s.net) + '</div>'
+        + '<div class="sub">Collected − refunded − fees</div></div>';
+
+    const methodRows = byMethod.map((m) =>
+      '<tr><td>' + esc(m.label || m.method || '—') + '</td>'
+      + '<td class="num">' + Number(m.count || 0) + '</td>'
+      + '<td class="num">' + usd(m.gross) + '</td></tr>').join('');
+    const feesNote = fees.note ? '<div class="fees-note">' + esc(fees.note) + '</div>' : '';
+    const feesRow = '<tr class="fees"><td>Fees' + feesNote + '</td><td class="num">—</td><td class="num">—</td></tr>';
+    const byMethodTable =
+      '<div class="fin-sec"><h2>Revenue by method</h2>'
+      + '<table class="trips"><thead><tr><th>Method</th><th class="num">Count</th><th class="num">Gross (' + esc(f.currency || 'USD') + ')</th></tr></thead><tbody>'
+      + methodRows + feesRow + '</tbody></table></div>';
+
+    const txnRows = txns.map((t) => {
+      const st = t.status || 'completed';
+      const stColor = st === 'refunded' ? '#8a4a00' : st === 'completed' ? '#1b6e3d' : 'var(--ink-2)';
+      return '<tr>'
+        + '<td style="color:#888;white-space:nowrap">' + esc(fmtDateTime(t.created_at)) + '</td>'
+        + '<td class="cust"><div class="nm">' + esc(t.payer_name || '—') + '</div>' + (t.payer_email ? '<div class="em">' + esc(t.payer_email) + '</div>' : '') + '</td>'
+        + '<td>' + esc(t.method || '—') + '</td>'
+        + '<td class="num">' + usd(t.amount) + '</td>'
+        + '<td style="text-transform:capitalize;color:' + stColor + ';font-weight:600">' + esc(cap(st)) + '</td>'
+        + '<td style="color:#888;white-space:nowrap">' + (t.itinerary_id ? esc(String(t.itinerary_id).slice(0, 8)) : '—') + '</td>'
+        + '</tr>';
+    }).join('');
+    const txnTable =
+      '<div class="fin-sec"><h2>Transactions</h2>'
+      + (txns.length
+          ? '<table class="trips"><thead><tr><th>Date</th><th>Payer</th><th>Method</th><th class="num">Amount</th><th>Status</th><th>Trip</th></tr></thead><tbody>' + txnRows + '</tbody></table>'
+          : '<div class="empty">No transactions yet.</div>')
+      + '</div>';
+
+    const recvRows = recv.map((g) => {
+      const payLink = g.share_token
+        ? '<a href="/pay.html?g=' + esc(g.share_token) + '" target="_blank" rel="noopener">Pay link</a>'
+        : '<span style="color:#aaa">—</span>';
+      return '<tr>'
+        + '<td class="cust"><div class="nm">' + esc(g.customer || '—') + '</div></td>'
+        + '<td class="num">' + usd(g.total) + '</td>'
+        + '<td class="num">' + usd(g.paid) + '</td>'
+        + '<td class="num amber">' + usd(g.outstanding) + '</td>'
+        + '<td style="text-transform:capitalize">' + esc(cap(g.status || 'open')) + '</td>'
+        + '<td class="act">' + payLink + '</td>'
+        + '</tr>';
+    }).join('');
+    const recvTable =
+      '<div class="fin-sec"><h2>Receivables — open invoices</h2>'
+      + (recv.length
+          ? '<table class="trips"><thead><tr><th>Customer</th><th class="num">Total</th><th class="num">Paid</th><th class="num">Outstanding</th><th>Status</th><th>Pay link</th></tr></thead><tbody>' + recvRows + '</tbody></table>'
+          : '<div class="empty">No open invoices.</div>')
+      + '</div>';
+
+    dash.innerHTML = banner + '<div class="cards">' + cards + '</div>' + byMethodTable + txnTable + recvTable;
+  }
+
+  // ── Marketing view (placeholder) ──
+  function renderMarketing() {
+    dash.innerHTML = '<div class="placeholder">'
+      + '<h2>Marketing — coming soon</h2>'
+      + '<p>Dashboards and tools land here after the marketing-tool research wraps up.</p>'
       + '</div>';
   }
 

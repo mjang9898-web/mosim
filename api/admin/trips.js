@@ -6,6 +6,7 @@
 //   ?action=lead-status POST → { ok } (update a lead's triage status)
 //   ?action=overview    GET  → { overview } (dashboard metrics, best-effort)
 //   ?action=members     GET  → { members } (all signups + profile + trip count)
+//   ?action=finance     GET  → { finance } (accounting dashboard, best-effort)
 import { createClient } from '@supabase/supabase-js';
 import { getAdminUser, adminEmails } from '../_lib/admin.js';
 
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
   if (action === 'lead-status') return handleLeadStatus(req, res);
   if (action === 'overview') return handleOverview(req, res);
   if (action === 'members') return handleMembers(req, res);
+  if (action === 'finance') return handleFinance(req, res);
   return handleTrips(req, res);
 }
 
@@ -256,4 +258,142 @@ async function handleMembers(req, res) {
     console.error('[admin/trips?members] failed', e?.message || e);
     return res.status(500).json({ error: 'Failed to load members' });
   }
+}
+
+// --- finance (accounting dashboard, best-effort: a failing section → zeros) --
+// Method-agnostic: card/cash are constant zero categories until those payment
+// methods exist, so the chart-of-accounts is always visible. PayPal vs test is
+// derived from the capture/order id prefix (MOCK… = sandbox/test).
+function deriveMethod(p) {
+  const cap = (p.paypal_capture_id || '').trim();
+  const ord = (p.paypal_order_id || '').trim();
+  if (/^mock/i.test(cap) || /^mock/i.test(ord)) return 'test';
+  if (cap || ord) return 'paypal';
+  return 'other';
+}
+
+async function handleFinance(req, res) {
+  const finance = {
+    currency: 'USD',
+    summary: { invoiced: 0, collected: 0, outstanding: 0, refunded: 0, net: 0 },
+    byMethod: [
+      { method: 'paypal', label: 'PayPal',      count: 0, gross: 0 },
+      { method: 'card',   label: 'Credit card', count: 0, gross: 0 },
+      { method: 'cash',   label: 'Cash',        count: 0, gross: 0 },
+      { method: 'other',  label: 'Other',       count: 0, gross: 0 },
+      { method: 'test',   label: 'Test / mock', count: 0, gross: 0 }
+    ],
+    fees: { total: null, note: "Processing fees populate once a payment provider's fee reporting is connected." },
+    transactions: [],
+    receivables: []
+  };
+
+  // payment_groups → invoiced + outstanding (best-effort)
+  let groups = [];
+  try {
+    const { data, error } = await admin
+      .from('payment_groups')
+      .select('id, itinerary_id, total_amount, amount_paid, currency, status, share_token, created_at')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    groups = data || [];
+    let invoiced = 0, outstanding = 0;
+    groups.forEach((g) => {
+      const total = Number(g.total_amount) || 0;
+      const paid = Number(g.amount_paid) || 0;
+      invoiced += total;
+      const notFullyPaid = g.status !== 'paid' || paid < total;
+      if (notFullyPaid) outstanding += Math.max(total - paid, 0);
+    });
+    finance.summary.invoiced = invoiced;
+    finance.summary.outstanding = outstanding;
+  } catch (e) { console.error('[admin/trips?finance] groups failed', e?.message || e); }
+
+  // payments → collected, refunded, byMethod, transactions (best-effort)
+  // (group_id → itinerary_id map from the groups we already loaded)
+  const itinByGroup = {};
+  groups.forEach((g) => { itinByGroup[g.id] = g.itinerary_id; });
+  try {
+    const { data, error } = await admin
+      .from('payments')
+      .select('id, payment_group_id, payer_name, payer_email, amount, paypal_order_id, paypal_capture_id, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    const rows = data || [];
+
+    const methodIdx = {};
+    finance.byMethod.forEach((m, i) => { methodIdx[m.method] = i; });
+
+    let collected = 0, refunded = 0;
+    rows.forEach((p) => {
+      const amt = Number(p.amount) || 0;
+      const method = deriveMethod(p);
+      if (p.status === 'completed') {
+        collected += amt;
+        const idx = methodIdx[method];
+        if (idx != null) { finance.byMethod[idx].count += 1; finance.byMethod[idx].gross += amt; }
+      } else if (p.status === 'refunded') {
+        refunded += amt;
+      }
+    });
+    finance.summary.collected = collected;
+    finance.summary.refunded = refunded;
+    finance.summary.net = collected - refunded; // fees = 0 today
+
+    finance.transactions = rows.map((p) => ({
+      id: p.id,
+      created_at: p.created_at || null,
+      payer_name: p.payer_name || null,
+      payer_email: p.payer_email || null,
+      amount: Number(p.amount) || 0,
+      method: deriveMethod(p),
+      status: p.status || null,
+      capture_id: p.paypal_capture_id || p.paypal_order_id || null,
+      itinerary_id: itinByGroup[p.payment_group_id] || null
+    }));
+  } catch (e) { console.error('[admin/trips?finance] payments failed', e?.message || e); }
+
+  // receivables → open groups w/ customer name (best-effort)
+  try {
+    const open = groups.filter((g) => g.status === 'open' || (Number(g.amount_paid) || 0) < (Number(g.total_amount) || 0));
+    if (open.length) {
+      // itinerary → user_id
+      const userByItin = {};
+      const itinIds = open.map((g) => g.itinerary_id).filter(Boolean);
+      if (itinIds.length) {
+        const { data: itins } = await admin.from('itineraries').select('id, user_id').in('id', itinIds);
+        (itins || []).forEach((i) => { userByItin[i.id] = i.user_id; });
+      }
+      // user_id → name (profiles) and email (auth)
+      const profById = {};
+      try {
+        const { data: profs } = await admin.from('profiles').select('id, name');
+        (profs || []).forEach((p) => { profById[p.id] = p.name; });
+      } catch (e) { /* best-effort */ }
+      const emailById = {};
+      try {
+        const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        (list?.users || []).forEach((u) => { emailById[u.id] = u.email; });
+      } catch (e) { /* best-effort */ }
+
+      finance.receivables = open.map((g) => {
+        const total = Number(g.total_amount) || 0;
+        const paid = Number(g.amount_paid) || 0;
+        const uid = userByItin[g.itinerary_id];
+        const customer = (uid && profById[uid]) || (uid && emailById[uid]) || '—';
+        return {
+          itinerary_id: g.itinerary_id,
+          customer,
+          total,
+          paid,
+          outstanding: Math.max(total - paid, 0),
+          status: g.status,
+          share_token: g.share_token
+        };
+      });
+    }
+  } catch (e) { console.error('[admin/trips?finance] receivables failed', e?.message || e); }
+
+  return res.status(200).json({ finance });
 }
