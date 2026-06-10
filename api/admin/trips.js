@@ -4,6 +4,8 @@
 //   ?action=whoami      GET  → { isAdmin, email, admins }
 //   ?action=leads       GET  → { leads } (newest-first, no `state` PII)
 //   ?action=lead-status POST → { ok } (update a lead's triage status)
+//   ?action=overview    GET  → { overview } (dashboard metrics, best-effort)
+//   ?action=members     GET  → { members } (all signups + profile + trip count)
 import { createClient } from '@supabase/supabase-js';
 import { getAdminUser, adminEmails } from '../_lib/admin.js';
 
@@ -32,6 +34,8 @@ export default async function handler(req, res) {
   if (action === 'whoami') return handleWhoami(req, res, me);
   if (action === 'leads') return handleLeads(req, res);
   if (action === 'lead-status') return handleLeadStatus(req, res);
+  if (action === 'overview') return handleOverview(req, res);
+  if (action === 'members') return handleMembers(req, res);
   return handleTrips(req, res);
 }
 
@@ -128,5 +132,128 @@ async function handleTrips(req, res) {
   } catch (e) {
     console.error('[admin/trips] failed', e?.message || e);
     return res.status(500).json({ error: 'Failed to load trips' });
+  }
+}
+
+// --- provider helper (auth user → 'email' | 'google' | ...) ----------------
+function providerOf(u) {
+  return (
+    (u.app_metadata && u.app_metadata.provider) ||
+    (Array.isArray(u.identities) && u.identities[0] && u.identities[0].provider) ||
+    (u.app_metadata && Array.isArray(u.app_metadata.providers) && u.app_metadata.providers[0]) ||
+    'email'
+  );
+}
+
+// --- overview (dashboard metrics, best-effort: a failing section → zeros) --
+async function handleOverview(req, res) {
+  const overview = {
+    members: { total: 0, newThisWeek: 0 },
+    leads:   { total: 0, byStatus: { new: 0, contacted: 0, quoted: 0, booked: 0, lost: 0 } },
+    trips:   { total: 0, byStage: { new: 0, reserved: 0, reviewing: 0, quoted: 0, booked: 0, archived: 0 } },
+    revenue: { invoiced: 0, paid: 0, outstanding: 0 },
+    recent:  { signups: [], leads: [] }
+  };
+
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+  // members + recent signups (from auth)
+  try {
+    const { data: list, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    if (error) throw error;
+    const users = list?.users || [];
+    overview.members.total = users.length;
+    overview.members.newThisWeek = users.filter((u) => u.created_at && new Date(u.created_at).getTime() >= weekAgo).length;
+    overview.recent.signups = [...users]
+      .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+      .slice(0, 5)
+      .map((u) => ({ email: u.email || null, created_at: u.created_at || null }));
+  } catch (e) { console.error('[admin/trips?overview] members failed', e?.message || e); }
+
+  // leads totals + by-status + recent
+  try {
+    const { data, error } = await admin
+      .from('leads')
+      .select('name, email, status, created_at')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    const rows = data || [];
+    overview.leads.total = rows.length;
+    rows.forEach((r) => {
+      const s = r.status || 'new';
+      if (overview.leads.byStatus[s] != null) overview.leads.byStatus[s] += 1;
+    });
+    overview.recent.leads = rows.slice(0, 5).map((r) => ({
+      name: r.name || null, email: r.email || null, created_at: r.created_at || null, status: r.status || 'new'
+    }));
+  } catch (e) { console.error('[admin/trips?overview] leads failed', e?.message || e); }
+
+  // trips totals + by-stage
+  try {
+    const { data, error } = await admin.from('itineraries').select('status');
+    if (error) throw error;
+    const rows = data || [];
+    overview.trips.total = rows.length;
+    rows.forEach((r) => {
+      const s = r.status || 'new';
+      if (overview.trips.byStage[s] != null) overview.trips.byStage[s] += 1;
+    });
+  } catch (e) { console.error('[admin/trips?overview] trips failed', e?.message || e); }
+
+  // revenue (payment_groups)
+  try {
+    const { data, error } = await admin.from('payment_groups').select('total_amount, amount_paid');
+    if (error) throw error;
+    let invoiced = 0, paid = 0;
+    (data || []).forEach((p) => { invoiced += Number(p.total_amount) || 0; paid += Number(p.amount_paid) || 0; });
+    overview.revenue.invoiced = invoiced;
+    overview.revenue.paid = paid;
+    overview.revenue.outstanding = invoiced - paid;
+  } catch (e) { console.error('[admin/trips?overview] revenue failed', e?.message || e); }
+
+  return res.status(200).json({ overview });
+}
+
+// --- members (all signups + profile name/phone + trip count) --------------
+async function handleMembers(req, res) {
+  try {
+    const { data: list, error } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    if (error) throw error;
+    const users = list?.users || [];
+
+    // profiles (name/phone) by id — best-effort
+    const profById = {};
+    try {
+      const { data: profs } = await admin.from('profiles').select('id, name, phone');
+      (profs || []).forEach((p) => { profById[p.id] = p; });
+    } catch (e) { /* best-effort — names/phones may be blank */ }
+
+    // trip counts per user_id (one query, tally in JS — no N+1)
+    const tripsByUser = {};
+    try {
+      const { data: itins } = await admin.from('itineraries').select('user_id');
+      (itins || []).forEach((it) => { if (it.user_id) tripsByUser[it.user_id] = (tripsByUser[it.user_id] || 0) + 1; });
+    } catch (e) { /* best-effort — counts default to 0 */ }
+
+    const members = users
+      .map((u) => {
+        const prof = profById[u.id] || {};
+        return {
+          id: u.id,
+          email: u.email || null,
+          name: prof.name || null,
+          phone: prof.phone || null,
+          provider: providerOf(u),
+          created_at: u.created_at || null,
+          last_sign_in_at: u.last_sign_in_at || null,
+          trips: tripsByUser[u.id] || 0
+        };
+      })
+      .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    return res.status(200).json({ members });
+  } catch (e) {
+    console.error('[admin/trips?members] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to load members' });
   }
 }

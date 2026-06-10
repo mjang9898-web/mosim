@@ -22,6 +22,8 @@
   header.cp-head .brand .sub { color:var(--ink-3); font-weight:500; }
   header.cp-head .right { display:flex; align-items:center; gap:16px; }
   header.cp-head .greeting { font-size:15px; color:var(--ink-2); }
+  header.cp-head a.navlink { font:inherit; font-size:15px; color:var(--ink-2); text-decoration:none; }
+  header.cp-head a.navlink:hover { color:var(--ink-1); text-decoration:underline; }
   header.cp-head button.signout { font:inherit; font-size:15px; padding:8px 14px; background:#fff;
     border:1px solid var(--border); border-radius:8px; cursor:pointer; }
   header.cp-head button.signout:hover { background:var(--bg-soft); }
@@ -62,6 +64,31 @@
   .panel-note { font-size:14px; color:var(--ink-3); margin-top:14px; max-width:560px; line-height:1.5; }
   .panel-note code { background:var(--bg-soft); border:1px solid var(--border); border-radius:6px; padding:1px 6px; font-size:13px; }
   td.lead-note { max-width:240px; color:var(--ink-3); font-size:13px; white-space:pre-wrap; }
+
+  /* Overview dashboard */
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:24px; }
+  .card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px 20px; }
+  .card .label { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin-bottom:8px; }
+  .card .big { font-size:34px; font-weight:700; color:var(--navy); line-height:1.05; }
+  .card .sub { font-size:13px; color:var(--ink-3); margin-top:4px; }
+  .card .bd { display:flex; flex-wrap:wrap; gap:5px; margin-top:12px; }
+  .card .bd .b { font-size:12px; border:1px solid var(--border); border-radius:999px; padding:2px 9px; color:var(--ink-2); white-space:nowrap; }
+  .card .bd .b b { color:var(--ink-1); font-weight:700; }
+  .card.rev .rev-rows { margin-top:4px; }
+  .card.rev .rr { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; font-size:14px; color:var(--ink-2); border-top:1px solid var(--border); }
+  .card.rev .rr:first-child { border-top:none; }
+  .card.rev .rr b { font-size:17px; color:var(--navy); font-weight:700; }
+  .card.rev .rr.out b { color:#8a4a00; }
+  .recents { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .recent { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .recent h3 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin:0; padding:14px 18px; border-bottom:1px solid var(--border); background:var(--bg-soft); }
+  .recent .ri { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--border); font-size:14px; }
+  .recent .ri:last-child { border-bottom:none; }
+  .recent .ri .who { min-width:0; } .recent .ri .who .nm { font-weight:600; }
+  .recent .ri .who .em { color:var(--ink-3); font-size:13px; overflow:hidden; text-overflow:ellipsis; }
+  .recent .ri .meta { color:var(--ink-3); font-size:13px; white-space:nowrap; text-align:right; flex:none; }
+  .recent .ri .meta .stt { text-transform:capitalize; color:var(--navy); font-weight:600; }
+  .recent .none { padding:18px; color:var(--ink-3); font-size:14px; }
   .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.42); z-index:50; align-items:flex-start; justify-content:center; padding:56px 16px; overflow:auto; }
   .modal { background:#fff; border-radius:14px; max-width:640px; width:100%; padding:24px; box-shadow:0 30px 80px -30px rgba(0,0,0,.5); }
   .modal h2 { font-size:20px; margin:0; }
@@ -76,18 +103,22 @@
   <div class="brand">Mosim <span class="sub">· Cockpit</span></div>
   <div class="right">
     <span id="greeting" class="greeting"></span>
+    <a class="navlink" href="/">View site</a>
+    <a class="navlink" href="/me.html">My Page</a>
     <button id="signout" class="signout" type="button">Sign out</button>
   </div>
 </header>
 
 <main>
   <div class="views" id="views">
-    <button data-view="trips" class="on" type="button">Trips</button>
+    <button data-view="overview" class="on" type="button">Overview</button>
+    <button data-view="members" type="button">Members</button>
+    <button data-view="trips" type="button">Trips</button>
     <button data-view="leads" type="button">Leads</button>
     <button data-view="admins" type="button">Admins</button>
   </div>
-  <h1 class="cp-title" id="cp-title">Reservations &amp; trips</h1>
-  <p class="cp-lede" id="cp-lede">Every traveler's plan and where it stands. <b>Reserved</b> trips (highlighted) need a call within a day.</p>
+  <h1 class="cp-title" id="cp-title">Overview</h1>
+  <p class="cp-lede" id="cp-lede">A snapshot of members, leads, trips, and concierge revenue.</p>
   <div class="filters" id="filters"></div>
   <div id="dash"><div class="empty">Loading…</div></div>
 </main>
@@ -152,20 +183,24 @@
   const cap = (s) => s ? s[0].toUpperCase() + s.slice(1) : s;
   const fmtDate = (s) => { try { return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch (e) { return ''; } };
 
-  let trips = [], filter = 'all';
-  let leads = null, admins = null, currentView = 'trips';
+  let trips = null, filter = 'all';
+  let leads = null, admins = null, overview = null, members = null, currentView = 'overview';
+  const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US');
+  const fmtDateTime = (s) => { try { return new Date(s).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}); } catch (e) { return ''; } };
 
   const filtersEl = document.getElementById('filters');
   const titleEl = document.getElementById('cp-title');
   const ledeEl = document.getElementById('cp-lede');
   const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost'];
   const VIEW_META = {
+    overview: { title: 'Overview', lede: 'A snapshot of members, leads, trips, and concierge revenue.' },
+    members:  { title: 'Members', lede: 'Everyone who has created an account, newest first.' },
     trips:  { title: 'Reservations &amp; trips', lede: 'Every traveler’s plan and where it stands. <b>Reserved</b> trips (highlighted) need a call within a day.' },
     leads:  { title: 'Leads', lede: 'Everyone who reached out through the site. Triage each one with a status.' },
     admins: { title: 'Admins', lede: 'Who can see this cockpit.' }
   };
 
-  // ── Top-level view switcher: Trips · Leads · Admins ──
+  // ── Top-level view switcher: Overview · Members · Trips · Leads · Admins ──
   document.querySelectorAll('#views button').forEach((b) => {
     b.addEventListener('click', () => switchView(b.dataset.view));
   });
@@ -176,12 +211,98 @@
     const m = VIEW_META[view]; titleEl.innerHTML = m.title; ledeEl.innerHTML = m.lede;
     filtersEl.innerHTML = '';                       // status pills are Trips-only
     filtersEl.style.display = view === 'trips' ? '' : 'none';
-    if (view === 'trips') render();              // trips already loaded on first paint
+    if (view === 'overview') { if (overview) renderOverview(); else loadOverview(); }
+    else if (view === 'members') { if (members) renderMembers(); else loadMembers(); }
+    else if (view === 'trips') { if (trips) render(); else loadTrips(); }
     else if (view === 'leads') { if (leads) renderLeads(); else loadLeads(); }
     else if (view === 'admins') { if (admins) renderAdmins(); else loadAdmins(); }
   }
 
-  async function load() {
+  // ── Overview view ──
+  async function loadOverview() {
+    dash.innerHTML = '<div class="empty">Loading…</div>';
+    let r;
+    try { r = await fetch('/api/admin/trips?action=overview', { headers: { authorization: 'Bearer ' + token } }); }
+    catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
+    if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; return; }
+    if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load the overview.</div>'; return; }
+    overview = (await r.json()).overview || {};
+    renderOverview();
+  }
+
+  function renderOverview() {
+    const o = overview || {};
+    const mem = o.members || {}, ld = o.leads || {}, tr = o.trips || {}, rev = o.revenue || {}, rec = o.recent || {};
+    const lb = ld.byStatus || {}, tb = tr.byStage || {};
+    const bdChip = (label, n) => '<span class="b">' + esc(label) + ' <b>' + Number(n || 0) + '</b></span>';
+
+    const leadBd = ['new','contacted','quoted','booked','lost'].map((k) => bdChip(cap(k), lb[k])).join('');
+    const tripBd = ['reserved','reviewing','quoted','booked','new','archived'].map((k) => bdChip(cap(k), tb[k])).join('');
+
+    const cards =
+      '<div class="card"><div class="label">Members</div><div class="big">' + Number(mem.total || 0) + '</div>'
+        + '<div class="sub">+' + Number(mem.newThisWeek || 0) + ' this week</div></div>'
+      + '<div class="card"><div class="label">Leads</div><div class="big">' + Number(ld.total || 0) + '</div>'
+        + '<div class="bd">' + leadBd + '</div></div>'
+      + '<div class="card"><div class="label">Trips</div><div class="big">' + Number(tr.total || 0) + '</div>'
+        + '<div class="bd">' + tripBd + '</div></div>'
+      + '<div class="card rev"><div class="label">Revenue</div><div class="rev-rows">'
+        + '<div class="rr"><span>Invoiced</span><b>' + usd(rev.invoiced) + '</b></div>'
+        + '<div class="rr"><span>Paid</span><b>' + usd(rev.paid) + '</b></div>'
+        + '<div class="rr out"><span>Outstanding</span><b>' + usd(rev.outstanding) + '</b></div>'
+      + '</div></div>';
+
+    const signups = (rec.signups || []).map((s) =>
+      '<div class="ri"><div class="who"><div class="em">' + esc(s.email || '—') + '</div></div>'
+      + '<div class="meta">' + esc(fmtDate(s.created_at)) + '</div></div>').join('')
+      || '<div class="none">No signups yet.</div>';
+
+    const recentLeads = (rec.leads || []).map((l) =>
+      '<div class="ri"><div class="who"><div class="nm">' + esc(l.name || '—') + '</div><div class="em">' + esc(l.email || '') + '</div></div>'
+      + '<div class="meta"><span class="stt">' + esc(cap(l.status || 'new')) + '</span><br>' + esc(fmtDate(l.created_at)) + '</div></div>').join('')
+      || '<div class="none">No leads yet.</div>';
+
+    dash.innerHTML = '<div class="cards">' + cards + '</div>'
+      + '<div class="recents">'
+      + '<div class="recent"><h3>Recent signups</h3>' + signups + '</div>'
+      + '<div class="recent"><h3>Recent leads</h3>' + recentLeads + '</div>'
+      + '</div>';
+  }
+
+  // ── Members view ──
+  async function loadMembers() {
+    dash.innerHTML = '<div class="empty">Loading…</div>';
+    let r;
+    try { r = await fetch('/api/admin/trips?action=members', { headers: { authorization: 'Bearer ' + token } }); }
+    catch (e) { dash.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
+    if (r.status === 403) { dash.innerHTML = '<div class="empty">You don’t have access to the cockpit.</div>'; return; }
+    if (!r.ok) { dash.innerHTML = '<div class="empty">Could not load members.</div>'; return; }
+    members = (await r.json()).members || [];
+    renderMembers();
+  }
+
+  function renderMembers() {
+    if (!members || !members.length) { dash.innerHTML = '<div class="empty">No members yet.</div>'; return; }
+    const dash2 = (v) => v ? esc(v) : '<span style="color:#aaa">—</span>';
+    const rows = members.map((m) => {
+      const email = m.email || '';
+      const emailCell = email
+        ? '<a href="mailto:' + esc(email) + '">' + esc(email) + '</a>'
+        : '<span style="color:#aaa">—</span>';
+      return '<tr>'
+        + '<td class="cust"><div class="nm">' + esc(m.name || '—') + '</div>' + (m.phone ? '<div class="em">' + esc(m.phone) + '</div>' : '') + '</td>'
+        + '<td>' + emailCell + '</td>'
+        + '<td style="text-transform:capitalize">' + dash2(m.provider) + '</td>'
+        + '<td style="color:#888;white-space:nowrap">' + esc(fmtDateTime(m.created_at)) + '</td>'
+        + '<td style="color:#888;white-space:nowrap">' + (m.last_sign_in_at ? esc(fmtDate(m.last_sign_in_at)) : '<span style="color:#aaa">—</span>') + '</td>'
+        + '<td>' + Number(m.trips || 0) + '</td>'
+        + '</tr>';
+    }).join('');
+    dash.innerHTML = '<table class="trips"><thead><tr><th>Name</th><th>Email</th><th>Provider</th><th>Signed up</th><th>Last sign in</th><th>Trips</th></tr></thead><tbody>'
+      + rows + '</tbody></table>';
+  }
+
+  async function loadTrips() {
     dash.innerHTML = '<div class="empty">Loading…</div>';
     let r;
     try { r = await fetch('/api/admin/trips', { headers: { authorization: 'Bearer ' + token } }); }
@@ -268,7 +389,7 @@
         body: JSON.stringify({ itinerary_id: id })
       });
       const b = await r.json();
-      if (r.ok && b.token) { await load(); }   // refetch — Payment column + link now populated
+      if (r.ok && b.token) { await loadTrips(); }   // refetch — Payment column + link now populated
       else { alert(b.error || 'Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
     } catch (e) { alert('Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
   }
@@ -470,7 +591,7 @@
       + '<p class="panel-note">To add or remove an admin, edit <code>ADMIN_EMAILS</code> in Vercel and redeploy.</p>';
   }
 
-  load();
+  loadOverview();
 })();
 </script>
 </body>
