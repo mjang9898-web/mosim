@@ -104,8 +104,22 @@
     while (!window.kwAuth && t < 100) { await new Promise(r => setTimeout(r, 50)); t++; }
   }
 
+  // A "plain login" is one whose destination is My Page (next null or 'me').
+  // Only then do we set the one-shot flag so an admin gets bounced to the
+  // cockpit from /me.html. Funnel continuations (result/stepN) and an explicit
+  // ?next=cockpit are left untouched.
+  function isPlainLogin() {
+    const next = new URL(window.location.href).searchParams.get('next');
+    return next === null || next === 'me';
+  }
+  function markFromLogin() {
+    if (!isPlainLogin()) return;
+    try { sessionStorage.setItem('kw.fromLogin', '1'); } catch (e) {}
+  }
+
   document.getElementById('google-btn').addEventListener('click', async () => {
     await ready();
+    markFromLogin();
     const { error } = await window.kwAuth.signInWithGoogle(nextUrl());
     if (error) document.getElementById('msg').textContent = error.message;
   });
@@ -125,6 +139,7 @@
       btn.disabled = false;
       return;
     }
+    markFromLogin();
     window.location.href = nextUrl();
   });
 

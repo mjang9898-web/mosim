@@ -86,6 +86,11 @@
       window.location.replace('/signin.html?next=me');
       return;
     }
+    // One-shot "just logged in" flag (set by signin.html on a plain login).
+    // Read and clear it immediately so a later visit never re-triggers.
+    const fromLogin = sessionStorage.getItem('kw.fromLogin');
+    try { sessionStorage.removeItem('kw.fromLogin'); } catch (e) {}
+
     document.getElementById('greeting').textContent = user.user_metadata?.name || user.email;
     document.getElementById('signout').addEventListener('click', async () => {
       await window.kwAuth.signOut();
@@ -108,9 +113,14 @@
       const token = session && session.access_token;
       if (token) {
         const r = await fetch('/api/admin/trips?action=whoami', { headers: { authorization: 'Bearer ' + token } });
-        if (r.ok) document.getElementById('cockpit-link').style.display = '';
+        if (r.ok) {
+          document.getElementById('cockpit-link').style.display = '';
+          // Admins who just logged in (fromLogin flag) land on the cockpit,
+          // not My Page. replace() so Back doesn't bounce them here.
+          if (fromLogin) { window.location.replace('/cockpit.html'); return; }
+        }
       }
-    } catch (e) { /* never block My Page on the admin probe */ }
+    } catch (e) { /* never block My Page on the admin probe; never redirect on error */ }
   })();
 </script>
 <script src="/js/me-itineraries.js?v=106defe1" defer></script>
