@@ -77,6 +77,7 @@
   @media(max-width:560px){ .faq-item p{padding-left:0;} }
   @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
+<script src="js/analytics.js"></script>
 </head>
 <body>
 
@@ -155,7 +156,7 @@
   </div>
 </div></footer>
 
-<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');}}catch(x){}})();</script>
+<script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');fetch('/api/admin/trips?action=whoami',{headers:{authorization:'Bearer '+t}}).then(function(res){if(res.ok){el.textContent='Cockpit';el.setAttribute('href','/cockpit.html');}}).catch(function(){});}}catch(x){}})();</script>
 <script>(function(){var b=document.getElementById('nav-burger'),m=document.getElementById('navlinks');if(!b||!m)return;b.addEventListener('click',function(){var open=m.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');});})();</script>
 
 </body>
