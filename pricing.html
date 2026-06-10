@@ -68,8 +68,28 @@
   .incl li{font-size:19px; color:var(--ink); line-height:1.5; padding-left:26px; position:relative;}
   .incl li::before{content:""; position:absolute; left:0; top:.62em; width:9px; height:9px; border-radius:50%; background:var(--gold);}
   .incl li b{display:block; color:var(--navy); font-weight:600; margin-bottom:2px;}
-  .fee-foot{font-size:19px; color:var(--ink); line-height:1.65; margin-top:22px; max-width:64ch;}
-  .fee-foot b{color:var(--navy); font-weight:600;}
+
+  /* How it works — horizontal roadmap (3 phases × 2 nodes) */
+  .roadmap{margin-top:38px;}
+  .road{display:grid; grid-template-columns:repeat(3,1fr); column-gap:30px; row-gap:0;}
+  .phase{display:flex; flex-direction:column;}
+  .phase-lab{font-size:13px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:18px;}
+  /* the two nodes within a phase, sitting on a shared horizontal segment */
+  .nodes{position:relative; display:grid; grid-template-columns:1fr 1fr;}
+  /* continuous path line running behind every node marker, edge to edge */
+  .nodes::before{content:""; position:absolute; left:0; right:0; top:11px; height:3px; background:var(--line); z-index:0;}
+  /* extend the line across the column gap so the road reads as one continuous path */
+  .phase:not(:last-child) .nodes::after{content:""; position:absolute; left:100%; width:30px; top:11px; height:3px; background:var(--line); z-index:0;}
+  .node{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 6px;}
+  .dot{width:25px; height:25px; border-radius:50%; background:var(--ivory); border:3px solid var(--navy); position:relative; z-index:1;}
+  .node b{display:block; font-family:'Lora',Georgia,serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.2; margin-top:14px;}
+  .node span{display:block; font-size:16px; color:var(--ink); line-height:1.4; margin-top:4px;}
+  /* gold-accented payment nodes (3 & 4 — the whole middle phase) */
+  .node.pay .dot{background:var(--gold); border-color:var(--gold); display:flex; align-items:center; justify-content:center;}
+  .node.pay .dot::after{content:"$"; font-family:'Lora',Georgia,serif; font-size:15px; font-weight:600; color:#fff; line-height:1;}
+  .node.pay b{color:var(--gold);}
+  /* highlight the middle (pay) phase line in gold */
+  .phase-pay .nodes::before{background:var(--gold-soft);}
 
   /* Comparison */
   .compare{margin-top:30px; background:var(--ivory-soft); border:1px solid var(--line); border-radius:18px; padding:34px 40px;}
@@ -107,6 +127,16 @@
     .fee-block{grid-template-columns:1fr; gap:28px; padding:30px 26px;}
     .compare{padding:28px 26px;}
   }
+  /* Roadmap mobile reflow: 3 phases stack as compact blocks,
+     each keeping its 2 nodes on a short horizontal segment (no vertical timeline) */
+  @media(max-width:600px){
+    .road{grid-template-columns:1fr; row-gap:32px;}
+    .phase-lab{margin-bottom:14px;}
+    /* drop the cross-phase connector — each block is its own mini road */
+    .phase:not(:last-child) .nodes::after{display:none;}
+    .node b{font-size:19px;}
+    .node span{font-size:16px;}
+  }
   @media(max-width:380px){ .nav-actions{gap:8px;} .nav-signin,.nav-cta{padding:8px 12px; font-size:14px;} .nav-div{display:none;} }
 </style>
 </head>
@@ -136,7 +166,7 @@
   <section class="hero">
     <div class="label">What it costs</div>
     <h1 style="margin-top:16px;">What it costs — clearly, before you decide.</h1>
-    <p>One simple fee for our service — and not a dollar of markup on your care, your hotel, or your flights.</p>
+    <p>One fee for our service. No markup on your care, hotel, or flights.</p>
   </section>
 
   <!-- THE CONCIERGE FEE -->
@@ -146,29 +176,56 @@
       <h2>One simple fee.</h2>
     </div>
     <div class="fee-block">
-      <div class="amt">$1,200<small>per traveler · one-week (7-day) trip · prorated to your dates (about $170 a day)</small></div>
+      <div class="amt">$1,200<small>per traveler · 7-day trip · prorated to your dates (~$170/day)</small></div>
       <div>
-        <div class="who">This is everything Mosim charges.</div>
+        <div class="who">Everything Mosim charges.</div>
         <ul class="incl">
-          <li><b>Planning &amp; itinerary</b>Your whole trip arranged before you leave home</li>
-          <li><b>Private car &amp; driver</b>Door to door, every day — no taxis, no subways</li>
-          <li><b>Personal interpreter</b>Someone who speaks for you, at every appointment</li>
-          <li><b>Everyday meals</b>Your daily meals, taken care of</li>
-          <li><b>A concierge beside you</b>A Mosim person with you in Korea, start to finish</li>
-          <li><b>24/7 support</b>Help is one call away, day or night</li>
+          <li><b>Planning &amp; itinerary</b>Arranged before you leave</li>
+          <li><b>Private car &amp; driver</b>Door to door, daily</li>
+          <li><b>Personal interpreter</b>At every appointment</li>
+          <li><b>Everyday meals</b>Taken care of</li>
+          <li><b>A concierge beside you</b>With you, start to finish</li>
+          <li><b>24/7 support</b>One call away, day or night</li>
         </ul>
       </div>
     </div>
-    <p class="fee-foot">This is everything Mosim charges. If your trip is shorter or longer, we prorate the fee to your actual number of days — so you only pay for the days we're by your side.</p>
   </section>
 
-  <!-- PAID DIRECTLY -->
+  <!-- HOW IT WORKS — HORIZONTAL ROADMAP -->
   <section class="sec">
     <div class="sec-h">
-      <span class="label">Paid directly — no markup</span>
-      <h2>Your care, hotel, and flights — paid straight to them.</h2>
+      <span class="label">How it works</span>
+      <h2>Your journey, start to finish.</h2>
     </div>
-    <p>Three things are not part of our fee: your <b>medical care</b>, your <b>hotel</b>, and your <b>flights</b>. We arrange every one of them — but you're billed <b>directly by the hospital, the hotel, and the airline.</b> Mosim never collects that money, never adds a markup, and never takes a cut. You always see the real costs, exactly as they are.</p>
+    <div class="roadmap">
+      <div class="road">
+
+        <div class="phase">
+          <div class="phase-lab">Before you go</div>
+          <div class="nodes">
+            <div class="node"><span class="dot"></span><b>Plan</b><span>your care &amp; trip</span></div>
+            <div class="node"><span class="dot"></span><b>Reserve</b><span>free</span></div>
+          </div>
+        </div>
+
+        <div class="phase phase-pay">
+          <div class="phase-lab">Pay</div>
+          <div class="nodes">
+            <div class="node pay"><span class="dot"></span><b>Pay Mosim</b><span>$1,200 · one fee</span></div>
+            <div class="node pay"><span class="dot"></span><b>Book direct</b><span>no markup</span></div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-lab">Travel</div>
+          <div class="nodes">
+            <div class="node"><span class="dot"></span><b>Beside you</b><span>in Korea</span></div>
+            <div class="node"><span class="dot"></span><b>Home</b><span>landing to flight home</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </section>
 
   <!-- AN HONEST EXAMPLE -->
@@ -177,7 +234,6 @@
       <span class="label">An honest example</span>
       <h2>What the care itself might cost.</h2>
     </div>
-    <p>Here's an honest comparison, so the number isn't a mystery. For the kind of care many of our travelers come for, here's roughly what you'd pay the hospital — in Korea, and back home.</p>
     <div class="compare">
       <div class="bar-row bar-kr">
         <div class="blab"><span>In Korea (estimated)</span><b>~ $12,800</b></div>
@@ -190,14 +246,14 @@
       <div class="save">About <em>a third</em> of U.S. prices.</div>
       <div class="caveat">Example estimates only — your hospital confirms the final quote before anything is decided.</div>
     </div>
-    <p class="linkline">Want the numbers behind this? See <a href="medical.html">per-procedure prices on our Medical page →</a></p>
+    <p class="linkline">See <a href="medical.html">per-procedure prices →</a></p>
   </section>
 
   <!-- CTA -->
   <section class="closing">
     <h2>Ready when you are.</h2>
     <a href="step1.html" class="btn" style="margin-top:24px;">Plan my trip</a>
-    <p class="micro">You only pay when you decide to begin. Looking costs nothing — and there's always a real person to ask first.</p>
+    <p class="micro">Looking costs nothing — pay only when you decide to begin.</p>
   </section>
 
 </div>
