@@ -61,19 +61,23 @@ async function handleAnalytics(req, res) {
   if (!PH_KEY) return res.status(503).json({ error: 'Analytics not configured yet' });
   const days = Math.min(Math.max(parseInt(req.query.days, 10) || 30, 1), 90);
   const since = `now() - INTERVAL ${days} DAY`;
+  // Drop bots/crawlers/monitoring by user-agent (real browser UAs never match these).
+  const notBot = `NOT match(lower(coalesce(properties.$raw_user_agent, '')), `
+    + `'bot|crawl|spider|slurp|headless|phantom|puppeteer|playwright|python-|curl/|wget|monitor|uptime|pingdom|lighthouse|ahrefs|semrush|dataforseo|prerender|vercel-|scan')`;
+  const base = `${base} AND ${notBot}`;
   try {
     const [ov, fn, sr] = await Promise.all([
-      phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE event='$pageview' AND timestamp > ${since}`),
+      phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE ${base}`),
       phHogql(`SELECT
                  uniqIf(distinct_id, properties.$current_url LIKE '%step1%') AS s1,
                  uniqIf(distinct_id, properties.$current_url LIKE '%step2%') AS s2,
                  uniqIf(distinct_id, properties.$current_url LIKE '%step3%') AS s3,
                  uniqIf(distinct_id, properties.$current_url LIKE '%step4%') AS s4,
                  uniqIf(distinct_id, properties.$current_url LIKE '%result%') AS rs
-               FROM events WHERE event='$pageview' AND timestamp > ${since}`),
+               FROM events WHERE ${base}`),
       phHogql(`SELECT coalesce(nullIf(properties.$referring_domain, ''), '$direct') AS src,
                       uniq(distinct_id) AS v, count() AS pv
-               FROM events WHERE event='$pageview' AND timestamp > ${since}
+               FROM events WHERE ${base}
                GROUP BY src ORDER BY v DESC LIMIT 8`)
     ]);
     const o = ov[0] || [0, 0]; const f = fn[0] || [0, 0, 0, 0, 0];
