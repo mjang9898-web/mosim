@@ -36,6 +36,7 @@
 
   h1{font-size:clamp(30px,4.4vw,44px); font-weight:600; line-height:1.12; text-wrap:balance;}
   .sub{font-size:19px; color:var(--ink); max-width:36em; margin:16px auto 0; line-height:1.6; text-wrap:balance;}
+  .sub.expect{font-size:19px; color:var(--navy); font-weight:500; margin-top:12px; max-width:34em;}
 
   .frame{position:relative; width:100%; max-width:680px; aspect-ratio:16/9; border-radius:18px; overflow:hidden; margin:36px auto 0; background:#CDBC95; box-shadow:0 30px 64px -34px rgba(27,42,74,.5);}
   .slide{position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transform:scale(1.04); transition:opacity 1s ease, transform 4.5s ease;}
@@ -56,6 +57,12 @@
   .steps li.active .tick{border-color:var(--gold-soft);}
   .steps li.done{color:var(--ink);}
   .steps li.done .tick{background:var(--gold); border-color:var(--gold);}
+  /* Perpetual final step — stays animated until navigation, so the screen
+     never reads "all done" while the real plan is still being written. */
+  .steps li.working{color:var(--navy); font-weight:600;}
+  .steps li.working .tick{border-color:var(--gold); background:#fff; color:transparent; position:relative;}
+  .steps li.working .tick::after{content:''; position:absolute; inset:3px; border-radius:50%; border:2px solid var(--gold-soft); border-top-color:var(--gold); animation:spin .8s linear infinite;}
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 
   .skip{margin-top:34px; font-size:15px; color:var(--ink-2);}
   .skip a{color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold-soft); text-underline-offset:3px;}
@@ -73,6 +80,7 @@
   <div class="badge"><span class="dot"></span>Mosim AI · Building your plan</div>
   <h1>We're putting your days together.</h1>
   <p class="sub">From your answers, we're shaping a gentle plan around your care, your pace, and the things you love. One moment.</p>
+  <p class="sub expect">This usually takes about 30 seconds — we're building your week by hand, not loading a template.</p>
 
   <div class="frame" id="frame" role="img" aria-label="Warm moments of care and rest in Korea">
     <div class="cap" id="cap"></div>
@@ -85,6 +93,7 @@
     <li data-step><span class="tick">✓</span>Matching trusted hospitals</li>
     <li data-step><span class="tick">✓</span>Planning restful days around them</li>
     <li data-step><span class="tick">✓</span>Adding the experiences you chose</li>
+    <li id="workingStep" class="working"><span class="tick">✓</span>Writing your day-by-day plan…</li>
   </ul>
 
   <p class="skip">Taking a moment? <a href="result.html" id="skip">See my plan now →</a></p>
@@ -109,7 +118,11 @@
                                              // Real itineraries (multi-city, e.g. Jeju+Busan) take ~28s to
                                              // generate; 60s avoids discarding a valid-but-slow plan. The plan
                                              // shows the instant it resolves (~28s) — this is only the give-up net.
-  var STEP_GAP = MIN_MS / 4;                 // 4 reassurance steps
+  var PACE_MS = 26000;                       // COSMETIC pacing target — the real plan takes ~26s, so the bar
+                                             // and reassurance steps are paced across this window (not MIN_MS).
+                                             // The bar creeps to ~85% over PACE_MS and only snaps to 100% when
+                                             // the plan actually resolves, so the screen never reads "done" early.
+  var STEP_GAP = PACE_MS / 4;                // 4 reassurance steps, spread across the real wait
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── Kick off the real AI itinerary now; the animation below covers the wait ──
@@ -130,6 +143,14 @@
   var settled = false;
   function go(schedule) {
     if (settled) return; settled = true;
+    // Snap the bar to 100% and mark the final step done the instant the plan
+    // actually resolves — this is the ONLY moment the screen reads "complete".
+    try {
+      var barEl = document.getElementById('bar');
+      if (barEl) { barEl.style.transition = 'width .4s ease'; barEl.style.width = '100%'; }
+      var ws = document.getElementById('workingStep');
+      if (ws) { ws.classList.remove('working'); ws.classList.add('done'); }
+    } catch (e) {}
     var ok = !!schedule;
     try {
       if (ok) sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(schedule));
@@ -174,7 +195,9 @@
   // ── Reduced motion: show the first frame; go() (above) handles the redirect ──
   if (reduce) {
     show(0); steps.forEach(function (li) { li.classList.add('done'); });
-    bar.style.transition = 'none'; bar.style.width = '100%';
+    // Keep the final step in its in-progress (not-done) state so it doesn't read
+    // "complete"; and hold the bar below 100% until go() resolves the real plan.
+    bar.style.transition = 'none'; bar.style.width = '85%';
     return;
   }
 
@@ -185,18 +208,24 @@
     show(cur);
   }, SLIDE_MS);
 
-  // Progress bar fills over the minimum display time
-  bar.style.transition = 'width ' + MIN_MS + 'ms linear';
-  requestAnimationFrame(function () { bar.style.width = '100%'; });
+  // Progress bar CREEPS to ~85% over the real ~26s wait — it never reaches 100%
+  // here. go() (above) snaps it to 100% only when the plan actually resolves, so
+  // the screen never shows a finished bar while we're still waiting.
+  bar.style.transition = 'width ' + PACE_MS + 'ms cubic-bezier(.15,.6,.25,1)';
+  requestAnimationFrame(function () { bar.style.width = '85%'; });
 
-  // Reassurance steps tick over one by one
+  // Reassurance steps tick over one by one, spread across the real wait.
   steps.forEach(function (li, idx) {
     setTimeout(function () {
       steps.forEach(function (x, j) { if (j < idx) { x.classList.remove('active'); x.classList.add('done'); } });
       li.classList.add('active');
     }, idx * STEP_GAP);
   });
-  setTimeout(function () { steps.forEach(function (li) { li.classList.remove('active'); li.classList.add('done'); }); }, MIN_MS - 300);
+  // When the 4 reassurance steps have all run, mark them done — but the final
+  // perpetual "Writing your day-by-day plan…" step keeps spinning until go() fires.
+  setTimeout(function () {
+    steps.forEach(function (li) { li.classList.remove('active'); li.classList.add('done'); });
+  }, 4 * STEP_GAP);
 
   // Manual skip — go straight to the result with whatever plan is ready
   // (if it isn't ready yet, result.html shows the "still finalizing" notice).

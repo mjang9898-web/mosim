@@ -1575,10 +1575,12 @@ function Step3Culture() {
             {/* Page content — items grid or city cards */}
             {currentPage.kind === 'cities' ? (
               <div className="kw-city-grid">
-                {currentPage.items.map(c => (
+                {currentPage.items.map(c => {
+                  const sel = selected.has(c.code);
+                  return (
                   <div
                     key={c.code}
-                    className={`kw-city kw-photo-${c.theme}`}
+                    className={`kw-city kw-photo-${c.theme} ${sel ? 'is-selected' : ''}`}
                     style={{ cursor: 'pointer' }}
                     onClick={() => openDetail(c)}
                   >
@@ -1588,6 +1590,7 @@ function Step3Culture() {
                     >
                       {!c.image && <span className="kw-city-monogram">{c.mono}</span>}
                       <span className="kw-city-photo-region">{c.region}</span>
+                      {sel && <span className="kw-city-check" aria-hidden="true">✓</span>}
                     </div>
                     <div className="kw-city-body">
                       <div className="kw-city-name">{c.name}</div>
@@ -1598,12 +1601,18 @@ function Step3Culture() {
                         ))}
                       </div>
                       <div className="kw-city-foot">
-                        <span className="kw-city-count">{c.activities.length} activities</span>
+                        <button
+                          className="kw-city-add"
+                          onClick={(e) => { e.stopPropagation(); toggle(c.code); }}
+                        >
+                          {sel ? <>✓ Added</> : <><span className="kw-city-add-plus">+</span> Add this trip</>}
+                        </button>
                         <span className="kw-city-cta">View details →</span>
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="kw-cul-grid">
@@ -1621,6 +1630,7 @@ function Step3Culture() {
                       style={it.image ? { backgroundImage: `url('${thumbUrl(it.image)}')` } : undefined}
                     >
                       {!it.image && <span className="kw-cul-monogram">{it.mono}</span>}
+                      {sel && <span className="kw-cul-check" aria-hidden="true">✓</span>}
                     </div>
                     <span className="kw-cul-view">View details →</span>
                     <div className="kw-cul-body">
