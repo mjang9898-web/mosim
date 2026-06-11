@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--
+  MOCKUP / PREVIEW ONLY — standalone, hard-coded sample data.
+  Purpose: let the founder see the senior-facing itinerary deliverable before we build the real
+  /itinerary.html (token-fetched, DB-driven). Not wired to anything. Safe to delete.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Korea Itinerary · Mosim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F;
+         --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8;
+         --care:#5C7C63; --rest:#C39A3F; --explore:#2A3C5E; --travel:#9A938A; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{ background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif;
+        -webkit-font-smoothing:antialiased; line-height:1.5; font-size:17px; }
+  h1,h2,h3,.brand{ font-family:'Lora',Georgia,serif; }
+  .label{ font-size:12px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold); }
+
+  /* ── screen-only action bar ── */
+  .bar{ position:sticky; top:0; z-index:5; display:flex; justify-content:space-between; align-items:center;
+        gap:16px; padding:14px 24px; background:var(--ivory-soft); border-bottom:1px solid var(--line); }
+  .brand{ font-weight:600; font-size:22px; text-decoration:none; color:var(--navy); }
+  .brand .dot{ color:var(--gold); }
+  .print-btn{ font-size:17px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy);
+              border-radius:999px; padding:13px 26px; min-height:52px; display:inline-flex; align-items:center;
+              gap:9px; cursor:pointer; text-decoration:none; }
+  .print-btn:hover{ background:var(--navy-soft); }
+
+  /* ── page ── */
+  .sheet{ max-width:760px; margin:0 auto; padding:28px 30px 70px; }
+
+  /* cover (compact) */
+  .cover{ text-align:center; padding:6px 0 18px; }
+  .cover h1{ font-size:clamp(26px,4vw,34px); font-weight:600; line-height:1.1; margin:8px 0 0; }
+  .cover .dates{ font-size:18px; color:var(--navy); margin:9px 0 0; font-weight:500; }
+  .cover .meta{ font-size:15px; color:var(--ink); margin:5px 0 0; }
+
+  /* section shell */
+  section{ margin-top:26px; }
+  .sec-h{ display:flex; align-items:baseline; gap:12px; margin:0 0 12px; }
+  .sec-h h2{ font-size:21px; font-weight:600; margin:0; }
+  .sec-h .num{ font-family:'Lora',serif; font-size:15px; color:var(--gold); font-weight:600; }
+  .sec-h::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  /* essentials card (flights + stay, compact rows) */
+  .card{ background:var(--ivory-soft); border:1px solid var(--line); border-radius:12px; padding:4px 18px; }
+  .erow{ display:grid; grid-template-columns:96px 1fr auto; gap:14px; align-items:center;
+         padding:13px 0; border-bottom:1px solid var(--line); }
+  .erow:last-child{ border-bottom:none; }
+  .erow .tag{ font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-2); }
+  .erow .tag .d{ display:block; font-size:13px; color:var(--ink); letter-spacing:0; font-weight:500; margin-top:2px; text-transform:none; }
+  .erow .mainline{ font-size:17px; color:var(--navy); font-weight:500; }
+  .erow .mainline b{ font-family:'Lora',serif; font-weight:600; }
+  .erow .mainline .arrow{ color:var(--gold); padding:0 4px; }
+  .erow .sub{ font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .erow .ref{ font-size:13px; color:var(--ink-2); text-align:right; white-space:nowrap; }
+  .erow .ref b{ display:block; font-size:15px; color:var(--navy); font-weight:600; }
+  .erow.stay{ border-left:0; }
+
+  /* who to call (compact, on page 1) */
+  .calls{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:10px; }
+  .ct{ background:var(--ivory-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px; }
+  .ct.primary{ grid-column:1/-1; background:var(--navy); border-color:var(--navy); color:#fff;
+               display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .ct .role{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink-2); }
+  .ct.primary .role{ color:var(--gold); }
+  .ct .who{ font-size:15px; font-weight:600; margin:2px 0 1px; }
+  .ct .tel{ font-size:17px; font-weight:600; font-family:'Lora',serif; }
+  .ct.primary .who{ font-size:17px; }
+  .ct.primary .tel{ color:#fff; font-size:23px; }
+  .ct.primary .pr-l .role{ margin-bottom:2px; }
+
+  /* days */
+  .day{ border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:11px; break-inside:avoid; }
+  .day-h{ display:flex; align-items:baseline; gap:11px; background:var(--navy); color:#fff; padding:9px 18px; }
+  .day-h .dn{ font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
+  .day-h .dd{ font-family:'Lora',serif; font-size:17px; font-weight:600; }
+  .day-h .dt{ margin-left:auto; font-size:14px; color:#D7CDB6; }
+  .day-body{ padding:3px 18px 5px; background:#fff; }
+  .row{ display:grid; grid-template-columns:78px 1fr; gap:14px; padding:9px 0; border-bottom:1px solid var(--line); }
+  .row:last-child{ border-bottom:none; }
+  .row .t{ font-size:14px; font-weight:600; color:var(--gold); padding-top:1px; }
+  .row .a{ font-size:16px; color:var(--navy); }
+
+  .foot{ text-align:center; margin-top:30px; padding-top:18px; border-top:1px solid var(--line);
+         font-size:14px; color:var(--ink-2); }
+  .foot .b{ font-family:'Lora',serif; font-size:17px; color:var(--navy); }
+
+  /* ── print ── */
+  @media print{
+    @page{ size:A4; margin:16mm 14mm; }
+    body{ background:#fff; font-size:12pt; }
+    .bar{ display:none !important; }
+    .sheet{ max-width:none; padding:0; }
+    section{ break-inside:avoid; margin-top:26px; }
+    .day-h{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .ct.primary, .flight, .hotel, .day-h{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .cover{ padding-top:0; }
+  }
+  @media (max-width:560px){
+    .hkv{ grid-template-columns:1fr 1fr; }
+    .contacts{ grid-template-columns:1fr; }
+    .leg{ grid-template-columns:1fr auto 1fr; gap:8px; }
+    .leg .ap{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="bar">
+    <a class="brand" href="#">Mosim<span class="dot">.</span></a>
+    <button class="print-btn" onclick="window.print()">⤓ &nbsp;Download PDF / Print</button>
+  </div>
+
+  <main class="sheet">
+
+    <!-- ─── PAGE 1 · AT A GLANCE ─── -->
+
+    <!-- COVER (compact) -->
+    <header class="cover">
+      <div class="label">Mosim Concierge · Your Itinerary</div>
+      <h1>Robert &amp; Linda Anderson in Korea</h1>
+      <p class="dates">Mon, Sep 14 – Sun, Sep 20, 2026</p>
+      <p class="meta">7 days · 2 travelers · Health screening &amp; orthopedic care</p>
+    </header>
+
+    <!-- ESSENTIALS · flights + stay, compact -->
+    <section style="margin-top:18px;">
+      <div class="sec-h"><h2>Flights &amp; Hotel</h2></div>
+      <div class="card">
+        <div class="erow">
+          <div class="tag">Depart<span class="d">Mon, Sep 14</span></div>
+          <div>
+            <div class="mainline"><b>LAX</b> 11:50 AM<span class="arrow">→</span><b>ICN</b> 5:20 PM <span style="font-size:13px;color:var(--ink-2);">+1 day</span></div>
+            <div class="sub">Los Angeles (TBIT) → Seoul Incheon · Terminal 2</div>
+          </div>
+          <div class="ref">Korean Air<b>KE 018</b></div>
+        </div>
+        <div class="erow">
+          <div class="tag">Return<span class="d">Sun, Sep 20</span></div>
+          <div>
+            <div class="mainline"><b>ICN</b> 9:00 PM<span class="arrow">→</span><b>LAX</b> 4:20 PM <span style="font-size:13px;color:var(--ink-2);">same day</span></div>
+            <div class="sub">Seoul Incheon · Terminal 2 → Los Angeles (TBIT)</div>
+          </div>
+          <div class="ref">Korean Air<b>KE 017</b></div>
+        </div>
+        <div class="erow stay">
+          <div class="tag">Stay<span class="d">Sep 14 – 20</span></div>
+          <div>
+            <div class="mainline"><b>Four Seasons Hotel Seoul</b></div>
+            <div class="sub">97 Saemunan-ro, Jongno-gu · +82 2-6388-5000</div>
+          </div>
+          <div class="ref">Confirmation<b>FS-2026-88123</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DAY BY DAY (flows continuously to save pages) ─── -->
+    <section>
+      <div class="sec-h"><h2>Day by Day</h2></div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 1</span><span class="dd">Arrival &amp; Welcome</span><span class="dt">Mon, Sep 14</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">5:20 PM</div><div class="a">Arrival at Incheon — private vehicle &amp; your Mosim host greet you at the gate</div></div>
+          <div class="row"><div class="t">7:00 PM</div><div class="a">Four Seasons check-in &amp; welcome tea</div></div>
+          <div class="row"><div class="t">8:00 PM</div><div class="a">Light dinner in-suite — rest after the flight</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 2</span><span class="dd">Health Screening</span><span class="dt">Tue, Sep 15</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">8:30 AM</div><div class="a">Severance Health Promotion Center — comprehensive screening (your host accompanies you)</div></div>
+          <div class="row"><div class="t">1:00 PM</div><div class="a">Lunch — gentle hanjeongsik near the hospital</div></div>
+          <div class="row"><div class="t">3:00 PM</div><div class="a">Rest at hotel · evening free</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 3</span><span class="dd">Orthopedic Consultation</span><span class="dt">Wed, Sep 16</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">9:30 AM</div><div class="a">One-on-one consultation with lead orthopedic physician — knee assessment</div></div>
+          <div class="row"><div class="t">2:00 PM</div><div class="a">Gyeongbokgung Palace — gentle guided walk</div></div>
+          <div class="row"><div class="t">6:30 PM</div><div class="a">Dinner — royal-court hanjeongsik</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 4</span><span class="dd">Restoration</span><span class="dt">Thu, Sep 17</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">10:00 AM</div><div class="a">Premium spa &amp; recovery treatment</div></div>
+          <div class="row"><div class="t">3:00 PM</div><div class="a">Bukchon Hanok Village stroll at an easy pace</div></div>
+          <div class="row"><div class="t">7:00 PM</div><div class="a">In-room dining — restorative menu</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 5</span><span class="dd">Care Review &amp; Culture</span><span class="dt">Fri, Sep 18</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">10:00 AM</div><div class="a">Follow-up — results review &amp; aftercare plan</div></div>
+          <div class="row"><div class="t">2:00 PM</div><div class="a">Private tea ceremony with a master</div></div>
+          <div class="row"><div class="t">7:00 PM</div><div class="a">Hanwoo omakase dinner</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 6</span><span class="dd">Open Day</span><span class="dt">Sat, Sep 19</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">Morning</div><div class="a">Free time — hotel lounge or a quiet Seoul stroll</div></div>
+          <div class="row"><div class="t">2:00 PM</div><div class="a">National Museum of Korea — at your pace</div></div>
+          <div class="row"><div class="t">7:00 PM</div><div class="a">Farewell dinner — Michelin-starred Korean fine dining</div></div>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day-h"><span class="dn">Day 7</span><span class="dd">Departure</span><span class="dt">Sun, Sep 20</span></div>
+        <div class="day-body">
+          <div class="row"><div class="t">11:00 AM</div><div class="a">Closing consultation — aftercare documents &amp; medications handoff</div></div>
+          <div class="row"><div class="t">12:00 PM</div><div class="a">Hotel checkout</div></div>
+          <div class="row"><div class="t">6:00 PM</div><div class="a">Private send-off to Incheon Airport for your 9:00 PM flight</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO TO CALL (bottom — phone/web is the real use; reachable after the plan) -->
+    <section>
+      <div class="sec-h"><h2>Who to Call</h2></div>
+      <div class="calls">
+        <div class="ct primary">
+          <div class="pr-l">
+            <div class="role">Your Mosim concierge · 24 hours · call anytime</div>
+            <div class="who">Michael Jang</div>
+          </div>
+          <div class="tel">+82 10-1234-5678</div>
+        </div>
+        <div class="ct"><div class="role">Emergency (Korea)</div><div class="who">Ambulance &amp; Fire</div><div class="tel">119</div></div>
+        <div class="ct"><div class="role">Hospital</div><div class="who">Severance Intl</div><div class="tel">+82 2-2228-5800</div></div>
+        <div class="ct"><div class="role">U.S. Embassy Seoul</div><div class="who">Citizen Services</div><div class="tel">+82 2-397-4114</div></div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <div class="b">Mosim<span style="color:var(--gold);">.</span></div>
+      You're never alone on this trip. Keep this with you — print it, or save it on your phone.
+    </div>
+
+  </main>
+</body>
+</html>

@@ -60,3 +60,6 @@ coverage/
 
 # orchestrator intermediate artifacts (screenshots, specs-in-progress)
 _workspace/
+
+# design mockup output (not source)
+itinerary-preview-sample.pdf
