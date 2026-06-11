@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<!--
+  /itinerary.html — customer-facing final itinerary deliverable.
+  Token-fetched, DB-driven. No login required.
+
+  Approved by spec: docs/2026-06-11-itinerary-deliverable-design.md §6
+  (CLAUDE.md forbids NEW pages without PRD; this page IS in the approved spec).
+
+  Flow: ?t=<token> → GET /api/save-itinerary?t=<token> → render published `final`.
+  Response shape (contract, see api/save-itinerary.js getPublishedItinerary):
+    { title, cover:{title,eyebrow,party_size,care_summary}, depart_date,
+      final:{ flights:{outbound,inbound}, hotel, contacts[], days[] } }
+  The response is STRUCTURED — display strings (dates line, flight mainlines,
+  weekday/date per day) are composed CLIENT-SIDE here. Do not assume hardcoded text.
+
+  Layout (phone-first, matches mockup itinerary-preview.html):
+    cover → Flights & Hotel → Day by Day → Who to Call (bottom).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Korea Itinerary · Mosim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F;
+         --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8;
+         --care:#5C7C63; --rest:#C39A3F; --explore:#2A3C5E; --travel:#9A938A; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{ background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif;
+        -webkit-font-smoothing:antialiased; line-height:1.5; font-size:17px; }
+  h1,h2,h3,.brand{ font-family:'Lora',Georgia,serif; }
+  .label{ font-size:12px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold); }
+
+  /* ── screen-only action bar ── */
+  .bar{ position:sticky; top:0; z-index:5; display:flex; justify-content:space-between; align-items:center;
+        gap:16px; padding:14px 24px; background:var(--ivory-soft); border-bottom:1px solid var(--line); }
+  .brand{ font-weight:600; font-size:22px; text-decoration:none; color:var(--navy); }
+  .brand .dot{ color:var(--gold); }
+  .print-btn{ font-size:17px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy);
+              border-radius:999px; padding:13px 26px; min-height:52px; display:inline-flex; align-items:center;
+              gap:9px; cursor:pointer; text-decoration:none; }
+  .print-btn:hover{ background:var(--navy-soft); }
+
+  /* ── page ── */
+  .sheet{ max-width:760px; margin:0 auto; padding:28px 30px 70px; }
+
+  /* cover (compact) */
+  .cover{ text-align:center; padding:6px 0 18px; }
+  .cover h1{ font-size:clamp(26px,4vw,34px); font-weight:600; line-height:1.1; margin:8px 0 0; }
+  .cover .dates{ font-size:18px; color:var(--navy); margin:9px 0 0; font-weight:500; }
+  .cover .meta{ font-size:15px; color:var(--ink); margin:5px 0 0; }
+
+  /* section shell */
+  section{ margin-top:26px; }
+  .sec-h{ display:flex; align-items:baseline; gap:12px; margin:0 0 12px; }
+  .sec-h h2{ font-size:21px; font-weight:600; margin:0; }
+  .sec-h .num{ font-family:'Lora',serif; font-size:15px; color:var(--gold); font-weight:600; }
+  .sec-h::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  /* essentials card (flights + stay, compact rows) */
+  .card{ background:var(--ivory-soft); border:1px solid var(--line); border-radius:12px; padding:4px 18px; }
+  .erow{ display:grid; grid-template-columns:96px 1fr auto; gap:14px; align-items:center;
+         padding:13px 0; border-bottom:1px solid var(--line); }
+  .erow:last-child{ border-bottom:none; }
+  .erow .tag{ font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-2); }
+  .erow .tag .d{ display:block; font-size:13px; color:var(--ink); letter-spacing:0; font-weight:500; margin-top:2px; text-transform:none; }
+  .erow .mainline{ font-size:17px; color:var(--navy); font-weight:500; }
+  .erow .mainline b{ font-family:'Lora',serif; font-weight:600; }
+  .erow .mainline .arrow{ color:var(--gold); padding:0 4px; }
+  .erow .mainline .off{ font-size:13px; color:var(--ink-2); }
+  .erow .sub{ font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .erow .ref{ font-size:13px; color:var(--ink-2); text-align:right; white-space:nowrap; }
+  .erow .ref b{ display:block; font-size:15px; color:var(--navy); font-weight:600; }
+  .erow.stay{ border-left:0; }
+
+  /* who to call (compact, on page 1) */
+  .calls{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:10px; }
+  .ct{ background:var(--ivory-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px; }
+  .ct.primary{ grid-column:1/-1; background:var(--navy); border-color:var(--navy); color:#fff;
+               display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .ct .role{ font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink-2); }
+  .ct.primary .role{ color:var(--gold); }
+  .ct .who{ font-size:15px; font-weight:600; margin:2px 0 1px; }
+  .ct .tel{ font-size:17px; font-weight:600; font-family:'Lora',serif; }
+  .ct .tel a{ color:inherit; text-decoration:none; }
+  .ct.primary .who{ font-size:17px; }
+  .ct.primary .tel{ color:#fff; font-size:23px; }
+  .ct.primary .pr-l .role{ margin-bottom:2px; }
+
+  /* days */
+  .day{ border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:11px; break-inside:avoid; }
+  .day-h{ display:flex; align-items:baseline; gap:11px; background:var(--navy); color:#fff; padding:9px 18px; }
+  .day-h .dn{ font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
+  .day-h .dd{ font-family:'Lora',serif; font-size:17px; font-weight:600; }
+  .day-h .dt{ margin-left:auto; font-size:14px; color:#D7CDB6; }
+  .day-body{ padding:3px 18px 5px; background:#fff; }
+  .row{ display:grid; grid-template-columns:78px 1fr; gap:14px; padding:9px 0; border-bottom:1px solid var(--line); }
+  .row:last-child{ border-bottom:none; }
+  .row .t{ font-size:14px; font-weight:600; color:var(--gold); padding-top:1px; }
+  .row .a{ font-size:16px; color:var(--navy); }
+
+  .foot{ text-align:center; margin-top:30px; padding-top:18px; border-top:1px solid var(--line);
+         font-size:14px; color:var(--ink-2); }
+  .foot .b{ font-family:'Lora',serif; font-size:17px; color:var(--navy); }
+
+  /* ── status states (loading / not-found) ── */
+  .state{ max-width:560px; margin:0 auto; padding:90px 30px; text-align:center; }
+  .state .label{ display:block; margin-bottom:14px; }
+  .state h1{ font-size:clamp(24px,4vw,30px); font-weight:600; margin:0 0 12px; color:var(--navy); }
+  .state p{ font-size:18px; color:var(--ink); margin:0 0 8px; line-height:1.6; }
+  .state .tel{ font-family:'Lora',serif; font-size:20px; color:var(--navy); font-weight:600; }
+  .state .tel a{ color:inherit; text-decoration:none; }
+  .spinner{ width:34px; height:34px; margin:0 auto 22px; border-radius:50%;
+            border:3px solid var(--line); border-top-color:var(--gold); animation:spin .8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ── print ── */
+  @media print{
+    @page{ size:A4; margin:16mm 14mm; }
+    body{ background:#fff; font-size:12pt; }
+    .bar{ display:none !important; }
+    .sheet{ max-width:none; padding:0; }
+    section{ break-inside:avoid; margin-top:26px; }
+    .day-h{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .ct.primary, .flight, .hotel, .day-h{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .cover{ padding-top:0; }
+  }
+  @media (max-width:560px){
+    .sheet{ padding:24px 18px 56px; }
+    .erow{ grid-template-columns:1fr; gap:6px; }
+    .erow .ref{ text-align:left; }
+    .erow .ref b{ display:inline; }
+    .calls{ grid-template-columns:1fr; }
+    .ct.primary{ flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="bar" id="bar">
+    <a class="brand" href="/">Mosim<span class="dot">.</span></a>
+    <button class="print-btn" id="printBtn" onclick="window.print()" style="visibility:hidden;">⤓ &nbsp;Download PDF / Print</button>
+  </div>
+
+  <main id="app">
+    <!-- Loading state (default) -->
+    <div class="state" id="loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Opening your itinerary…</p>
+    </div>
+  </main>
+
+<script>
+(function () {
+  'use strict';
+
+  var app      = document.getElementById('app');
+  var printBtn = document.getElementById('printBtn');
+
+  // ── helpers ───────────────────────────────────────────────
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  var WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Parse "YYYY-MM-DD" as a local date (avoid UTC off-by-one).
+  function parseISO(s) {
+    if (!s || typeof s !== 'string') return null;
+    var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return null;
+    return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
+  // "Mon, Sep 14"
+  function fmtShort(d) {
+    if (!d) return '';
+    return WD[d.getDay()] + ', ' + MO[d.getMonth()] + ' ' + d.getDate();
+  }
+  // "Mon, Sep 14 – Sun, Sep 20, 2026"  (omit second weekday repeat only if needed — keep full per mockup)
+  function fmtRange(a, b) {
+    if (!a) return '';
+    var left = fmtShort(a);
+    if (!b) return left + ', ' + a.getFullYear();
+    var sameYear = a.getFullYear() === b.getFullYear();
+    var right = fmtShort(b) + ', ' + b.getFullYear();
+    return left + (sameYear ? '' : ', ' + a.getFullYear()) + ' – ' + right;
+  }
+  function addDays(d, n) {
+    var x = new Date(d.getTime());
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+  // "Sep 14" (short, no weekday) for hotel stay tag
+  function fmtTagShort(d) {
+    if (!d) return '';
+    return MO[d.getMonth()] + ' ' + d.getDate();
+  }
+
+  // ── render: full deliverable ──────────────────────────────
+  function renderItinerary(data) {
+    var cover = data.cover || {};
+    var final = data.final || {};
+    var flights = final.flights || {};
+    var hotel = final.hotel || null;
+    var contacts = Array.isArray(final.contacts) ? final.contacts : [];
+    var days = Array.isArray(final.days) ? final.days : [];
+
+    var depart = parseISO(data.depart_date);
+
+    // --- cover ---
+    var title = cover.title || data.title || 'Your Korea Itinerary';
+    var eyebrow = cover.eyebrow || 'Mosim Concierge · Your Itinerary';
+
+    // dates line ← depart_date + days.length (last day = depart + (N-1))
+    var datesLine = '';
+    if (depart && days.length) {
+      datesLine = fmtRange(depart, addDays(depart, days.length - 1));
+    } else if (depart) {
+      datesLine = fmtRange(depart, null);
+    }
+
+    // meta ← "N days · P travelers · care" (tolerate null party_size / care_summary)
+    var metaParts = [];
+    if (days.length) metaParts.push(days.length + (days.length === 1 ? ' day' : ' days'));
+    if (cover.party_size != null) {
+      var ps = Number(cover.party_size);
+      metaParts.push(ps + (ps === 1 ? ' traveler' : ' travelers'));
+    }
+    if (cover.care_summary) metaParts.push(cover.care_summary);
+    var metaLine = metaParts.join(' · ');
+
+    var html = '';
+    html += '<div class="sheet">';
+
+    // COVER
+    html += '<header class="cover">';
+    html += '<div class="label">' + esc(eyebrow) + '</div>';
+    html += '<h1>' + esc(title) + '</h1>';
+    if (datesLine) html += '<p class="dates">' + esc(datesLine) + '</p>';
+    if (metaLine)  html += '<p class="meta">' + esc(metaLine) + '</p>';
+    html += '</header>';
+
+    // FLIGHTS & HOTEL
+    var hasEssentials = flights.outbound || flights.inbound || hotel;
+    if (hasEssentials) {
+      html += '<section style="margin-top:18px;">';
+      html += '<div class="sec-h"><h2>Flights &amp; Hotel</h2></div>';
+      html += '<div class="card">';
+      if (flights.outbound) html += flightRow('Depart', flights.outbound);
+      if (flights.inbound)  html += flightRow('Return', flights.inbound);
+      if (hotel)            html += hotelRow(hotel, depart, days.length);
+      html += '</div></section>';
+    }
+
+    // DAY BY DAY
+    if (days.length) {
+      html += '<section><div class="sec-h"><h2>Day by Day</h2></div>';
+      for (var i = 0; i < days.length; i++) {
+        html += dayBlock(days[i]);
+      }
+      html += '</section>';
+    }
+
+    // WHO TO CALL (bottom)
+    if (contacts.length) {
+      html += '<section><div class="sec-h"><h2>Who to Call</h2></div>';
+      html += '<div class="calls">';
+      // primary first (navy hero), then the rest
+      var primaries = contacts.filter(function (c) { return c && c.primary; });
+      var others    = contacts.filter(function (c) { return c && !c.primary; });
+      primaries.forEach(function (c) { html += contactHero(c); });
+      others.forEach(function (c) { html += contactCard(c); });
+      html += '</div></section>';
+    }
+
+    // FOOT
+    html += '<div class="foot">';
+    html += '<div class="b">Mosim<span style="color:var(--gold);">.</span></div>';
+    html += "You're never alone on this trip. Keep this with you — print it, or save it on your phone.";
+    html += '</div>';
+
+    html += '</div>'; // .sheet
+
+    app.innerHTML = html;
+    printBtn.style.visibility = 'visible';
+  }
+
+  // compose a flight row (outbound/inbound) from structured fields
+  function flightRow(tagLabel, f) {
+    f = f || {};
+    var d = parseISO(f.date);
+    var dateTag = d ? fmtShort(d) : esc(f.date || '');
+
+    // mainline: DEP time → ARR time + offset
+    var main = '';
+    main += '<b>' + esc(f.dep_airport || '') + '</b> ' + esc(f.dep_time || '');
+    main += '<span class="arrow">→</span>';
+    main += '<b>' + esc(f.arr_airport || '') + '</b> ' + esc(f.arr_time || '');
+    if (f.arr_offset) main += ' <span class="off">' + esc(f.arr_offset) + '</span>';
+
+    // sub: airports + terminals
+    var depPart = esc(airportName(f.dep_airport));
+    if (f.dep_terminal) depPart += ' (' + esc(f.dep_terminal) + ')';
+    var arrPart = esc(airportName(f.arr_airport));
+    if (f.arr_terminal) arrPart += ' · ' + esc(f.arr_terminal);
+    var sub = depPart + ' → ' + arrPart;
+
+    // ref: airline + number
+    var ref = esc(f.airline || '');
+    if (f.number) ref += '<b>' + esc(f.number) + '</b>';
+
+    var r = '<div class="erow">';
+    r += '<div class="tag">' + esc(tagLabel) + '<span class="d">' + dateTag + '</span></div>';
+    r += '<div><div class="mainline">' + main + '</div><div class="sub">' + sub + '</div></div>';
+    r += '<div class="ref">' + ref + '</div>';
+    r += '</div>';
+    return r;
+  }
+
+  // friendly airport name for the sub-line (kept minimal; backend may pass codes only)
+  var AIRPORTS = {
+    'LAX': 'Los Angeles', 'ICN': 'Seoul Incheon', 'GMP': 'Seoul Gimpo',
+    'JFK': 'New York', 'SFO': 'San Francisco', 'SEA': 'Seattle',
+    'ORD': 'Chicago', 'ATL': 'Atlanta', 'DFW': 'Dallas', 'IAD': 'Washington'
+  };
+  function airportName(code) {
+    if (!code) return '';
+    return AIRPORTS[code] || code;
+  }
+
+  function hotelRow(h, depart, dayCount) {
+    h = h || {};
+    // stay tag range: prefer hotel checkin/checkout; else derive from depart + days
+    var inD  = parseISO(h.checkin)  || depart;
+    var outD = parseISO(h.checkout) || (depart && dayCount ? addDays(depart, dayCount - 1) : null);
+    var stayTag = '';
+    if (inD && outD) stayTag = fmtTagShort(inD) + ' – ' + outD.getDate();
+    else if (inD)    stayTag = fmtTagShort(inD);
+
+    var sub = esc(h.address || '');
+    if (h.phone) sub += (sub ? ' · ' : '') + esc(h.phone);
+
+    var ref = '';
+    if (h.confirmation) ref = 'Confirmation<b>' + esc(h.confirmation) + '</b>';
+
+    var r = '<div class="erow stay">';
+    r += '<div class="tag">Stay<span class="d">' + esc(stayTag) + '</span></div>';
+    r += '<div><div class="mainline"><b>' + esc(h.name || '') + '</b></div>';
+    if (sub) r += '<div class="sub">' + sub + '</div>';
+    r += '</div>';
+    r += '<div class="ref">' + ref + '</div>';
+    r += '</div>';
+    return r;
+  }
+
+  function dayBlock(day) {
+    day = day || {};
+    var d = parseISO(day.date);
+    var dateLabel = d ? fmtShort(d) : esc(day.date || '');
+    var items = Array.isArray(day.items) ? day.items : [];
+
+    var r = '<div class="day">';
+    r += '<div class="day-h">';
+    r += '<span class="dn">Day ' + esc(day.day != null ? day.day : '') + '</span>';
+    r += '<span class="dd">' + esc(day.title || '') + '</span>';
+    if (dateLabel) r += '<span class="dt">' + dateLabel + '</span>';
+    r += '</div>';
+    r += '<div class="day-body">';
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i] || {};
+      r += '<div class="row"><div class="t">' + esc(it.time || '') + '</div>'
+         + '<div class="a">' + esc(it.label || '') + '</div></div>';
+    }
+    r += '</div></div>';
+    return r;
+  }
+
+  function telLink(tel) {
+    if (!tel) return '';
+    var clean = String(tel).replace(/[^\d+]/g, '');
+    return '<a href="tel:' + esc(clean) + '">' + esc(tel) + '</a>';
+  }
+
+  function contactHero(c) {
+    c = c || {};
+    var r = '<div class="ct primary">';
+    r += '<div class="pr-l">';
+    r += '<div class="role">' + esc(c.role || '') + '</div>';
+    r += '<div class="who">' + esc(c.who || '') + '</div>';
+    r += '</div>';
+    r += '<div class="tel">' + telLink(c.tel) + '</div>';
+    r += '</div>';
+    return r;
+  }
+
+  function contactCard(c) {
+    c = c || {};
+    var r = '<div class="ct">';
+    r += '<div class="role">' + esc(c.role || '') + '</div>';
+    r += '<div class="who">' + esc(c.who || '') + '</div>';
+    r += '<div class="tel">' + telLink(c.tel) + '</div>';
+    r += '</div>';
+    return r;
+  }
+
+  // ── render: graceful states ───────────────────────────────
+  function renderState(headline, body, opts) {
+    opts = opts || {};
+    var html = '<div class="state">';
+    html += '<span class="label">Mosim Concierge</span>';
+    html += '<h1>' + esc(headline) + '</h1>';
+    html += '<p>' + esc(body) + '</p>';
+    if (opts.showCall) {
+      html += '<p>Call your Mosim concierge anytime:</p>';
+      html += '<p class="tel"><a href="tel:+821012345678">+82 10-1234-5678</a></p>';
+    }
+    html += '</div>';
+    app.innerHTML = html;
+    printBtn.style.visibility = 'hidden';
+  }
+
+  function showNotFound() {
+    renderState(
+      'We couldn’t open this itinerary',
+      'This link may be incomplete, or your itinerary isn’t ready to view yet. Please double-check the link from your email — we’re here to help.',
+      { showCall: true }
+    );
+  }
+  function showError() {
+    renderState(
+      'Something went wrong',
+      'We couldn’t load your itinerary just now. Please try again in a moment.',
+      { showCall: true }
+    );
+  }
+
+  // ── boot ──────────────────────────────────────────────────
+  function getToken() {
+    var p = new URLSearchParams(window.location.search);
+    return (p.get('t') || '').trim();
+  }
+
+  function init() {
+    var token = getToken();
+    if (!token) { showNotFound(); return; }
+
+    fetch('/api/save-itinerary?t=' + encodeURIComponent(token))
+      .then(function (res) {
+        if (res.status === 404) { showNotFound(); return null; }
+        if (!res.ok) { showError(); return null; }
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data) return;            // already handled (404 / error)
+        try { renderItinerary(data); }
+        catch (e) { console.error('[itinerary] render failed', e); showError(); }
+      })
+      .catch(function (e) {
+        console.error('[itinerary] fetch failed', e);
+        showError();
+      });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

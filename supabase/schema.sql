@@ -36,6 +36,24 @@ create table if not exists public.itineraries (
 -- (added 2026-06-08 for the cockpit Flight/Stay tracking; applied via dashboard)
 alter table public.itineraries add column if not exists flight_status text not null default 'none';
 alter table public.itineraries add column if not exists stay_status   text not null default 'none';
+-- (added 2026-06-11 for the itinerary deliverable; applied via Management API)
+--   final        = final customer deliverable { flights, hotel, contacts, days } (schedule = AI draft, kept)
+--   depart_date  = real departure date (Day N date mapping)
+--   share_token  = public link token (set on publish), unique
+--   published_at = null = unpublished, value = customer-accessible via /itinerary.html?t=<token>
+alter table public.itineraries add column if not exists final        jsonb;
+alter table public.itineraries add column if not exists depart_date  date;
+alter table public.itineraries add column if not exists share_token  text;
+alter table public.itineraries add column if not exists published_at timestamptz;
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'itineraries_share_token_key') then
+    alter table public.itineraries add constraint itineraries_share_token_key unique (share_token);
+  end if;
+end $$;
+-- Public token read is NOT a client RLS path: api/save-itinerary.js (GET ?t=) uses
+-- the service role to return a row only when share_token matches AND published_at is not null.
+-- Owners still read their own rows via the existing "own itin r" policy.
 
 create index if not exists itineraries_user_id_created_idx
   on public.itineraries(user_id, created_at desc);
