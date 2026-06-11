@@ -8,6 +8,7 @@
 - [ ] **Medical 페이지 — 세부사항 업데이트** — 진료 항목별 상세 내용 보강
 - [ ] **예약요청 이메일 — 내용·디자인 폴리시** — 발송은 동작하나 카피·디자인 개선 필요 (`api/reserve.js` → `api/_lib/email.js`; 발행 이메일 `api/admin/trips.js`, 결제 이메일 `api/_lib/pay-emails.js`)
 - [ ] **로딩 화면 페이싱 (~28초 대기)** — `loading.html` 진행바는 5.2초에 끝나는데 실제 AI 생성은 ~28초 → 시니어가 멈춘 듯 느낌. 바 느리게 / 안내 단계 추가 / 스트리밍 등으로 개선
+- [ ] **/pay 결제 페이지 — 문구 폴리시** — "Mosim concierge fee" 카드 카피 손보기 (설명문·"directly by those providers"·prorate 안내·"Sharing the cost"·"Fully paid" 등). founder가 특정 변경 예정. 위치: `pay.html` + `js/pay.js`
 
 ## 마케팅 시작할 때
 - [ ] IG / YouTube / Facebook 링크에 **UTM 태그** 붙이기 (예: `?utm_source=instagram&utm_medium=social`) → cockpit Marketing "채널" 카드에 채널별 유입·전환 집계
