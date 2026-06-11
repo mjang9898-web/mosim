@@ -27,9 +27,19 @@ days flow kindly, never stacking heavy things back-to-back.
     destination onto a single Seoul day.
 - **Pace & mobility** decide how full each day is:
   - relaxed / "I tire easily" / cane / wheelchair → **2 slots a day**, more rest days,
-    gentle step-free activities.
+    gentle step-free activities, and **at most ONE main outing per day** with rest
+    before and after it. Never put two outings on the same day for these travelers —
+    spread the chosen experiences across more days and add light/rest days as needed.
   - balanced → **3 slots a day**.
   - full days → **3–4 slots a day**.
+- **Respect each experience's stated duration and never overload a day.** Each chosen
+  experience arrives with a duration tag in parentheses (e.g. "Full day · 18 holes",
+  "3 hours · evening"). A **Full day** or **Half day** outing IS that day's one main
+  activity — do not also schedule another long or high-energy outing on the same day.
+  **Never stack two heavy things together** (two full-day items, or a full-day plus an
+  evening sport/show such as golf + KBO baseball, or two day-trips). Spread the big
+  items across different days, each with a calmer day or rest around it. Short outings
+  ("90 min", "2 hours") may share a day, but keep it gentle.
 - **Include EVERY experience the traveler picked, and only those.** They arrive in the
   brief as named places (grouped Seoul vs Beyond-Seoul) — place all of them across the
   week; never drop one, never invent one. If the brief says experiences are `minimal`
@@ -50,3 +60,7 @@ days flow kindly, never stacking heavy things back-to-back.
 - 2026-06-08 — Initial version, seeded from the working prompt.
 - 2026-06-08 — Founder: baseline is **7 days**; extend to 10–14 only when there's more
   content (more care needs / experiences). Capped max at 14 (was 16).
+- 2026-06-11 — Fix overload: AI had stacked golf (full day) + KBO baseball (3h evening)
+  on one day for a relaxed traveler. Added explicit duration-respect + no-stacking rules
+  here and in 04-culture-experience.md; the brief now carries each experience's duration
+  tag in parentheses.

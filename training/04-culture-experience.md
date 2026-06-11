@@ -6,10 +6,25 @@ senior-friendly pace.
 
 ## How experiences reach you
 
-The traveler picked specific, **named** experiences (e.g. "Korean Royal Palace Tour",
-"Private Tea Ceremony", "Jeju Island"). They arrive in the brief as named places,
-grouped **In/around Seoul** vs **Beyond Seoul**. Your job is to place EVERY one they
-chose into the week — never drop any, never add ones they didn't pick.
+The traveler picked specific, **named** experiences, each with its **duration/intensity
+in parentheses** (e.g. "Signature Golf Course Round (Full day · 18 holes)", "KBO Baseball
+with Private Box (3 hours · with snacks)", "Private Tea Ceremony (90 min · private room)",
+"Jeju Island"). They arrive in the brief grouped **In/around Seoul** vs **Beyond Seoul**.
+Your job is to place EVERY one they chose into the week — never drop any, never add ones
+they didn't pick — **and pace them by their stated duration**.
+
+## Respect duration — never overload a day
+
+- A **Full day** or **Half day** experience is that day's ONE main outing. Do **not** put
+  another long or high-energy activity on the same day.
+- **Never stack two heavy things on one day** — e.g. golf (full day) + KBO baseball
+  (3h evening), or two day-trips. That was a real failure: golf and baseball landed on the
+  same day for a relaxed traveler. Spread big items across **different** days with a calmer
+  day or rest in between.
+- Short outings ("90 min", "2 hours") may share a day, but keep it gentle and leave room
+  to sit and rest.
+- On a **relaxed** pace, or **tires easily / cane / wheelchair**: at most **one** main
+  outing per day, surrounded by rest. Add light days and spread experiences out.
 
 ## Trusted places (by interest, in/around Seoul)
 
@@ -51,6 +66,8 @@ or longer trip (within the day cap).
 - DO treat Beyond-Seoul picks as real flight/KTX + overnight excursions, never as Seoul
   day trips.
 - DO keep outings short and restful on or near care days.
+- DO read each experience's parenthesized duration and respect it; a Full/Half day item is
+  the day's only main outing. DON'T stack two heavy or long activities on one day.
 - If the brief says experiences are `minimal`, include **almost no** sightseeing — at
   most one very easy outing.
 - DON'T plan long walks, stairs, or crowded peak-hour visits for travelers who tire

@@ -284,16 +284,18 @@ function MeOverview() {
             <div style={{marginTop:14}}>
               <div style={{fontSize:14, color:'#8A8479'}}>Balance due</div>
               <div style={{fontSize:28, fontWeight:600, color:'#1B2A4A', fontFamily:'Lora, serif'}}>${due.toLocaleString()}</div>
-              <div style={{fontSize:13, color:'#8A8479', margin:'2px 0 14px'}}>${Number(payg.amount_paid).toLocaleString()} of ${Number(payg.total_amount).toLocaleString()} paid</div>
-              <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
-                <a href={payg.share_token ? `/pay.html?g=${payg.share_token}` : '#'} style={{display:'inline-block', padding:'11px 22px', background:'#1B2A4A', color:'#fff', borderRadius:10, textDecoration:'none', fontSize:15, fontWeight:600}}>Pay now</a>
-                {payg.share_token && (
-                  <button onClick={() => { navigator.clipboard.writeText(window.location.origin + '/pay.html?g=' + payg.share_token); setCopied(true); setTimeout(() => setCopied(false), 2500); }}
-                    style={{padding:'11px 20px', background:'#fff', color:'#1B2A4A', border:'1.5px solid #C39A3F', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer'}}>
-                    {copied ? 'Link copied ✓' : 'Split the cost'}
-                  </button>
-                )}
-              </div>
+              <div style={{fontSize:13, color:'#8A8479', margin:'2px 0 16px'}}>${Number(payg.amount_paid).toLocaleString()} of ${Number(payg.total_amount).toLocaleString()} paid</div>
+              <a href={payg.share_token ? `/pay.html?g=${payg.share_token}` : '#'}
+                 style={{display:'block', padding:'14px 22px', background:'#1B2A4A', color:'#fff', borderRadius:10, textDecoration:'none', fontSize:17, fontWeight:600, textAlign:'center', lineHeight:1.35}}>
+                Pay your concierge fee
+                <span style={{display:'block', fontSize:13.5, fontWeight:500, opacity:.82, marginTop:2}}>Split it with companions</span>
+              </a>
+              {payg.share_token && (
+                <button onClick={() => { navigator.clipboard.writeText(window.location.origin + '/pay.html?g=' + payg.share_token); setCopied(true); setTimeout(() => setCopied(false), 2500); }}
+                  style={{display:'block', width:'100%', marginTop:10, padding:'11px 20px', background:'#fff', color:'#1B2A4A', border:'1.5px solid #C39A3F', borderRadius:10, fontSize:15, fontWeight:600, cursor:'pointer'}}>
+                  {copied ? 'Link copied ✓' : 'Copy the payment link'}
+                </button>
+              )}
               {payg.share_token && (
                 <p style={{fontSize:13, color:'#8A8479', margin:'12px 0 0', lineHeight:1.5}}>Paying with others? Share that link — each person pays their share, no account needed.</p>
               )}

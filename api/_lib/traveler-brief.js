@@ -82,7 +82,14 @@ function labelExperience(code) {
   const known = EXPERIENCE_LABELS[code];
   if (known) return known;
   // Unknown experience code: pass through, best-effort, flagged seoul by default.
-  return { name: humanize(code), group: 'Other', region: 'seoul' };
+  return { name: humanize(code), group: 'Other', region: 'seoul', meta: '' };
+}
+
+// "Signature Golf Course Round (Full day · 18 holes)" — name plus its duration/
+// intensity tag so the planner can respect how long & how heavy each outing is.
+function expWithMeta(e) {
+  const meta = (e.meta || '').trim();
+  return meta ? `${e.name} (${meta})` : e.name;
 }
 
 function labelFood(code) {
@@ -137,12 +144,14 @@ export function buildTravelerBrief(state) {
     } else {
       const parts = [];
       if (seoul.length) {
-        parts.push('In/around Seoul: ' + seoul.map((e) => e.name).join('; ') + '.');
+        // Each carries its duration/intensity in parentheses so the planner can
+        // pace the day correctly and never stack two long/heavy outings together.
+        parts.push('In/around Seoul (duration in parentheses — respect it): ' + seoul.map(expWithMeta).join('; ') + '.');
       }
       if (beyond.length) {
         parts.push(
           'BEYOND SEOUL (real excursions — each may need an internal flight and/or an overnight, not a Seoul day trip): '
-          + beyond.map((e) => e.name).join('; ') + '.'
+          + beyond.map(expWithMeta).join('; ') + '.'
         );
       }
       lines.push('EXPERIENCES THEY CHOSE (include EVERY one): ' + parts.join(' '));

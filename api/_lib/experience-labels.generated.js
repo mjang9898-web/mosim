@@ -7,282 +7,338 @@ export const EXPERIENCE_LABELS = {
   "gyeongbokgung": {
     "name": "Korean Royal Palace Tour",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Half day · with historian"
   },
   "changdeokgung": {
     "name": "Royal Garden Palace Visit",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · UNESCO"
   },
   "deoksugung": {
     "name": "Evening Lantern Palace Walk",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · evening"
   },
   "changgyeonggung": {
     "name": "Moonlit Palace Night Opening",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · seasonal"
   },
   "jongmyo": {
     "name": "Royal Ancestral Shrine",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · UNESCO"
   },
   "huwon": {
     "name": "The King's Secret Garden Walk",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · guided"
   },
   "bukchon": {
     "name": "Traditional Hanok Village Stroll",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · walking"
   },
   "bongeunsa": {
     "name": "City Mountain Temple Visit",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · meditation"
   },
   "jogyesa": {
     "name": "Flower Lantern Temple Visit",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "60 min · seasonal"
   },
   "haeinsa": {
     "name": "Tripitaka Templestay Overnight",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "24 hours · with monk"
   },
   "meditation": {
     "name": "Buddhist Meditation Session",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · with monk"
   },
   "tea": {
     "name": "Private Tea Ceremony",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · private room"
   },
   "calligraphy": {
     "name": "Brush Calligraphy with Master",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · private"
   },
   "hanbok": {
     "name": "Royal Dress Fitting & Photoshoot",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Half day · private"
   },
   "royalcuisine": {
     "name": "Royal Court Cuisine Tasting",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · with sommelier"
   },
   "nationalmuseum": {
     "name": "National History Museum",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · curator-led"
   },
   "warmemorial": {
     "name": "War Memorial & Monument",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · guided"
   },
   "cheonggye": {
     "name": "Cheonggyecheon Stream Walk",
     "group": "Heritage",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · evening best"
   },
   "seongsu": {
     "name": "Brooklyn-of-Seoul Café & Boutique Walk",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · self-paced"
   },
   "myeongdong": {
     "name": "Main Shopping Street & K-Beauty",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · with stylist"
   },
   "apgujeong": {
     "name": "Designer Luxury Boutique Row",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Half day · concierge"
   },
   "coex": {
     "name": "Starfield Library & Mega Mall",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · indoors"
   },
   "garosugil": {
     "name": "Tree-lined Boutique Avenue",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · walking"
   },
   "hongdae": {
     "name": "Youth Street Fashion Quarter",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · evening best"
   },
   "ikseondong": {
     "name": "Hanok Alleys, Cafés & Boutiques",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · self-paced"
   },
   "gwangjang": {
     "name": "Traditional Street Food Market",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · with foodie"
   },
   "namdaemun": {
     "name": "Largest Night Market",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · evening"
   },
   "ddp": {
     "name": "Modern Design Plaza & Shopping",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · Zaha Hadid"
   },
   "ddm": {
     "name": "Midnight Fashion Wholesale",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · 11pm–5am"
   },
   "kbeauty": {
     "name": "K-Beauty Flagship Tour",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Half day · with samples"
   },
   "insadong": {
     "name": "Traditional Craft & Antique Lanes",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · with curator"
   },
   "hannam": {
     "name": "Boutique Gallery & Concept Row",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · walking"
   },
   "commonground": {
     "name": "Container Market & Pop-ups",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · self-paced"
   },
   "taxfree": {
     "name": "Tax-Free Designer Outlet Day",
     "group": "Shop",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Full day · with driver"
   },
   "baseball": {
     "name": "KBO Baseball with Private Box",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · with snacks"
   },
   "golf": {
     "name": "Signature Golf Course Round",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Full day · 18 holes"
   },
   "kpop-concert": {
     "name": "K-Pop Concert with VIP Access",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "3 hours · soundcheck pass"
   },
   "hybe": {
     "name": "K-Pop Label Studio Tour",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · BTS HQ"
   },
   "smtown": {
     "name": "K-Pop Artists Museum",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · self-paced"
   },
   "kpop-class": {
     "name": "K-Pop Dance Class",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · private"
   },
   "namsan-tower": {
     "name": "N Seoul Tower at Sunset",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · cable car"
   },
   "lotte": {
     "name": "Skyscraper SkyDeck at Sunset",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "60 min · 555m"
   },
   "hanriver-yacht": {
     "name": "Han River Sunset Yacht Cruise",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "2 hours · with champagne"
   },
   "hanriver": {
     "name": "Han River Sunrise Kayak",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · sunrise"
   },
   "forestbath": {
     "name": "Mountain Forest Bathing",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Half day · with guide"
   },
   "dmz": {
     "name": "Border Zone Private Tour",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "Full day · pre-cleared"
   },
   "royalmusic": {
     "name": "Royal Court Music Recital",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · private"
   },
   "bboy": {
     "name": "B-Boy Showcase in Hongdae",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · world champions"
   },
   "nanta": {
     "name": "Non-Verbal Drum Show",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · family-friendly"
   },
   "pansori": {
     "name": "Korean Epic Vocal Performance",
     "group": "Famous",
-    "region": "seoul"
+    "region": "seoul",
+    "meta": "90 min · with translator"
   },
   "jeju": {
     "name": "Jeju Island",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   },
   "busan": {
     "name": "Busan",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   },
   "gyeongju": {
     "name": "Gyeongju",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   },
   "jeonju": {
     "name": "Jeonju",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   },
   "gangwon": {
     "name": "Gangwon-do",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   },
   "incheon": {
     "name": "Incheon",
     "group": "Beyond Seoul",
-    "region": "beyond_seoul"
+    "region": "beyond_seoul",
+    "meta": ""
   }
 };
 

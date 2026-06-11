@@ -8,9 +8,12 @@
 // on the next `npm run build` — funnel / brief / prompt can never drift.
 //
 // Emits three maps:
-//   EXPERIENCE_LABELS: code -> { name, group, region }
+//   EXPERIENCE_LABELS: code -> { name, group, region, meta }
 //       group  = the CULTURE_PAGES page label (Heritage / Shop / Famous / Beyond Seoul)
 //       region = 'seoul' | 'beyond_seoul'  (jeju/busan/gyeongju/jeonju/gangwon/incheon = beyond_seoul)
+//       meta   = the funnel's duration/intensity tag verbatim (e.g. "Full day · 18 holes",
+//                "3 hours · with snacks") so the brief can tell the planner how long each
+//                experience takes and how heavy it is. Drives the no-overload pacing rules.
 //   ALLERGEN_LABELS: code -> name   (comfort.food allergen codes)
 //   DIET_LABELS:     code -> name   (comfort.food diet/religion codes)
 //
@@ -85,6 +88,9 @@ for (const page of CULTURE_PAGES) {
       name: item.name || item.code,
       group,
       region,
+      // Duration/intensity tag from the funnel card (may be empty for Beyond-Seoul
+      // destinations, which carry their own travel/overnight shape in the prompt).
+      meta: (item.meta || '').trim(),
     };
     total++;
   }

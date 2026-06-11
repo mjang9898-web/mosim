@@ -157,6 +157,43 @@
       .finally(() => setTimeout(() => { $('copyBtn').textContent = 'Copy payment link'; }, 2000));
   });
 
+  // Email this payment link to a companion.
+  const validEmail = (e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+  async function sendCompanionEmail() {
+    const input = $('companionEmail');
+    const msg = $('emailMsg');
+    const btn = $('emailBtn');
+    const email = (input.value || '').trim();
+    if (!validEmail(email)) {
+      msg.style.color = '#a00';
+      msg.textContent = 'Please enter a valid email address.';
+      input.focus();
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
+    try {
+      const r = await fetch('/api/payment-group', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: token, companion_email: email })
+      });
+      const b = await r.json().catch(() => ({}));
+      if (r.ok && b.ok) {
+        msg.style.color = '#0a6';
+        msg.textContent = 'Sent ✓ — we emailed the payment link to ' + email + '.';
+        input.value = '';
+      } else {
+        msg.style.color = '#a00';
+        msg.textContent = b.error || 'Could not send — please try again.';
+      }
+    } catch (e) {
+      msg.style.color = '#a00';
+      msg.textContent = 'Could not send — please try again.';
+    }
+    btn.disabled = false; btn.textContent = 'Email this link';
+  }
+  $('emailBtn') && $('emailBtn').addEventListener('click', sendCompanionEmail);
+  $('companionEmail') && $('companionEmail').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); sendCompanionEmail(); } });
+
   (async function init() {
     if (!token) return showError('Invalid payment link.');
     try {

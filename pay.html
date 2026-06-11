@@ -39,6 +39,12 @@
     button.copy{ font-size:17px; font-weight:600; padding:11px 18px; border:1.5px solid var(--gold); color:var(--navy); background:#fff; border-radius:10px; cursor:pointer; min-height:44px; }
     button.copy:hover{ background:var(--ivory-soft); }
     .paid{ color:var(--care); font-size:22px; font-weight:700; }
+    .email-share{ margin-top:16px; }
+    .email-share label{ display:block; margin:0 0 7px; font-weight:600; font-size:15px; color:var(--ink-2); }
+    .email-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .email-row input[type=email]{ flex:1; min-width:180px; font-size:18px; padding:11px 14px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; color:var(--navy); }
+    .email-row input[type=email]:focus{ outline:none; border-color:var(--gold); }
+    #emailMsg{ min-height:1.2em; margin-top:9px; font-size:15px; }
     .consent{ display:flex; gap:10px; align-items:flex-start; margin:16px 0 14px; font-size:15px; color:var(--ink); line-height:1.5; cursor:pointer; }
     .consent input{ width:20px; height:20px; margin-top:1px; flex:none; accent-color:var(--navy); cursor:pointer; }
     .consent a{ color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:2px; }
@@ -78,6 +84,14 @@
       <div class="share">
         <div class="muted">Sharing the cost? Send this link to the others paying:</div>
         <button class="copy" id="copyBtn" type="button">Copy payment link</button>
+        <div class="email-share">
+          <label for="companionEmail">Or email it to someone:</label>
+          <div class="email-row">
+            <input type="email" id="companionEmail" placeholder="their@email.com" autocomplete="off" />
+            <button class="copy" id="emailBtn" type="button">Email this link</button>
+          </div>
+          <div id="emailMsg"></div>
+        </div>
       </div>
     </div>
     <div id="error" style="display:none; color:#A4452F"></div>

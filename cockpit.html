@@ -213,6 +213,33 @@
   </div>
 </div>
 
+<div class="modal-bg" id="book-modal">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+      <h2>Confirm booking &amp; concierge fee</h2>
+      <button id="book-close" style="font:inherit; font-size:22px; border:none; background:none; cursor:pointer; color:#888; line-height:1;">&times;</button>
+    </div>
+    <p style="color:#777; font-size:14px; margin:0 0 18px; line-height:1.5;">Marking this trip <b>booked</b> creates the concierge-fee payment request and emails the customer their pay link.</p>
+    <div id="book-trip" style="font-weight:600; font-size:15px; margin-bottom:14px;"></div>
+    <label style="display:block; font-size:13px; font-weight:600; color:#666; margin-bottom:5px;">Travelers</label>
+    <input id="book-travelers" type="number" min="1" step="1" style="width:90px; font-size:15px; padding:9px 11px; border:1px solid var(--border); border-radius:9px;" />
+    <div id="book-basis" style="font-size:13px; color:#999; margin:8px 0 16px;"></div>
+    <label style="display:block; font-size:13px; font-weight:600; color:#666; margin-bottom:5px;">Concierge total (USD)</label>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:18px; color:#666;">$</span>
+      <input id="book-total" type="number" min="0" step="1" style="width:140px; font-size:18px; padding:9px 11px; border:1px solid var(--border); border-radius:9px;" />
+      <button id="book-recompute" type="button" style="font:inherit; font-size:13px; color:var(--navy); background:none; border:none; text-decoration:underline; cursor:pointer;">recompute</button>
+    </div>
+    <div style="font-size:12px; color:#aaa; margin-top:5px;">$1,200 per traveler for a 7-day trip, prorated to this trip's day count. Edit the total if you've agreed on a different amount.</div>
+    <div id="book-msg" style="min-height:1.2em; font-size:14px; margin:14px 0 0;"></div>
+    <div id="book-result" style="display:none; margin-top:14px; padding:14px; background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px;"></div>
+    <div style="display:flex; gap:10px; margin-top:18px;">
+      <button id="book-confirm" class="addbtn" style="background:#1b6e3d;">Confirm &amp; create payment</button>
+      <button id="book-cancel" type="button" style="font:inherit; font-size:14px; font-weight:600; color:#666; background:#fff; border:1px solid var(--border); border-radius:9px; padding:9px 18px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="itin-modal">
   <div class="modal wide">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -626,6 +653,12 @@
   }
 
   async function updateField(id, field, value, sel) {
+    // Booking → concierge fee: confirm travelers + total, then create the payment group.
+    if (field === 'status' && value === 'booked') {
+      const x = trips.find((tt) => tt.id === id);
+      if (x && (!x.payment)) { openBookModal(x, sel); return; }
+      // already has a payment group — just flip status normally below
+    }
     sel.disabled = true;
     try {
       const body = { itinerary_id: id }; body[field] = value;
@@ -638,6 +671,85 @@
     } catch (e) { alert('Could not update.'); }
     sel.disabled = false;
   }
+
+  // ── Booking modal: confirm travelers + concierge total, create payment group ──
+  const BASE_FEE = 1200, BASE_DAYS = 7;
+  const bookModal = document.getElementById('book-modal');
+  let bookCtx = null;   // { trip, sel }
+
+  function perPerson(days) { return Math.round((BASE_FEE / BASE_DAYS) * (days || BASE_DAYS)); }
+  function recomputeBookTotal() {
+    if (!bookCtx) return;
+    const days = bookCtx.trip.days || BASE_DAYS;
+    const travelers = Math.max(1, parseInt(document.getElementById('book-travelers').value, 10) || 1);
+    const pp = perPerson(days);
+    document.getElementById('book-total').value = pp * travelers;
+    document.getElementById('book-basis').textContent =
+      '$' + pp.toLocaleString() + ' per traveler · ' + (days || BASE_DAYS) + '-day trip × ' + travelers + (travelers === 1 ? ' traveler' : ' travelers');
+  }
+
+  function openBookModal(x, sel) {
+    bookCtx = { trip: x, sel: sel };
+    document.getElementById('book-trip').textContent = (x.customer.name || 'Customer') + ' — ' + (x.title || 'Korea trip');
+    document.getElementById('book-travelers').value = (x.partySize && x.partySize > 0) ? x.partySize : 2;
+    document.getElementById('book-msg').textContent = '';
+    document.getElementById('book-result').style.display = 'none';
+    const confirmBtn = document.getElementById('book-confirm');
+    confirmBtn.disabled = false; confirmBtn.textContent = 'Confirm & create payment';
+    recomputeBookTotal();
+    bookModal.style.display = 'flex';
+    document.getElementById('book-travelers').focus();
+  }
+
+  function closeBookModal(reverted) {
+    bookModal.style.display = 'none';
+    // If the admin cancelled before confirming, snap the dropdown back to the real status.
+    if (reverted && bookCtx && bookCtx.sel) bookCtx.sel.value = bookCtx.trip.status;
+    bookCtx = null;
+  }
+
+  document.getElementById('book-travelers').addEventListener('input', recomputeBookTotal);
+  document.getElementById('book-recompute').addEventListener('click', recomputeBookTotal);
+  document.getElementById('book-close').addEventListener('click', () => closeBookModal(true));
+  document.getElementById('book-cancel').addEventListener('click', () => closeBookModal(true));
+  bookModal.addEventListener('click', (e) => { if (e.target === bookModal) closeBookModal(true); });
+
+  document.getElementById('book-confirm').addEventListener('click', async () => {
+    if (!bookCtx) return;
+    const travelers = Math.max(1, parseInt(document.getElementById('book-travelers').value, 10) || 1);
+    const days = bookCtx.trip.days || BASE_DAYS;
+    const totalVal = Math.round(parseFloat(document.getElementById('book-total').value));
+    const computed = perPerson(days) * travelers;
+    const body = { itinerary_id: bookCtx.trip.id, status: 'booked', travelers: travelers };
+    if (Number.isFinite(totalVal) && totalVal > 0 && totalVal !== computed) body.total_override = totalVal;
+
+    const btn = document.getElementById('book-confirm');
+    btn.disabled = true; btn.textContent = 'Creating…';
+    const msg = document.getElementById('book-msg'); msg.textContent = ''; msg.style.color = '#a00';
+    try {
+      const r = await fetch('/api/admin/trip-status', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify(body)
+      });
+      const b = await r.json().catch(() => ({}));
+      if (!r.ok) { msg.textContent = b.error || 'Could not confirm booking.'; btn.disabled = false; btn.textContent = 'Confirm & create payment'; return; }
+      const payUrl = b.url || ('/pay.html?g=' + (b.share_token || ''));
+      const res = document.getElementById('book-result');
+      res.innerHTML = '<div style="font-weight:600; color:#1b6e3d; margin-bottom:6px;">Booked · payment request created · customer emailed ✓</div>'
+        + '<div style="font-size:13px; color:#555;">Total $' + Number(b.total || totalVal || computed).toLocaleString() + ' · ' + (b.travelers || travelers) + (((b.travelers || travelers) === 1) ? ' traveler' : ' travelers') + '</div>'
+        + '<div style="margin-top:8px;"><a href="' + esc(payUrl) + '" target="_blank" rel="noopener" style="font-size:14px; font-weight:600; color:var(--navy);">' + esc(payUrl) + '</a></div>';
+      res.style.display = 'block';
+      btn.style.display = 'none';
+      document.getElementById('book-cancel').textContent = 'Done';
+      // reflect new state in the table behind the modal
+      const x = trips.find((tt) => tt.id === bookCtx.trip.id);
+      if (x) { x.status = 'booked'; x.payment = { status: 'open', paid: 0, total: Number(b.total || computed), token: b.share_token }; }
+      bookCtx = null;
+      loadTrips();
+    } catch (e) {
+      msg.textContent = 'Could not confirm booking.'; btn.disabled = false; btn.textContent = 'Confirm & create payment';
+    }
+  });
 
   // ── Set up the concierge-fee payment for a trip (Mosim invoices) ──
   async function setupPayment(id, btn) {
