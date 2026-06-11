@@ -3,7 +3,10 @@
 //
 // What's FIXED here (not editable in training/, so a note edit can't break the
 // website or the safety rule): the output JSON contract, the medical-safety
-// guardrail, and the input label maps. Everything else comes from training/*.md.
+// guardrail, and how to read the traveler brief. Everything else comes from
+// training/*.md. NOTE: the experience vocabulary is no longer hardcoded here —
+// api/schedule.js sends a plain-English brief (named places, Seoul vs
+// Beyond-Seoul) built from the same funnel source via traveler-brief.js.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,11 +31,16 @@ Return ONLY a single JSON object — no prose, no markdown, no code fences:
 const SAFETY = `# Safety (never break this)
 You are NOT a doctor. Never give medical advice, diagnoses, dosages, or promise outcomes. Describe appointment LOGISTICS and experiences only — e.g. "Health screening at Severance", never "this will cure you". Keep medical slots factual and calm.`;
 
-const LABEL_MAPS = `# Input label maps (funnel codes -> meaning)
-care.needs: screening = comprehensive health screening; knees = knees & joints (orthopedics / regenerative); dental = dental (implants, crowns, restorative); eyes = eyes (cataract / vision / laser); unsure = not sure yet — include a gentle "care guidance" consult early.
-trip.length: under1w | 1to2w | 2plus | unsure. trip.party: solo | couple | family. trip.partySize: number. trip.stay: cozy | comfort | premium hotel. trip.when.season: spring/summer/autumn/winter (optional seasonal touches).
-experiences: heritage | cuisine | markets | nature | spa | beyond | minimal.
-comfort.pace: relaxed | balanced | full. comfort.mobility: walks_fine | tires_easily | cane_walker | wheelchair. comfort.spice: mild | some | love. comfort.food: list of restrictions plus any free-text note.
+const HOW_TO_READ_BRIEF = `# How to read the traveler brief (and what to do with it)
+You receive a plain-English "traveler brief" with labeled sections — NOT raw codes. Use EVERY detail in it:
+- CARE NEEDS / CARE NOTE: the medical reason for the trip. Build the week around it (see the Composer's care rules). The care note is the traveler's own words — let it shape the plan (e.g. timing, recovery), but stay within the medical-safety rule above.
+- TRIP: dates (or "dates flexible"), expected length, season, who's travelling and party size, hotel tier. Honor the day count when given.
+- EXPERIENCES THEY CHOSE: these are specific, NAMED places and activities (e.g. "Korean Royal Palace Tour", "Private Tea Ceremony"). INCLUDE EVERY experience the traveler selected — do not drop any, do not invent ones they didn't pick. Spread them across the explore/rest days at a gentle pace. If the brief says EXPERIENCES is "minimal", keep sightseeing to almost none (at most one very easy outing).
+  - In/around Seoul experiences are day activities from your Seoul base.
+  - BEYOND SEOUL places — Jeju, Busan, Gyeongju, Jeonju, Gangwon-do, Incheon — are REAL excursions, NOT Seoul day trips. Each typically needs an internal flight (Jeju) or KTX train (Busan ~2.5h, Gyeongju ~2h, Jeonju ~2h) and often an OVERNIGHT. When the traveler picked one or more, lengthen and reshape the trip and its logistics to fit them properly: add travel-day slots, an overnight stay in that city, and a return — never compress a far destination into a single Seoul day. Multiple Beyond-Seoul picks may justify a multi-stop or longer trip (within the day cap).
+- COMFORT: pace, mobility, spice tolerance. Mobility and pace govern how full each day is and which routes are step-free. Match spice tolerance in dining.
+- FOOD RESTRICTIONS: dietary/religious restrictions and any free-text note — every meal must respect them.
+- Any unfamiliar label: treat it as a best-effort preference and accommodate it gently; never ignore it.
 
 Return only the JSON object described above.`;
 
@@ -50,7 +58,7 @@ const PROMPT = [
   SAFETY,
   '# THE COMPOSER (orchestrate everything below into one harmonious plan)\n\n' + orchestrator,
   '# YOUR SPECIALIST TEAM (each contributes its domain; the Composer weaves them together)\n\n' + specialists,
-  LABEL_MAPS
+  HOW_TO_READ_BRIEF
 ].join('\n\n');
 
 mkdirSync(join(ROOT, 'api', '_lib'), { recursive: true });

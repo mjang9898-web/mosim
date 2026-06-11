@@ -102,6 +102,20 @@
   .meals .drow .dp{color:var(--navy);}
   .cal-note{text-align:center; color:var(--ink-2); font-size:15px; font-style:italic; margin-top:28px;}
 
+  /* ---- "Still finalizing your plan" state (shown when the AI plan isn't ready) ---- */
+  .pending{max-width:620px; margin:24px auto 0; text-align:center; background:#fff; border:1px solid var(--line); border-radius:18px; padding:48px 40px; box-shadow:0 24px 56px -36px rgba(27,42,74,.4);}
+  .pending .ico{width:64px; height:64px; border-radius:50%; background:rgba(195,154,63,.14); display:flex; align-items:center; justify-content:center; margin:0 auto 22px;}
+  .pending .ico svg{width:30px; height:30px; color:var(--gold);}
+  .pending h2{font-size:clamp(24px,3.2vw,30px); font-weight:600; line-height:1.16;}
+  .pending p{font-size:19px; color:var(--ink); line-height:1.6; margin:16px auto 0; max-width:30em; text-wrap:balance;}
+  .pending .acts{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:30px;}
+  .pending .btn-primary{font-size:18px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy); border-radius:10px; padding:15px 30px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; cursor:pointer; font-family:'Inter',sans-serif;}
+  .pending .btn-primary:hover{background:var(--navy-soft);}
+  .pending .btn-quiet{font-size:18px; font-weight:600; color:var(--navy); background:#fff; border:1.5px solid var(--gold); border-radius:10px; padding:15px 30px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; cursor:pointer; font-family:'Inter',sans-serif;}
+  .pending .btn-quiet:hover{background:var(--ivory-soft);}
+  .pending .fine{font-size:16px; color:var(--ink-2); margin-top:22px;}
+  .pending .fine a{color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;}
+
   .pricing{background:var(--ivory-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:center;}
   .fee-block .amt{font-family:'Lora',serif; font-size:46px; font-weight:600; color:var(--navy); white-space:nowrap;}
@@ -194,23 +208,40 @@
 
 <!-- ITINERARY -->
 <div class="sec"><div class="wrap">
-  <div class="sec-h"><div class="label">Your days, at a glance</div><h2 style="margin-top:12px;">A calm rhythm, built around your care.</h2></div>
-  <div class="legend">
-    <span><i style="background:var(--care)"></i>Care</span>
-    <span><i style="background:var(--rest)"></i>Rest</span>
-    <span><i style="background:var(--explore)"></i>Explore</span>
-    <span><i style="background:var(--travel)"></i>Travel</span>
+  <!-- "Still finalizing" state — shown only when the AI plan isn't ready (no fake sample) -->
+  <div class="pending" id="pending" hidden>
+    <div class="ico">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg>
+    </div>
+    <h2>We're still finalizing your plan.</h2>
+    <p>Your days are taking a little longer to come together. Give it one more moment — we'll build them around your care and your pace.</p>
+    <div class="acts">
+      <button class="btn-primary" id="retryBtn" type="button">Try again</button>
+      <a class="btn-quiet" href="/step1.html">Review my answers</a>
+    </div>
+    <div class="fine">Still stuck? <a href="/index.html#contact">Talk to us</a> — we'll plan it with you personally.</div>
   </div>
-  <div class="calwrap" id="calwrap" hidden>
-    <div class="cal-month" id="calMonth"></div>
-    <div class="weekgrid" id="weekgrid"></div>
+
+  <!-- Real itinerary (hidden until a valid AI plan is present) -->
+  <div id="itinerary" hidden>
+    <div class="sec-h"><div class="label">Your days, at a glance</div><h2 style="margin-top:12px;">A calm rhythm, built around your care.</h2></div>
+    <div class="legend">
+      <span><i style="background:var(--care)"></i>Care</span>
+      <span><i style="background:var(--rest)"></i>Rest</span>
+      <span><i style="background:var(--explore)"></i>Explore</span>
+      <span><i style="background:var(--travel)"></i>Travel</span>
+    </div>
+    <div class="calwrap" id="calwrap" hidden>
+      <div class="cal-month" id="calMonth"></div>
+      <div class="weekgrid" id="weekgrid"></div>
+    </div>
+    <div class="accord" id="accord"></div>
+    <div class="cal-note">Your concierge fine-tunes every day with you — nothing is rushed, nothing is fixed.</div>
   </div>
-  <div class="accord" id="accord"></div>
-  <div class="cal-note">Your concierge fine-tunes every day with you — nothing is rushed, nothing is fixed.</div>
 </div></div>
 
 <!-- PRICING -->
-<div class="pricing sec"><div class="wrap">
+<div class="pricing sec" id="pricingSec"><div class="wrap">
   <div class="sec-h"><div class="label">Clear from the start</div><h2 style="margin-top:12px;">No hidden costs. No "sign up to see the price."</h2></div>
 
   <div class="fee-block">
@@ -249,7 +280,7 @@
 </div></div>
 
 <!-- INVITE -->
-<div class="invite sec" id="talk"><div class="wrap">
+<div class="invite sec" id="talk" data-invite><div class="wrap">
   <div id="cta-guest">
     <h2>Save your plan.</h2>
     <p>Create a free account to keep this itinerary, follow your trip, and pick up whenever you're ready — no commitment.</p>
@@ -497,21 +528,10 @@
       }
     }
 
-    // Fallback sample plan — used only if the AI plan from the loading screen is missing.
-    var SAMPLE = [
-      { day:'Day 1', title:'Arrival', cat:'travel', slots:[{t:'3:00 PM',place:'Incheon arrival'},{t:'Evening',place:'Car to hotel, Myeongdong'}] },
-      { day:'Day 2', title:'Health screening', cat:'care', slots:[{t:'9:00 AM',place:'Severance Hospital'},{t:'Afternoon',place:'Rest, Bukchon teahouse'}] },
-      { day:'Day 3', title:'Knee consultation', cat:'care', slots:[{t:'10:00 AM',place:'Orthopedic clinic'},{t:'Afternoon',place:'Gyeongbokgung walk'}] },
-      { day:'Day 4', title:'Rest & Insadong', cat:'rest', slots:[{t:'Late morning',place:'Insadong'},{t:'Afternoon',place:'Spa & recovery'}] },
-      { day:'Day 5', title:'Procedure', cat:'care', slots:[{t:'8:00 AM',place:'Hospital admission'},{t:'Day',place:'Recovery begins'}] },
-      { day:'Day 6', title:'Recovery', cat:'rest', slots:[{t:'All day',place:'Hospital rest'},{t:'Evening',place:'Concierge visit'}] },
-      { day:'Day 7', title:'Recovery', cat:'rest', slots:[{t:'Morning',place:'Gentle hotel rest'},{t:'Afternoon',place:'Short garden walk'}] },
-      { day:'Day 8', title:'Palace & city', cat:'explore', slots:[{t:'Morning',place:'Changdeokgung'},{t:'Lunch',place:'Korean BBQ (mild)'}] },
-      { day:'Day 9', title:'Follow-up', cat:'care', slots:[{t:'11:00 AM',place:'Follow-up check'},{t:'Afternoon',place:'Free & easy'}] },
-      { day:'Day 10', title:'Departure', cat:'travel', slots:[{t:'Morning',place:'Checkout'},{t:'Midday',place:'Car to Incheon'}] }
-    ];
-    // Prefer the AI itinerary generated on the loading screen; fall back to the sample.
-    var plan = SAMPLE;
+    // ---- Resolve the AI itinerary built on the loading screen ----
+    // No silent sample: if the plan is genuinely unavailable we show a clear
+    // "still finalizing" retry state instead of pretending a generic plan is theirs.
+    var plan = null;
     try {
       var stashed = sessionStorage.getItem('mosim.schedule.v1');
       if (stashed) {
@@ -519,6 +539,25 @@
         if (Array.isArray(parsedPlan) && parsedPlan.length) plan = parsedPlan;
       }
     } catch (e) {}
+
+    function showPending() {
+      var p = document.getElementById('pending'); if (p) p.hidden = false;
+      var it = document.getElementById('itinerary'); if (it) it.hidden = true;
+      // A retry page shouldn't show pricing / save-CTA / sticky bar as if the plan were ready.
+      var price = document.getElementById('pricingSec'); if (price) price.hidden = true;
+      var inv = document.querySelector('[data-invite]'); if (inv) inv.hidden = true;
+      var rbar = document.getElementById('resultBar'); if (rbar) rbar.style.display = 'none';
+      var retry = document.getElementById('retryBtn');
+      if (retry) retry.addEventListener('click', function () {
+        // Re-run generation from the loading screen with the same answers.
+        try { sessionStorage.removeItem('mosim.schedule.v1'); } catch (e) {}
+        window.location.href = 'loading.html';
+      });
+    }
+
+    if (!plan) { showPending(); return; }
+
+    var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
     renderItinerary(plan, trip);
 
     // ---- Auto-save the plan for signed-in travelers so it lives in My Page ----

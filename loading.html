@@ -111,23 +111,29 @@
   // ── Kick off the real AI itinerary now; the animation below covers the wait ──
   var planState = (window.kwState && kwState.loadAll()) || {};
   var safeState; try { safeState = JSON.parse(JSON.stringify(planState)); } catch (e) { safeState = {}; }
-  if (safeState.care) delete safeState.care.note;   // privacy: never send the free-text note
+  // NOTE: care.note (the free-text care memo) IS sent to the planner so the AI can
+  // tailor the itinerary — but it must NEVER be persisted. result.html strips it
+  // before /api/save-itinerary, so it reaches the planner only, never the DB.
   var startedAt = Date.now();
+  var readySchedule = null;   // latest resolved plan (for the manual skip link)
   var schedulePromise = fetch('/api/schedule', {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(safeState)
   }).then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) { return (j && Array.isArray(j.schedule) && j.schedule.length) ? j.schedule : null; })
-    .catch(function () { return null; });
+    .catch(function () { return null; })
+    .then(function (s) { readySchedule = s; return s; });
 
   var settled = false;
   function go(schedule) {
     if (settled) return; settled = true;
+    var ok = !!schedule;
     try {
-      if (schedule) sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(schedule));
-      else sessionStorage.removeItem('mosim.schedule.v1');   // result.html falls back to its sample
+      if (ok) sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(schedule));
+      else sessionStorage.removeItem('mosim.schedule.v1');   // no fake fallback — result.html shows a "still finalizing" notice
       sessionStorage.removeItem('mosim.schedule.saved');     // a new plan should save fresh to My Page
     } catch (e) {}
-    window.location.href = 'result.html';
+    // On failure, tell result.html explicitly so it shows the retry state, never a sample.
+    window.location.href = ok ? 'result.html' : 'result.html?status=pending';
   }
   // Go when the plan is ready AND the minimum time has passed; hard cap as a safety net.
   schedulePromise.then(function (schedule) {
@@ -188,9 +194,10 @@
   });
   setTimeout(function () { steps.forEach(function (li) { li.classList.remove('active'); li.classList.add('done'); }); }, MIN_MS - 300);
 
-  // Manual skip — go straight to the result (uses the sample plan).
+  // Manual skip — go straight to the result with whatever plan is ready
+  // (if it isn't ready yet, result.html shows the "still finalizing" notice).
   document.getElementById('skip').addEventListener('click', function (e) {
-    e.preventDefault(); go(null);
+    e.preventDefault(); go(readySchedule);
   });
 })();
 </script>

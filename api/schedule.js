@@ -5,6 +5,7 @@ import Anthropic from '@anthropic-ai/sdk';
 // by scripts/build-itinerary-prompt.mjs (runs in `npm run build`). To train the
 // planner, edit training/*.md — not this file.
 import { SYSTEM_PROMPT } from './_lib/itinerary-prompt.generated.js';
+import { buildTravelerBrief } from './_lib/traveler-brief.js';
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const client = ANTHROPIC_API_KEY ? new Anthropic({ apiKey: ANTHROPIC_API_KEY }) : null;
@@ -13,10 +14,12 @@ const MODEL = 'claude-sonnet-4-6';
 const CATS = ['care', 'rest', 'explore', 'travel'];
 
 function safePayload(state) {
-  // Privacy: the free-text care note is client-only — never send it onward.
+  // care.note INTENTIONALLY KEPT here: it is sent to the model to inform schedule
+  // generation (it can carry real planning context, e.g. "knee replacement in
+  // March, needs PT"). This endpoint does NOT persist anything — care.note never
+  // reaches the DB. The DB save path (api/save-itinerary.js) strips it. See PLAN.md.
   let s = {};
   try { s = JSON.parse(JSON.stringify(state || {})); } catch (e) { s = {}; }
-  if (s.care && typeof s.care === 'object') delete s.care.note;
   return s;
 }
 
@@ -85,9 +88,13 @@ export default async function handler(req, res) {
   }
 
   const daysHint = tripDaysInstruction(state);
+  // Send a human-readable brief (every code translated to plain English),
+  // NOT raw JSON codes — so the model recognizes every input, including all
+  // experiences and Beyond-Seoul destinations like Jeju.
+  const brief = buildTravelerBrief(state);
   const userContent =
     'Here is the traveler’s plan. Generate their itinerary as the JSON object described.\n\n'
-    + JSON.stringify(state)
+    + brief
     + (daysHint ? '\n\n' + daysHint : '');
 
   try {

@@ -20,14 +20,21 @@ days flow kindly, never stacking heavy things back-to-back.
     (5–7 days) even if there's a lot they'd like; `1to2w` allows 7–10; `2plus` allows up to
     14; `unsure` → let the amount of content decide (7 baseline, up to 14).
   - Keep the total between 5 and 14 days, and always leave room for rest after care.
+  - **A Beyond-Seoul pick (Jeju, Busan, Gyeongju, Jeonju, Gangwon-do, Incheon) needs real
+    room.** Each is a flight/KTX + overnight excursion, not a Seoul day trip — add the
+    travel and at least one night, and extend the trip toward the upper end of the allowed
+    range so Seoul care + the excursion both fit without rushing. Don't bolt a far
+    destination onto a single Seoul day.
 - **Pace & mobility** decide how full each day is:
   - relaxed / "I tire easily" / cane / wheelchair → **2 slots a day**, more rest days,
     gentle step-free activities.
   - balanced → **3 slots a day**.
   - full days → **3–4 slots a day**.
-- **Only include experiences the traveler picked.** If they chose `minimal`
-  ("here for care, not sightseeing"), keep sightseeing to almost none — mostly care
-  and rest, with at most one very easy outing.
+- **Include EVERY experience the traveler picked, and only those.** They arrive in the
+  brief as named places (grouped Seoul vs Beyond-Seoul) — place all of them across the
+  week; never drop one, never invent one. If the brief says experiences are `minimal`
+  ("here for care, not sightseeing"), keep sightseeing to almost none — mostly care and
+  rest, with at most one very easy outing.
 
 ## How to harmonize the specialists
 
