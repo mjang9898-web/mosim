@@ -54,7 +54,7 @@ function MeOverview() {
       fetch('/api/config').then(r => r.json()).then(c => setMock(!!c.paymentMock)).catch(() => {});
       const { data, error } = await client
         .from('itineraries')
-        .select('id, title, state, schedule, status, created_at')
+        .select('id, title, state, schedule, status, created_at, published_at')
         .order('created_at', { ascending: false })
         .limit(1).maybeSingle();
       if (error) { setErr(error.message); return; }
@@ -108,6 +108,26 @@ function MeOverview() {
       else alert(b.error || 'Could not reserve.');
     } catch (e) { alert('Could not reserve.'); }
     setReserving(false);
+  }
+
+  // Start a fresh plan. Deletes the current plan ONLY if it's still a draft
+  // (not yet published, no payment made) so an in-progress/paid trip is never lost.
+  async function startFresh(e) {
+    if (e) e.preventDefault();
+    const paid = payg && (payg.status === 'paid' || (payg.amount_paid || 0) > 0);
+    const hasPlan = itin && itin.id;
+    const isDraft = hasPlan && !itin.published_at && !paid;
+    const msg = !hasPlan
+      ? 'Start a fresh plan? This clears your selections so you begin from scratch.'
+      : isDraft
+        ? 'Start a fresh plan? This deletes your current draft and clears your selections, so you begin from scratch. This can\'t be undone.'
+        : 'Start a fresh plan? Your current plan is already in progress, so we\'ll keep it (find it under All itineraries) and start a new one.';
+    if (!window.confirm(msg)) return;
+    try {
+      if (isDraft && supa) await supa.from('itineraries').delete().eq('id', itin.id);
+    } catch (x) {}
+    try { sessionStorage.removeItem('mosim.state.v1'); } catch (x) {}
+    window.location.href = '/step1.html';
   }
 
   async function uploadBooking(file, category) {
@@ -331,7 +351,7 @@ function MeOverview() {
       <div style={{display:'flex', gap:24, marginTop:20, flexWrap:'wrap'}}>
         <a href="?tab=itineraries" style={{fontSize:16, color:'#1B2A4A', textDecoration:'none', fontWeight:500}}>All itineraries →</a>
         <a href="?tab=profile" style={{fontSize:16, color:'#1B2A4A', textDecoration:'none', fontWeight:500}}>Edit profile →</a>
-        <a href="/step1.html" onClick={(e) => { if (!window.confirm('Start a fresh plan? This clears your current selections so you begin from scratch.')) { e.preventDefault(); return; } try { sessionStorage.removeItem('mosim.state.v1'); } catch (x) {} }} style={{fontSize:16, color:'#C39A3F', textDecoration:'none', fontWeight:600}}>Start a fresh plan ↺</a>
+        <a href="/step1.html" onClick={startFresh} style={{fontSize:16, color:'#C39A3F', textDecoration:'none', fontWeight:600}}>Start a fresh plan ↺</a>
       </div>
     </div>
   );
