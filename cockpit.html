@@ -109,6 +109,43 @@
   .modal input { flex:1; min-width:140px; }
   .modal .addbtn { font:inherit; font-size:14px; font-weight:600; color:#fff; background:var(--navy); border:none; border-radius:9px; padding:9px 18px; cursor:pointer; }
   @media (max-width:760px) { main { padding:22px 14px; } table.trips { font-size:13px; } }
+
+  /* ── Itinerary builder modal ── */
+  .modal.wide { max-width:880px; }
+  .ib-body { max-height:calc(100vh - 200px); overflow:auto; margin:0 -4px; padding:0 4px; }
+  .ib-sec { border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:18px; background:var(--bg-1); }
+  .ib-sec > h3 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin:0 0 14px; }
+  .ib-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px 14px; }
+  .ib-field { display:flex; flex-direction:column; gap:4px; }
+  .ib-field label { font-size:12px; font-weight:600; color:var(--ink-3); }
+  .ib-field input, .ib-field select { font:inherit; font-size:14px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:#fff; width:100%; }
+  .ib-field.wide2 { grid-column:1 / -1; }
+  .ib-flight-h { font-size:13px; font-weight:700; color:var(--navy); margin:6px 0 10px; }
+  .ib-flight-h:not(:first-child) { margin-top:18px; border-top:1px solid var(--border); padding-top:18px; }
+  .ib-contact { display:grid; grid-template-columns:1fr 1fr 1fr auto auto; gap:10px; align-items:end; margin-bottom:10px; }
+  .ib-contact .ib-field { gap:4px; }
+  .ib-prim { display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; color:var(--ink-3); }
+  .ib-day { border:1px solid var(--border); border-radius:10px; margin-bottom:14px; overflow:hidden; }
+  .ib-day-h { display:grid; grid-template-columns:64px 1fr 130px auto; gap:10px; align-items:end; background:var(--bg-soft); padding:12px 14px; border-bottom:1px solid var(--border); }
+  .ib-day-items { padding:8px 14px 12px; }
+  .ib-item { display:grid; grid-template-columns:120px 1fr auto; gap:10px; align-items:center; padding:6px 0; }
+  .ib-item input { font:inherit; font-size:14px; padding:7px 9px; border:1px solid var(--border); border-radius:8px; width:100%; }
+  .ib-x { font:inherit; font-size:13px; color:#A4452F; border:1px solid var(--border); background:#fff; border-radius:8px; padding:7px 10px; cursor:pointer; white-space:nowrap; }
+  .ib-x:hover { background:#FBEEEA; }
+  .ib-add { font:inherit; font-size:13px; font-weight:600; color:var(--navy); border:1px dashed var(--border); background:#fff; border-radius:8px; padding:8px 14px; cursor:pointer; }
+  .ib-add:hover { background:var(--bg-soft); }
+  .ib-foot { display:flex; align-items:center; gap:12px; justify-content:flex-end; border-top:1px solid var(--border); padding-top:16px; margin-top:4px; flex-wrap:wrap; }
+  .ib-btn { font:inherit; font-size:15px; font-weight:600; border-radius:10px; padding:11px 22px; cursor:pointer; border:1px solid var(--navy); }
+  .ib-btn.save { background:#fff; color:var(--navy); }
+  .ib-btn.save:hover { background:var(--bg-soft); }
+  .ib-btn.publish { background:var(--navy); color:#fff; }
+  .ib-btn.publish:hover { background:#243b66; }
+  .ib-btn:disabled { opacity:.5; cursor:default; }
+  .ib-msg { font-size:14px; margin-right:auto; }
+  .ib-msg.ok { color:#1b6e3d; } .ib-msg.err { color:#A4452F; }
+  .ib-share { background:#F0F6F1; border:1px solid #BFD8C4; border-radius:10px; padding:12px 14px; margin-top:14px; font-size:14px; }
+  .ib-share a { color:var(--navy); font-weight:600; word-break:break-all; }
+  .ib-share .sent { color:#1b6e3d; font-weight:600; margin-top:4px; }
 </style>
 </head>
 <body>
@@ -173,6 +210,17 @@
         <button id="bk-add" class="addbtn">Add</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="itin-modal">
+  <div class="modal wide">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+      <h2 id="itin-title">Itinerary builder</h2>
+      <button id="itin-close" style="font:inherit; font-size:22px; border:none; background:none; cursor:pointer; color:#888; line-height:1;">&times;</button>
+    </div>
+    <p style="color:#777; font-size:14px; margin:0 0 16px;">Build the traveler's final itinerary. <b>Save</b> stores it; <b>Publish</b> sends them the email + share link.</p>
+    <div class="ib-body" id="itin-body"><div class="empty">Loading…</div></div>
   </div>
 </div>
 
@@ -537,6 +585,7 @@
     dash.innerHTML = '<table class="trips"><thead><tr><th>Customer</th><th>Trip</th><th>Status</th><th>Payment</th><th>Flight</th><th>Stay</th><th>Saved</th><th></th></tr></thead><tbody>'
       + rows.map(rowHtml).join('') + '</tbody></table>';
     document.querySelectorAll('select[data-field]').forEach((sel) => sel.addEventListener('change', () => updateField(sel.dataset.id, sel.dataset.field, sel.value, sel)));
+    document.querySelectorAll('button.itin-open').forEach((b) => b.addEventListener('click', () => openItinBuilder(b.dataset.id, b.dataset.title)));
     document.querySelectorAll('button.bk-open').forEach((b) => b.addEventListener('click', () => openBookings(b.dataset.id, b.dataset.title)));
     document.querySelectorAll('button.bk-pay').forEach((b) => b.addEventListener('click', () => setupPayment(b.dataset.id, b)));
   }
@@ -551,6 +600,7 @@
       : '<span style="color:#aaa">—</span>';
     const email = x.customer.email;
     const acts = [
+      '<button class="itin-open" data-id="' + x.id + '" data-title="' + esc(x.title || 'Korea trip') + '">Build itinerary</button>',
       '<button class="bk-open" data-id="' + x.id + '" data-title="' + esc(x.title || 'Korea trip') + '">Bookings</button>',
       email ? '<a href="mailto:' + esc(email) + '?subject=' + encodeURIComponent('Your Mosim trip') + '">Email customer</a>' : '',
       x.payment && x.payment.token ? '<a href="/pay.html?g=' + esc(x.payment.token) + '" target="_blank" rel="noopener">Payment link</a>' : '',
@@ -602,6 +652,299 @@
       if (r.ok && b.token) { await loadTrips(); }   // refetch — Payment column + link now populated
       else { alert(b.error || 'Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
     } catch (e) { alert('Could not set up payment.'); btn.disabled = false; btn.textContent = 'Set up payment'; }
+  }
+
+  // ── Itinerary builder modal ──────────────────────────────────────────
+  // Editable forms against the locked `final` shape:
+  //   final = { flights:{outbound,inbound}, hotel, contacts[], days[] }
+  // Buttons: Save → itinerary-save · Publish → itinerary-publish.
+  const itinModal = document.getElementById('itin-modal');
+  const itinBody  = document.getElementById('itin-body');
+  let ib = null;   // { id, title, depart_date, final:{...}, share_token, published_at }
+
+  document.getElementById('itin-close').addEventListener('click', () => { itinModal.style.display = 'none'; });
+  itinModal.addEventListener('click', (e) => { if (e.target === itinModal) itinModal.style.display = 'none'; });
+
+  function blankFlight() {
+    return { airline:'', number:'', date:'', dep_time:'', dep_airport:'', dep_terminal:'',
+             arr_time:'', arr_airport:'', arr_terminal:'', arr_offset:'' };
+  }
+  function blankFinal() {
+    return {
+      flights: { outbound: blankFlight(), inbound: blankFlight() },
+      hotel:   { name:'', address:'', phone:'', checkin:'', checkout:'', confirmation:'' },
+      contacts:[ { role:'Mosim 24h concierge', who:'', tel:'', primary:true } ],
+      days:    []
+    };
+  }
+
+  async function openItinBuilder(id, title) {
+    document.getElementById('itin-title').textContent = 'Itinerary — ' + title;
+    itinBody.innerHTML = '<div class="empty">Loading…</div>';
+    itinModal.style.display = 'flex';
+    let r;
+    try {
+      r = await fetch('/api/admin/trips?action=itinerary-get&id=' + encodeURIComponent(id),
+        { headers: { authorization: 'Bearer ' + token } });
+    } catch (e) { itinBody.innerHTML = '<div class="empty">Could not reach the server.</div>'; return; }
+    if (r.status === 403) { itinBody.innerHTML = '<div class="empty">You don’t have access.</div>'; return; }
+    if (!r.ok) { itinBody.innerHTML = '<div class="empty">Could not load this itinerary.</div>'; return; }
+    const d = await r.json();
+
+    // Seed the editor: prefer final.days, else fall back to schedule (AI draft) if present.
+    const f = (d.final && typeof d.final === 'object') ? d.final : {};
+    const seed = blankFinal();
+    seed.flights.outbound = Object.assign(blankFlight(), (f.flights && f.flights.outbound) || {});
+    seed.flights.inbound  = Object.assign(blankFlight(), (f.flights && f.flights.inbound)  || {});
+    if (f.hotel) seed.hotel = Object.assign(seed.hotel, f.hotel);
+    if (Array.isArray(f.contacts) && f.contacts.length) seed.contacts = f.contacts.map((c) => Object.assign({ role:'', who:'', tel:'', primary:false }, c));
+    if (Array.isArray(f.days) && f.days.length) {
+      seed.days = f.days.map((dd) => ({ day:dd.day, date:dd.date || '', title:dd.title || '',
+        items:(Array.isArray(dd.items) ? dd.items : []).map((it) => ({ time:it.time || '', label:it.label || '' })) }));
+    } else if (d.schedule && Array.isArray(d.schedule.days)) {
+      // seed day skeletons from AI/schedule draft
+      seed.days = d.schedule.days.map((dd, i) => ({ day:(dd.day != null ? dd.day : i + 1), date:dd.date || '', title:dd.title || '',
+        items:(Array.isArray(dd.items) ? dd.items : []).map((it) => ({ time:it.time || '', label:it.label || it.text || '' })) }));
+    }
+    ensureOnePrimary(seed.contacts);
+
+    ib = { id: d.id || id, title: d.title || title, depart_date: d.depart_date || '',
+           final: seed, share_token: d.share_token || null, published_at: d.published_at || null };
+    renderItinBuilder();
+  }
+
+  function ensureOnePrimary(contacts) {
+    if (!contacts.length) return;
+    const idx = contacts.findIndex((c) => c.primary);
+    contacts.forEach((c, i) => { c.primary = (i === (idx >= 0 ? idx : 0)); });
+  }
+
+  function flightFields(side, f) {
+    const fld = (key, label, type) =>
+      '<div class="ib-field"><label>' + label + '</label>'
+      + '<input data-fl="' + side + '" data-k="' + key + '" type="' + (type || 'text') + '" value="' + esc(f[key] || '') + '"></div>';
+    return '<div class="ib-grid">'
+      + fld('airline', 'Airline') + fld('number', 'Flight no.') + fld('date', 'Date', 'date')
+      + fld('dep_airport', 'From (code)') + fld('dep_time', 'Dep time') + fld('dep_terminal', 'Dep terminal')
+      + fld('arr_airport', 'To (code)') + fld('arr_time', 'Arr time') + fld('arr_terminal', 'Arr terminal')
+      + fld('arr_offset', 'Arrival offset (e.g. +1 day)')
+      + '</div>';
+  }
+
+  function hotelFields(h) {
+    const fld = (key, label, type, wide) =>
+      '<div class="ib-field' + (wide ? ' wide2' : '') + '"><label>' + label + '</label>'
+      + '<input data-ho="' + key + '" type="' + (type || 'text') + '" value="' + esc(h[key] || '') + '"></div>';
+    return '<div class="ib-grid">'
+      + fld('name', 'Hotel name', 'text', true)
+      + fld('address', 'Address', 'text', true)
+      + fld('phone', 'Phone') + fld('confirmation', 'Confirmation #')
+      + fld('checkin', 'Check-in', 'date') + fld('checkout', 'Check-out', 'date')
+      + '</div>';
+  }
+
+  function contactRow(c, i) {
+    return '<div class="ib-contact" data-ci="' + i + '">'
+      + '<div class="ib-field"><label>Role</label><input data-co="role" value="' + esc(c.role || '') + '"></div>'
+      + '<div class="ib-field"><label>Who</label><input data-co="who" value="' + esc(c.who || '') + '"></div>'
+      + '<div class="ib-field"><label>Phone</label><input data-co="tel" value="' + esc(c.tel || '') + '"></div>'
+      + '<div class="ib-prim"><label>Primary</label><input type="radio" name="ib-primary" data-co="primary"' + (c.primary ? ' checked' : '') + '></div>'
+      + '<button class="ib-x" data-co-del="' + i + '">Remove</button>'
+      + '</div>';
+  }
+
+  function dayBlock(dd, di) {
+    let items = '';
+    (dd.items || []).forEach((it, ii) => {
+      items += '<div class="ib-item" data-di="' + di + '" data-ii="' + ii + '">'
+        + '<input data-it="time" placeholder="9:00 AM" value="' + esc(it.time || '') + '">'
+        + '<input data-it="label" placeholder="What happens" value="' + esc(it.label || '') + '">'
+        + '<button class="ib-x" data-item-del="' + di + ':' + ii + '">×</button>'
+        + '</div>';
+    });
+    return '<div class="ib-day" data-day="' + di + '">'
+      + '<div class="ib-day-h">'
+        + '<div class="ib-field"><label>Day</label><input data-day-k="day" type="number" min="1" value="' + esc(dd.day != null ? dd.day : (di + 1)) + '" style="width:100%"></div>'
+        + '<div class="ib-field"><label>Title</label><input data-day-k="title" value="' + esc(dd.title || '') + '"></div>'
+        + '<div class="ib-field"><label>Date</label><input data-day-k="date" type="date" value="' + esc(dd.date || '') + '"></div>'
+        + '<button class="ib-x" data-day-del="' + di + '">Remove day</button>'
+      + '</div>'
+      + '<div class="ib-day-items">' + items
+        + '<button class="ib-add" data-item-add="' + di + '">+ Add item</button>'
+      + '</div></div>';
+  }
+
+  function renderItinBuilder() {
+    const fin = ib.final;
+    let h = '';
+
+    // depart_date (auto-maps day dates)
+    h += '<div class="ib-sec"><h3>Trip dates</h3><div class="ib-grid">'
+      + '<div class="ib-field"><label>Title</label><input id="ib-trip-title" value="' + esc(ib.title || '') + '"></div>'
+      + '<div class="ib-field"><label>Departure date (Day 1)</label><input id="ib-depart" type="date" value="' + esc(ib.depart_date || '') + '"></div>'
+      + '</div><div style="font-size:12px;color:var(--ink-3);margin-top:8px">Changing the departure date re-maps every day below (Day N = departure + N−1).</div></div>';
+
+    // flights
+    h += '<div class="ib-sec"><h3>Flights</h3>'
+      + '<div class="ib-flight-h">Outbound</div>' + flightFields('outbound', fin.flights.outbound)
+      + '<div class="ib-flight-h">Return</div>' + flightFields('inbound', fin.flights.inbound)
+      + '</div>';
+
+    // hotel
+    h += '<div class="ib-sec"><h3>Hotel</h3>' + hotelFields(fin.hotel) + '</div>';
+
+    // contacts
+    h += '<div class="ib-sec"><h3>Who to call</h3>'
+      + '<div style="font-size:12px;color:var(--ink-3);margin-bottom:12px">Mark exactly one as <b>Primary</b> — that becomes the Mosim 24h concierge hero card.</div>';
+    fin.contacts.forEach((c, i) => { h += contactRow(c, i); });
+    h += '<button class="ib-add" id="ib-contact-add">+ Add contact</button></div>';
+
+    // days
+    h += '<div class="ib-sec"><h3>Day by day</h3>';
+    fin.days.forEach((dd, di) => { h += dayBlock(dd, di); });
+    h += '<button class="ib-add" id="ib-day-add">+ Add day</button></div>';
+
+    // share-link panel (if already published)
+    let share = '';
+    if (ib.published_at && ib.share_token) {
+      const url = location.origin + '/itinerary.html?t=' + ib.share_token;
+      share = '<div class="ib-share">Published. Share link: <a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a></div>';
+    }
+
+    // footer
+    h += '<div class="ib-foot"><span class="ib-msg" id="ib-msg"></span>'
+      + '<button class="ib-btn save" id="ib-save">Save</button>'
+      + '<button class="ib-btn publish" id="ib-publish">' + (ib.published_at ? 'Re-publish' : 'Publish') + '</button>'
+      + '</div>' + share;
+
+    itinBody.innerHTML = h;
+    wireItinBuilder();
+  }
+
+  // sync DOM inputs → ib.final on every change (no re-render, keeps focus)
+  function wireItinBuilder() {
+    // trip title + depart date
+    itinBody.querySelector('#ib-trip-title').addEventListener('input', (e) => { ib.title = e.target.value; });
+    itinBody.querySelector('#ib-depart').addEventListener('change', (e) => { ib.depart_date = e.target.value; remapDayDates(); renderItinBuilder(); });
+
+    // flights
+    itinBody.querySelectorAll('input[data-fl]').forEach((inp) =>
+      inp.addEventListener('input', () => { ib.final.flights[inp.dataset.fl][inp.dataset.k] = inp.value; }));
+    // hotel
+    itinBody.querySelectorAll('input[data-ho]').forEach((inp) =>
+      inp.addEventListener('input', () => { ib.final.hotel[inp.dataset.ho] = inp.value; }));
+    // contacts (live fields)
+    itinBody.querySelectorAll('.ib-contact').forEach((row) => {
+      const ci = Number(row.dataset.ci);
+      row.querySelectorAll('input[data-co]').forEach((inp) => {
+        const k = inp.dataset.co;
+        if (k === 'primary') {
+          inp.addEventListener('change', () => { ib.final.contacts.forEach((c, j) => { c.primary = (j === ci); }); });
+        } else {
+          inp.addEventListener('input', () => { ib.final.contacts[ci][k] = inp.value; });
+        }
+      });
+    });
+    itinBody.querySelectorAll('button[data-co-del]').forEach((b) =>
+      b.addEventListener('click', () => { const i = Number(b.dataset.coDel); ib.final.contacts.splice(i, 1); ensureOnePrimary(ib.final.contacts); renderItinBuilder(); }));
+    itinBody.querySelector('#ib-contact-add').addEventListener('click', () => {
+      ib.final.contacts.push({ role:'', who:'', tel:'', primary: ib.final.contacts.length === 0 }); renderItinBuilder();
+    });
+
+    // days
+    itinBody.querySelectorAll('.ib-day').forEach((dayEl) => {
+      const di = Number(dayEl.dataset.day);
+      dayEl.querySelectorAll('input[data-day-k]').forEach((inp) => {
+        const k = inp.dataset.dayK;
+        inp.addEventListener('input', () => { ib.final.days[di][k] = (k === 'day') ? (parseInt(inp.value, 10) || 1) : inp.value; });
+      });
+      dayEl.querySelectorAll('.ib-item').forEach((itEl) => {
+        const ii = Number(itEl.dataset.ii);
+        itEl.querySelectorAll('input[data-it]').forEach((inp) =>
+          inp.addEventListener('input', () => { ib.final.days[di].items[ii][inp.dataset.it] = inp.value; }));
+      });
+    });
+    itinBody.querySelectorAll('button[data-item-add]').forEach((b) =>
+      b.addEventListener('click', () => { const di = Number(b.dataset.itemAdd); ib.final.days[di].items.push({ time:'', label:'' }); renderItinBuilder(); }));
+    itinBody.querySelectorAll('button[data-item-del]').forEach((b) =>
+      b.addEventListener('click', () => { const [di, ii] = b.dataset.itemDel.split(':').map(Number); ib.final.days[di].items.splice(ii, 1); renderItinBuilder(); }));
+    itinBody.querySelectorAll('button[data-day-del]').forEach((b) =>
+      b.addEventListener('click', () => { const di = Number(b.dataset.dayDel); ib.final.days.splice(di, 1); renumberDays(); renderItinBuilder(); }));
+    itinBody.querySelector('#ib-day-add').addEventListener('click', () => {
+      const n = ib.final.days.length + 1;
+      ib.final.days.push({ day:n, date: dateForDay(n), title:'', items:[] }); renderItinBuilder();
+    });
+
+    itinBody.querySelector('#ib-save').addEventListener('click', saveItin);
+    itinBody.querySelector('#ib-publish').addEventListener('click', publishItin);
+  }
+
+  // Day N date = depart_date + (N-1)
+  function dateForDay(dayNum) {
+    if (!ib.depart_date) return '';
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ib.depart_date);
+    if (!m) return '';
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    d.setDate(d.getDate() + (dayNum - 1));
+    const p = (x) => String(x).padStart(2, '0');
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function remapDayDates() {
+    ib.final.days.forEach((dd, i) => { dd.date = dateForDay(dd.day != null ? dd.day : i + 1); });
+  }
+  function renumberDays() {
+    ib.final.days.forEach((dd, i) => { dd.day = i + 1; if (ib.depart_date) dd.date = dateForDay(i + 1); });
+  }
+
+  function ibMsg(text, kind) {
+    const el = itinBody.querySelector('#ib-msg');
+    if (el) { el.textContent = text; el.className = 'ib-msg ' + (kind || ''); }
+  }
+
+  async function saveItin() {
+    const btn = itinBody.querySelector('#ib-save');
+    btn.disabled = true; ibMsg('Saving…', '');
+    try {
+      const r = await fetch('/api/admin/trips?action=itinerary-save', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify({ id: ib.id, title: ib.title, final: ib.final, depart_date: ib.depart_date || null })
+      });
+      if (r.ok) { ibMsg('Saved ✓', 'ok'); }
+      else { const e = await r.json().catch(() => ({})); ibMsg(e.error || 'Could not save.', 'err'); }
+    } catch (e) { ibMsg('Could not save.', 'err'); }
+    btn.disabled = false;
+  }
+
+  async function publishItin() {
+    if (!window.confirm('Publish this itinerary and email it to the traveler?')) return;
+    const btn = itinBody.querySelector('#ib-publish');
+    btn.disabled = true; ibMsg('Saving, then publishing…', '');
+    try {
+      // save first so the published version reflects the latest edits
+      const sr = await fetch('/api/admin/trips?action=itinerary-save', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify({ id: ib.id, title: ib.title, final: ib.final, depart_date: ib.depart_date || null })
+      });
+      if (!sr.ok) { const e = await sr.json().catch(() => ({})); ibMsg(e.error || 'Could not save before publishing.', 'err'); btn.disabled = false; return; }
+
+      const r = await fetch('/api/admin/trips?action=itinerary-publish', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+        body: JSON.stringify({ id: ib.id })
+      });
+      const b = await r.json().catch(() => ({}));
+      if (r.ok && (b.share_token || b.url)) {
+        ib.share_token = b.share_token || ib.share_token;
+        ib.published_at = new Date().toISOString();
+        const url = b.url || (location.origin + '/itinerary.html?t=' + ib.share_token);
+        renderItinBuilder();
+        const el = itinBody.querySelector('.ib-share');
+        if (el) el.innerHTML = 'Published. Share link: <a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a><div class="sent">✓ Email sent to the traveler.</div>';
+        ibMsg('Published ✓', 'ok');
+      } else {
+        ibMsg(b.error || 'Could not publish.', 'err');
+      }
+    } catch (e) { ibMsg('Could not publish.', 'err'); }
+    btn.disabled = false;
   }
 
   // ── Bookings modal: post hotel/flight links + view customer uploads ──

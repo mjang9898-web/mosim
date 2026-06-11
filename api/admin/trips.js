@@ -8,7 +8,9 @@
 //   ?action=members     GET  → { members } (all signups + profile + trip count)
 //   ?action=finance     GET  → { finance } (accounting dashboard, best-effort)
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'node:crypto';
 import { getAdminUser, adminEmails } from '../_lib/admin.js';
+import { sendEmail, esc } from '../_lib/email.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -30,8 +32,9 @@ export default async function handler(req, res) {
 
   const action = (req.query && req.query.action) || '';
 
-  // Method gate per action (default/whoami/leads = GET, lead-status = POST)
-  const wantsPost = action === 'lead-status';
+  // Method gate per action (default/whoami/leads/itinerary-get = GET; rest POST)
+  const POST_ACTIONS = ['lead-status', 'itinerary-save', 'itinerary-publish'];
+  const wantsPost = POST_ACTIONS.includes(action);
   const allowed = wantsPost ? 'POST' : 'GET';
   if (req.method !== allowed) { res.setHeader('Allow', allowed); return res.status(405).json({ error: 'Method not allowed' }); }
 
@@ -46,6 +49,9 @@ export default async function handler(req, res) {
   if (action === 'members') return handleMembers(req, res);
   if (action === 'finance') return handleFinance(req, res);
   if (action === 'analytics') return handleAnalytics(req, res);
+  if (action === 'itinerary-get') return handleItineraryGet(req, res);
+  if (action === 'itinerary-save') return handleItinerarySave(req, res);
+  if (action === 'itinerary-publish') return handleItineraryPublish(req, res);
   return handleTrips(req, res);
 }
 
@@ -482,4 +488,160 @@ async function handleFinance(req, res) {
   } catch (e) { console.error('[admin/trips?finance] receivables failed', e?.message || e); }
 
   return res.status(200).json({ finance });
+}
+
+// === Milestone 2: itinerary deliverable (cockpit editor + publish + email) ===
+const SITE_ORIGIN = 'https://mosim.vercel.app';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function isUuid(v) { return typeof v === 'string' && UUID_RE.test(v.trim()); }
+function isPlainObject(v) { return v != null && typeof v === 'object' && !Array.isArray(v); }
+
+// Resolve an itinerary owner's email from auth.users (the same source the other
+// admin endpoints use). Returns null if not found / lookup fails.
+async function ownerEmail(userId) {
+  if (!userId) return null;
+  try {
+    const { data, error } = await admin.auth.admin.getUserById(userId);
+    if (error) throw error;
+    return (data && data.user && data.user.email) || null;
+  } catch (e) {
+    console.error('[admin/trips itinerary] ownerEmail lookup failed', e?.message || e);
+    return null;
+  }
+}
+
+// --- itinerary-get (load one itinerary for the cockpit builder) ------------
+async function handleItineraryGet(req, res) {
+  const id = (req.query && req.query.id) || '';
+  if (!isUuid(id)) return res.status(400).json({ error: 'valid id required' });
+  try {
+    const { data, error } = await admin
+      .from('itineraries')
+      .select('id, title, state, schedule, final, depart_date, share_token, published_at')
+      .eq('id', id)
+      .single();
+    if (error || !data) return res.status(404).json({ error: 'Itinerary not found' });
+    return res.status(200).json({
+      id: data.id,
+      title: data.title || null,
+      state: data.state || null,
+      schedule: data.schedule || null,
+      final: data.final || null,
+      depart_date: data.depart_date || null,
+      share_token: data.share_token || null,
+      published_at: data.published_at || null
+    });
+  } catch (e) {
+    console.error('[admin/trips itinerary-get] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to load itinerary' });
+  }
+}
+
+// --- itinerary-save (persist editor changes) -------------------------------
+async function handleItinerarySave(req, res) {
+  const { id, title, final, depart_date } = req.body || {};
+  if (!isUuid(id)) return res.status(400).json({ error: 'valid id required' });
+  if (!isPlainObject(final)) return res.status(400).json({ error: 'final must be an object' });
+
+  // Only write the columns the editor owns. title is optional (skip if undefined).
+  const patch = { final, depart_date: depart_date || null };
+  if (title !== undefined) patch.title = title;
+
+  try {
+    const { error } = await admin.from('itineraries').update(patch).eq('id', id);
+    if (error) throw error;
+    return res.status(200).json({ ok: true });
+  } catch (e) {
+    console.error('[admin/trips itinerary-save] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to save itinerary' });
+  }
+}
+
+// --- itinerary-publish (mint share_token, stamp published_at, email owner) --
+async function handleItineraryPublish(req, res) {
+  const { id } = req.body || {};
+  if (!isUuid(id)) return res.status(400).json({ error: 'valid id required' });
+
+  try {
+    // Load current row (need owner + existing token for idempotent re-publish).
+    const { data: itin, error: loadErr } = await admin
+      .from('itineraries')
+      .select('id, user_id, title, share_token')
+      .eq('id', id)
+      .single();
+    if (loadErr || !itin) return res.status(404).json({ error: 'Itinerary not found' });
+
+    // Keep an existing token; mint a url-safe one (~22 chars) if still null.
+    let shareToken = itin.share_token;
+    if (!shareToken) {
+      // base64url of 16 random bytes → 22 url-safe chars, no padding/+//.
+      shareToken = crypto.randomBytes(16).toString('base64url');
+    }
+
+    const { error: upErr } = await admin
+      .from('itineraries')
+      .update({ published_at: new Date().toISOString(), share_token: shareToken })
+      .eq('id', id);
+    if (upErr) throw upErr;
+
+    const url = `${SITE_ORIGIN}/itinerary.html?t=${shareToken}`;
+
+    // ── Customer email (best-effort; a send failure must NOT fail publish) ──
+    // Sends only with a VERIFIED sender (CUSTOMER_EMAIL_FROM, e.g.
+    // "Mosim <care@mosimkorea.com>") — Resend's shared sender can't email customers.
+    let emailed = false;
+    const customerFrom = process.env.CUSTOMER_EMAIL_FROM;
+    const to = await ownerEmail(itin.user_id);
+    if (customerFrom && to) {
+      try {
+        const r = await sendEmail({
+          from: customerFrom,
+          to,
+          subject: 'Your Korea itinerary is ready',
+          html: itineraryReadyHtml(itin, url),
+          replyTo: process.env.LEAD_NOTIFY_EMAIL || undefined
+        });
+        emailed = !(r && r.skipped); // skipped:true means RESEND_API_KEY not set
+      } catch (e) {
+        console.error('[admin/trips itinerary-publish] customer email failed:', e?.message || e);
+      }
+    }
+
+    return res.status(200).json({ ok: true, share_token: shareToken, url, emailed });
+  } catch (e) {
+    console.error('[admin/trips itinerary-publish] failed', e?.message || e);
+    return res.status(500).json({ error: 'Failed to publish itinerary' });
+  }
+}
+
+// Senior-friendly, Warm Trust palette (ivory/navy/gold). One big tappable button.
+function itineraryReadyHtml(itin, url) {
+  const safeUrl = esc(url);
+  const trip = esc(itin.title || 'your Korea trip');
+  return `<div style="margin:0;padding:0;background:#FBF7EF">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;font-family:Georgia,'Times New Roman',serif;color:#1B2A4A">
+    <p style="font-size:22px;font-weight:700;color:#1B2A4A;margin:0 0 24px">Mosim</p>
+    <h1 style="font-size:28px;line-height:1.3;color:#1B2A4A;margin:0 0 16px">Your Korea itinerary is ready</h1>
+    <p style="font-size:19px;line-height:1.6;color:#54514B;margin:0 0 12px;font-family:Helvetica,Arial,sans-serif">
+      We've finished putting together the day-by-day plan for <strong style="color:#1B2A4A">${trip}</strong> &mdash; your flights, hotel, every day, and the people you can call. It's all in one place, ready whenever you are.
+    </p>
+    <p style="font-size:19px;line-height:1.6;color:#54514B;margin:0 0 28px;font-family:Helvetica,Arial,sans-serif">
+      Tap the button below to look it over.
+    </p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 28px"><tr><td style="border-radius:10px;background:#C39A3F">
+      <a href="${safeUrl}" style="display:inline-block;padding:18px 40px;font-size:20px;font-weight:700;color:#1B2A4A;text-decoration:none;font-family:Helvetica,Arial,sans-serif;border-radius:10px">
+        View my itinerary
+      </a>
+    </td></tr></table>
+    <p style="font-size:16px;line-height:1.6;color:#8A8479;margin:0 0 24px;font-family:Helvetica,Arial,sans-serif">
+      If the button doesn't work, copy and paste this link into your web browser:<br>
+      <a href="${safeUrl}" style="color:#1B2A4A;word-break:break-all">${safeUrl}</a>
+    </p>
+    <p style="font-size:19px;line-height:1.6;color:#54514B;margin:0;font-family:Helvetica,Arial,sans-serif">
+      You're never alone in this &mdash; just reply to this email any time and a real person at Mosim will help.
+    </p>
+    <p style="font-size:19px;line-height:1.6;color:#1B2A4A;margin:24px 0 0;font-family:Helvetica,Arial,sans-serif">Warmly,<br>The Mosim team</p>
+  </div>
+</div>`;
 }

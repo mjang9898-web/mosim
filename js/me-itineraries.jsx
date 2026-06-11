@@ -39,7 +39,7 @@ function MeItineraries() {
       setSupa(client);
       const { data, error } = await client
         .from('itineraries')
-        .select('id, title, status, created_at')
+        .select('id, title, status, created_at, published_at, share_token')
         .order('created_at', { ascending: false });
       if (error) { setErr(error.message); return; }
       setRows(data || []);
@@ -96,6 +96,18 @@ function MeItineraries() {
               )}
             </div>
             <div style={{fontSize:15, color:'#8A8479'}}>Saved {fmtDate(r.created_at)}</div>
+            {r.published_at && r.share_token && (
+              <a href={`/itinerary.html?t=${encodeURIComponent(r.share_token)}`}
+                 target="_blank" rel="noopener"
+                 style={{
+                   display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+                   padding:'10px 14px', background:'#FBF8F2', border:'1px solid #C39A3F',
+                   color:'#1B2A4A', borderRadius:8, textDecoration:'none',
+                   fontSize:17, fontWeight:600
+                 }}>
+                ✓ View itinerary
+              </a>
+            )}
             <div style={{display:'flex', gap:10, marginTop:6}}>
               <a href={`/result.html?itin=${r.id}`} style={{
                 flex:1, textAlign:'center', padding:'10px 14px', background:'#1B2A4A',
