@@ -22,6 +22,8 @@ const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost'];
 const PH_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 const PH_HOST = 'https://us.posthog.com';
 const PH_PROJECT = '463716';
+// Internal/test IPs to exclude from marketing stats (comma-separated env, e.g. the founder's IP).
+const PH_EXCLUDE_IPS = (process.env.POSTHOG_EXCLUDE_IPS || '').split(',').map((s) => s.trim()).filter(Boolean);
 
 export default async function handler(req, res) {
   if (!admin) return res.status(500).json({ error: 'Server not configured' });
@@ -64,7 +66,10 @@ async function handleAnalytics(req, res) {
   // Drop bots/crawlers/monitoring by user-agent (real browser UAs never match these).
   const notBot = `NOT match(lower(coalesce(properties.$raw_user_agent, '')), `
     + `'bot|crawl|spider|slurp|headless|phantom|puppeteer|playwright|python-|curl/|wget|monitor|uptime|pingdom|lighthouse|ahrefs|semrush|dataforseo|prerender|vercel-|scan')`;
-  const base = `event='$pageview' AND timestamp > ${since} AND ${notBot}`;
+  const ipClause = PH_EXCLUDE_IPS.length
+    ? ` AND coalesce(properties.$ip, '') NOT IN (${PH_EXCLUDE_IPS.map((ip) => `'${ip.replace(/'/g, '')}'`).join(', ')})`
+    : '';
+  const base = `event='$pageview' AND timestamp > ${since} AND ${notBot}${ipClause}`;
   try {
     const [ov, fn, sr] = await Promise.all([
       phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE ${base}`),
