@@ -491,7 +491,7 @@ async function handleFinance(req, res) {
 }
 
 // === Milestone 2: itinerary deliverable (cockpit editor + publish + email) ===
-const SITE_ORIGIN = 'https://mosim.vercel.app';
+const SITE_ORIGIN = process.env.SITE_ORIGIN || 'https://mosimkorea.com';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function isUuid(v) { return typeof v === 'string' && UUID_RE.test(v.trim()); }
@@ -585,7 +585,7 @@ async function handleItineraryPublish(req, res) {
       .eq('id', id);
     if (upErr) throw upErr;
 
-    const url = `${SITE_ORIGIN}/itinerary.html?t=${shareToken}`;
+    const url = `${SITE_ORIGIN}/itinerary?t=${shareToken}`;
 
     // ── Customer email (best-effort; a send failure must NOT fail publish) ──
     // Sends only with a VERIFIED sender (CUSTOMER_EMAIL_FROM, e.g.
