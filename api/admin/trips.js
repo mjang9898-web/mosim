@@ -64,7 +64,7 @@ async function handleAnalytics(req, res) {
   // Drop bots/crawlers/monitoring by user-agent (real browser UAs never match these).
   const notBot = `NOT match(lower(coalesce(properties.$raw_user_agent, '')), `
     + `'bot|crawl|spider|slurp|headless|phantom|puppeteer|playwright|python-|curl/|wget|monitor|uptime|pingdom|lighthouse|ahrefs|semrush|dataforseo|prerender|vercel-|scan')`;
-  const base = `${base} AND ${notBot}`;
+  const base = `event='$pageview' AND timestamp > ${since} AND ${notBot}`;
   try {
     const [ov, fn, sr] = await Promise.all([
       phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE ${base}`),
