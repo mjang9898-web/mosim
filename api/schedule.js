@@ -7,6 +7,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from './_lib/itinerary-prompt.generated.js';
 import { buildTravelerBrief } from './_lib/traveler-brief.js';
 
+// Itinerary generation runs ~28s for rich multi-city plans; allow headroom so
+// Vercel doesn't kill the function before the model finishes (Hobby max = 60s).
+export const config = { maxDuration: 60 };
+
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const client = ANTHROPIC_API_KEY ? new Anthropic({ apiKey: ANTHROPIC_API_KEY }) : null;
 

@@ -105,7 +105,10 @@
   var SLIDE_MS = 5000;   // each photo stays ~5 seconds
 
   var MIN_MS = 5200;                         // minimum time on screen so the wait feels real
-  var MAX_MS = 32000;                        // hard cap — proceed even if the API is slow/unreachable
+  var MAX_MS = 60000;                        // hard cap — proceed even if the API is slow/unreachable.
+                                             // Real itineraries (multi-city, e.g. Jeju+Busan) take ~28s to
+                                             // generate; 60s avoids discarding a valid-but-slow plan. The plan
+                                             // shows the instant it resolves (~28s) — this is only the give-up net.
   var STEP_GAP = MIN_MS / 4;                 // 4 reassurance steps
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
