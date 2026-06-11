@@ -6,6 +6,8 @@
 - [ ] **Expedia 제휴 가입** — Travel Creator Program (affiliates.expediagroup.com), `care@mosimkorea.com`, **개인 자격**(법인 불필요). 승인 후 cockpit Expedia 링크에 추적코드(affiliateParam) 추가 → ~4% 호텔 커미션
 - [ ] **Experience 페이지 — 사진 업데이트** — 큐레이션 카드 이미지 교체/개선
 - [ ] **Medical 페이지 — 세부사항 업데이트** — 진료 항목별 상세 내용 보강
+- [ ] **예약요청 이메일 — 내용·디자인 폴리시** — 발송은 동작하나 카피·디자인 개선 필요 (`api/reserve.js` → `api/_lib/email.js`; 발행 이메일 `api/admin/trips.js`, 결제 이메일 `api/_lib/pay-emails.js`)
+- [ ] **로딩 화면 페이싱 (~28초 대기)** — `loading.html` 진행바는 5.2초에 끝나는데 실제 AI 생성은 ~28초 → 시니어가 멈춘 듯 느낌. 바 느리게 / 안내 단계 추가 / 스트리밍 등으로 개선
 
 ## 마케팅 시작할 때
 - [ ] IG / YouTube / Facebook 링크에 **UTM 태그** 붙이기 (예: `?utm_source=instagram&utm_medium=social`) → cockpit Marketing "채널" 카드에 채널별 유입·전환 집계
@@ -18,4 +20,5 @@
 - [ ] PostHog 고아 키 `cockpit-analytics` 삭제 (Settings → Personal API keys; 실제 작동하는 건 `cockpit-analytics-v2`)
 
 ---
-*참고: 병렬 세션이 현재 빌드 중인 작업(itinerary deliverable, pay-emails 등)은 그쪽에서 따로 추적 중이라 여기 안 넣었어요. 완료되면 이 리스트는 "사업/운영" 백로그로 계속 쓰면 돼요.*
+*이 파일(`/TODO.md`)이 **유일한 to-do 리스트**입니다. 모든 세션·에이전트는 여기에 추가/체크하세요. (메모리에 따로 todo를 만들지 말 것 — `project_todos.md` 메모리는 이 파일을 가리키는 포인터일 뿐.)*
+*itinerary deliverable / 결제 활성화 / pay-emails / 일정 페이싱은 2026-06-11 빌드·배포 완료.*
