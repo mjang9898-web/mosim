@@ -71,7 +71,7 @@ async function handleAnalytics(req, res) {
     : '';
   const base = `event='$pageview' AND timestamp > ${since} AND ${notBot}${ipClause}`;
   try {
-    const [ov, fn, sr] = await Promise.all([
+    const [ov, fn, sr, tr, pg, co, dv, ch] = await Promise.all([
       phHogql(`SELECT count() AS pv, uniq(distinct_id) AS v FROM events WHERE ${base}`),
       phHogql(`SELECT
                  uniqIf(distinct_id, properties.$current_url LIKE '%step1%') AS s1,
@@ -83,7 +83,25 @@ async function handleAnalytics(req, res) {
       phHogql(`SELECT coalesce(nullIf(properties.$referring_domain, ''), '$direct') AS src,
                       uniq(distinct_id) AS v, count() AS pv
                FROM events WHERE ${base}
-               GROUP BY src ORDER BY v DESC LIMIT 8`)
+               GROUP BY src ORDER BY v DESC LIMIT 8`),
+      // ① daily visitor trend
+      phHogql(`SELECT toString(toDate(timestamp)) AS day, uniq(distinct_id) AS v
+               FROM events WHERE ${base} GROUP BY day ORDER BY day`),
+      // ② top pages
+      phHogql(`SELECT coalesce(nullIf(properties.$pathname, ''), '/') AS page, uniq(distinct_id) AS v, count() AS pv
+               FROM events WHERE ${base} GROUP BY page ORDER BY v DESC LIMIT 8`),
+      // ③ countries
+      phHogql(`SELECT coalesce(nullIf(properties.$geoip_country_name, ''), 'Unknown') AS c, uniq(distinct_id) AS v
+               FROM events WHERE ${base} GROUP BY c ORDER BY v DESC LIMIT 8`),
+      // ④ devices
+      phHogql(`SELECT coalesce(nullIf(properties.$device_type, ''), 'Unknown') AS d, uniq(distinct_id) AS v
+               FROM events WHERE ${base} GROUP BY d ORDER BY v DESC`),
+      // ⑤ marketing channels (UTM) — excludes our QA test tags
+      phHogql(`SELECT coalesce(nullIf(properties.utm_source, ''), '(none)') AS src,
+                      coalesce(nullIf(properties.utm_medium, ''), '—') AS med, uniq(distinct_id) AS v
+               FROM events WHERE ${base} AND coalesce(properties.utm_source, '') != ''
+                 AND lower(coalesce(properties.utm_source, '')) NOT IN ('qa_test', 'funnel_qa', 'verify', 'verification')
+               GROUP BY src, med ORDER BY v DESC LIMIT 8`)
     ]);
     const o = ov[0] || [0, 0]; const f = fn[0] || [0, 0, 0, 0, 0];
     return res.status(200).json({
@@ -96,7 +114,12 @@ async function handleAnalytics(req, res) {
         { step: 'Comfort (step 4)', visitors: Number(f[3]) || 0 },
         { step: 'AI plan (result)', visitors: Number(f[4]) || 0 }
       ],
-      sources: sr.map((row) => ({ source: row[0] === '$direct' ? 'Direct / none' : row[0], visitors: Number(row[1]) || 0, views: Number(row[2]) || 0 }))
+      sources: sr.map((row) => ({ source: row[0] === '$direct' ? 'Direct / none' : row[0], visitors: Number(row[1]) || 0, views: Number(row[2]) || 0 })),
+      trend: tr.map((row) => ({ day: row[0], visitors: Number(row[1]) || 0 })),
+      pages: pg.map((row) => ({ page: row[0], visitors: Number(row[1]) || 0, views: Number(row[2]) || 0 })),
+      countries: co.map((row) => ({ country: row[0], visitors: Number(row[1]) || 0 })),
+      devices: dv.map((row) => ({ device: row[0], visitors: Number(row[1]) || 0 })),
+      channels: ch.map((row) => ({ source: row[0], medium: row[1], visitors: Number(row[2]) || 0 }))
     });
   } catch (e) {
     console.error('[admin/trips analytics] failed', e?.message || e);

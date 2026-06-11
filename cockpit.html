@@ -387,15 +387,45 @@
     }
     const n = (x) => Number(x || 0).toLocaleString();
     const ph = 'https://us.posthog.com/project/463716';
+    // a horizontal bar-list card (label + gold bar + visitor count)
+    const barCard = (title, rows, labelFn, emptyMsg) => {
+      const max = rows.reduce((m, r) => Math.max(m, r.visitors), 0);
+      let h = '<div class="card"><div class="label" style="margin-bottom:12px">' + title + '</div>';
+      if (!rows.length) { h += '<div style="color:var(--ink-3);font-size:14px">' + esc(emptyMsg || 'No data yet.') + '</div>'; }
+      else rows.forEach((r) => {
+        const pct = max ? Math.round((r.visitors / max) * 100) : 0;
+        h += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0">'
+          + '<div style="width:150px;flex:none;font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(labelFn(r)) + '</div>'
+          + '<div style="flex:1;background:#F1EADC;border-radius:5px;height:16px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:var(--gold);border-radius:5px;min-width:2px"></div></div>'
+          + '<div style="width:46px;flex:none;text-align:right;font-size:13px;font-weight:700;color:var(--navy)">' + n(r.visitors) + '</div></div>';
+      });
+      return h + '</div>';
+    };
+    const trendHtml = (trend) => {
+      if (!trend || !trend.length) return '';
+      const max = trend.reduce((m, t) => Math.max(m, t.visitors), 0) || 1;
+      let h = '<div class="card" style="margin-bottom:24px"><div class="label" style="margin-bottom:12px">Visitors per day</div>'
+        + '<div style="display:flex;align-items:flex-end;gap:3px;height:90px">';
+      trend.forEach((t) => {
+        const ht = Math.round((t.visitors / max) * 82) + 2;
+        h += '<div title="' + esc(t.day) + ': ' + t.visitors + '" style="flex:1;min-width:3px;height:' + ht + 'px;background:var(--navy);border-radius:3px 3px 0 0;opacity:.85"></div>';
+      });
+      h += '</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:6px"><span>' + esc(trend[0].day) + '</span><span>' + esc(trend[trend.length - 1].day) + '</span></div>';
+      return h + '</div>';
+    };
+    const grid2 = (a, b) => '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-bottom:24px">' + a + b + '</div>';
 
     // overview cards
     let html = '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px">'
       + '<div style="font-size:13px;color:var(--ink-3)">Anonymous pageviews · last ' + a.days + ' days · no personal or medical data</div>'
       + '<a href="' + ph + '" target="_blank" rel="noopener" style="font-size:13px;color:var(--gold);font-weight:600">Deep dive in PostHog →</a></div>';
+    const conv = (a.funnel[0] && a.funnel[0].visitors > 0) ? Math.round((a.funnel[4].visitors / a.funnel[0].visitors) * 100) : null;
     html += '<div class="cards">'
       + '<div class="card"><div class="label">Pageviews</div><div class="big">' + n(a.overview.pageviews) + '</div></div>'
       + '<div class="card"><div class="label">Visitors</div><div class="big">' + n(a.overview.visitors) + '</div></div>'
+      + '<div class="card"><div class="label">Plan conversion</div><div class="big">' + (conv != null ? conv + '%' : '—') + '</div><div class="sub">visitors who reached a plan</div></div>'
       + '</div>';
+    html += trendHtml(a.trend);
 
     // funnel
     const top = a.funnel[0] ? a.funnel[0].visitors : 0;
@@ -434,6 +464,17 @@
       html += '</tbody></table>';
     }
     html += '</div>';
+
+    // marketing channels (UTM) + top pages
+    html += grid2(
+      barCard('Marketing channels (UTM)', a.channels || [], (r) => r.source + (r.medium && r.medium !== '—' ? ' / ' + r.medium : ''), 'Tag your Instagram / YouTube / Facebook links with UTM and channels appear here.'),
+      barCard('Top pages', a.pages || [], (r) => r.page, 'No pages yet.')
+    );
+    // countries + devices
+    html += grid2(
+      barCard('Countries', a.countries || [], (r) => r.country, 'No country data yet.'),
+      barCard('Devices', a.devices || [], (r) => r.device, 'No device data yet.')
+    );
 
     dash.innerHTML = html;
   }
