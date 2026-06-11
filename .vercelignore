@@ -1,0 +1,4 @@
+_workspace/
+node_modules/
+.git/
+*.sh
