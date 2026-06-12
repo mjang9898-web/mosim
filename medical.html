@@ -66,6 +66,22 @@
   .card .price span{font-size:14px; color:var(--ink-2); font-weight:400; font-family:'Inter';}
   .card .view{font-size:15px; font-weight:600; color:var(--navy); border-bottom:2px solid var(--gold); padding-bottom:2px;}
 
+  /* extra cards revealed by "& more" */
+  .card--extra{display:none;}
+  .cards.expanded .card--extra{display:flex;}
+  .card--cta{background:var(--ivory-soft); border:1.5px dashed var(--gold); text-decoration:none; justify-content:center;}
+  .card--cta:hover{box-shadow:0 24px 50px -30px rgba(195,154,63,.45);}
+  .card--cta .cta-body{padding:34px 30px;}
+  .card--cta .eyebrow{color:var(--gold);}
+  .card--cta h3{color:var(--navy);}
+  .card--cta .foot{border:0; margin-top:16px;}
+
+  /* "& more" toggle */
+  .more-toggle{text-align:center; margin:30px 0 0;}
+  .morebtn{font-size:18px; font-weight:600; color:var(--navy); background:#fff; border:1.5px solid var(--gold); border-radius:999px; padding:14px 30px; min-height:50px; cursor:pointer; transition:background .15s, box-shadow .15s;}
+  .morebtn:hover{background:var(--ivory-soft); box-shadow:0 16px 30px -22px rgba(195,154,63,.55);}
+  .morebtn .chev{margin-left:6px; color:var(--gold);}
+
   /* "more is possible" */
   .more{margin:36px 0 0; background:var(--ivory-soft); border:1px solid var(--line); border-radius:16px; padding:30px 34px; text-align:center;}
   .more h3{font-size:22px; font-weight:600; margin-bottom:8px;}
@@ -158,6 +174,10 @@
 
   <div class="cards" id="cards"></div>
 
+  <div class="more-toggle">
+    <button class="morebtn" id="moreBtn" type="button" aria-expanded="false" aria-controls="cards">&amp; more — see all care <span class="chev" aria-hidden="true">↓</span></button>
+  </div>
+
   <div class="more">
     <h3>And much more is possible.</h3>
     <p>These four are where most of our guests begin — but Korea's hospitals do far more. If you're here for something else (cardiac, oncology screening, a second opinion, or care we haven't listed), just ask. We'll find the right specialists and tell you honestly what's possible.</p>
@@ -242,19 +262,118 @@
         {name:'SMILE Pro',dur:'2 hours · same day',price:'2,400',blurb:'Korea-pioneered keyhole technique — no flap, faster healing.',inc:['All LASIK coverage','Femtosecond SMILE both eyes','Reduced dry-eye risk','24-hour recovery window','English-speaking surgeon']},
         {name:'ICL (Lens)',dur:'Half day',price:'4,200',blurb:'For high prescriptions — an implantable lens, reversible if needed.',inc:['Pre-op imaging & sizing','Visian ICL implant both eyes','Anesthesia + suite','1-week follow-up','No corneal tissue removed']}
       ],
-      addons:[{n:'Dry-eye intense-pulse-light (IPL)',p:'$320'},{n:'Night-vision lens upgrade',p:'$280'},{n:'Concierge airport transfer',p:'$120'},{n:'Second-eye scheduling',p:'incl.'}] }
+      addons:[{n:'Dry-eye intense-pulse-light (IPL)',p:'$320'},{n:'Night-vision lens upgrade',p:'$280'},{n:'Concierge airport transfer',p:'$120'},{n:'Second-eye scheduling',p:'incl.'}] },
+
+    // ---- additional care (revealed by "& more") ----
+    { code:'plastic', extra:true, eyebrow:'Plastic surgery', name:'Plastic surgery',
+      photo:'/assets/medical-drawer/plastic.webp',
+      gallery:['/assets/medical-drawer/plastic.webp','/assets/medical-drawer/plastic-2.webp'],
+      desc:'Cosmetic & reconstructive procedures with a concierge recovery suite.',
+      price:'3,500', duration:'2–7 days recovery',
+      positioning:"Seoul performs more cosmetic procedures per capita than anywhere in the world — board-certified surgeons, dedicated concierge recovery suites, and the Korean Plastic Surgery Society's strict accreditation standards.",
+      hospitals:['Banobagi','JK Plastic Surgery','BIO Plastic','Dream Medical Group','ID Hospital'],
+      tiers:[
+        {name:'Consult & plan',dur:'90 min',price:'300',blurb:'Sit-down with two surgeons, 3D imaging, and a written quote.',inc:['Two surgeon opinions','Vectra 3D simulation','Written quote and timeline','Korean Surgery Society credential review','No commitment']},
+        {name:'Standard package',dur:'2 days · 5 day stay',price:'3,500',blurb:'A single procedure (rhinoplasty, blepharoplasty, etc.) with recovery suite.',inc:['One major procedure','In-clinic recovery suite (1 night)','4-day post-op care','Nursing concierge','Suture removal and final check']},
+        {name:'Premium combo',dur:'4 days · 10 day stay',price:'8,800',blurb:'Two procedures with a double-room concierge suite and on-call nursing.',inc:['Two coordinated procedures','Private recovery suite (5 nights)','24/7 nursing on call','Lymphatic drainage daily','Full discharge package']}
+      ],
+      addons:[{n:'PRP scar healing accelerator',p:'$420'},{n:'Recovery hotel upgrade (5-star)',p:'$1,200'},{n:'Photo + video documentation',p:'$240'},{n:'In-flight medical escort (one-way)',p:'$1,800'}] },
+
+    { code:'derm', extra:true, eyebrow:'Dermatology', name:'Dermatology',
+      photo:'/assets/medical-drawer/derm.webp',
+      gallery:['/assets/medical-drawer/derm.webp','/assets/medical-drawer/derm-2.webp'],
+      desc:'Medical skin care — laser, anti-aging, pigmentation, and a K-beauty consult.',
+      price:'200', duration:'30–60 min',
+      positioning:"K-beauty's clinical engine — laser, anti-aging, pigmentation, and the K-skin facial protocols that built the entire global K-beauty category. Same-day visits, no downtime, English consult included.",
+      hospitals:['Dr. Mom Clinic','CNP Cha & Park','Lim Sunsoo','Oracle Dermatology','Dr. Jart Skin Clinic'],
+      tiers:[
+        {name:'K-skin facial',dur:'45 min',price:'200',blurb:'Aqua-peel + LED + ampoule layering — the original Seoul derm facial.',inc:['Skin diagnosis','Aqua-peel hydrodermabrasion','LED red/blue light therapy','Custom ampoule','Take-home K-skin sample kit']},
+        {name:'Laser package',dur:'1 hour',price:'550',blurb:'Pico-toning + IPL for pigmentation, pores, and overall tone.',inc:['Pico-laser toning','IPL for pigmentation','Cooling and recovery mask','Numbing cream as needed','2-week follow-up review']},
+        {name:'Anti-aging program',dur:'Half day',price:'1,100',blurb:'Ulthera HIFU + Thermage + injectable refresh — the K-celeb maintenance trio.',inc:['Ulthera HIFU (600 lines)','Thermage 600 shots','Botox + filler refresh (0.5cc)','PDRN salmon DNA boost','Photo documentation']}
+      ],
+      addons:[{n:'Skin booster (Profhilo)',p:'$420'},{n:'Carbon laser peel',p:'$180'},{n:'Eyelash perm + lift',p:'$80'},{n:'Take-home K-beauty kit ($300 value)',p:'$120'}] },
+
+    { code:'hanbang', extra:true, eyebrow:'Korean medicine', name:'Korean traditional medicine',
+      photo:'/assets/medical-drawer/hanbang.webp',
+      gallery:['/assets/medical-drawer/hanbang.webp','/assets/medical-drawer/hanbang-2.webp'],
+      desc:'Pulse diagnosis, acupuncture, herbal regimens, and cupping — the Heo Jun lineage.',
+      price:'90', duration:'Half day',
+      positioning:"Korea's centuries-old traditional medicine — pulse diagnosis, acupuncture, herbal regimens, and cupping — practiced today inside fully licensed Korean medicine hospitals (KOM) alongside Western care.",
+      hospitals:['Kyung Hee Korean Medicine Hospital','Daejeon Univ. KOM Hospital','Jaseng Hospital','Insan KOM Clinic','Ahn Korean Medicine'],
+      tiers:[
+        {name:'Diagnosis & taster',dur:'90 min · half day',price:'90',blurb:'Pulse + tongue + abdominal diagnosis, with a tasting of three herbal teas.',inc:['Pulse diagnosis','Tongue + abdominal palpation','Constitutional reading (Sasang)','Tea tasting × 3','Take-home herbal sachet']},
+        {name:'Treatment session',dur:'Half day',price:'320',blurb:'Acupuncture + cupping + electric needle therapy in one extended session.',inc:['Full body acupuncture','Fire and dry cupping','Electro-acupuncture if indicated','Moxibustion warming','Personalised herb pack (7 days)']},
+        {name:'4-day immersion',dur:'4 days',price:'1,800',blurb:'Daily treatments + a tailored herbal regimen + dietary protocol.',inc:['Daily acupuncture × 4','Custom herbal decoction (28 days)','Dietary + lifestyle consult','Sasang constitutional book','Take-home moxa kit']}
+      ],
+      addons:[{n:'Bee venom acupuncture (per session)',p:'$60'},{n:'Herbal pill compounding (gongjindan)',p:'$280'},{n:'Korean medicine MRI (radiomics)',p:'$180'},{n:'Hanbang spa day (Cha & Spa)',p:'$220'}] },
+
+    { code:'hair', extra:true, eyebrow:'Hair restoration', name:'Hair restoration',
+      photo:'/assets/medical-drawer/hair.webp',
+      gallery:['/assets/medical-drawer/hair.webp','/assets/medical-drawer/hair-2.webp'],
+      desc:'FUE transplants, PRP, scalp therapy, and low-level laser.',
+      price:'600', duration:'2–8 hours',
+      positioning:"Korea's hair restoration scene is the world's most clinically advanced — FUE non-shaven techniques, low-level laser therapy combined with PRP, and surgeons who routinely place 4,000+ grafts in a single session.",
+      hospitals:['Forleaders','Mosaic Hair','Beauty Han','CNP Hair Clinic','Seoul Hair Transplant Center'],
+      tiers:[
+        {name:'Diagnosis & PRP',dur:'2 hours · same day',price:'600',blurb:'Trichoscopy diagnosis with one platelet-rich plasma boost.',inc:['Digital trichoscopy','Hair density mapping','PRP scalp injection','Personalised shampoo + scalp serum','6-month progression photos']},
+        {name:'FUE transplant',dur:'6 hours · 1 day',price:'4,200',blurb:'Up to 2,500 graft non-shaven FUE — the K-celeb default.',inc:['Up to 2,500 grafts','Non-shaven FUE technique','PRP recovery boost','7-day post-op kit','1-year check-in photos']},
+        {name:'Mega-session FUE',dur:'8 hours · 2 days',price:'8,400',blurb:'Up to 5,000 grafts in one extended session for advanced hair loss.',inc:['Up to 5,000 grafts','Combined FUE + strip if needed','Overnight observation','Three PRP sessions over 6 months','2-year warranty']}
+      ],
+      addons:[{n:'Low-level laser therapy (3 sessions)',p:'$420'},{n:'Mesotherapy scalp booster',p:'$280'},{n:'Eyebrow micropigmentation',p:'$680'},{n:'Beard transplant (up to 500 grafts)',p:'$1,800'}] },
+
+    { code:'iv', extra:true, eyebrow:'IV therapy', name:'IV nutrient therapy',
+      photo:'/assets/medical-drawer/iv.webp',
+      gallery:['/assets/medical-drawer/iv.webp','/assets/medical-drawer/iv-2.webp'],
+      desc:'Glutathione, NAD+, vitamin C, and the Myers cocktail — concierge-delivered.',
+      price:'180', duration:'30–60 min',
+      positioning:"Glutathione, NAD+, vitamin C megadose, and the Myers cocktail — concierge-delivered to your hotel or to a private clinic suite within an hour of booking. Same-day blood panel optional.",
+      hospitals:['Concierge MD Korea','Royal Wellness IV','Cha & Spa Wellness','YS Clinic','Doctor My Health'],
+      tiers:[
+        {name:"Myers' cocktail",dur:'45 min',price:'180',blurb:'Magnesium, B-complex, vitamin C — the classic restorative IV.',inc:['Magnesium + B-complex + C','Saline base 500 mL','Clinic or hotel delivery','Vital signs monitoring','Quick recovery snack']},
+        {name:'Glutathione boost',dur:'60 min',price:'320',blurb:"Korea's signature anti-oxidation + skin-brightening protocol.",inc:["Myers' cocktail base",'High-dose glutathione (1200 mg)','Vitamin C megadose (15 g)','Hydration top-up','Hotel delivery (Seoul only)']},
+        {name:'NAD+ premium',dur:'2 hours',price:'780',blurb:'NAD+ longevity protocol with cellular energy markers re-tested.',inc:['NAD+ 500 mg slow drip','Pre & post energy marker panel','Sleep and recovery briefing','Hotel delivery','Next-day follow-up']}
+      ],
+      addons:[{n:'Same-day blood panel (50 markers)',p:'$240'},{n:'Concierge in-room delivery (Seoul)',p:'$80'},{n:'Hangover recovery upgrade',p:'$60'},{n:'IV + facial combo at Cha & Spa',p:'$340'}] },
+
+    { code:'aesthetic', extra:true, eyebrow:'Aesthetic', name:'Aesthetic medicine',
+      photo:'/assets/medical-drawer/aesthetic.webp',
+      gallery:['/assets/medical-drawer/aesthetic.webp','/assets/medical-drawer/aesthetic-2.webp'],
+      desc:'Non-surgical injectables — Botox, fillers, threads, and skin boosters.',
+      price:'300', duration:'30–60 min',
+      positioning:"Non-surgical Korean aesthetic medicine — botox, fillers, threads, and skin boosters — done by board-certified dermatologists who train the next generation of K-beauty practitioners worldwide.",
+      hospitals:['Banobagi Aesthetic','Lemon Aesthetic','Renewme','Apgujeong Aesthetic','Dr. Park Aesthetic'],
+      tiers:[
+        {name:'Refresh',dur:'30 min',price:'300',blurb:"A single area — Botox forehead, glabella, or crow's feet.",inc:['One injectable area','Korean-brand Botox (Nabota)','Numbing topical','Quick recovery review','2-week touch-up if needed']},
+        {name:'Full refresh',dur:'60 min',price:'780',blurb:'Three areas + light filler (cheeks, chin, or lips).',inc:['Up to 3 Botox areas','Filler 1 cc (cheek/chin/lips)','Vectra 3D documentation','Same-day discharge','2-week touch-up']},
+        {name:'Shilhouette',dur:'90 min',price:'1,800',blurb:'PDO threads + filler + skin booster — the Korean V-line lift maintenance.',inc:['PDO threads (20 mid-face)','Filler 1 cc cheek/chin','Profhilo skin booster','Cooling and recovery mask','Photo + video documentation']}
+      ],
+      addons:[{n:'Korean-brand filler upgrade (Restylane)',p:'$240'},{n:'Eyebrow lift threads (4 threads)',p:'$420'},{n:'Lip filler add-on (0.5cc)',p:'$280'},{n:'Recovery LED + cooling mask',p:'$80'}] },
+
+    { code:'stemcell', extra:true, eyebrow:'Regenerative', name:'Stem cell & regenerative',
+      photo:'/assets/medical-drawer/stemcell.webp',
+      gallery:['/assets/medical-drawer/stemcell.webp','/assets/medical-drawer/stemcell-2.webp'],
+      desc:'Mesenchymal cells, NK-cell immunity, exosomes, and anti-aging protocols.',
+      price:'480', duration:'Half day',
+      positioning:"Korea is the only OECD country with commercial autologous stem cell therapy approved — anti-aging, NK-cell immunity, exosomes, and the regenerative protocols that the global longevity community now flies in for.",
+      hospitals:['CHA Stem Cell Center','Pharmicell','Asan Stem Cell','Severance Cell Therapy','Anti-Aging Korea (CHA)'],
+      tiers:[
+        {name:'Consult & screen',dur:'Half day',price:'480',blurb:'Eligibility screening — labs, immune profile, family history.',inc:['100-marker blood panel','Immune (NK / T-cell) profile','Family history review','Personalised protocol options','No-commitment plan']},
+        {name:'NK-cell boost',dur:'Half day · 2 visits',price:'4,800',blurb:'Autologous NK-cell extraction, expansion, and IV reinfusion.',inc:['NK cell extraction','10-day lab expansion','IV reinfusion (1 round)','2-month immune marker re-test','Written report']},
+        {name:'Mesenchymal protocol',dur:'3 days',price:'12,800',blurb:'Mesenchymal stem cells + exosomes — the full Korean longevity protocol.',inc:['Mesenchymal extraction (adipose)','Stem cell IV + targeted injections','Exosome IV booster','6-month longevity-marker tracking','On-call physician for 30 days']}
+      ],
+      addons:[{n:'Exosome facial add-on',p:'$680'},{n:'Longevity marker panel (90 markers)',p:'$420'},{n:'Telomere length test',p:'$280'},{n:'Hyperbaric oxygen (3 sessions)',p:'$540'}] }
   ];
 
   // ---- render cards ----
   var cardsEl = document.getElementById('cards');
   MED.forEach(function (m) {
     var el = document.createElement('div');
-    el.className = 'card';
+    el.className = 'card' + (m.extra ? ' card--extra' : '');
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
     el.setAttribute('aria-label', m.name);
     el.innerHTML =
-      '<div class="photo" style="background-image:url(\'/assets/medical/card-' + m.code + '.webp\')"></div>' +
+      '<div class="photo" style="background-image:url(\'' + (m.photo || '/assets/medical/card-' + m.code + '.webp') + '\')"></div>' +
       '<div class="body"><div class="eyebrow">' + m.eyebrow + '</div>' +
       '<h3>' + m.name + '</h3><div class="desc">' + m.desc + '</div>' +
       '<div class="foot"><span class="price">From $' + m.price + ' <span>· ' + m.duration + '</span></span>' +
@@ -265,6 +384,31 @@
     });
     cardsEl.appendChild(el);
   });
+
+  // 12th card — "Something else" CTA (revealed with the extras)
+  var se = document.createElement('a');
+  se.className = 'card card--extra card--cta';
+  se.href = 'step1.html';
+  se.setAttribute('aria-label', 'Something else — tell us what you need');
+  se.innerHTML =
+    '<div class="body cta-body"><div class="eyebrow">Something else</div>' +
+    '<h3>Not listed here?</h3>' +
+    '<div class="desc">Cardiac, an oncology screening, a second opinion, or care we haven\'t listed — tell us and we\'ll find the right specialists.</div>' +
+    '<div class="foot"><span class="view">Tell us what you need →</span></div></div>';
+  cardsEl.appendChild(se);
+
+  // ---- "& more" reveal toggle ----
+  var moreBtn = document.getElementById('moreBtn');
+  if (moreBtn) {
+    moreBtn.addEventListener('click', function () {
+      var expanded = cardsEl.classList.toggle('expanded');
+      moreBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      moreBtn.innerHTML = expanded
+        ? 'Show fewer <span class="chev" aria-hidden="true">↑</span>'
+        : '&amp; more — see all care <span class="chev" aria-hidden="true">↓</span>';
+      if (!expanded) cardsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 
   // ---- drawer ----
   var scrim = document.getElementById('scrim'), drawer = document.getElementById('drawer');
