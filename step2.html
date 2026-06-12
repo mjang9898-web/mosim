@@ -64,12 +64,12 @@
   @media(max-width:520px){ .seg{display:flex; width:100%;} .seg button{flex:1; padding:0 12px;} }
 
   /* ── Inline 2-month calendar ──────────────────────────────────────── */
-  .cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; max-width:760px;}
+  .cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
   .cal-arrow{width:44px; height:44px; border-radius:50%; border:1.5px solid var(--line); background:#fff; color:var(--navy); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, color .15s;}
   .cal-arrow:hover:not(:disabled){ border-color:var(--gold); color:var(--gold); }
   .cal-arrow:disabled{ opacity:.32; cursor:not-allowed; }
   .cal-hint{font-size:16px; font-weight:600; color:var(--ink-2); text-align:center;}
-  .cal{display:grid; grid-template-columns:1fr 1fr; gap:40px; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:22px 24px; max-width:760px;}
+  .cal{display:grid; grid-template-columns:1fr 1fr; gap:40px; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:22px 24px;}
   .cal-month-title{font-size:19px; font-weight:700; color:var(--navy); text-align:center; margin-bottom:16px; font-family:'Lora',Georgia,serif;}
   .cal-dow{display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:8px;}
   .cal-dow span{text-align:center; font-size:12px; font-weight:700; color:var(--ink-2); letter-spacing:.08em; text-transform:uppercase;}
@@ -85,7 +85,7 @@
   .cal-day.start{ border-radius:999px 0 0 999px; }
   .cal-day.end{ border-radius:0 999px 999px 0; }
   .cal-day.start.end{ border-radius:999px; }
-  .cal-summary{display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap; max-width:760px;}
+  .cal-summary{display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap;}
   .cal-dot{width:12px; height:12px; border-radius:999px; background:var(--gold); flex:none;}
   .cal-summary-text{font-size:18px; font-weight:600; color:var(--navy);}
   .cal-summary-text .muted{color:var(--ink-2); font-weight:500;}
@@ -96,13 +96,13 @@
   }
 
   /* ── "I'm flexible" reassurance card ──────────────────────────────── */
-  .flex-msg{background:var(--gold-tint); border:1.5px solid var(--gold-soft); border-radius:16px; padding:22px 24px; display:flex; gap:16px; align-items:flex-start; max-width:760px;}
+  .flex-msg{background:var(--gold-tint); border:1.5px solid var(--gold-soft); border-radius:16px; padding:22px 24px; display:flex; gap:16px; align-items:flex-start;}
   .flex-msg svg{flex:none; color:var(--gold); margin-top:2px;}
   .flex-msg-title{font-size:19px; font-weight:700; color:var(--navy); margin-bottom:6px; font-family:'Lora',Georgia,serif;}
   .flex-msg p{font-size:19px; font-weight:400; color:var(--ink); line-height:1.6;}
 
   /* ── Party-type cards ─────────────────────────────────────────────── */
-  .party-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:760px;}
+  .party-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
   .party{background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:20px 16px 18px; text-align:left; display:flex; flex-direction:column; gap:14px; cursor:pointer; transition:border-color .15s, transform .15s, box-shadow .15s; min-height:160px;}
   .party:hover{ border-color:var(--gold-soft); transform:translateY(-1px); }
   .party.is-selected{ border-color:var(--gold); background:var(--gold-tint); box-shadow:0 0 0 3px var(--gold-tint); }
@@ -114,7 +114,7 @@
   @media(max-width:760px){ .party-grid{grid-template-columns:repeat(2,1fr);} }
 
   /* ── Steppers (adults/children) ───────────────────────────────────── */
-  .stepper-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; max-width:760px;}
+  .stepper-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
   @media(max-width:520px){ .stepper-row{grid-template-columns:1fr;} }
   .stepperc{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:16px 18px;}
   .stepperc-label{font-size:19px; font-weight:700; color:var(--navy);}
@@ -126,7 +126,7 @@
   .stepperc-val{min-width:24px; text-align:center; font-size:22px; font-weight:700; color:var(--navy);}
 
   /* ── Airport autocomplete ─────────────────────────────────────────── */
-  .airport{max-width:620px;}
+  .airport{max-width:none;}
   .airport-search{background:#fff; border:1.5px solid var(--line); border-radius:14px; overflow:hidden; transition:border-color .15s, box-shadow .15s;}
   .airport-search.focused{ border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-tint); }
   .airport-field{display:flex; align-items:center; gap:12px; padding:0 16px 0 20px; height:62px; border-bottom:1px solid var(--line);}
@@ -149,7 +149,7 @@
   .airport-dist{font-size:15px; font-weight:600; color:var(--ink-2); text-align:right; white-space:nowrap;}
   .airport-row.is-selected .airport-dist{ color:var(--gold); }
   .airport-empty{padding:16px 20px; font-size:17px; font-weight:500; color:var(--ink-2);}
-  .input-helper{font-size:17px; font-weight:500; color:var(--ink); margin-top:14px; line-height:1.5; max-width:620px;}
+  .input-helper{font-size:17px; font-weight:500; color:var(--ink); margin-top:14px; line-height:1.5;}
   .input-helper b{ color:var(--gold); }
   .optional-tag{font-size:15px; font-weight:600; color:var(--ink-2); margin-left:8px;}
 
@@ -208,7 +208,7 @@
       </div>
     </div>
 
-    <!-- Flexible reassurance + length chips -->
+    <!-- Flexible reassurance -->
     <div class="subpanel" id="panel-flexible" hidden>
       <div class="flex-msg">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -221,15 +221,6 @@
         </div>
       </div>
 
-      <div style="margin-top:22px;">
-        <div class="q" style="font-size:19px;">How long would you like to stay?</div>
-        <div class="chip-group" data-group="length" style="margin-top:12px;">
-          <button class="chip" data-value="under1w" type="button">Under a week</button>
-          <button class="chip" data-value="1to2w" type="button">1–2 weeks</button>
-          <button class="chip" data-value="2plus" type="button">2+ weeks</button>
-          <button class="chip" data-value="unsure" type="button">Not sure yet</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -308,14 +299,16 @@
     { id:'solo',    label:'Solo',   sub:'A private journey',  adults:1, children:0 },
     { id:'couple',  label:'Couple', sub:'The two of you',     adults:2, children:0 },
     { id:'family',  label:'Family', sub:'Multi-generational', adults:2, children:2 },
-    { id:'friends', label:'Friends', sub:'A trip together',   adults:4, children:0 }
+    { id:'friends', label:'Friends', sub:'A trip together',   adults:4, children:0 },
+    { id:'business', label:'Business', sub:'Work & wellness',  adults:2, children:0 }
   ];
 
   var PARTY_ICONS = {
     solo:    '<circle cx="16" cy="11" r="5"/><path d="M6 27c1.5-5 5.5-7.5 10-7.5s8.5 2.5 10 7.5"/>',
     couple:  '<circle cx="11" cy="11" r="4"/><circle cx="21" cy="11" r="4"/><path d="M3 27c1-4 4-6 8-6s7 2 8 6M19 27c1-4 4-6 8-6"/>',
     family:  '<circle cx="9" cy="10" r="3.5"/><circle cx="23" cy="10" r="3.5"/><circle cx="16" cy="20" r="2.5"/><path d="M3 25c1-3 3-5 6-5s5 2 6 5M17 25c1-3 3-5 6-5s5 2 6 5M12 28c.6-2 2-3 4-3s3.4 1 4 3"/>',
-    friends: '<circle cx="8" cy="11" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="24" cy="11" r="3.5"/><path d="M2 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M10 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M18 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5"/>'
+    friends: '<circle cx="8" cy="11" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="24" cy="11" r="3.5"/><path d="M2 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M10 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M18 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5"/>',
+    business: '<circle cx="16" cy="9" r="4.5"/><path d="M7 27c1.2-4.5 4.8-7 9-7s7.8 2.5 9 7"/><path d="M11 20.5h10v6.5h-10z"/><path d="M14 20.5v-1.5a2 2 0 0 1 2-2 2 2 0 0 1 2 2v1.5"/>'
   };
 
   var CITIES = [
@@ -666,7 +659,6 @@
         if(re) st.rangeEnd = re;
       }
     }
-    if(prior.length) st.length = prior.length;
     if(prior.party) st.party = prior.party;
     if(typeof prior.adults === 'number') st.adults = prior.adults;
     if(typeof prior.children === 'number') st.children = prior.children;
@@ -684,7 +676,6 @@
 
   // Apply restored state to UI
   setWhenMode(st.whenMode);
-  if(st.length) singleSelect('length', st.length);
   if(st.stay) singleSelect('stay', st.stay);
   if(st.party) selectParty(st.party, false);
   renderSteppers();
@@ -724,7 +715,7 @@
       data.days = days;
       data.length = deriveLength(days);
     } else {
-      data.length = st.length;
+      data.length = '';
     }
     if(window.kwState) kwState.saveStep('trip', data);
     window.location.href = 'step3.html';
