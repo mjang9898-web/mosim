@@ -146,6 +146,7 @@
   .airport-row.is-selected .airport-code{ background:var(--gold); color:#fff; border-color:var(--gold); }
   .airport-name{display:flex; flex-direction:column; gap:3px; font-size:18px; font-weight:700; color:var(--navy); line-height:1.25;}
   .airport-hint{font-size:14px; font-weight:500; color:var(--ink-2);}
+  .airport-best{display:inline-block; width:fit-content; align-self:flex-start; margin:2px 0; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--gold); background:var(--gold-tint); border:1px solid var(--gold-soft); border-radius:999px; padding:2px 9px; white-space:nowrap;}
   .airport-dist{font-size:15px; font-weight:600; color:var(--ink-2); text-align:right; white-space:nowrap;}
   .airport-row.is-selected .airport-dist{ color:var(--gold); }
   .airport-empty{padding:16px 20px; font-size:17px; font-weight:500; color:var(--ink-2);}
@@ -258,7 +259,7 @@
   <!-- ── 03 · DEPARTURE ────────────────────────────────────────── -->
   <div class="field">
     <div class="q">Where are you flying from?<span class="optional-tag">Optional</span></div>
-    <div class="q-help">Start typing your city — pick your airport and we'll show the average flight time to Seoul (ICN).</div>
+    <div class="q-help">Tell us the big international airport near you — or just your city — and we'll show the approximate flight time to Korea (ICN). Type "New York" and we'll pick the airport with a nonstop flight for you.</div>
     <div class="airport">
       <div class="airport-search" id="airport-search">
         <div class="airport-field" id="airport-field">
@@ -266,7 +267,7 @@
             <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5Z"/>
           </svg>
           <input class="airport-input" id="airport-input" type="text" autocomplete="off"
-                 placeholder="Type your departure city…" aria-label="Departure city">
+                 placeholder="Your city or airport — e.g. New York or JFK" aria-label="Departure city or airport">
           <button type="button" class="airport-clear" id="airport-clear" aria-label="Clear" hidden>×</button>
         </div>
         <div class="airport-results" id="airport-results"></div>
@@ -555,17 +556,58 @@
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+  // "14h 25m" → minutes, for ranking the best (nonstop, shortest) airport
+  function durMin(d){
+    var m = /(\d+)h(?:\s*(\d+)m)?/.exec(d || '');
+    return m ? (parseInt(m[1],10)*60 + (parseInt(m[2],10)||0)) : 9999;
+  }
+  // Recommended airport for a city: nonstop first, then shortest flight
+  function bestAirport(cityObj){
+    var list = cityObj.airports.slice().sort(function(a,b){
+      var an = a.stops === 'nonstop' ? 0 : 1, bn = b.stops === 'nonstop' ? 0 : 1;
+      return (an - bn) || (durMin(a.dur) - durMin(b.dur));
+    });
+    return list[0];
+  }
   function findMatches(q){
     var out = [];
     if(!q) return out;
     CITIES.forEach(function(c){
-      if(c.city.toLowerCase().indexOf(q) !== -1){
-        c.airports.forEach(function(a){
-          out.push({ code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city });
-        });
-      }
+      var cityHit = c.city.toLowerCase().indexOf(q) !== -1;
+      var best = bestAirport(c);
+      c.airports.forEach(function(a){
+        // match by city, airport code (JFK), or airport name (Heathrow)
+        if(cityHit || a.code.toLowerCase().indexOf(q) !== -1 || a.name.toLowerCase().indexOf(q) !== -1){
+          out.push({ code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city, best: a.code === best.code });
+        }
+      });
+    });
+    // nonstop (recommended) airports first, shortest flight first
+    out.sort(function(a,b){
+      var an = a.stops === 'nonstop' ? 0 : 1, bn = b.stops === 'nonstop' ? 0 : 1;
+      return (an - bn) || (durMin(a.dur) - durMin(b.dur));
     });
     return out;
+  }
+  // Exact city name ("new york") or exact code ("jfk") typed → auto-pick the
+  // nonstop airport and show the flight time, no extra tap needed.
+  function autoDesignate(q){
+    if(!q) return false;
+    for(var i = 0; i < CITIES.length; i++){
+      var c = CITIES[i];
+      if(c.city.toLowerCase() === q){
+        var a = bestAirport(c);
+        selectAirport(a.code, c.city, true);
+        return true;
+      }
+      for(var j = 0; j < c.airports.length; j++){
+        if(c.airports[j].code.toLowerCase() === q){
+          selectAirport(c.airports[j].code, c.city, false);
+          return true;
+        }
+      }
+    }
+    return false;
   }
   function renderAirport(){
     clearBtn.hidden = !input.value;
@@ -574,15 +616,19 @@
 
     if(st.airport){
       var a = st.airport;
+      var recBadge = a.recommended ? '<span class="airport-best">Nonstop to Korea</span>' : '';
       results.innerHTML =
         '<div class="airport-row is-selected">' +
           '<span class="airport-code">' + esc(a.code) + '</span>' +
-          '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
+          '<span class="airport-name">' + esc(a.name) + recBadge + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
           '<span class="airport-dist">' + esc(a.dur) + ' to ICN</span>' +
         '</div>';
       document.getElementById('airport-field').classList.remove('solo');
       helper.hidden = false;
-      helper.innerHTML = 'Average flight time from ' + esc(a.code) + ' to Seoul Incheon (ICN): <b>' + esc(a.dur) + '</b> (' + esc(a.stops) + ').';
+      helper.innerHTML = (a.stops === 'nonstop'
+        ? 'From ' + esc(a.code) + ', a nonstop flight to Seoul Incheon (ICN) takes about <b>' + esc(a.dur) + '</b>.'
+        : 'From ' + esc(a.code) + ', flights to Seoul Incheon (ICN) take about <b>' + esc(a.dur) + '</b> (' + esc(a.stops) + ').')
+        + (a.recommended ? ' We picked the best airport near ' + esc(a.city) + ' — tap × to choose another.' : '');
       return;
     }
 
@@ -601,17 +647,18 @@
     var label = keys.length === 1 ? keys[0] : input.value;
     var html = '<div class="airport-row airport-row-head"><span>' + matches.length + ' airport' + (matches.length>1?'s':'') + ' near <b>' + esc(label) + '</b></span><span>Flight time to ICN</span></div>';
     matches.forEach(function(a){
+      var badge = (a.best && a.stops === 'nonstop') ? '<span class="airport-best">Nonstop to Korea</span>' : '';
       html += '<button type="button" class="airport-row" data-code="' + esc(a.code) + '" data-city="' + esc(a.city) + '">' +
         '<span class="airport-code">' + esc(a.code) + '</span>' +
-        '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
+        '<span class="airport-name">' + esc(a.name) + badge + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
         '<span class="airport-dist">' + esc(a.dur) + '</span>' +
         '</button>';
     });
     results.innerHTML = html;
   }
-  function selectAirport(code, city){
+  function selectAirport(code, city, recommended){
     var found = null;
-    CITIES.forEach(function(c){ if(c.city === city) c.airports.forEach(function(a){ if(a.code === code) found = { code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city }; }); });
+    CITIES.forEach(function(c){ if(c.city === city) c.airports.forEach(function(a){ if(a.code === code) found = { code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city, recommended: !!recommended }; }); });
     if(!found) return;
     st.airport = found;
     input.value = found.city;
@@ -620,7 +667,12 @@
   }
   function clearAirport(){ st.airport = null; input.value = ''; focused = false; renderAirport(); input.focus(); }
 
-  input.addEventListener('input', function(){ st.airport = null; renderAirport(); });
+  input.addEventListener('input', function(){
+    st.airport = null;
+    // full city name or exact airport code typed → auto-pick the nonstop airport
+    if(autoDesignate(input.value.trim().toLowerCase())) return;
+    renderAirport();
+  });
   input.addEventListener('focus', function(){ focused = true; renderAirport(); });
   input.addEventListener('blur', function(){ setTimeout(function(){ focused = false; renderAirport(); }, 160); });
   clearBtn.addEventListener('click', clearAirport);
