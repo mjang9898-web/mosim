@@ -90,12 +90,12 @@
   /* subtle accent badge behind the icon, echoing the reference's circle/check */
   .step-ic::before{content:""; position:absolute; right:2px; top:-2px; width:20px; height:20px; border-radius:50%; background:rgba(195,154,63,.16); z-index:0;}
   .step .step-no{display:block; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:7px;}
-  .step b{display:block; font-family:'Lora',Georgia,serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.22;}
+  .step b{display:block; font-family:'Lora',Georgia,serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.22; min-height:2.44em;}
   .step span{display:block; font-size:15px; color:var(--ink); line-height:1.4; margin-top:5px;}
   .step span.feeline{white-space:nowrap; font-size:14px; letter-spacing:-.3px;}
 
   /* payment steps (4 & 6) — gold treatment so the "fee vs. direct" contrast reads */
-  .step.pay{border-color:var(--gold-soft); box-shadow:0 14px 30px -20px rgba(195,154,63,.55);}
+  .step.pay{border:2px solid var(--gold); box-shadow:0 14px 30px -20px rgba(195,154,63,.55);}
   .step.pay .step-ic svg{stroke:var(--gold);}
   .step.pay .step-ic::before{background:rgba(195,154,63,.3);}
   .step.pay .step b{color:var(--navy);}
@@ -157,6 +157,8 @@
     .flow-row{display:contents;}            /* steps become direct grid items */
     .flow-row .step{flex:none;}
     .flow-arrow, .flow-down{display:none;}
+    /* narrow cards: let the payment labels wrap instead of clipping */
+    .step span.feeline{white-space:normal; font-size:15px; letter-spacing:normal;}
   }
   /* Flow mobile reflow (≤520px): tighter 2-col card grid, no arrows */
   @media(max-width:520px){
