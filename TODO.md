@@ -11,7 +11,7 @@
 - [ ] **/pay 결제 페이지 — 문구 폴리시** — "Mosim concierge fee" 카드 카피 손보기 (설명문·"directly by those providers"·prorate 안내·"Sharing the cost"·"Fully paid" 등). founder가 특정 변경 예정. 위치: `pay.html` + `js/pay.js`
 
 ## 결정 대기 (founder 생각 중)
-- [ ] **가격 정책 재검토** — "$1,200 per traveler · 7-day trip · prorated" 책정 자체 + pricing 페이지 "One simple fee" 칸의 내용 구성을 다시 생각하기로 (2026-06-12). 디자인(full width)은 완료, 정책·문구는 founder 결정 후 반영
+- [ ] **가격 정책 재검토** — 딥리서치 완료 (2026-06-13): `docs/2026-06-13-pricing-research.md` — 권고 A(주단위 베이스+바닥+동반자 50% 할인/캡) vs B(3단계 tier). founder 결정 → payment-group.js 요금계산 + pricing/pay/landing 카피 연쇄 수정
 
 ## 마케팅 시작할 때
 - [ ] IG / YouTube / Facebook 링크에 **UTM 태그** 붙이기 (예: `?utm_source=instagram&utm_medium=social`) → cockpit Marketing "채널" 카드에 채널별 유입·전환 집계
