@@ -108,7 +108,7 @@
   .dr-eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .dr-body h2{font-size:32px; font-weight:600; margin:8px 0 14px; line-height:1.12;}
   .dr-pos{font-size:19px; color:var(--ink); line-height:1.65;}
-  .dr-gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:24px 0;}
+  .dr-gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin:24px 0;}
   .dr-gallery .g{aspect-ratio:4/3; border-radius:10px; background:#E7D9BC center/cover no-repeat;}
   .dr-h{font-family:'Lora',serif; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-2); margin:26px 0 12px;}
   .hosp{display:flex; flex-wrap:wrap; gap:8px;}
@@ -418,9 +418,11 @@
   function openDrawer(m, trigger) {
     lastTrigger = trigger || null;
     crumb.textContent = m.name;
-    var imgs = m.gallery || [P + m.code + '.webp', P + m.code + '-2.webp'];
+    // full gallery — every code has <code>.webp + -2..-6 in /assets/medical-drawer/
+    var imgs = [P + m.code + '.webp'];
+    for (var gi = 2; gi <= 6; gi++) imgs.push(P + m.code + '-' + gi + '.webp');
     var gallery = '<div class="dr-gallery">' +
-      imgs.slice(0,2).map(function (f) {
+      imgs.map(function (f) {
         return '<div class="g" style="background-image:url(\'' + f + '\')"></div>';
       }).join('') + '</div>';
     var hosp = '<div class="dr-h">Trusted partner hospitals</div><div class="hosp">' +
