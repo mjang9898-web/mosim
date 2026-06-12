@@ -247,7 +247,7 @@
     gap: 8px; flex: 1;
   }
   .kw-cul-eyebrow {
-    font-size: 13px; font-weight: 700;
+    font-size: 14px; font-weight: 700;
     letter-spacing: .12em; text-transform: uppercase;
     color: var(--ink-2);
   }
@@ -269,8 +269,18 @@
     border-top: 1px solid var(--line);
     gap: 8px;
   }
+  /* "& more" reveal button under the grid */
+  .kw-more-row { text-align: center; margin: 26px 0 4px; }
+  .kw-more-btn {
+    font-size: 18px; font-weight: 600; color: var(--navy);
+    background: #fff; border: 1.5px solid var(--gold); border-radius: 999px;
+    padding: 13px 28px; min-height: 50px; cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+  }
+  .kw-more-btn:hover { background: var(--ivory-soft); box-shadow: 0 16px 30px -22px rgba(195,154,63,.55); }
+  .kw-more-chev { margin-left: 6px; color: var(--gold); }
   .kw-cul-meta {
-    font-size: 13px; font-weight: 600;
+    font-size: 15px; font-weight: 600;
     color: var(--ink-2);
     letter-spacing: .01em;
     min-width: 0;
@@ -887,7 +897,7 @@
 <script src="js/state.js"></script>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="js/step3-culture.js?v=210fa030" defer></script>
+<script src="js/step3-culture.js?v=77261a07" defer></script>
 <script>
   (function () {
     var countEl = document.getElementById('count');

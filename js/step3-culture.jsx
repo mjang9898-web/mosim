@@ -1511,9 +1511,18 @@ function Step3Culture() {
     return new Set(prior);
   });
   const [detailCode, setDetailCode] = useState(null);
+  // Per-tab "& more" expansion — show the first 8 cards until expanded
+  const [expandedPages, setExpandedPages] = useState({});
 
   const currentPage = CULTURE_PAGES[pageIdx];
   const allSelectedItems = CULTURE_PAGES.flatMap(p => p.items.filter(it => selected.has(it.code)));
+
+  const INITIAL_CARDS = 8;
+  const isPageExpanded = !!expandedPages[currentPage.id];
+  const visibleItems = (currentPage.kind === 'cities' || isPageExpanded)
+    ? currentPage.items
+    : currentPage.items.slice(0, INITIAL_CARDS);
+  const hiddenCount = currentPage.items.length - visibleItems.length;
 
   // Persist the selected experience codes (array) on every change, so the
   // page's Continue button (and the result page) always read current picks.
@@ -1616,7 +1625,7 @@ function Step3Culture() {
               </div>
             ) : (
               <div className="kw-cul-grid">
-              {currentPage.items.map(it => {
+              {visibleItems.map(it => {
                 const sel = selected.has(it.code);
                 return (
                   <div
@@ -1650,6 +1659,22 @@ function Step3Culture() {
                 );
               })}
             </div>
+            )}
+
+            {/* "& more" reveal — keeps the first impression light */}
+            {currentPage.kind !== 'cities' && currentPage.items.length > INITIAL_CARDS && (
+              <div className="kw-more-row">
+                <button
+                  className="kw-more-btn"
+                  type="button"
+                  aria-expanded={isPageExpanded}
+                  onClick={() => setExpandedPages(prev => ({ ...prev, [currentPage.id]: !isPageExpanded }))}
+                >
+                  {isPageExpanded
+                    ? <>Show fewer <span className="kw-more-chev" aria-hidden="true">↑</span></>
+                    : <>&amp; more — see all {currentPage.items.length} <span className="kw-more-chev" aria-hidden="true">↓</span></>}
+                </button>
+              </div>
             )}
 
             {/* Pagination */}
