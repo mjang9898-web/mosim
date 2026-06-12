@@ -15,9 +15,9 @@
 <title>Mosim — Plan your trip · Step 2, Your trip</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --gold-tint:rgba(195,154,63,.12); --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:124px;}
@@ -47,25 +47,111 @@
   .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12; text-wrap:balance;}
   .head p{font-size:19px; color:var(--ink); max-width:34em; margin:16px auto 0; line-height:1.6; text-wrap:balance;}
 
-  .field{margin:36px 0;}
-  .field .q{font-size:19px; font-weight:600; color:var(--navy); margin-bottom:14px;}
+  .field{margin:40px 0;}
+  .field .q{font-size:22px; font-weight:600; color:var(--navy); margin-bottom:6px; font-family:'Lora',Georgia,serif;}
+  .field .q-help{font-size:19px; color:var(--ink); margin-bottom:18px; line-height:1.55; max-width:42em;}
   .chip-group{display:flex; flex-wrap:wrap; gap:10px;}
   .chip{font-size:19px; border:2px solid var(--line); background:#fff; border-radius:999px; padding:12px 22px; cursor:pointer; color:var(--navy); min-height:48px; font-family:'Inter',sans-serif;}
   .chip:hover{border-color:var(--gold-soft);}
   .chip.sel{border-color:var(--gold); font-weight:600; box-shadow:0 8px 22px -14px rgba(195,154,63,.6);}
 
-  .subpanel{margin-top:16px;}
   .subpanel[hidden]{display:none;}
-  .dates{display:flex; gap:16px; flex-wrap:wrap;}
-  .dates label{flex:1; min-width:200px; font-size:19px; color:var(--ink-2); font-weight:600;}
-  .dates input{display:block; width:100%; margin-top:8px; height:52px; border:2px solid var(--line); border-radius:11px; background:#fff; padding:0 16px; font-size:19px; font-family:'Inter',sans-serif; color:var(--navy);}
-  .dates input:focus{outline:none; border-color:var(--gold);}
 
-  .stepper{display:inline-flex; align-items:center; gap:18px; margin-top:14px; border:2px solid var(--line); border-radius:999px; padding:6px 10px; background:#fff;}
-  .stepper button{flex:none; width:44px; height:44px; border-radius:50%; border:none; background:var(--ivory-soft); color:var(--navy); font-size:22px; cursor:pointer; line-height:1;}
-  .stepper button:hover{background:var(--line);}
-  .stepper .num{font-size:20px; font-weight:600; min-width:28px; text-align:center;}
-  .stepper-label{font-size:19px; color:var(--ink-2); margin-left:10px;}
+  /* ── Segmented control (Specific dates / I'm flexible) ─────────────── */
+  .seg{display:inline-flex; background:#fff; padding:5px; border-radius:14px; gap:5px; border:1.5px solid var(--line); margin-bottom:22px;}
+  .seg button{height:48px; padding:0 26px; border:none; border-radius:10px; background:transparent; font-size:18px; font-weight:600; color:var(--ink-2); cursor:pointer; font-family:'Inter',sans-serif; transition:background .15s, color .15s, box-shadow .15s;}
+  .seg button.is-active{background:var(--navy); color:#fff; box-shadow:0 6px 16px -8px rgba(27,42,74,.5);}
+  @media(max-width:520px){ .seg{display:flex; width:100%;} .seg button{flex:1; padding:0 12px;} }
+
+  /* ── Inline 2-month calendar ──────────────────────────────────────── */
+  .cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; max-width:760px;}
+  .cal-arrow{width:44px; height:44px; border-radius:50%; border:1.5px solid var(--line); background:#fff; color:var(--navy); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, color .15s;}
+  .cal-arrow:hover:not(:disabled){ border-color:var(--gold); color:var(--gold); }
+  .cal-arrow:disabled{ opacity:.32; cursor:not-allowed; }
+  .cal-hint{font-size:16px; font-weight:600; color:var(--ink-2); text-align:center;}
+  .cal{display:grid; grid-template-columns:1fr 1fr; gap:40px; background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:22px 24px; max-width:760px;}
+  .cal-month-title{font-size:19px; font-weight:700; color:var(--navy); text-align:center; margin-bottom:16px; font-family:'Lora',Georgia,serif;}
+  .cal-dow{display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:8px;}
+  .cal-dow span{text-align:center; font-size:12px; font-weight:700; color:var(--ink-2); letter-spacing:.08em; text-transform:uppercase;}
+  .cal-dow span:first-child{ color:#b04a3a; }
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); row-gap:4px;}
+  .cal-day{min-height:44px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:500; color:var(--navy); border-radius:9px; position:relative; user-select:none;}
+  .cal-day.blank{ color:transparent; pointer-events:none; }
+  .cal-day.past{ color:var(--line); cursor:default; }
+  .cal-day.pick{ cursor:pointer; }
+  .cal-day.pick:hover{ background:var(--gold-tint); color:var(--gold); }
+  .cal-day.in{ background:var(--gold-tint); color:var(--navy); border-radius:0; font-weight:600; }
+  .cal-day.start, .cal-day.end{ background:var(--gold); color:#fff; font-weight:700; }
+  .cal-day.start{ border-radius:999px 0 0 999px; }
+  .cal-day.end{ border-radius:0 999px 999px 0; }
+  .cal-day.start.end{ border-radius:999px; }
+  .cal-summary{display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap; max-width:760px;}
+  .cal-dot{width:12px; height:12px; border-radius:999px; background:var(--gold); flex:none;}
+  .cal-summary-text{font-size:18px; font-weight:600; color:var(--navy);}
+  .cal-summary-text .muted{color:var(--ink-2); font-weight:500;}
+  .cal-reset{margin-left:auto; font-size:16px; font-weight:600; color:var(--gold); background:none; border:none; cursor:pointer; padding:8px 4px; min-height:44px;}
+  @media(max-width:700px){
+    .cal{grid-template-columns:1fr; gap:0;}
+    .cal-month.second{display:none;}
+  }
+
+  /* ── "I'm flexible" reassurance card ──────────────────────────────── */
+  .flex-msg{background:var(--gold-tint); border:1.5px solid var(--gold-soft); border-radius:16px; padding:22px 24px; display:flex; gap:16px; align-items:flex-start; max-width:760px;}
+  .flex-msg svg{flex:none; color:var(--gold); margin-top:2px;}
+  .flex-msg-title{font-size:19px; font-weight:700; color:var(--navy); margin-bottom:6px; font-family:'Lora',Georgia,serif;}
+  .flex-msg p{font-size:19px; font-weight:400; color:var(--ink); line-height:1.6;}
+
+  /* ── Party-type cards ─────────────────────────────────────────────── */
+  .party-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:760px;}
+  .party{background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:20px 16px 18px; text-align:left; display:flex; flex-direction:column; gap:14px; cursor:pointer; transition:border-color .15s, transform .15s, box-shadow .15s; min-height:160px;}
+  .party:hover{ border-color:var(--gold-soft); transform:translateY(-1px); }
+  .party.is-selected{ border-color:var(--gold); background:var(--gold-tint); box-shadow:0 0 0 3px var(--gold-tint); }
+  .party-icon{width:36px; height:36px;}
+  .party-icon svg{width:36px; height:36px; stroke:var(--navy);}
+  .party.is-selected .party-icon svg{ stroke:var(--gold); }
+  .party-label{font-size:19px; font-weight:700; color:var(--navy);}
+  .party-sub{font-size:16px; font-weight:500; color:var(--ink-2); line-height:1.35; margin-top:-8px;}
+  @media(max-width:760px){ .party-grid{grid-template-columns:repeat(2,1fr);} }
+
+  /* ── Steppers (adults/children) ───────────────────────────────────── */
+  .stepper-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; max-width:760px;}
+  @media(max-width:520px){ .stepper-row{grid-template-columns:1fr;} }
+  .stepperc{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .stepperc-label{font-size:19px; font-weight:700; color:var(--navy);}
+  .stepperc-hint{font-size:15px; font-weight:500; color:var(--ink-2); margin-top:2px;}
+  .stepperc-ctrl{display:flex; align-items:center; gap:14px;}
+  .stepperc-btn{width:44px; height:44px; border-radius:50%; border:1.5px solid var(--line); background:#fff; color:var(--navy); font-size:22px; font-weight:500; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, color .15s;}
+  .stepperc-btn:hover:not(:disabled){ border-color:var(--gold); color:var(--gold); }
+  .stepperc-btn:disabled{ opacity:.35; cursor:not-allowed; }
+  .stepperc-val{min-width:24px; text-align:center; font-size:22px; font-weight:700; color:var(--navy);}
+
+  /* ── Airport autocomplete ─────────────────────────────────────────── */
+  .airport{max-width:620px;}
+  .airport-search{background:#fff; border:1.5px solid var(--line); border-radius:14px; overflow:hidden; transition:border-color .15s, box-shadow .15s;}
+  .airport-search.focused{ border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-tint); }
+  .airport-field{display:flex; align-items:center; gap:12px; padding:0 16px 0 20px; height:62px; border-bottom:1px solid var(--line);}
+  .airport-field.solo{ border-bottom:none; }
+  .airport-icon{color:var(--gold); flex:none;}
+  .airport-input{flex:1; height:100%; min-width:0; background:transparent; border:none; outline:none; font:inherit; font-size:19px; font-weight:600; color:var(--navy);}
+  .airport-input::placeholder{ color:var(--ink-2); font-weight:500; }
+  .airport-clear{width:30px; height:30px; border-radius:50%; background:var(--ivory-soft); color:var(--ink-2); display:flex; align-items:center; justify-content:center; font-size:20px; line-height:1; cursor:pointer; flex:none; border:none;}
+  .airport-results{background:#fff;}
+  .airport-row{display:grid; grid-template-columns:64px 1fr auto; align-items:center; gap:16px; padding:14px 20px; border-bottom:1px solid var(--line); cursor:pointer; transition:background .12s; text-align:left; width:100%; background:none; border-left:none; border-right:none; border-top:none; font-family:'Inter',sans-serif;}
+  .airport-row:last-child{ border-bottom:none; }
+  .airport-row:hover{ background:var(--ivory-soft); }
+  .airport-row.is-selected{ background:var(--gold-tint); cursor:default; }
+  .airport-row-head{cursor:default; background:var(--ivory-soft); grid-template-columns:1fr auto; padding:11px 20px; font-size:13px; font-weight:700; color:var(--ink-2); letter-spacing:.03em;}
+  .airport-row-head b{ color:var(--navy); font-weight:700; }
+  .airport-code{font-family:'Inter',sans-serif; font-size:18px; font-weight:800; color:var(--navy); letter-spacing:.06em; background:var(--ivory-soft); border-radius:8px; padding:8px 6px; text-align:center; border:1px solid var(--line);}
+  .airport-row.is-selected .airport-code{ background:var(--gold); color:#fff; border-color:var(--gold); }
+  .airport-name{display:flex; flex-direction:column; gap:3px; font-size:18px; font-weight:700; color:var(--navy); line-height:1.25;}
+  .airport-hint{font-size:14px; font-weight:500; color:var(--ink-2);}
+  .airport-dist{font-size:15px; font-weight:600; color:var(--ink-2); text-align:right; white-space:nowrap;}
+  .airport-row.is-selected .airport-dist{ color:var(--gold); }
+  .airport-empty{padding:16px 20px; font-size:17px; font-weight:500; color:var(--ink-2);}
+  .input-helper{font-size:17px; font-weight:500; color:var(--ink); margin-top:14px; line-height:1.5; max-width:620px;}
+  .input-helper b{ color:var(--gold); }
+  .optional-tag{font-size:15px; font-weight:600; color:var(--ink-2); margin-left:8px;}
 
   .footbar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:10;}
   .fb-in{max-width:1200px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
@@ -73,7 +159,7 @@
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 30px; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
   .btn:hover{background:var(--navy-soft);}
 
-  @media(max-width:520px){ .head h1{font-size:28px;} }
+  @media(max-width:520px){ .head h1{font-size:28px;} .wrap{padding:0 20px;} }
 </style>
 <script src="js/analytics.js"></script>
 </head>
@@ -97,51 +183,108 @@
     <p>Just a few basics, so we can shape the days around you. You'll arrive at Incheon, near Seoul — we'll handle the rest.</p>
   </div>
 
+  <!-- ── 01 · WHEN ─────────────────────────────────────────────── -->
   <div class="field">
     <div class="q">When would you like to come?</div>
-    <div class="chip-group" data-group="whenMode">
-      <button class="chip" data-value="flexible" type="button">I'm flexible</button>
-      <button class="chip" data-value="dates" type="button">I have dates</button>
+    <div class="q-help">Pick exact dates if you've decided, or stay flexible and let us choose the ideal window for you.</div>
+
+    <div class="seg" id="when-seg" role="tablist">
+      <button type="button" data-mode="dates" role="tab">Specific dates</button>
+      <button type="button" data-mode="flexible" role="tab">I'm flexible</button>
     </div>
-    <div class="subpanel" id="panel-flexible" hidden>
-      <div class="chip-group" data-group="season" style="margin-top:14px;">
-        <button class="chip" data-value="spring" type="button">Spring</button>
-        <button class="chip" data-value="summer" type="button">Summer</button>
-        <button class="chip" data-value="autumn" type="button">Autumn</button>
-        <button class="chip" data-value="winter" type="button">Winter</button>
+
+    <!-- Specific-dates calendar -->
+    <div class="subpanel" id="panel-dates" hidden>
+      <div class="cal-nav">
+        <button type="button" class="cal-arrow" id="cal-prev" aria-label="Previous month">‹</button>
+        <span class="cal-hint">Tap a start date, then an end date</span>
+        <button type="button" class="cal-arrow" id="cal-next" aria-label="Next month">›</button>
+      </div>
+      <div class="cal" id="cal"></div>
+      <div class="cal-summary">
+        <span class="cal-dot"></span>
+        <span class="cal-summary-text" id="cal-summary">No dates selected yet</span>
+        <button type="button" class="cal-reset" id="cal-reset" hidden>Reset</button>
       </div>
     </div>
-    <div class="subpanel dates" id="panel-dates" hidden>
-      <label>Arrive<input type="date" id="date-start"></label>
-      <label>Return<input type="date" id="date-end"></label>
+
+    <!-- Flexible reassurance + length chips -->
+    <div class="subpanel" id="panel-flexible" hidden>
+      <div class="flex-msg">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v3M12 18v3M5 12H2M22 12h-3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>
+          <circle cx="12" cy="12" r="3.2"/>
+        </svg>
+        <div>
+          <div class="flex-msg-title">We'll find your perfect window</div>
+          <p>Stay flexible — based on the care and experiences you choose in the next steps, we'll recommend the best time to visit Korea and the ideal length for everything on your list.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;">
+        <div class="q" style="font-size:19px;">How long would you like to stay?</div>
+        <div class="chip-group" data-group="length" style="margin-top:12px;">
+          <button class="chip" data-value="under1w" type="button">Under a week</button>
+          <button class="chip" data-value="1to2w" type="button">1–2 weeks</button>
+          <button class="chip" data-value="2plus" type="button">2+ weeks</button>
+          <button class="chip" data-value="unsure" type="button">Not sure yet</button>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- ── 02 · WHO ──────────────────────────────────────────────── -->
   <div class="field">
-    <div class="q">How long would you like to stay?</div>
-    <div class="chip-group" data-group="length">
-      <button class="chip" data-value="under1w" type="button">Under a week</button>
-      <button class="chip" data-value="1to2w" type="button">1–2 weeks</button>
-      <button class="chip" data-value="2plus" type="button">2+ weeks</button>
-      <button class="chip" data-value="unsure" type="button">Not sure yet</button>
+    <div class="q">Who's traveling with you?</div>
+    <div class="q-help">This shapes everything from room configuration to the pace of each day.</div>
+    <div class="party-grid" id="party-grid"></div>
+    <div class="stepper-row">
+      <div class="stepperc">
+        <div>
+          <div class="stepperc-label">Adults</div>
+          <div class="stepperc-hint">Age 18+</div>
+        </div>
+        <div class="stepperc-ctrl">
+          <button type="button" class="stepperc-btn" id="adults-minus" aria-label="Fewer adults">−</button>
+          <span class="stepperc-val" id="adults-val">2</span>
+          <button type="button" class="stepperc-btn" id="adults-plus" aria-label="More adults">+</button>
+        </div>
+      </div>
+      <div class="stepperc">
+        <div>
+          <div class="stepperc-label">Children</div>
+          <div class="stepperc-hint">Age 0–17</div>
+        </div>
+        <div class="stepperc-ctrl">
+          <button type="button" class="stepperc-btn" id="children-minus" aria-label="Fewer children">−</button>
+          <span class="stepperc-val" id="children-val">0</span>
+          <button type="button" class="stepperc-btn" id="children-plus" aria-label="More children">+</button>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- ── 03 · DEPARTURE ────────────────────────────────────────── -->
   <div class="field">
-    <div class="q">Who's coming with you?</div>
-    <div class="chip-group" data-group="party">
-      <button class="chip" data-value="solo" type="button">Just me</button>
-      <button class="chip" data-value="couple" type="button">Me &amp; my spouse</button>
-      <button class="chip" data-value="family" type="button">With family or friends</button>
-    </div>
-    <div class="stepper">
-      <button type="button" id="party-minus" aria-label="Fewer travelers">−</button>
-      <span class="num" id="party-num">1</span>
-      <button type="button" id="party-plus" aria-label="More travelers">+</button>
-      <span class="stepper-label">travelers in total</span>
+    <div class="q">Where are you flying from?<span class="optional-tag">Optional</span></div>
+    <div class="q-help">Start typing your city — pick your airport and we'll show the average flight time to Seoul (ICN).</div>
+    <div class="airport">
+      <div class="airport-search" id="airport-search">
+        <div class="airport-field" id="airport-field">
+          <svg class="airport-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5Z"/>
+          </svg>
+          <input class="airport-input" id="airport-input" type="text" autocomplete="off"
+                 placeholder="Type your departure city…" aria-label="Departure city">
+          <button type="button" class="airport-clear" id="airport-clear" aria-label="Clear" hidden>×</button>
+        </div>
+        <div class="airport-results" id="airport-results"></div>
+      </div>
+      <p class="input-helper" id="airport-helper" hidden></p>
     </div>
   </div>
 
+  <!-- ── 04 · STAY (unchanged) ─────────────────────────────────── -->
   <div class="field">
     <div class="q">Where would you like to stay?</div>
     <div class="chip-group" data-group="stay">
@@ -159,69 +302,434 @@
 
 <script src="js/state.js"></script>
 <script>
-  (function () {
-    var chosen = { whenMode: '', season: '', length: '', party: '', stay: '' };
-    var partySize = 1;
+(function () {
+  // ── Datasets ───────────────────────────────────────────────────────
+  var PARTY = [
+    { id:'solo',    label:'Solo',   sub:'A private journey',  adults:1, children:0 },
+    { id:'couple',  label:'Couple', sub:'The two of you',     adults:2, children:0 },
+    { id:'family',  label:'Family', sub:'Multi-generational', adults:2, children:2 },
+    { id:'friends', label:'Friends', sub:'A trip together',   adults:4, children:0 }
+  ];
 
-    function singleSelect(group, value) {
-      var wrap = document.querySelector('.chip-group[data-group="' + group + '"]');
-      if (!wrap) return;
-      Array.prototype.forEach.call(wrap.querySelectorAll('.chip'), function (c) {
-        c.classList.toggle('sel', c.getAttribute('data-value') === value);
-      });
-      chosen[group] = value;
-    }
+  var PARTY_ICONS = {
+    solo:    '<circle cx="16" cy="11" r="5"/><path d="M6 27c1.5-5 5.5-7.5 10-7.5s8.5 2.5 10 7.5"/>',
+    couple:  '<circle cx="11" cy="11" r="4"/><circle cx="21" cy="11" r="4"/><path d="M3 27c1-4 4-6 8-6s7 2 8 6M19 27c1-4 4-6 8-6"/>',
+    family:  '<circle cx="9" cy="10" r="3.5"/><circle cx="23" cy="10" r="3.5"/><circle cx="16" cy="20" r="2.5"/><path d="M3 25c1-3 3-5 6-5s5 2 6 5M17 25c1-3 3-5 6-5s5 2 6 5M12 28c.6-2 2-3 4-3s3.4 1 4 3"/>',
+    friends: '<circle cx="8" cy="11" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="24" cy="11" r="3.5"/><path d="M2 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M10 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M18 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5"/>'
+  };
 
-    document.querySelectorAll('.chip-group').forEach(function (wrap) {
-      var group = wrap.getAttribute('data-group');
-      wrap.addEventListener('click', function (ev) {
-        var c = ev.target.closest('.chip');
-        if (!c) return;
-        singleSelect(group, c.getAttribute('data-value'));
-        if (group === 'whenMode') syncWhenPanels();
-      });
+  var CITIES = [
+    { city:'New York', airports:[
+      { code:'JFK', name:'John F. Kennedy International', dur:'14h 25m', stops:'nonstop' },
+      { code:'EWR', name:'Newark Liberty International',  dur:'14h 50m', stops:'nonstop' },
+      { code:'LGA', name:'LaGuardia',                     dur:'16h 30m', stops:'1 stop' } ]},
+    { city:'Los Angeles', airports:[
+      { code:'LAX', name:'Los Angeles International',     dur:'13h 05m', stops:'nonstop' } ]},
+    { city:'San Francisco', airports:[
+      { code:'SFO', name:'San Francisco International',   dur:'12h 30m', stops:'nonstop' } ]},
+    { city:'Seattle', airports:[
+      { code:'SEA', name:'Seattle–Tacoma International',  dur:'11h 00m', stops:'nonstop' } ]},
+    { city:'Chicago', airports:[
+      { code:'ORD', name:"O'Hare International",          dur:'14h 05m', stops:'nonstop' } ]},
+    { city:'Dallas', airports:[
+      { code:'DFW', name:'Dallas/Fort Worth International', dur:'14h 30m', stops:'nonstop' } ]},
+    { city:'Atlanta', airports:[
+      { code:'ATL', name:'Hartsfield–Jackson Atlanta Intl', dur:'14h 35m', stops:'nonstop' } ]},
+    { city:'Washington', airports:[
+      { code:'IAD', name:'Washington Dulles International', dur:'14h 10m', stops:'nonstop' } ]},
+    { city:'Boston', airports:[
+      { code:'BOS', name:'Boston Logan International',    dur:'14h 30m', stops:'nonstop' } ]},
+    { city:'Honolulu', airports:[
+      { code:'HNL', name:'Daniel K. Inouye International', dur:'10h 00m', stops:'nonstop' } ]},
+    { city:'Las Vegas', airports:[
+      { code:'LAS', name:'Harry Reid International',      dur:'13h 30m', stops:'1 stop' } ]},
+    { city:'Toronto', airports:[
+      { code:'YYZ', name:'Toronto Pearson International', dur:'13h 30m', stops:'nonstop' } ]},
+    { city:'Vancouver', airports:[
+      { code:'YVR', name:'Vancouver International',       dur:'10h 50m', stops:'nonstop' } ]},
+    { city:'London', airports:[
+      { code:'LHR', name:'Heathrow',                     dur:'11h 20m', stops:'nonstop' },
+      { code:'LGW', name:'Gatwick',                      dur:'13h 40m', stops:'1 stop' } ]},
+    { city:'Paris', airports:[
+      { code:'CDG', name:'Charles de Gaulle',            dur:'11h 30m', stops:'nonstop' } ]},
+    { city:'Sydney', airports:[
+      { code:'SYD', name:'Sydney Kingsford Smith',       dur:'10h 20m', stops:'nonstop' } ]},
+    { city:'Tokyo', airports:[
+      { code:'NRT', name:'Narita International',          dur:'2h 30m',  stops:'nonstop' },
+      { code:'HND', name:'Haneda',                       dur:'2h 25m',  stops:'nonstop' } ]},
+    { city:'Singapore', airports:[
+      { code:'SIN', name:'Changi',                       dur:'6h 30m',  stops:'nonstop' } ]},
+    { city:'Hong Kong', airports:[
+      { code:'HKG', name:'Hong Kong International',       dur:'3h 40m',  stops:'nonstop' } ]},
+    { city:'Dubai', airports:[
+      { code:'DXB', name:'Dubai International',           dur:'9h 00m',  stops:'nonstop' } ]}
+  ];
+
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MONTHS_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var WD_ABBR = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // ── State ──────────────────────────────────────────────────────────
+  var st = {
+    whenMode: 'dates',
+    monthOffset: 0,
+    rangeStart: null,      // {y,m,d}
+    rangeEnd: null,
+    length: '',
+    party: '',
+    adults: 2,
+    children: 0,
+    stay: '',
+    airport: null          // {code,name,dur,stops,city}
+  };
+
+  // ── Helpers ────────────────────────────────────────────────────────
+  function ymAdd(y, m, add){ var t=m+add; return { y:y+Math.floor(t/12), m:((t%12)+12)%12 }; }
+  function cmpYMD(a, b){ return (a.y-b.y) || (a.m-b.m) || (a.d-b.d); }
+  function pad(n){ return n<10 ? '0'+n : ''+n; }
+  function isoOf(o){ return o ? (o.y + '-' + pad(o.m+1) + '-' + pad(o.d)) : null; }
+  function isPast(y, m, d){ var t=new Date(); return new Date(y,m,d) < new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+  function nights(){
+    if(!st.rangeStart || !st.rangeEnd) return 0;
+    return Math.round((new Date(st.rangeEnd.y, st.rangeEnd.m, st.rangeEnd.d) - new Date(st.rangeStart.y, st.rangeStart.m, st.rangeStart.d)) / 86400000);
+  }
+  function fmtDay(o){ return WD_ABBR[new Date(o.y,o.m,o.d).getDay()] + ' ' + MONTHS_ABBR[o.m] + ' ' + o.d; }
+
+  // ── Single-select chips ────────────────────────────────────────────
+  function singleSelect(group, value){
+    var wrap = document.querySelector('.chip-group[data-group="'+group+'"]');
+    if(!wrap) return;
+    Array.prototype.forEach.call(wrap.querySelectorAll('.chip'), function(c){
+      c.classList.toggle('sel', c.getAttribute('data-value') === value);
     });
+    st[group] = value;
+  }
+  document.querySelectorAll('.chip-group').forEach(function(wrap){
+    var group = wrap.getAttribute('data-group');
+    wrap.addEventListener('click', function(ev){
+      var c = ev.target.closest('.chip'); if(!c) return;
+      singleSelect(group, c.getAttribute('data-value'));
+    });
+  });
 
-    function syncWhenPanels() {
-      document.getElementById('panel-flexible').hidden = chosen.whenMode !== 'flexible';
-      document.getElementById('panel-dates').hidden = chosen.whenMode !== 'dates';
+  // ── When: segmented control ────────────────────────────────────────
+  var seg = document.getElementById('when-seg');
+  function setWhenMode(mode){
+    st.whenMode = mode;
+    Array.prototype.forEach.call(seg.querySelectorAll('button'), function(b){
+      b.classList.toggle('is-active', b.getAttribute('data-mode') === mode);
+    });
+    document.getElementById('panel-dates').hidden = mode !== 'dates';
+    document.getElementById('panel-flexible').hidden = mode !== 'flexible';
+  }
+  seg.addEventListener('click', function(ev){
+    var b = ev.target.closest('button'); if(!b) return;
+    setWhenMode(b.getAttribute('data-mode'));
+  });
+
+  // ── Calendar ───────────────────────────────────────────────────────
+  function pickDay(y, m, d){
+    var cur = { y:y, m:m, d:d };
+    if(!st.rangeStart || (st.rangeStart && st.rangeEnd)){
+      st.rangeStart = cur; st.rangeEnd = null;
+    } else {
+      var c = cmpYMD(cur, st.rangeStart);
+      if(c < 0){ st.rangeStart = cur; }
+      else if(c > 0){ st.rangeEnd = cur; }
+      // c === 0 → ignore
+    }
+    renderCal();
+  }
+  function resetRange(){ st.rangeStart = null; st.rangeEnd = null; renderCal(); }
+
+  function renderCal(){
+    var left  = ymAdd((new Date()).getFullYear(), (new Date()).getMonth(), st.monthOffset);
+    var right = ymAdd((new Date()).getFullYear(), (new Date()).getMonth(), st.monthOffset + 1);
+    var calEl = document.getElementById('cal');
+    calEl.innerHTML = monthGrid(left.y, left.m, false) + monthGrid(right.y, right.m, true);
+
+    document.getElementById('cal-prev').disabled = st.monthOffset === 0;
+    document.getElementById('cal-next').disabled = st.monthOffset >= 11;
+
+    var sum = document.getElementById('cal-summary');
+    var resetBtn = document.getElementById('cal-reset');
+    if(st.rangeStart && st.rangeEnd){
+      sum.innerHTML = fmtDay(st.rangeStart) + ' → ' + fmtDay(st.rangeEnd) + ' · <span class="muted">' + nights() + ' night' + (nights()===1?'':'s') + '</span>';
+    } else if(st.rangeStart){
+      sum.innerHTML = fmtDay(st.rangeStart) + ' — <span class="muted">pick an end date</span>';
+    } else {
+      sum.innerHTML = '<span class="muted">No dates selected yet</span>';
+    }
+    resetBtn.hidden = !(st.rangeStart || st.rangeEnd);
+  }
+  function monthGrid(y, m, isSecond){
+    var firstDow = new Date(y, m, 1).getDay();
+    var daysInMonth = new Date(y, m+1, 0).getDate();
+    var html = '<div class="cal-month' + (isSecond ? ' second' : '') + '">';
+    html += '<div class="cal-month-title">' + MONTHS[m] + ' ' + y + '</div>';
+    html += '<div class="cal-dow">' + WD_ABBR.map(function(d){ return '<span>'+d.slice(0,2)+'</span>'; }).join('') + '</div>';
+    html += '<div class="cal-grid">';
+    for(var i=0;i<firstDow;i++) html += '<span class="cal-day blank"></span>';
+    for(var d=1; d<=daysInMonth; d++){
+      var past = isPast(y, m, d);
+      var cur = { y:y, m:m, d:d };
+      var cls = 'cal-day';
+      if(past){ cls += ' past'; }
+      else {
+        cls += ' pick';
+        if(st.rangeStart && st.rangeEnd && cmpYMD(cur, st.rangeStart) > 0 && cmpYMD(cur, st.rangeEnd) < 0) cls += ' in';
+        if(st.rangeStart && cmpYMD(cur, st.rangeStart) === 0) cls += ' start';
+        if(st.rangeEnd && cmpYMD(cur, st.rangeEnd) === 0) cls += ' end';
+      }
+      if(past){
+        html += '<span class="'+cls+'">'+d+'</span>';
+      } else {
+        html += '<span class="'+cls+'" role="button" tabindex="0" data-y="'+y+'" data-m="'+m+'" data-d="'+d+'">'+d+'</span>';
+      }
+    }
+    html += '</div></div>';
+    return html;
+  }
+  document.getElementById('cal').addEventListener('click', function(ev){
+    var el = ev.target.closest('.cal-day.pick'); if(!el) return;
+    pickDay(+el.getAttribute('data-y'), +el.getAttribute('data-m'), +el.getAttribute('data-d'));
+  });
+  document.getElementById('cal').addEventListener('keydown', function(ev){
+    if(ev.key !== 'Enter' && ev.key !== ' ') return;
+    var el = ev.target.closest('.cal-day.pick'); if(!el) return;
+    ev.preventDefault();
+    pickDay(+el.getAttribute('data-y'), +el.getAttribute('data-m'), +el.getAttribute('data-d'));
+  });
+  document.getElementById('cal-prev').addEventListener('click', function(){ st.monthOffset = Math.max(0, st.monthOffset-1); renderCal(); });
+  document.getElementById('cal-next').addEventListener('click', function(){ st.monthOffset = Math.min(11, st.monthOffset+1); renderCal(); });
+  document.getElementById('cal-reset').addEventListener('click', resetRange);
+
+  // ── Party cards ────────────────────────────────────────────────────
+  var partyGrid = document.getElementById('party-grid');
+  PARTY.forEach(function(p){
+    var card = document.createElement('div');
+    card.className = 'party';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('data-id', p.id);
+    card.innerHTML =
+      '<div class="party-icon"><svg viewBox="0 0 32 32" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + PARTY_ICONS[p.id] + '</svg></div>' +
+      '<div><div class="party-label">' + p.label + '</div><div class="party-sub">' + p.sub + '</div></div>';
+    partyGrid.appendChild(card);
+  });
+  function selectParty(id, seedCounts){
+    st.party = id;
+    Array.prototype.forEach.call(partyGrid.querySelectorAll('.party'), function(c){
+      c.classList.toggle('is-selected', c.getAttribute('data-id') === id);
+    });
+    if(seedCounts){
+      var def = PARTY.filter(function(p){ return p.id === id; })[0];
+      if(def){ st.adults = def.adults; st.children = def.children; renderSteppers(); }
+    }
+  }
+  partyGrid.addEventListener('click', function(ev){
+    var c = ev.target.closest('.party'); if(!c) return;
+    selectParty(c.getAttribute('data-id'), true);
+  });
+  partyGrid.addEventListener('keydown', function(ev){
+    if(ev.key !== 'Enter' && ev.key !== ' ') return;
+    var c = ev.target.closest('.party'); if(!c) return;
+    ev.preventDefault();
+    selectParty(c.getAttribute('data-id'), true);
+  });
+
+  // ── Steppers ───────────────────────────────────────────────────────
+  function renderSteppers(){
+    document.getElementById('adults-val').textContent = st.adults;
+    document.getElementById('children-val').textContent = st.children;
+    document.getElementById('adults-minus').disabled = st.adults <= 1;
+    document.getElementById('adults-plus').disabled = st.adults >= 12;
+    document.getElementById('children-minus').disabled = st.children <= 0;
+    document.getElementById('children-plus').disabled = st.children >= 10;
+  }
+  document.getElementById('adults-minus').addEventListener('click', function(){ st.adults = Math.max(1, st.adults-1); renderSteppers(); });
+  document.getElementById('adults-plus').addEventListener('click', function(){ st.adults = Math.min(12, st.adults+1); renderSteppers(); });
+  document.getElementById('children-minus').addEventListener('click', function(){ st.children = Math.max(0, st.children-1); renderSteppers(); });
+  document.getElementById('children-plus').addEventListener('click', function(){ st.children = Math.min(10, st.children+1); renderSteppers(); });
+
+  // ── Airport autocomplete ───────────────────────────────────────────
+  var input = document.getElementById('airport-input');
+  var results = document.getElementById('airport-results');
+  var clearBtn = document.getElementById('airport-clear');
+  var searchBox = document.getElementById('airport-search');
+  var helper = document.getElementById('airport-helper');
+  var focused = false;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function findMatches(q){
+    var out = [];
+    if(!q) return out;
+    CITIES.forEach(function(c){
+      if(c.city.toLowerCase().indexOf(q) !== -1){
+        c.airports.forEach(function(a){
+          out.push({ code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city });
+        });
+      }
+    });
+    return out;
+  }
+  function renderAirport(){
+    clearBtn.hidden = !input.value;
+    searchBox.classList.toggle('focused', focused);
+    helper.hidden = true;
+
+    if(st.airport){
+      var a = st.airport;
+      results.innerHTML =
+        '<div class="airport-row is-selected">' +
+          '<span class="airport-code">' + esc(a.code) + '</span>' +
+          '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
+          '<span class="airport-dist">' + esc(a.dur) + ' to ICN</span>' +
+        '</div>';
+      document.getElementById('airport-field').classList.remove('solo');
+      helper.hidden = false;
+      helper.innerHTML = 'Average flight time from ' + esc(a.code) + ' to Seoul Incheon (ICN): <b>' + esc(a.dur) + '</b> (' + esc(a.stops) + ').';
+      return;
     }
 
-    // party stepper
-    var numEl = document.getElementById('party-num');
-    function setSize(n) { partySize = Math.max(1, n); numEl.textContent = partySize; }
-    document.getElementById('party-minus').addEventListener('click', function () { setSize(partySize - 1); });
-    document.getElementById('party-plus').addEventListener('click', function () { setSize(partySize + 1); });
+    var q = input.value.trim().toLowerCase();
+    var show = focused && q.length >= 1;
+    if(!show){ results.innerHTML = ''; document.getElementById('airport-field').classList.add('solo'); return; }
+    document.getElementById('airport-field').classList.remove('solo');
 
-    // restore
-    var prior = (window.kwState && kwState.loadStep('trip')) || null;
-    if (prior) {
-      if (prior.when) { if (prior.when.mode) singleSelect('whenMode', prior.when.mode); if (prior.when.season) singleSelect('season', prior.when.season);
-        if (prior.when.dates) { if (prior.when.dates.start) document.getElementById('date-start').value = prior.when.dates.start; if (prior.when.dates.end) document.getElementById('date-end').value = prior.when.dates.end; } }
-      if (prior.length) singleSelect('length', prior.length);
-      if (prior.party) singleSelect('party', prior.party);
-      if (prior.stay) singleSelect('stay', prior.stay);
-      if (prior.partySize) setSize(prior.partySize);
-      syncWhenPanels();
+    var matches = findMatches(q);
+    if(matches.length === 0){
+      results.innerHTML = '<div class="airport-empty">No match — try a major city like New York, London, or Tokyo.</div>';
+      return;
     }
+    var cities = {}; matches.forEach(function(m){ cities[m.city] = 1; });
+    var keys = Object.keys(cities);
+    var label = keys.length === 1 ? keys[0] : input.value;
+    var html = '<div class="airport-row airport-row-head"><span>' + matches.length + ' airport' + (matches.length>1?'s':'') + ' near <b>' + esc(label) + '</b></span><span>Flight time to ICN</span></div>';
+    matches.forEach(function(a){
+      html += '<button type="button" class="airport-row" data-code="' + esc(a.code) + '" data-city="' + esc(a.city) + '">' +
+        '<span class="airport-code">' + esc(a.code) + '</span>' +
+        '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + ' · ' + esc(a.stops) + '</span></span>' +
+        '<span class="airport-dist">' + esc(a.dur) + '</span>' +
+        '</button>';
+    });
+    results.innerHTML = html;
+  }
+  function selectAirport(code, city){
+    var found = null;
+    CITIES.forEach(function(c){ if(c.city === city) c.airports.forEach(function(a){ if(a.code === code) found = { code:a.code, name:a.name, dur:a.dur, stops:a.stops, city:c.city }; }); });
+    if(!found) return;
+    st.airport = found;
+    input.value = found.city;
+    focused = false;
+    renderAirport();
+  }
+  function clearAirport(){ st.airport = null; input.value = ''; focused = false; renderAirport(); input.focus(); }
 
-    document.getElementById('continue').addEventListener('click', function () {
-      var data = {
-        when: {
-          mode: chosen.whenMode || 'flexible',
-          dates: { start: document.getElementById('date-start').value || null, end: document.getElementById('date-end').value || null },
-          season: chosen.season
+  input.addEventListener('input', function(){ st.airport = null; renderAirport(); });
+  input.addEventListener('focus', function(){ focused = true; renderAirport(); });
+  input.addEventListener('blur', function(){ setTimeout(function(){ focused = false; renderAirport(); }, 160); });
+  clearBtn.addEventListener('click', clearAirport);
+  results.addEventListener('click', function(ev){
+    var row = ev.target.closest('.airport-row[data-code]'); if(!row) return;
+    selectAirport(row.getAttribute('data-code'), row.getAttribute('data-city'));
+  });
+
+  // ── Restore prior answers ──────────────────────────────────────────
+  function parseISO(s){
+    if(!s) return null;
+    var p = String(s).split('-'); if(p.length !== 3) return null;
+    var y = parseInt(p[0],10), m = parseInt(p[1],10)-1, d = parseInt(p[2],10);
+    if(isNaN(y)||isNaN(m)||isNaN(d)) return null;
+    return { y:y, m:m, d:d };
+  }
+  function offsetForYM(y, m){
+    var t = new Date();
+    var diff = (y - t.getFullYear())*12 + (m - t.getMonth());
+    return Math.max(0, Math.min(11, diff));
+  }
+
+  // Only restore if the visitor has actually saved the Trip step before.
+  // kwState.loadStep always returns the DEFAULT_STATE.trip for fresh visitors
+  // (default when.mode is 'flexible'), so check raw storage for a real 'trip' key.
+  var hasSavedTrip = false;
+  try { var rawState = sessionStorage.getItem('mosim.state.v1'); hasSavedTrip = !!(rawState && JSON.parse(rawState).trip); } catch(e){}
+  var prior = hasSavedTrip ? ((window.kwState && kwState.loadStep('trip')) || null) : null;
+  if(prior){
+    if(prior.when){
+      if(prior.when.mode) st.whenMode = (prior.when.mode === 'flexible') ? 'flexible' : 'dates';
+      if(prior.when.dates){
+        var rs = parseISO(prior.when.dates.start);
+        var re = parseISO(prior.when.dates.end);
+        if(rs){ st.rangeStart = rs; st.monthOffset = offsetForYM(rs.y, rs.m); }
+        if(re) st.rangeEnd = re;
+      }
+    }
+    if(prior.length) st.length = prior.length;
+    if(prior.party) st.party = prior.party;
+    if(typeof prior.adults === 'number') st.adults = prior.adults;
+    if(typeof prior.children === 'number') st.children = prior.children;
+    else if(prior.partySize && !prior.adults){ st.adults = Math.max(1, prior.partySize); st.children = 0; }
+    if(prior.stay) st.stay = prior.stay;
+    if(prior.airport && prior.airportName){
+      st.airport = { code:prior.airport, name:prior.airportName, dur:prior.flightDuration || '', stops:'', city:prior.origin || '' };
+      // recover stops from dataset if available
+      CITIES.forEach(function(c){ c.airports.forEach(function(a){ if(a.code === prior.airport){ st.airport.stops = a.stops; st.airport.name = a.name; st.airport.dur = a.dur; st.airport.city = c.city; } }); });
+      input.value = st.airport.city || prior.origin || '';
+    } else if(prior.origin){
+      input.value = prior.origin;
+    }
+  }
+
+  // Apply restored state to UI
+  setWhenMode(st.whenMode);
+  if(st.length) singleSelect('length', st.length);
+  if(st.stay) singleSelect('stay', st.stay);
+  if(st.party) selectParty(st.party, false);
+  renderSteppers();
+  renderCal();
+  renderAirport();
+
+  // ── Continue ───────────────────────────────────────────────────────
+  function deriveLength(days){
+    if(days <= 6) return 'under1w';
+    if(days <= 14) return '1to2w';
+    return '2plus';
+  }
+  document.getElementById('continue').addEventListener('click', function(){
+    var haveRange = !!(st.rangeStart && st.rangeEnd);
+    var data = {
+      when: {
+        mode: st.whenMode,
+        dates: {
+          start: (st.whenMode === 'dates' && st.rangeStart) ? isoOf(st.rangeStart) : null,
+          end:   (st.whenMode === 'dates' && st.rangeEnd)   ? isoOf(st.rangeEnd)   : null
         },
-        length: chosen.length,
-        party: chosen.party,
-        partySize: partySize,
-        stay: chosen.stay,
-        arrival: 'ICN'
-      };
-      if (window.kwState) kwState.saveStep('trip', data);
-      window.location.href = 'step3.html';
-    });
-  })();
+        season: ''
+      },
+      party: st.party,
+      partySize: st.adults + st.children,
+      adults: st.adults,
+      children: st.children,
+      origin: st.airport ? st.airport.city : (input.value.trim() || ''),
+      airport: st.airport ? st.airport.code : '',
+      airportName: st.airport ? st.airport.name : '',
+      flightDuration: st.airport ? st.airport.dur : '',
+      stay: st.stay,
+      arrival: 'ICN'
+    };
+    if(st.whenMode === 'dates' && haveRange){
+      var days = nights() + 1;
+      data.days = days;
+      data.length = deriveLength(days);
+    } else {
+      data.length = st.length;
+    }
+    if(window.kwState) kwState.saveStep('trip', data);
+    window.location.href = 'step3.html';
+  });
+})();
 </script>
 <script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');fetch('/api/admin/trips?action=whoami',{headers:{authorization:'Bearer '+t}}).then(function(res){if(res.ok){el.textContent='Cockpit';el.setAttribute('href','/cockpit.html');}}).catch(function(){});}}catch(x){}})();</script>
 </body>
