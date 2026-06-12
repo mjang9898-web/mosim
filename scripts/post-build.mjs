@@ -32,6 +32,7 @@ const HASHED_BASENAMES = [
   'me-profile.js',
   'me-settings.js',
   'me-overview.js',
+  'airports-data.js',   // static dataset (not esbuild output) — hashed for cache busting
 ];
 
 // 1. Compute SHA-256 short hash (8 chars) of each built JS file.

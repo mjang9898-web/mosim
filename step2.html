@@ -292,6 +292,7 @@
 </div></div>
 
 <script src="js/state.js"></script>
+<script src="js/airports-data.js?v=18cb6a18"></script>
 <script>
 (function () {
   // ── Datasets ───────────────────────────────────────────────────────
@@ -310,53 +311,6 @@
     friends: '<circle cx="8" cy="11" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="24" cy="11" r="3.5"/><path d="M2 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M10 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5M18 25c.6-3 2.4-4.5 6-4.5s5.4 1.5 6 4.5"/>',
     business: '<circle cx="16" cy="9" r="4.5"/><path d="M7 27c1.2-4.5 4.8-7 9-7s7.8 2.5 9 7"/><path d="M11 20.5h10v6.5h-10z"/><path d="M14 20.5v-1.5a2 2 0 0 1 2-2 2 2 0 0 1 2 2v1.5"/>'
   };
-
-  var CITIES = [
-    { city:'New York', airports:[
-      { code:'JFK', name:'John F. Kennedy International', dur:'14h 25m', stops:'nonstop' },
-      { code:'EWR', name:'Newark Liberty International',  dur:'14h 50m', stops:'nonstop' },
-      { code:'LGA', name:'LaGuardia',                     dur:'16h 30m', stops:'1 stop' } ]},
-    { city:'Los Angeles', airports:[
-      { code:'LAX', name:'Los Angeles International',     dur:'13h 05m', stops:'nonstop' } ]},
-    { city:'San Francisco', airports:[
-      { code:'SFO', name:'San Francisco International',   dur:'12h 30m', stops:'nonstop' } ]},
-    { city:'Seattle', airports:[
-      { code:'SEA', name:'Seattle–Tacoma International',  dur:'11h 00m', stops:'nonstop' } ]},
-    { city:'Chicago', airports:[
-      { code:'ORD', name:"O'Hare International",          dur:'14h 05m', stops:'nonstop' } ]},
-    { city:'Dallas', airports:[
-      { code:'DFW', name:'Dallas/Fort Worth International', dur:'14h 30m', stops:'nonstop' } ]},
-    { city:'Atlanta', airports:[
-      { code:'ATL', name:'Hartsfield–Jackson Atlanta Intl', dur:'14h 35m', stops:'nonstop' } ]},
-    { city:'Washington', airports:[
-      { code:'IAD', name:'Washington Dulles International', dur:'14h 10m', stops:'nonstop' } ]},
-    { city:'Boston', airports:[
-      { code:'BOS', name:'Boston Logan International',    dur:'14h 30m', stops:'nonstop' } ]},
-    { city:'Honolulu', airports:[
-      { code:'HNL', name:'Daniel K. Inouye International', dur:'10h 00m', stops:'nonstop' } ]},
-    { city:'Las Vegas', airports:[
-      { code:'LAS', name:'Harry Reid International',      dur:'13h 30m', stops:'1 stop' } ]},
-    { city:'Toronto', airports:[
-      { code:'YYZ', name:'Toronto Pearson International', dur:'13h 30m', stops:'nonstop' } ]},
-    { city:'Vancouver', airports:[
-      { code:'YVR', name:'Vancouver International',       dur:'10h 50m', stops:'nonstop' } ]},
-    { city:'London', airports:[
-      { code:'LHR', name:'Heathrow',                     dur:'11h 20m', stops:'nonstop' },
-      { code:'LGW', name:'Gatwick',                      dur:'13h 40m', stops:'1 stop' } ]},
-    { city:'Paris', airports:[
-      { code:'CDG', name:'Charles de Gaulle',            dur:'11h 30m', stops:'nonstop' } ]},
-    { city:'Sydney', airports:[
-      { code:'SYD', name:'Sydney Kingsford Smith',       dur:'10h 20m', stops:'nonstop' } ]},
-    { city:'Tokyo', airports:[
-      { code:'NRT', name:'Narita International',          dur:'2h 30m',  stops:'nonstop' },
-      { code:'HND', name:'Haneda',                       dur:'2h 25m',  stops:'nonstop' } ]},
-    { city:'Singapore', airports:[
-      { code:'SIN', name:'Changi',                       dur:'6h 30m',  stops:'nonstop' } ]},
-    { city:'Hong Kong', airports:[
-      { code:'HKG', name:'Hong Kong International',       dur:'3h 40m',  stops:'nonstop' } ]},
-    { city:'Dubai', airports:[
-      { code:'DXB', name:'Dubai International',           dur:'9h 00m',  stops:'nonstop' } ]}
-  ];
 
   var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var MONTHS_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -556,17 +510,24 @@
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function findMatches(q){
+    // KW_AIRPORTS: [IATA, name, city, country] — worldwide large international airports
+    var DB = window.KW_AIRPORTS || [];
     var out = [];
     if(!q) return out;
-    CITIES.forEach(function(c){
-      var cityHit = c.city.toLowerCase().indexOf(q) !== -1;
-      c.airports.forEach(function(a){
-        if(cityHit || a.code.toLowerCase().indexOf(q) !== -1 || a.name.toLowerCase().indexOf(q) !== -1){
-          out.push({ code:a.code, name:a.name, city:c.city });
-        }
-      });
-    });
-    return out;
+    for(var i = 0; i < DB.length; i++){
+      var code = DB[i][0], name = DB[i][1], city = DB[i][2], country = DB[i][3];
+      var lc = city.toLowerCase(), ln = name.toLowerCase(), lcode = code.toLowerCase();
+      var score = -1;
+      if(lcode === q) score = 0;                       // exact code: PHL
+      else if(lc === q) score = 1;                     // exact city: philadelphia
+      else if(lc.indexOf(q) === 0) score = 2;          // city prefix
+      else if(ln.indexOf(q) === 0) score = 3;          // name prefix
+      else if(q.length >= 3 && lc.indexOf(q) !== -1) score = 4;
+      else if(q.length >= 3 && ln.indexOf(q) !== -1) score = 5;
+      if(score >= 0) out.push({ code:code, name:name, city:city, country:country, _s:score });
+    }
+    out.sort(function(a,b){ return (a._s - b._s) || (a.city > b.city ? 1 : -1); });
+    return out.slice(0, 8);
   }
   function renderAirport(){
     clearBtn.hidden = !input.value;
@@ -594,7 +555,7 @@
     matches.forEach(function(a){
       html += '<button type="button" class="airport-row" data-code="' + esc(a.code) + '" data-city="' + esc(a.city) + '">' +
         '<span class="airport-code">' + esc(a.code) + '</span>' +
-        '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + '</span></span>' +
+        '<span class="airport-name">' + esc(a.name) + '<span class="airport-hint">' + esc(a.city) + (a.country ? ' · ' + esc(a.country) : '') + '</span></span>' +
         '</button>';
     });
     // always allow using exactly what they typed — any airport works
@@ -606,10 +567,10 @@
   }
   function selectAirport(code, city){
     var found = null;
-    CITIES.forEach(function(c){ if(c.city === city) c.airports.forEach(function(a){ if(a.code === code) found = { code:a.code, name:a.name, city:c.city }; }); });
+    (window.KW_AIRPORTS || []).forEach(function(r){ if(r[0] === code) found = { code:r[0], name:r[1], city:r[2] }; });
     if(!found) return;
     st.airport = found;
-    input.value = found.city;
+    input.value = found.city || found.name;
     focused = false;
     renderAirport();
   }
