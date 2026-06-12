@@ -52,12 +52,14 @@
   .nav-in{ position:relative; }
 
   /* hero */
-  .hero{max-width:1040px; margin:0 auto; text-align:center; padding:104px 0 24px;}
+  .hero{max-width:1040px; margin:0 auto; text-align:center; padding:72px 0 24px;}
   .hero h1{font-weight:600; font-size:clamp(38px,5.2vw,56px); line-height:1.06; letter-spacing:-.5px; text-wrap:balance;}
-  .hero .sub{font-size:21px; line-height:1.6; color:var(--ink); margin:28px auto 0; max-width:30em; text-wrap:balance;}
+  .hero .sub{font-size:21px; line-height:1.6; color:var(--ink); margin:28px auto 0; max-width:none; text-wrap:balance;}
   .cta-row{margin-top:40px; display:flex; flex-direction:column; align-items:center; gap:20px;}
-  .care-line{max-width:760px; margin:64px auto 0; text-align:center; color:var(--ink); font-size:17px;}
+  .care-line{max-width:760px; margin:40px auto 0; text-align:center; color:var(--ink); font-size:17px;}
   .care-line .sep{color:var(--gold); margin:0 12px;}
+  .care-line a.cat{color:inherit; text-decoration:none; cursor:pointer;}
+  .care-line a.cat:hover, .care-line a.cat:focus-visible{text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;}
 
   /* image band (AI concept image — replace with licensed photography later) */
   .band{margin:60px 0 0; aspect-ratio:16/6.5; border-radius:20px; position:relative; overflow:hidden;
@@ -194,7 +196,7 @@
     .navlinks.open{ display:flex; }
     .navlinks a{ padding:13px 0; width:100%; font-size:17px; }
     .nav-signin, .nav-cta{ padding:8px 14px; }
-    .hero{padding:64px 0 16px;}
+    .hero{padding:48px 0 16px;}
     .band .cap{font-size:18px; left:20px; bottom:16px;}
     .steps,.diff-grid{grid-template-columns:1fr; gap:30px;}
     .about{grid-template-columns:1fr;}
@@ -227,13 +229,13 @@
 <div class="wrap">
   <section class="hero">
     <h1>You're never alone in Korea.</h1>
-    <p class="sub">World-class medical care in Korea — fully arranged, with someone beside you the whole way.</p>
+    <p class="sub">World-class medical care in Korea — fully arranged, with you the whole way.</p>
     <div class="cta-row">
       <a href="step1.html" class="btn">Plan my trip</a>
       <a href="#how" class="btn-text">See how it works →</a>
     </div>
   </section>
-  <div id="care" class="care-line">Health screening <span class="sep">·</span> Knees &amp; joints <span class="sep">·</span> Dental <span class="sep">·</span> Eyes <span class="sep">·</span> <a href="medical.html" style="color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;">&amp; more →</a></div>
+  <div id="care" class="care-line"><a href="medical.html" class="cat">Health checkup</a> <span class="sep">·</span> <a href="medical.html" class="cat">Knees &amp; joints</a> <span class="sep">·</span> <a href="medical.html" class="cat">Dental</a> <span class="sep">·</span> <a href="medical.html" class="cat">Eyes</a> <span class="sep">·</span> <a href="medical.html" style="color:var(--navy); font-weight:600; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;">&amp; more →</a></div>
   <div class="band" role="group" aria-label="Warm moments of care in Korea">
     <div class="band-slide active" style="background-image:url('assets/landing/hero-care.jpg'); background-position:center 38%;"></div>
     <div class="band-slide" style="background-image:url('assets/landing/hero-welcome.jpg'); background-position:center 46%;"></div>
