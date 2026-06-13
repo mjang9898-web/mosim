@@ -117,14 +117,15 @@
   .pending .fine a{color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;}
 
   .pricing{background:var(--ivory-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-  .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:center;}
+  .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:start;}
   .fee-block .amt{font-family:'Lora',serif; font-size:46px; font-weight:600; color:var(--navy); white-space:nowrap;}
   .fee-block .amt small{display:block; white-space:normal; font-family:'Inter'; font-size:13px; color:var(--ink-2); font-weight:500; letter-spacing:.3px; margin-top:2px;}
   .fee-block .who{font-size:19px; color:var(--care); font-weight:600; margin-bottom:8px;}
-  .fee-block .fee-reassure{font-size:19px; color:var(--ink); font-weight:500; line-height:1.5; margin:0 0 14px; max-width:34em;}
-  .fee-block ul{list-style:none; columns:2; column-gap:26px;}
-  .fee-block li{font-size:15px; color:var(--ink); padding:3px 0 3px 16px; position:relative; break-inside:avoid;}
-  .fee-block li:before{content:""; position:absolute; left:2px; top:11px; width:5px; height:5px; border-radius:50%; background:var(--gold);}
+  .fee-block .fee-reassure{font-size:19px; color:var(--ink); font-weight:500; line-height:1.5; margin:0 0 18px; max-width:34em;}
+  .fee-block .col-h{font-family:'Lora',serif; font-size:21px; font-weight:600; color:var(--navy); margin:0 0 12px;}
+  .fee-block ul{list-style:none; columns:2; column-gap:30px;}
+  .fee-block li{font-size:19px; color:var(--ink); line-height:1.45; padding:5px 0 5px 20px; position:relative; break-inside:avoid;}
+  .fee-block li:before{content:""; position:absolute; left:2px; top:13px; width:7px; height:7px; border-radius:50%; background:var(--gold);}
 
   .compare{margin-top:30px;}
   .compare .ctitle{font-size:16px; color:var(--ink); margin-bottom:20px;}
@@ -139,8 +140,8 @@
   .save em{color:var(--care); font-style:normal;}
   .est-note{font-size:14px; color:var(--ink-2); font-style:italic; margin-top:18px; text-align:center;}
   .other{margin-top:30px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 26px;}
-  .other h3{font-size:18px; font-weight:600; margin-bottom:6px;}
-  .other p{font-size:17px; color:var(--ink); line-height:1.55;}
+  .other h3{font-family:'Lora',serif; font-size:21px; font-weight:600; margin-bottom:8px;}
+  .other p{font-size:19px; color:var(--ink); line-height:1.55;}
   .other p b{color:var(--navy); font-weight:600;}
 
   .invite{background:var(--navy); color:#fff; text-align:center;}
@@ -243,19 +244,21 @@
 
 <!-- PRICING -->
 <div class="pricing sec" id="pricingSec"><div class="wrap">
-  <div class="sec-h"><div class="label">Clear from the start</div><h2 style="margin-top:12px;">No hidden costs. No "sign up to see the price."</h2></div>
+  <div class="sec-h"><div class="label">Clear from the start</div><h2 style="margin-top:12px;">One package. No hidden costs, no "sign up to see the price."</h2></div>
 
   <div class="fee-block">
     <div class="amt">$1,200<small>per traveler · one-week trip · prorated to your dates</small></div>
     <div>
-      <div class="who">This is everything Mosim charges.</div>
+      <div class="who">The Mosim Care Week — everything we do for you.</div>
       <p class="fee-reassure">A real person books every detail and stays beside you the whole trip — you're never alone.</p>
+      <div class="col-h">What we do for you</div>
       <ul>
-        <li>Planning &amp; itinerary</li>
-        <li>Private car &amp; driver</li>
-        <li>Personal interpreter</li>
-        <li>Everyday meals</li>
-        <li>Concierge beside you</li>
+        <li>Private car &amp; driver, daily</li>
+        <li>A concierge beside you, start to finish</li>
+        <li>Medical interpreting at every appointment</li>
+        <li>Every day's meals</li>
+        <li>Cultural visits on your itinerary</li>
+        <li>Your day-by-day plan, before you leave</li>
         <li>24/7 support</li>
       </ul>
     </div>
@@ -276,8 +279,8 @@
   </div>
 
   <div class="other">
-    <h3>Also handled, paid directly</h3>
-    <p><b>Hotel</b> (your choice of comfort) and <b>flights</b> — we book and arrange everything, you pay the provider directly, and we guide each payment safely.</p>
+    <h3>What you pay directly</h3>
+    <p>Your <b>hotel</b> and <b>flights</b> stay in your hands — we book and arrange every option, you pay the provider, and we guide each payment safely. Never a markup from us.</p>
   </div>
 </div></div>
 
