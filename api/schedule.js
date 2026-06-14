@@ -65,11 +65,11 @@ function normalize(parsed) {
     const cat = CATS.includes(d?.cat) ? d.cat : 'explore';
     const slots = Array.isArray(d?.slots) ? d.slots
       .filter((s) => s && (s.place || s.t))
-      .map((s) => ({ t: String(s.t || '').slice(0, 40), place: String(s.place || '').slice(0, 160) }))
+      .map((s) => ({ t: String(s.t || '').slice(0, 40), place: String(s.place || '').slice(0, 400) }))
       : [];
     return {
       day: String(d?.day || ('Day ' + (i + 1))).slice(0, 24),
-      title: String(d?.title || 'Your day in Korea').slice(0, 80),
+      title: String(d?.title || 'Your day in Korea').slice(0, 120),
       cat,
       slots: slots.length ? slots : [{ t: '', place: 'A gentle day, planned with you' }]
     };
