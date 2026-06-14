@@ -3,6 +3,10 @@
 작업 체크리스트 (공유). 끝나면 `[ ]` → `[x]`. 새 항목은 알맞은 섹션에 추가.
 
 ## 지금 / 다음
+- [ ] **모바일 버전 일괄 점검·수정** (founder가 한 번에 보기로 함, 2026-06-14) — 데스크톱은 OK, 모바일만 따로 훑기. 지금까지 발견된 것:
+  - result.html "한눈에 보기" 주간 캘린더 칸(`.ctitle2`, result.html ~175줄) 제목이 모바일에서 `-webkit-line-clamp:2`로 2줄 클램프 — 가로 7칸이라 의도된 요약이나 founder는 더 보이길 원할 수 있음. 전체 일정 설명은 아코디언에 다 나옴(데이터 캡은 2642d21에서 해결)
+  - pricing.html 모바일(390px) 가로 5px 오버플로 — sticky nav의 "Sign in"+"Plan my trip" 버튼(`.nav-actions`/`.nav-cta`). visual-qa가 2026-06-13 발견, 패키지 변경과 무관한 기존 이슈
+  - (점검 시) 5단계 퍼널·result 아코디언·랜딩 전 섹션 모바일 reflow 전반 한 번에 확인
 - [ ] **Expedia 제휴 가입** — Travel Creator Program (affiliates.expediagroup.com), `care@mosimkorea.com`, **개인 자격**(법인 불필요). 승인 후 cockpit Expedia 링크에 추적코드(affiliateParam) 추가 → ~4% 호텔 커미션
 - [ ] **Experience 페이지 — 사진 업데이트** — 큐레이션 카드 이미지 교체/개선
 - [ ] **Medical 페이지 — 세부사항 업데이트** — 진료 항목별 상세 내용 보강
