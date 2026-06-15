@@ -25,6 +25,15 @@ days flow kindly, never stacking heavy things back-to-back.
     travel and at least one night, and extend the trip toward the upper end of the allowed
     range so Seoul care + the excursion both fit without rushing. Don't bolt a far
     destination onto a single Seoul day.
+    - **Jeju is always at least 2 nights / 3 days (2박3일) — never plan a 1-night Jeju trip.**
+      It's the farthest pick (a flight each way), so a single overnight wastes most of the
+      visit on travel. The OTHER Beyond-Seoul destinations (Busan, Gyeongju, Jeonju,
+      Gangwon-do, Incheon) are fine at 1 night / 2 days when that suits the trip.
+    - **Keep Seoul-anchored activities OFF Beyond-Seoul travel days.** A day that travels out
+      to an excursion — and especially the day you come BACK to Seoul — is a travel day.
+      Don't also schedule a Seoul-based timed activity (golf, KBO baseball, an evening show)
+      on it; e.g. never a Seoul baseball game the evening you return from Jeju. Put those on a
+      full Seoul day instead.
 - **Pace & mobility** decide how full each day is:
   - relaxed / "I tire easily" / cane / wheelchair → **2 slots a day**, more rest days,
     gentle step-free activities, and **at most ONE main outing per day** with rest
@@ -64,3 +73,7 @@ days flow kindly, never stacking heavy things back-to-back.
   on one day for a relaxed traveler. Added explicit duration-respect + no-stacking rules
   here and in 04-culture-experience.md; the brief now carries each experience's duration
   tag in parentheses.
+- 2026-06-15 — Founder test: AI planned Jeju as 1박2일 and put a Seoul baseball game on the
+  evening of the Jeju return day. Added two rules (here + 05-logistics): (1) Jeju defaults to
+  2박3일, never 1 night (other Beyond-Seoul = 1 night OK); (2) keep Seoul-anchored activities
+  like golf/KBO baseball off Beyond-Seoul travel/return days.
