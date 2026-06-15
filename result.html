@@ -44,11 +44,26 @@
   .recap{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:28px 0 0;}
   .recap span{background:var(--ivory-soft); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:15px; color:var(--navy);}
 
-  .preview-note{max-width:none; margin:30px auto 0; text-align:center; font-size:15px; color:var(--ink-2); background:var(--ivory-soft); border:1px solid var(--line); border-radius:12px; padding:14px 20px; line-height:1.5;}
-
   .sec{padding:60px 0;}
   .sec-h{text-align:center; margin-bottom:18px;}
-  .sec-h h2{font-size:clamp(26px,3.4vw,32px); font-weight:600;}
+  .sec-h h2{font-size:clamp(26px,3.4vw,32px); font-weight:600; margin-top:12px;}
+
+  /* ---- "How this works" — 5-step stepper ---- */
+  .steps{display:grid; grid-template-columns:repeat(5,1fr); gap:0; background:var(--ivory-soft); border:1px solid var(--line); border-radius:18px; padding:30px 20px; max-width:1000px; margin:0 auto;}
+  .step{position:relative; text-align:center; padding:0 12px;}
+  .step:not(:last-child)::after{content:""; position:absolute; top:21px; left:calc(50% + 26px); right:0; height:2px; background:var(--line);}
+  .step.here:not(:last-child)::after{background:#D9BD7E;}
+  .step .num{width:42px; height:42px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; background:#fff; border:2px solid var(--line); color:var(--ink-2); position:relative; z-index:1;}
+  .step.here .num{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .step b{display:block; font-family:'Lora',serif; font-size:16px; font-weight:600; color:var(--navy); line-height:1.25;}
+  .step .stxt > span{display:block; font-size:14px; color:var(--ink); margin-top:4px; line-height:1.35;}
+  .step .here-tag{display:inline-block; margin-top:9px; font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--gold); background:#fff; border:1px solid #D9BD7E; border-radius:999px; padding:3px 9px;}
+  .step-cta{display:flex; flex-direction:column; gap:6px; margin-top:11px;}
+  .mini-btn{font-size:14px; font-weight:600; text-decoration:none; border-radius:9px; padding:10px 10px; text-align:center; display:block; line-height:1.2; cursor:pointer; font-family:'Inter',sans-serif; border:none; min-height:44px;}
+  .mini-btn.primary{background:var(--navy); color:#fff;}
+  .mini-btn.primary:hover{background:var(--navy-soft);}
+  .signin-link{font-size:14px; color:var(--ink-2); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:2px; text-align:center; margin-top:2px;}
+
   .legend{display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin:0 0 26px;}
   .legend span{display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink);}
   .legend i{width:11px; height:11px; border-radius:3px; display:inline-block;}
@@ -116,43 +131,40 @@
   .pending .fine{font-size:16px; color:var(--ink-2); margin-top:22px;}
   .pending .fine a{color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;}
 
+  /* ---- "What you pay" — single card ---- */
   .pricing{background:var(--ivory-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-  .fee-block{background:#fff; border:1px solid var(--gold); border-radius:16px; padding:30px; box-shadow:0 16px 40px -24px rgba(195,154,63,.5); display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:center;}
-  .fee-block .amt{font-family:'Lora',serif; font-size:46px; font-weight:600; color:var(--navy); white-space:nowrap;}
-  .fee-block .amt small{display:block; white-space:normal; font-family:'Inter'; font-size:13px; color:var(--ink-2); font-weight:500; letter-spacing:.3px; margin-top:2px;}
-  .fee-block .who{font-size:19px; color:var(--care); font-weight:600; margin-bottom:8px;}
-  .fee-block .fee-reassure{font-size:19px; color:var(--ink); font-weight:500; line-height:1.5; margin:0 0 14px; max-width:34em;}
-  .fee-block ul{list-style:none; columns:2; column-gap:26px;}
-  .fee-block li{font-size:15px; color:var(--ink); padding:3px 0 3px 16px; position:relative; break-inside:avoid;}
-  .fee-block li:before{content:""; position:absolute; left:2px; top:11px; width:5px; height:5px; border-radius:50%; background:var(--gold);}
+  .pay{max-width:900px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:18px; padding:10px 40px; box-shadow:0 18px 44px -30px rgba(27,42,74,.35);}
+  .payrow{display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding:22px 0; border-bottom:1px solid var(--line);}
+  .payrow:last-of-type{border-bottom:none;}
+  .payrow .pl b{font-size:20px; font-weight:600; color:var(--navy); display:block;}
+  .payrow .pl > span{font-size:16px; color:var(--ink-2); display:block; margin-top:3px; max-width:34ch;}
+  .payrow .pr{font-family:'Lora',serif; font-size:26px; font-weight:600; color:var(--navy); white-space:nowrap; text-align:right;}
+  .payrow .pr small{display:block; font-family:'Inter'; font-size:13px; color:var(--ink-2); font-weight:500;}
+  .payrow.direct .pr{font-size:18px; color:var(--ink); padding-top:6px; font-family:'Inter';}
+  .payrow .pl span.est{display:block; margin-top:10px; font-size:14px; color:var(--ink-2); line-height:1.5; max-width:none;}
+  .payrow .pl span.est > b{display:block; color:var(--gold); font-weight:700; letter-spacing:.4px; text-transform:uppercase; font-size:12px; margin-bottom:5px;}
+  .payrow .pl span.est .estitem{display:flex; justify-content:space-between; gap:18px; max-width:320px; padding:2px 0;}
+  .payrow .pl span.est .estitem em{font-style:normal; font-weight:600; color:var(--navy);}
+  .payrow .pl span.est .estnote{display:block; margin-top:6px;}
+  .pay-foot{text-align:center; padding:20px 0 22px; font-size:17px; color:var(--ink); border-top:2px solid var(--line);}
+  .pay-foot b{color:var(--navy);}
 
-  .compare{margin-top:30px;}
-  .compare .ctitle{font-size:16px; color:var(--ink); margin-bottom:20px;}
-  .bar-row{margin-bottom:20px;}
-  .bar-row .blab{display:flex; justify-content:space-between; font-size:15px; margin-bottom:8px;}
-  .bar-row .blab b{font-family:'Lora',serif; font-size:18px;}
-  .bar{height:30px; border-radius:7px; background:#ECE4D5; overflow:hidden;}
-  .bar i{display:block; height:100%; border-radius:7px;}
-  .bar-kr i{background:var(--care);} .bar-kr b{color:var(--care);}
-  .bar-us i{background:#C9C0B2;} .bar-us .blab b{color:var(--ink-2);}
-  .save{text-align:center; margin-top:8px; font-family:'Lora',serif; font-size:22px; font-weight:600; color:var(--navy);}
-  .save em{color:var(--care); font-style:normal;}
-  .est-note{font-size:14px; color:var(--ink-2); font-style:italic; margin-top:18px; text-align:center;}
-  .other{margin-top:30px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 26px;}
-  .other h3{font-size:18px; font-weight:600; margin-bottom:6px;}
-  .other p{font-size:17px; color:var(--ink); line-height:1.55;}
-  .other p b{color:var(--navy); font-weight:600;}
-
-  .invite{background:var(--navy); color:#fff; text-align:center;}
-  .invite h2{color:#fff; font-size:clamp(28px,3.6vw,36px); font-weight:600;}
-  .invite p{color:#D7DCE6; font-size:19px; margin:16px auto 28px; max-width:30em; line-height:1.6;}
-  .inrow{display:flex; gap:12px; justify-content:center; max-width:520px; margin:0 auto; flex-wrap:wrap;}
-  .inrow input{flex:1; min-width:180px; height:54px; border-radius:10px; border:none; padding:0 18px; font-size:17px; font-family:'Inter',sans-serif;}
-  .inrow .btn{background:var(--gold); color:var(--navy); font-weight:700; font-size:17px; border-radius:10px; padding:0 26px; height:54px; display:flex; align-items:center; text-decoration:none; border:none; cursor:pointer;}
-  .invite .fine{color:#9FA9BC; font-size:14px; margin-top:18px;}
-  .invite .fine a{color:#D9BD7E; text-decoration:underline; text-underline-offset:2px;}
-  .inrow .btn-ghost{background:transparent; color:#fff; border:1.5px solid var(--gold);}
-  .inrow .btn-ghost:hover{background:rgba(255,255,255,.07);}
+  /* ---- Reserve close ---- */
+  .reserve{text-align:center; padding:56px 0 64px;}
+  .reserve h2{font-size:clamp(26px,3.4vw,34px); font-weight:600;}
+  .reserve p{font-size:19px; color:var(--ink); margin:14px auto 28px; max-width:none; line-height:1.6;}
+  .reserve .btn{font-size:19px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:12px; padding:18px 40px; text-decoration:none; display:inline-block; box-shadow:0 16px 34px -18px rgba(27,42,74,.6); cursor:pointer; font-family:'Inter',sans-serif; min-height:44px;}
+  .reserve .btn:hover{background:var(--navy-soft);}
+  .reserve .fine{font-size:15px; color:var(--ink-2); margin-top:18px;}
+  .reserve .fine b{color:var(--care);}
+  .reserve .fine a{color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;}
+  .reserved-state{max-width:560px; margin:0 auto; background:#fff; border:1px solid var(--care); border-radius:18px; padding:36px 40px; box-shadow:0 18px 44px -30px rgba(92,124,99,.5);}
+  .reserved-state .rico{width:54px; height:54px; border-radius:50%; background:rgba(92,124,99,.14); display:flex; align-items:center; justify-content:center; margin:0 auto 18px;}
+  .reserved-state .rico svg{width:28px; height:28px; color:var(--care);}
+  .reserved-state h3{font-size:24px; font-weight:600; color:var(--navy);}
+  .reserved-state p{font-size:19px; color:var(--ink); margin:12px auto 22px; line-height:1.55;}
+  .reserved-state .btn{font-size:18px; font-weight:600; background:var(--navy); color:#fff; border-radius:10px; padding:15px 30px; text-decoration:none; display:inline-block;}
+  .reserved-state .btn:hover{background:var(--navy-soft);}
 
   /* sticky proceed bar — always-available CTA while scrolling */
   .result-bar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:30; transition:transform .25s ease;}
@@ -167,7 +179,18 @@
   @media(max-width:600px){ .nav-save{display:none;} }
   @media(max-width:560px){ .rb-label{display:none;} .rb-in{justify-content:center;} .rb-btn{width:100%;} }
 
-  @media(max-width:760px){ .head h1{font-size:36px;} .fee-block{grid-template-columns:1fr; gap:18px;} .fee-block ul{columns:1;} }
+  @media(max-width:760px){
+    .head h1{font-size:36px;}
+    .steps{grid-template-columns:1fr; gap:4px; padding:22px 18px;}
+    .step{display:flex; align-items:flex-start; gap:14px; text-align:left; padding:10px 0;}
+    .step:not(:last-child)::after{display:none;}
+    .step .num{margin:0;}
+    .step .stxt{flex:1;}
+    .pay{padding:6px 22px;}
+    .payrow{flex-direction:column; gap:6px;}
+    .payrow .pr{text-align:left;}
+    .payrow .pl span.est .estitem{max-width:none;}
+  }
   @media(max-width:560px){
     .weekgrid{gap:4px;}
     .ccell{min-height:58px; padding:5px 4px 6px; border-radius:7px;}
@@ -190,7 +213,7 @@
 <nav><div class="wrap nav-in">
   <a href="index.html" class="brand">Mosim<span class="dot">.</span></a>
   <div class="nav-right">
-    <a href="#talk" class="nav-save">Save my plan</a>
+    <a href="#talk" class="nav-save">Reserve my trip</a>
     <a id="nav-auth" href="/signin.html" class="nav-signin">Sign in</a>
     <span class="nav-div" aria-hidden="true"></span>
     <a href="/step1.html" class="nav-cta">Plan my trip</a>
@@ -201,11 +224,42 @@
   <div class="head">
     <div class="label">Your plan</div>
     <h1>Here's your Korea.</h1>
-    <p>Drafted from everything you chose — to be perfected together with your concierge. Nothing here is locked in.</p>
+    <p>Drafted from everything you chose — perfected together with your concierge.</p>
     <div class="recap" id="recap"></div>
-    <div class="preview-note">This is a preview. Once you're ready, our AI and your concierge tailor every day around you — your care, your pace, your taste.</div>
   </div>
 </div>
+
+<!-- HOW THIS WORKS -->
+<div class="sec" id="stepsSec"><div class="wrap">
+  <div class="sec-h"><div class="label">How this works</div><h2>Here's what happens next.</h2></div>
+  <div class="steps">
+    <div class="step here">
+      <div class="num">1</div>
+      <div class="stxt"><b>See your plan</b><span>Your week, drafted around your care.</span><span class="here-tag">You're here</span></div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="stxt"><b>Reserve</b><span>Free, no commitment.</span>
+        <div class="step-cta">
+          <a id="step-create" class="mini-btn primary" href="/signup.html?next=result&amp;save=1&amp;reserve=1">Create account</a>
+          <a id="step-signin" class="signin-link" href="/signin.html?next=result&amp;save=1&amp;reserve=1">Already a member? Sign in</a>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="stxt"><b>We confirm</b><span>Your care &amp; dates with the hospital.</span></div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div class="stxt"><b>Pay your fee</b><span>Only once everything's confirmed.</span></div>
+    </div>
+    <div class="step">
+      <div class="num">5</div>
+      <div class="stxt"><b>We handle it</b><span>Beside you, the whole trip.</span></div>
+    </div>
+  </div>
+</div></div>
 
 <!-- ITINERARY -->
 <div class="sec"><div class="wrap">
@@ -241,64 +295,41 @@
   </div>
 </div></div>
 
-<!-- PRICING -->
+<!-- WHAT YOU PAY -->
 <div class="pricing sec" id="pricingSec"><div class="wrap">
-  <div class="sec-h"><div class="label">Clear from the start</div><h2 style="margin-top:12px;">No hidden costs. No "sign up to see the price."</h2></div>
-
-  <div class="fee-block">
-    <div class="amt">$1,200<small>per traveler · one-week trip · prorated to your dates</small></div>
-    <div>
-      <div class="who">This is everything Mosim charges.</div>
-      <p class="fee-reassure">A real person books every detail and stays beside you the whole trip — you're never alone.</p>
-      <ul>
-        <li>Planning &amp; itinerary</li>
-        <li>Private car &amp; driver</li>
-        <li>Personal interpreter</li>
-        <li>Everyday meals</li>
-        <li>Concierge beside you</li>
-        <li>24/7 support</li>
-      </ul>
+  <div class="sec-h"><div class="label">What you pay</div><h2>Clear from the start. No surprises.</h2></div>
+  <div class="pay">
+    <div class="payrow">
+      <div class="pl"><b>To Mosim</b><span>Your concierge — private car &amp; driver, interpreter-guide, every meal, 24/7 support.</span></div>
+      <div class="pr" id="mosimFee">$1,200<small id="mosimFeeNote">per traveler · all-in</small></div>
     </div>
-  </div>
-
-  <div class="compare">
-    <div class="ctitle" style="margin-top:34px;"><b>Your medical care</b> — paid directly to the hospital (we arrange it, never mark it up):</div>
-    <div class="bar-row bar-kr">
-      <div class="blab"><span>In Korea (estimated)</span><b>~ $12,800</b></div>
-      <div class="bar"><i style="width:34%"></i></div>
+    <div class="payrow direct">
+      <div class="pl"><b>To the hospital</b><span>Your medical care — paid directly to the hospital, never marked up by us.<span class="est" id="careEst"><b>Estimate</b><span class="estnote">Your hospital confirms the final price.</span></span></span></div>
+      <div class="pr">paid direct</div>
     </div>
-    <div class="bar-row bar-us">
-      <div class="blab"><span>Typical in the U.S.</span><b>~ $37,500</b></div>
-      <div class="bar"><i style="width:100%"></i></div>
+    <div class="payrow direct">
+      <div class="pl"><b>Hotel + flights</b><span>We arrange every option; you pay the provider directly, no markup.</span></div>
+      <div class="pr">paid direct</div>
     </div>
-    <div class="save">About <em>a third</em> of U.S. prices.</div>
-    <div class="est-note">Example estimates only — your hospital confirms the final quote before anything is decided.</div>
-  </div>
-
-  <div class="other">
-    <h3>Also handled, paid directly</h3>
-    <p><b>Hotel</b> (your choice of comfort) and <b>flights</b> — we book and arrange everything, you pay the provider directly, and we guide each payment safely.</p>
+    <div class="pay-foot"><b>Reserve free today</b> — you pay your Mosim fee later, only once we confirm your care &amp; dates.</div>
   </div>
 </div></div>
 
-<!-- INVITE -->
-<div class="invite sec" id="talk" data-invite><div class="wrap">
+<!-- RESERVE CLOSE -->
+<div class="sec reserve" id="talk" data-invite><div class="wrap">
   <div id="cta-guest">
-    <h2>Save your plan.</h2>
-    <p>Create a free account to keep this itinerary, follow your trip, and pick up whenever you're ready — no commitment.</p>
-    <div class="inrow">
-      <a class="btn" href="/signup.html?next=result&amp;save=1">Create a free account</a>
-      <a class="btn btn-ghost" href="/signin.html?next=result&amp;save=1">Sign in</a>
-    </div>
-    <div class="fine">Your plan stays on your private page. Questions? <a href="/index.html#contact">Contact us</a>.</div>
+    <h2>Ready to make this real?</h2>
+    <p>Reserve your trip — it's free, with no commitment. It tells us you're serious so we can confirm your care and dates.</p>
+    <a id="reserve-cta" class="btn" href="/signup.html?next=result&amp;save=1&amp;reserve=1">Reserve this trip →</a>
+    <div class="fine">Takes a moment to set up your private page · <b>$0 today</b> · cancel anytime before we begin · <a href="/signin.html?next=result&amp;save=1&amp;reserve=1">Already a member? Sign in</a></div>
   </div>
   <div id="cta-member" style="display:none">
-    <h2>Saved to your page.</h2>
-    <p>Your itinerary is waiting in My Page — review it anytime, and continue whenever you're ready.</p>
-    <div class="inrow">
+    <div class="reserved-state">
+      <div class="rico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3 id="reserved-title">Your trip is reserved.</h3>
+      <p id="reserved-text">We've got it. Our care team will reach out within one business day to confirm your care and dates — there's nothing to pay yet.</p>
       <a class="btn" href="/me.html">Go to My Page</a>
     </div>
-    <div class="fine">Questions? <a href="/index.html#contact">Contact us</a>.</div>
   </div>
 </div></div>
 
@@ -310,8 +341,8 @@
 </div></footer>
 
 <div class="result-bar" id="resultBar"><div class="rb-in">
-  <span class="rb-label" id="rb-label">Like this plan? Save it to your free account.</span>
-  <button class="rb-btn" id="rb-cta" type="button">Save my plan</button>
+  <span class="rb-label" id="rb-label">Ready when you are. Reserve free — pay later.</span>
+  <button class="rb-btn" id="rb-cta" type="button">Reserve this trip →</button>
 </div></div>
 
 <script src="js/state.js"></script>
@@ -344,6 +375,46 @@
 
     var recapEl = document.getElementById('recap');
     chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
+
+    // ---- "What you pay": Mosim fee (party total) + per-care ESTIMATE ----
+    // Fee framing only — numbers unchanged: $1,200 per traveler, one-week prorated.
+    var PER_TRAVELER = 1200;
+    var PARTY_SIZE = { solo:1, couple:2, family:4 };
+    function fmtUsd(n) { return '$' + Number(n).toLocaleString('en-US'); }
+    (function renderMosimFee() {
+      var n = PARTY_SIZE[trip.party] || 1;
+      var total = PER_TRAVELER * n;
+      var feeEl = document.getElementById('mosimFee');
+      var noteEl = document.getElementById('mosimFeeNote');
+      if (feeEl) feeEl.firstChild.nodeValue = fmtUsd(total);
+      if (noteEl) noteEl.textContent = (n > 1 ? (n + ' travelers') : '1 traveler') + ' · all-in';
+    })();
+
+    // Per-procedure starting estimates — sourced from medical.html baseline prices
+    // (checkup $850 / ortho $500 / dental implant $1,200 / eyes $1,600). Labelled
+    // ESTIMATE; the hospital confirms the final price. No US-comparison.
+    var CARE_EST = {
+      screening: { label:'Health screening',  amt:'~$850' },
+      knees:     { label:'Knees & joints',     amt:'~$500' },
+      dental:    { label:'Dental (implants)',  amt:'~$1,200' },
+      eyes:      { label:'Eyes (cataract/LASIK)', amt:'~$1,600' }
+    };
+    (function renderCareEst() {
+      var box = document.getElementById('careEst');
+      if (!box) return;
+      var items = care.filter(function (k) { return CARE_EST[k]; });
+      if (!items.length) {
+        // No specific procedures chosen (e.g. 'unsure') — keep just the confirm line.
+        return;
+      }
+      var note = box.querySelector('.estnote');
+      items.forEach(function (k) {
+        var row = document.createElement('span');
+        row.className = 'estitem';
+        row.innerHTML = esc(CARE_EST[k].label) + '<em>' + esc(CARE_EST[k].amt) + '</em>';
+        box.insertBefore(row, note);
+      });
+    })();
 
     // ===================================================================
     //  Date-aware calendar + per-day accordion (Phase 1, client-side only)
@@ -562,43 +633,7 @@
     var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
     renderItinerary(plan, trip);
 
-    // ---- Auto-save the plan for signed-in travelers so it lives in My Page ----
-    (function () {
-      var tok = null;
-      try {
-        var raw = localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');
-        var sess = raw ? JSON.parse(raw) : null;
-        tok = sess && (sess.access_token || (sess.currentSession && sess.currentSession.access_token));
-        var exp = sess && (sess.expires_at || (sess.currentSession && sess.currentSession.expires_at));
-        if (exp && exp * 1000 <= Date.now()) tok = null;       // expired session
-      } catch (e) { tok = null; }
-      if (!tok) return;                                        // only signed-in users
-      if (sessionStorage.getItem('mosim.schedule.saved')) return;  // save once per plan
-
-      var safeState;
-      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
-      if (safeState.care) delete safeState.care.note;          // privacy: never persist the free-text note
-
-      var title = (chips[0] ? ('Korea trip — ' + chips[0]) : 'Your Korea trip').slice(0, 120);
-
-      fetch('/api/save-itinerary', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + tok },
-        body: JSON.stringify({ state: safeState, schedule: plan, title: title })
-      }).then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) {
-          if (!j || !j.ok) return;
-          try { sessionStorage.setItem('mosim.schedule.saved', j.id || '1'); } catch (e) {}
-          var t = document.createElement('div');
-          t.textContent = '✓ Saved to your page';
-          t.style.cssText = 'position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#1B2A4A;color:#fff;font-size:15px;font-weight:600;padding:10px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);z-index:40;opacity:0;transition:opacity .4s;';
-          document.body.appendChild(t);
-          requestAnimationFrame(function () { t.style.opacity = '1'; });
-          setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 500); }, 3500);
-        }).catch(function () {});
-    })();
-
-    // ---- post-itinerary CTA: self-serve (save via account), not a human chat ----
+    // ---- auth helper ----
     function authToken() {
       try {
         var raw = localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');
@@ -610,18 +645,107 @@
       return null;
     }
     var member = !!authToken();
-    if (member) {
+
+    // URL intents carried back from signup/signin (?save=1&reserve=1).
+    var qp = new URLSearchParams(window.location.search);
+    var wantReserve = qp.get('reserve') === '1';
+
+    function toast(text) {
+      var t = document.createElement('div');
+      t.textContent = text;
+      t.style.cssText = 'position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#1B2A4A;color:#fff;font-size:15px;font-weight:600;padding:10px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);z-index:40;opacity:0;transition:opacity .4s;';
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.style.opacity = '1'; });
+      setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 500); }, 3500);
+    }
+
+    // Switch the page into the "reserved" confirmation state.
+    var isReserved = false;
+    function showReservedState() {
+      isReserved = true;
       var g = document.getElementById('cta-guest'); if (g) g.style.display = 'none';
       var m = document.getElementById('cta-member'); if (m) m.style.display = 'block';
-      var ns = document.querySelector('.nav-save'); if (ns) { ns.textContent = 'My Page'; ns.setAttribute('href', '/me.html'); }
-      var rl = document.getElementById('rb-label'); if (rl) rl.textContent = 'Your plan is saved to your page.';
+      var rl = document.getElementById('rb-label'); if (rl) rl.textContent = 'Your trip is reserved.';
       var rc = document.getElementById('rb-cta'); if (rc) rc.textContent = 'Go to My Page';
+    }
+
+    // Ensure the itinerary is saved → returns a Promise<itinerary_id|null>.
+    // Reuses the one-save-per-plan cache so we never duplicate rows.
+    function ensureSaved() {
+      var cached = null;
+      try { cached = sessionStorage.getItem('mosim.schedule.saved'); } catch (e) {}
+      if (cached && cached !== '1') return Promise.resolve(cached);
+
+      var tok = authToken();
+      if (!tok) return Promise.resolve(null);
+
+      var safeState;
+      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
+      if (safeState.care) delete safeState.care.note;          // privacy: never persist the free-text note
+      var title = (chips[0] ? ('Korea trip — ' + chips[0]) : 'Your Korea trip').slice(0, 120);
+
+      return fetch('/api/save-itinerary', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + tok },
+        body: JSON.stringify({ state: safeState, schedule: plan, title: title })
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j || !j.ok || !j.id) return null;
+          try { sessionStorage.setItem('mosim.schedule.saved', j.id); } catch (e) {}
+          return j.id;
+        }).catch(function () { return null; });
+    }
+
+    // Mark the saved itinerary reserved (idempotent server-side).
+    function reserveItinerary(id) {
+      var tok = authToken();
+      if (!tok || !id) return Promise.resolve(false);
+      return fetch('/api/reserve', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + tok },
+        body: JSON.stringify({ itinerary_id: id })
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return !!(j && j.ok); })
+        .catch(function () { return false; });
+    }
+
+    // Full flow: save (if needed) → reserve → reserved state.
+    var reserving = false;
+    function doReserve() {
+      if (reserving) return;
+      reserving = true;
+      ensureSaved().then(function (id) {
+        if (!id) { reserving = false; toast('Could not reserve — please try again.'); return; }
+        return reserveItinerary(id).then(function (ok) {
+          reserving = false;
+          if (ok) { showReservedState(); toast('✓ Your trip is reserved'); }
+          else { toast('Could not reserve — please try again.'); }
+        });
+      });
+    }
+
+    if (member) {
+      var ns = document.querySelector('.nav-save'); if (ns) { ns.textContent = 'My Page'; ns.setAttribute('href', '/me.html'); }
+
+      // Save quietly so the plan always lives in My Page (even before reserving).
+      ensureSaved().then(function (id) {
+        if (id && !wantReserve) toast('✓ Saved to your page');
+        // Carried ?reserve=1 back from auth → auto-complete the reservation.
+        if (wantReserve && id) {
+          reserveItinerary(id).then(function (ok) { if (ok) { showReservedState(); toast('✓ Your trip is reserved'); } });
+        }
+      });
+
+      // In-page Reserve buttons (close section CTA + sticky bar) → reserve directly.
+      var resBtn = document.getElementById('reserve-cta');
+      if (resBtn) resBtn.addEventListener('click', function (e) { e.preventDefault(); doReserve(); });
     }
 
     // ---- sticky proceed bar ----
     var bar = document.getElementById('resultBar');
     document.getElementById('rb-cta').addEventListener('click', function () {
-      if (member) { window.location.href = '/me.html'; return; }
+      if (isReserved) { window.location.href = '/me.html'; return; }
+      if (member) { doReserve(); return; }
       var talk = document.getElementById('talk');
       if (talk) talk.scrollIntoView({ behavior: 'smooth' });
     });

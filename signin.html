@@ -93,7 +93,13 @@
     const u = new URL(window.location.href);
     const next = u.searchParams.get('next');
     const save = u.searchParams.get('save');
-    if (next === 'result') return '/result.html' + (save ? '?save=1' : '');
+    const reserve = u.searchParams.get('reserve');
+    if (next === 'result') {
+      const params = [];
+      if (save) params.push('save=1');
+      if (reserve === '1') params.push('reserve=1');
+      return '/result.html' + (params.length ? ('?' + params.join('&')) : '');
+    }
     if (next === 'me') return '/me.html';
     if (next === 'cockpit') return '/cockpit.html';
     if (next && /^step[1-4]$/.test(next)) return '/' + next + '.html';
