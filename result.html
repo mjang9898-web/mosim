@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; --care:#4F8A66; --rest:#C39A3F; --explore:#5E7E9E; --travel:#9A938A; }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; --care:#3E7355; --rest:#C39A3F; --explore:#5E7E9E; --travel:#BD5D4C; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
   body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:84px;}
@@ -312,7 +312,7 @@
       <div class="pr">paid direct</div>
     </div>
     <div class="payrow direct">
-      <div class="pl"><b>Hotel + flights</b><span>We arrange every option; you pay the provider directly, no markup.<span class="est" id="stayEst"><b>Estimate · you book directly</b><span class="esthdr">Flights — round trip, per traveler</span><span class="estitem indent">Economy<em>~$1,400</em></span><span class="estitem indent">Premium economy<em>~$2,600</em></span><span class="estitem indent">Business<em>~$5,200</em></span><span class="esthdr">Hotel — your comfort tier</span><span class="estnote">You pick the options; we arrange them, you pay the provider directly.</span></span></span></div>
+      <div class="pl"><b>Hotel + flights</b><span>We arrange every option; you pay the provider directly, no markup.<span class="est" id="stayEst"><b>Estimate · you book directly</b><span class="esthdr">Flights — round trip, per traveler</span><span class="estitem indent">Economy<em>avg. $1,400</em></span><span class="estitem indent">Premium economy<em>avg. $2,600</em></span><span class="estitem indent">Business<em>avg. $5,200</em></span><span class="esthdr">Hotel — your comfort tier</span><span class="estnote">You pick the options; we arrange them, you pay the provider directly.</span></span></span></div>
       <div class="pr">paid direct</div>
     </div>
     <div class="pay-foot"><b>Reserve free today</b> — you pay your Mosim fee later, only once we confirm your care &amp; dates.</div>
@@ -402,10 +402,10 @@
     //   price  → "~$N" starting estimate (hospital confirms final price)
     //   detail → optional small grey sub-line (the card's options/scope)
     var CARE_EST = {
-      screening: { label:'Health Screening — Comprehensive', price:'~$1,600', detail:'heart & cancer markers · full-body imaging' },
-      knees:     { label:'Knees & Joints — Ortho consult + imaging', price:'~$900',   detail:'X-ray/MRI · treatment plan' },
-      dental:    { label:'Dental — Implants (2 teeth)', price:'~$3,000', detail:'' },
-      eyes:      { label:'Eyes — Cataract / vision correction', price:'~$2,400', detail:'exam · both eyes' }
+      screening: { label:'Health Screening — Comprehensive', price:'avg. $1,600', detail:'heart & cancer markers · full-body imaging' },
+      knees:     { label:'Knees & Joints — Ortho consult + imaging', price:'avg. $900',   detail:'X-ray/MRI · treatment plan' },
+      dental:    { label:'Dental — Implants (2 teeth)', price:'avg. $3,000', detail:'' },
+      eyes:      { label:'Eyes — Cataract / vision correction', price:'avg. $2,400', detail:'exam · both eyes' }
     };
     (function renderCareEst() {
       var box = document.getElementById('careEst');
@@ -439,9 +439,9 @@
     // tier rows live directly in the markup. This map is the editable source of
     // truth; update both if these numbers change.
     var FLIGHT_EST = {
-      economy:  '~$1,400',
-      premium:  '~$2,600',
-      business: '~$5,200'
+      economy:  'avg. $1,400',
+      premium:  'avg. $2,600',
+      business: 'avg. $5,200'
     };
     // Hotel per-night rate by chosen comfort tier (state.trip.stay). Editable.
     var HOTEL_NIGHTLY = {
@@ -458,8 +458,8 @@
       var note = box.querySelector('.estnote');
       var row = document.createElement('span');
       row.className = 'estitem indent';
-      row.innerHTML = '~' + fmtUsd(rate) + ' / night × ' + n + ' night' + (n === 1 ? '' : 's') +
-                      '<em>~' + fmtUsd(total) + '</em>';
+      row.innerHTML = 'avg. ' + fmtUsd(rate) + ' / night × ' + n + ' night' + (n === 1 ? '' : 's') +
+                      '<em>avg. ' + fmtUsd(total) + '</em>';
       box.insertBefore(row, note);
     }
 
