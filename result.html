@@ -143,8 +143,11 @@
   .payrow.direct .pr{font-size:18px; color:var(--ink); padding-top:6px; font-family:'Inter';}
   .payrow .pl span.est{display:block; margin-top:10px; font-size:14px; color:var(--ink-2); line-height:1.5; max-width:none;}
   .payrow .pl span.est > b{display:block; color:var(--gold); font-weight:700; letter-spacing:.4px; text-transform:uppercase; font-size:12px; margin-bottom:5px;}
-  .payrow .pl span.est .estitem{display:flex; justify-content:space-between; gap:18px; max-width:320px; padding:2px 0;}
+  .payrow .pl span.est .esthdr{display:block; color:var(--ink); font-weight:600; margin:8px 0 2px;}
+  .payrow .pl span.est .estitem{display:flex; justify-content:space-between; gap:18px; max-width:360px; padding:2px 0; color:var(--ink);}
+  .payrow .pl span.est .estitem.indent{padding-left:14px; max-width:374px;}
   .payrow .pl span.est .estitem em{font-style:normal; font-weight:600; color:var(--navy);}
+  .payrow .pl span.est .estsub{display:block; font-size:12px; color:var(--ink-2); margin:0 0 4px;}
   .payrow .pl span.est .estnote{display:block; margin-top:6px;}
   .pay-foot{text-align:center; padding:20px 0 22px; font-size:17px; color:var(--ink); border-top:2px solid var(--line);}
   .pay-foot b{color:var(--navy);}
@@ -189,7 +192,8 @@
     .pay{padding:6px 22px;}
     .payrow{flex-direction:column; gap:6px;}
     .payrow .pr{text-align:left;}
-    .payrow .pl span.est .estitem{max-width:none;}
+    .payrow .pl span.est .estitem,
+    .payrow .pl span.est .estitem.indent{max-width:none;}
   }
   @media(max-width:560px){
     .weekgrid{gap:4px;}
@@ -304,11 +308,11 @@
       <div class="pr" id="mosimFee">$1,200<small id="mosimFeeNote">per traveler · all-in</small></div>
     </div>
     <div class="payrow direct">
-      <div class="pl"><b>To the hospital</b><span>Your medical care — paid directly to the hospital, never marked up by us.<span class="est" id="careEst"><b>Estimate</b><span class="estnote">Your hospital confirms the final price.</span></span></span></div>
+      <div class="pl"><b>To the hospital</b><span>Your medical care — paid directly to the hospital, never marked up by us.<span class="est" id="careEst"><b>Estimate · from the care you chose</b><span class="estnote">Pulled from your chosen medical cards · your hospital confirms the final price.</span></span></span></div>
       <div class="pr">paid direct</div>
     </div>
     <div class="payrow direct">
-      <div class="pl"><b>Hotel + flights</b><span>We arrange every option; you pay the provider directly, no markup.</span></div>
+      <div class="pl"><b>Hotel + flights</b><span>We arrange every option; you pay the provider directly, no markup.<span class="est" id="stayEst"><b>Estimate · you book directly</b><span class="esthdr">Flights — round trip, per traveler</span><span class="estitem indent">Economy<em>~$1,400</em></span><span class="estitem indent">Premium economy<em>~$2,600</em></span><span class="estitem indent">Business<em>~$5,200</em></span><span class="esthdr">Hotel — your comfort tier</span><span class="estnote">You pick the options; we arrange them, you pay the provider directly.</span></span></span></div>
       <div class="pr">paid direct</div>
     </div>
     <div class="pay-foot"><b>Reserve free today</b> — you pay your Mosim fee later, only once we confirm your care &amp; dates.</div>
@@ -390,31 +394,74 @@
       if (noteEl) noteEl.textContent = (n > 1 ? (n + ' travelers') : '1 traveler') + ' · all-in';
     })();
 
-    // Per-procedure starting estimates — sourced from medical.html baseline prices
-    // (checkup $850 / ortho $500 / dental implant $1,200 / eyes $1,600). Labelled
-    // ESTIMATE; the hospital confirms the final price. No US-comparison.
+    // ---- "To the hospital": per-care ESTIMATE from the chosen medical cards ----
+    // PLACEHOLDER estimates — replace with real medical-card prices/options when the
+    // medical cards are detailed; structured so each chosen card + its options render
+    // here. One editable map per care need: { label, price, detail? }.
+    //   label  → the card name + procedure
+    //   price  → "~$N" starting estimate (hospital confirms final price)
+    //   detail → optional small grey sub-line (the card's options/scope)
     var CARE_EST = {
-      screening: { label:'Health screening',  amt:'~$850' },
-      knees:     { label:'Knees & joints',     amt:'~$500' },
-      dental:    { label:'Dental (implants)',  amt:'~$1,200' },
-      eyes:      { label:'Eyes (cataract/LASIK)', amt:'~$1,600' }
+      screening: { label:'Health Screening — Comprehensive', price:'~$1,600', detail:'heart & cancer markers · full-body imaging' },
+      knees:     { label:'Knees & Joints — Ortho consult + imaging', price:'~$900',   detail:'X-ray/MRI · treatment plan' },
+      dental:    { label:'Dental — Implants (2 teeth)', price:'~$3,000', detail:'' },
+      eyes:      { label:'Eyes — Cataract / vision correction', price:'~$2,400', detail:'exam · both eyes' }
     };
     (function renderCareEst() {
       var box = document.getElementById('careEst');
       if (!box) return;
       var items = care.filter(function (k) { return CARE_EST[k]; });
       if (!items.length) {
-        // No specific procedures chosen (e.g. 'unsure') — keep just the confirm line.
+        // No specific cards chosen (e.g. 'unsure') — keep just the confirm note.
         return;
       }
       var note = box.querySelector('.estnote');
       items.forEach(function (k) {
+        var c = CARE_EST[k];
         var row = document.createElement('span');
         row.className = 'estitem';
-        row.innerHTML = esc(CARE_EST[k].label) + '<em>' + esc(CARE_EST[k].amt) + '</em>';
+        row.innerHTML = esc(c.label) + '<em>' + esc(c.price) + '</em>';
         box.insertBefore(row, note);
+        if (c.detail) {
+          var sub = document.createElement('span');
+          sub.className = 'estsub';
+          sub.textContent = c.detail;
+          box.insertBefore(sub, note);
+        }
       });
     })();
+
+    // ---- "Hotel + flights": tiered flights (static) + hotel per-night × nights ----
+    // PLACEHOLDER estimates — flights are round-trip per traveler; the flight tier
+    // rows are fixed in markup. Hotel per-night rate reflects the chosen stay tier;
+    // nights = (itinerary length in days) − 1, computed once the plan is resolved.
+    // Flight tiers (round trip, per traveler) — fixed for everyone, so the three
+    // tier rows live directly in the markup. This map is the editable source of
+    // truth; update both if these numbers change.
+    var FLIGHT_EST = {
+      economy:  '~$1,400',
+      premium:  '~$2,600',
+      business: '~$5,200'
+    };
+    // Hotel per-night rate by chosen comfort tier (state.trip.stay). Editable.
+    var HOTEL_NIGHTLY = {
+      cozy:    120,
+      comfort: 220,
+      premium: 400
+    };
+    function renderStayEst(nights) {
+      var box = document.getElementById('stayEst');
+      if (!box) return;
+      var n = Math.max(1, nights || 1);
+      var rate = HOTEL_NIGHTLY[trip.stay] || HOTEL_NIGHTLY.comfort;
+      var total = rate * n;
+      var note = box.querySelector('.estnote');
+      var row = document.createElement('span');
+      row.className = 'estitem indent';
+      row.innerHTML = '~' + fmtUsd(rate) + ' / night × ' + n + ' night' + (n === 1 ? '' : 's') +
+                      '<em>~' + fmtUsd(total) + '</em>';
+      box.insertBefore(row, note);
+    }
 
     // ===================================================================
     //  Date-aware calendar + per-day accordion (Phase 1, client-side only)
@@ -599,6 +646,7 @@
         });
         renderAccordion(entries);
       }
+      return entries.length;   // # itinerary days → hotel nights = days − 1
     }
 
     // ---- Resolve the AI itinerary built on the loading screen ----
@@ -631,7 +679,8 @@
     if (!plan) { showPending(); return; }
 
     var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
-    renderItinerary(plan, trip);
+    var dayCount = renderItinerary(plan, trip);
+    renderStayEst(dayCount - 1);   // nights = itinerary days − 1 (min 1, clamped in fn)
 
     // ---- auth helper ----
     function authToken() {
