@@ -175,6 +175,8 @@
   .contact input:focus, .contact textarea:focus{outline:none; border-color:var(--gold); background:#fff;}
   .contact .send{margin-top:18px; width:100%; border:none; cursor:pointer; font-family:'Inter',sans-serif;}
   .contact .note{font-size:15px; color:var(--ink-2); margin-top:16px; text-align:center; line-height:1.5;}
+  .contact .form-err{font-size:16px; color:#BD5D4C; font-weight:600; margin-top:16px; text-align:center; line-height:1.5;}
+  .contact input.bad{border-color:#BD5D4C; background:#fff;}
   @media(max-width:560px){ .contact .form{padding:24px;} .contact .row2{grid-template-columns:1fr; gap:0;} .contact .row2 input:last-child{margin-top:14px;} }
 
   /* final cta */
@@ -395,13 +397,15 @@
   </div>
   <div class="form">
     <div class="row2">
-      <input id="c-name" placeholder="Your name" autocomplete="name" aria-label="Your name">
-      <input id="c-email" type="email" placeholder="Your email" autocomplete="email" aria-label="Your email">
+      <input id="c-first" placeholder="First name" autocomplete="given-name" aria-label="First name">
+      <input id="c-last" placeholder="Last name" autocomplete="family-name" aria-label="Last name">
     </div>
+    <input id="c-email" class="below" type="email" placeholder="Your email (required)" autocomplete="email" aria-label="Your email (required)" aria-required="true" required>
     <input id="c-phone" class="below" type="tel" placeholder="Phone (optional)" autocomplete="tel" aria-label="Phone (optional)">
     <textarea id="c-msg" class="below" placeholder="What would you like to ask?" aria-label="Your question"></textarea>
+    <p class="form-err" id="c-err" role="alert" hidden></p>
     <button type="button" class="btn send" id="c-send">Send →</button>
-    <p class="note">We'll only use this to answer you. Your details are never shared.</p>
+    <p class="note">We'll only use this to answer you. Your details are never shared. We reply by email, so please include yours.</p>
   </div>
 </div></section>
 
@@ -438,19 +442,27 @@
 })();</script>
 <script>(function(){
   var btn=document.getElementById('c-send'); if(!btn) return;
+  var emailEl=document.getElementById('c-email'), errEl=document.getElementById('c-err');
+  function showErr(m){ if(errEl){ errEl.textContent=m; errEl.hidden=false; } }
+  function clearErr(){ if(errEl){ errEl.hidden=true; errEl.textContent=''; } if(emailEl) emailEl.classList.remove('bad'); }
+  if(emailEl) emailEl.addEventListener('input', clearErr);
   btn.addEventListener('click',function(){
-    var name=document.getElementById('c-name').value.trim();
-    var email=document.getElementById('c-email').value.trim();
+    var first=document.getElementById('c-first').value.trim();
+    var last=document.getElementById('c-last').value.trim();
+    var name=(first+' '+last).trim();
+    var email=emailEl.value.trim();
     var phone=document.getElementById('c-phone').value.trim();
     var msg=document.getElementById('c-msg').value.trim();
-    if(!email){ document.getElementById('c-email').focus(); return; }
+    if(!email){ clearErr(); emailEl.classList.add('bad'); showErr('Please enter your email so we can reply to you.'); emailEl.focus(); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ clearErr(); emailEl.classList.add('bad'); showErr('That email doesn’t look right — please check it so our reply reaches you.'); emailEl.focus(); return; }
+    clearErr();
     var note=(phone?('Phone: '+phone+'\n'):'')+msg;
     btn.disabled=true; btn.textContent='Sending…';
     fetch('/api/lead',{method:'POST',headers:{'content-type':'application/json'},
       body:JSON.stringify({name:name,email:email,note:note,interest:'Landing inquiry'})})
       .then(function(r){ if(r.ok){ btn.textContent='Thank you — we’ll be in touch.'; }
-        else { btn.disabled=false; btn.textContent='Try again'; } })
-      .catch(function(){ btn.disabled=false; btn.textContent='Try again'; });
+        else { btn.disabled=false; btn.textContent='Try again'; showErr('Something went wrong on our end. Please try again, or email us at care@mosimkorea.com.'); } })
+      .catch(function(){ btn.disabled=false; btn.textContent='Try again'; showErr('We couldn’t send that — please check your connection and try again, or email care@mosimkorea.com.'); });
   });
 })();</script>
 
