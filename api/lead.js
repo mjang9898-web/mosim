@@ -106,12 +106,17 @@ async function notifyByEmail({ name, email, from, travelWhen, interest, note, st
   const care = (state && state.care && state.care.needs) || [];
   const trip = (state && state.trip) || {};
   const comfort = (state && state.comfort) || {};
+  // Landing "Have a question?" form stamps interest='Landing inquiry' purely as a
+  // source marker — show it as a Source row, not a (misleading) Care interest.
+  const interestRow = interest === 'Landing inquiry'
+    ? ['Source', 'Website question box']
+    : ['Care interest', interest || care.join(', ')];
   const rows = [
     ['Name', name],
     ['Email', email],
     ['Coming from', from],
     ['When', travelWhen],
-    ['Care interest', interest || care.join(', ')],
+    interestRow,
     ['Trip length', trip.length],
     ['Party', trip.party],
     ['Pace', comfort.pace]
