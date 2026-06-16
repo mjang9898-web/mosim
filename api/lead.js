@@ -78,7 +78,7 @@ export default async function handler(req, res) {
 
     // Best-effort email notification — never blocks or fails the lead capture.
     await notifyByEmail({
-      name, email: email.trim().toLowerCase(), from, travelWhen, interest, state: safeState
+      name, email: email.trim().toLowerCase(), from, travelWhen, interest, note, state: safeState
     }).catch((e) => console.error('[api/lead] notify failed:', e));
 
     return res.status(200).json({ ok: true, id: data.id });
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
 //   LEAD_NOTIFY_EMAIL  — where to send the alert (e.g. the founder's inbox)
 // Optional: LEAD_FROM_EMAIL — defaults to Resend's shared onboarding sender,
 //   which can only deliver to the account owner until a domain is verified.
-async function notifyByEmail({ name, email, from, travelWhen, interest, state }) {
+async function notifyByEmail({ name, email, from, travelWhen, interest, note, state }) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.LEAD_NOTIFY_EMAIL;
   if (!apiKey || !to) return; // not configured yet — skip quietly
@@ -117,10 +117,20 @@ async function notifyByEmail({ name, email, from, travelWhen, interest, state })
     ['Pace', comfort.pace]
   ].filter(([, v]) => v).map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#8A8479">${esc(k)}</td><td style="padding:4px 0;font-weight:600">${esc(v)}</td></tr>`).join('');
 
+  const intro = interest === 'Landing inquiry'
+    ? 'Someone sent a question through the website.'
+    : 'Someone reached out through the website.';
+  const msgBlock = note ? `<div style="margin-top:18px">
+      <div style="color:#8A8479;font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 6px">Their message</div>
+      <div style="font-size:15px;line-height:1.6;color:#1B2A4A;white-space:pre-wrap;background:#F7F4EE;border-radius:8px;padding:14px 16px">${esc(note)}</div>
+    </div>` : '';
+
   const html = `<div style="font-family:system-ui,sans-serif;color:#1B2A4A">
     <h2 style="margin:0 0 4px">New Mosim lead</h2>
-    <p style="margin:0 0 16px;color:#54514B">Someone finished the planner and asked to talk.</p>
+    <p style="margin:0 0 16px;color:#54514B">${intro}</p>
     <table style="border-collapse:collapse;font-size:15px">${rows}</table>
+    ${msgBlock}
+    <p style="margin:18px 0 0;color:#8A8479;font-size:13px">Reply to this email to answer ${esc(name || email)} directly.</p>
   </div>`;
 
   const r = await fetch('https://api.resend.com/emails', {
