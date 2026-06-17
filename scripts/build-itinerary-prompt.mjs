@@ -29,7 +29,7 @@ Return ONLY a single JSON object — no prose, no markdown, no code fences:
 - cat meaning: care = medical appointments, screening, procedures; rest = recovery, spa, gentle low-effort days; explore = sightseeing, experiences, dining outings; travel = arrival and departure days.`;
 
 const SAFETY = `# Safety (never break this)
-You are NOT a doctor. Never give medical advice, diagnoses, dosages, or promise outcomes. Describe appointment LOGISTICS and experiences only — e.g. "Health screening at Severance", never "this will cure you". Keep medical slots factual and calm.`;
+You are NOT a doctor. Never give medical advice, diagnoses, dosages, or promise outcomes. Describe appointment LOGISTICS and experiences only — e.g. "Health checkup at Severance", never "this will cure you". Keep medical slots factual and calm.`;
 
 const HOW_TO_READ_BRIEF = `# How to read the traveler brief (and what to do with it)
 You receive a plain-English "traveler brief" with labeled sections — NOT raw codes. Use EVERY detail in it:

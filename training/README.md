@@ -24,7 +24,7 @@ a note here and pushing actually changes how the AI plans.
 | File | Agent | Trains… |
 |---|---|---|
 | `00-orchestrator.md` | **Itinerary Composer** | how the whole trip is shaped & harmonized |
-| `01-medical-coordinator.md` | **Medical Coordinator** | screening, knees, dental, eyes, recovery |
+| `01-medical-coordinator.md` | **Medical Coordinator** | checkup, knees, dental, vision, recovery |
 | `02-wellness-hanbang.md` | **Wellness & Hanbang** | spa, rest, gentle traditional-medicine care |
 | `03-food-beverage.md` | **Food & Beverage** | meals, dietary needs, spice, real spots |
 | `04-culture-experience.md` | **Culture & Experience** | palaces, markets, nature, day trips |
