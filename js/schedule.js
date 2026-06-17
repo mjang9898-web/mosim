@@ -22,7 +22,7 @@
     'aesthetic':         'Aesthetic procedure consultation',
     'oriental':          'Hanbang pulse reading & prescription',
     'wellness':          'Wellness restoration program',
-    'checkup':           'Comprehensive health screening',
+    'checkup':           'Comprehensive health checkup',
     'spa':               'Premium spa treatment',
     'mental':            'Meditation & mental restoration'
   };

@@ -13,7 +13,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mosim — Medical care in Korea</title>
-<meta name="description" content="The planned care that's costly and cold back home — health screening, knees & joints, dental, eyes — done beautifully in Korea, with someone beside you.">
+<meta name="description" content="The planned care that's costly and cold back home — health checkup, knees & joints, dental, eyes — done beautifully in Korea, with someone beside you.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -110,6 +110,11 @@
   .dr-pos{font-size:19px; color:var(--ink); line-height:1.65;}
   .dr-gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin:24px 0;}
   .dr-gallery .g{aspect-ratio:4/3; border-radius:10px; background:#E7D9BC center/cover no-repeat;}
+  .dr-intro{display:flex; flex-direction:column;}
+  .dr-intro .ii{padding:12px 0; border-bottom:1px solid var(--line);}
+  .dr-intro .ii:last-child{border-bottom:none; padding-bottom:0;}
+  .dr-intro .ih{display:block; font-weight:600; color:var(--navy); font-size:16.5px;}
+  .dr-intro .id{display:block; font-size:16px; color:var(--ink); line-height:1.5; margin-top:3px;}
   .dr-h{font-family:'Lora',serif; font-size:14px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-2); margin:26px 0 12px;}
   .hosp{display:flex; flex-wrap:wrap; gap:8px;}
   .hosp span{background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:15px; color:var(--navy);}
@@ -216,15 +221,24 @@
   // 4 north-star procedures (checkup · knees/ortho · dental · eyes).
   var P = '/assets/medical-drawer/';
   var MED = [
-    { code:'checkup', eyebrow:'Health screening', name:'Health screening', gallery:['/assets/medical-drawer/checkup-d1.webp','/assets/medical-drawer/checkup-d2.webp'],
+    { code:'checkup', eyebrow:'Health checkup', name:'Health checkup', noGallery:true,
       desc:'A thorough full-body checkup — cancer markers, MRI/CT, cardiac, endoscopy, reported in English.',
       price:'850', duration:'4–8 hours',
-      positioning:"A thorough head-to-toe checkup in a single half-day — heart, scans, and the screenings that matter most — with your results explained to you in clear English within two days.",
+      positioning:"A thorough head-to-toe checkup in a single half-day — heart, scans, and the screenings that matter most — with your results explained to you in clear English within two days. In Korea a comprehensive checkup that would take weeks of separate appointments at home is done in one calm visit, with your Mosim companion handling every form and interpreting throughout.",
+      intro:[
+        {h:'Bloodwork & metabolic',d:'CBC, cholesterol panel, blood sugar (A1C), liver, kidney and thyroid function, vitamin D.'},
+        {h:'Cancer screening',d:'Tumor markers (CEA, AFP, CA 19-9, PSA or CA-125) paired with targeted imaging.'},
+        {h:'Heart & circulation',d:'EKG and blood pressure — plus cardiac CT, echocardiogram and carotid ultrasound on the higher tiers.'},
+        {h:'Imaging & scans',d:'Chest X-ray, abdominal and thyroid ultrasound, low-dose CT, and whole-body or brain MRI/MRA on the top tier.'},
+        {h:'Digestive',d:'Upper endoscopy (gastroscopy) under light sedation; colonoscopy on the Concierge tier.'},
+        {h:'Bone, body & senses',d:'Bone-density (DEXA) scan, body-composition analysis, and vision and hearing checks.'},
+        {h:'Your results',d:'A clear written report, explained to you in plain English within two days.'}
+      ],
       hospitals:['Asan Medical Center','Samsung Medical Center','Severance',"Seoul St. Mary's",'Seoul National Univ. Hospital'],
       tiers:[
-        {name:'Essential',dur:'4 hours · half day',price:'850',blurb:'Bloodwork, EKG, chest X-ray, abdominal ultrasound, and a same-day physician consult.',inc:['Full lab panel (CBC, lipid, A1C, liver, kidney)','Cancer markers (CEA, CA-125, PSA)','EKG + chest X-ray','Abdominal ultrasound','Same-day physician consult']},
-        {name:'Premium',dur:'6 hours · full morning',price:'1,450',blurb:'Adds upper endoscopy and cardiac CT for a comprehensive look.',inc:['All Essential coverage','Upper endoscopy (gastroscopy)','Coronary CT angiography','Carotid ultrasound','Bone density (DEXA)']},
-        {name:'Concierge',dur:'8 hours · 2-day option',price:'2,800',blurb:'Whole-body MRI, full endoscopy suite, written English report within 48h.',inc:['All Premium coverage','Whole-body MRI (3T)','Colonoscopy (full prep)','PET-CT (if indicated)','Written English report in 48h']}
+        {name:'Essential',dur:'4 hours · half day',price:'850',blurb:'A core blood, heart and imaging screen with a same-day doctor’s consult.',inc:['Full blood panel — CBC, cholesterol, A1C, liver, kidney, thyroid','Cancer markers — CEA, AFP, CA 19-9, PSA / CA-125','Heart — EKG + blood pressure','Imaging — chest X-ray, abdominal & thyroid ultrasound','Bone density (DEXA) + body composition','Same-day physician consult']},
+        {name:'Premium',dur:'6 hours · full morning',price:'1,450',blurb:'Adds endoscopy and detailed heart & vascular imaging for a deeper look.',inc:['Everything in Essential','Upper endoscopy (gastroscopy), lightly sedated','Coronary calcium / cardiac CT','Echocardiogram + carotid ultrasound','Low-dose chest CT']},
+        {name:'Concierge',dur:'8 hours · 2-day option',price:'2,800',blurb:'Full-body and brain imaging plus advanced cancer and longevity screening.',inc:['Everything in Premium','Whole-body or brain MRI + MRA (no radiation)','Colonoscopy (full prep)','Cancer-risk DNA panel + NK-cell immunity','Written English report within 48 hours']}
       ],
       addons:[{n:'NK-cell immunity panel',p:'$220'},{n:'Microbiome / SIBO screen',p:'$180'},{n:'Stress hormone curve (cortisol)',p:'$140'},{n:'Concierge transport (3 days)',p:'$280'}] },
 
@@ -419,12 +433,21 @@
     lastTrigger = trigger || null;
     crumb.textContent = m.name;
     // full gallery — every code has <code>.webp + -2..-6 in /assets/medical-drawer/
-    var imgs = [P + m.code + '.webp'];
-    for (var gi = 2; gi <= 6; gi++) imgs.push(P + m.code + '-' + gi + '.webp');
-    var gallery = '<div class="dr-gallery">' +
-      imgs.map(function (f) {
-        return '<div class="g" style="background-image:url(\'' + f + '\')"></div>';
-      }).join('') + '</div>';
+    // (skipped when m.noGallery — e.g. the checkup card leads with test info instead)
+    var gallery = '';
+    if (!m.noGallery) {
+      var imgs = [P + m.code + '.webp'];
+      for (var gi = 2; gi <= 6; gi++) imgs.push(P + m.code + '-' + gi + '.webp');
+      gallery = '<div class="dr-gallery">' +
+        imgs.map(function (f) {
+          return '<div class="g" style="background-image:url(\'' + f + '\')"></div>';
+        }).join('') + '</div>';
+    }
+    // optional "what's checked" overview (definition-style list)
+    var intro = m.intro ? '<div class="dr-h">What a checkup covers</div><div class="dr-intro">' +
+      m.intro.map(function (it) {
+        return '<div class="ii"><span class="ih">' + it.h + '</span><span class="id">' + it.d + '</span></div>';
+      }).join('') + '</div>' : '';
     var hosp = '<div class="dr-h">Trusted partner hospitals</div><div class="hosp">' +
       m.hospitals.map(function (h) { return '<span>' + h + '</span>'; }).join('') + '</div>';
     var tiers = '<div class="dr-h">Packages</div>' + m.tiers.map(function (t) {
@@ -437,7 +460,7 @@
       m.addons.map(function (a) { return '<div class="addon"><span>' + a.n + '</span><span class="ap">' + a.p + '</span></div>'; }).join('') + '</div>';
     body.innerHTML =
       '<div class="dr-eyebrow">' + m.eyebrow + '</div><h2>' + m.name + '</h2>' +
-      '<p class="dr-pos">' + m.positioning + '</p>' + gallery + hosp + tiers + addons +
+      '<p class="dr-pos">' + m.positioning + '</p>' + intro + gallery + hosp + tiers + addons +
       '<p class="dr-disc">Prices are starting baselines from our partner hospitals. Final quotes follow a screening visit. Every procedure is pre-cleared for medical fit before booking.</p>';
     body.scrollTop = 0;
     scrim.classList.add('open'); drawer.classList.add('open');

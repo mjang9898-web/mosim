@@ -17,7 +17,7 @@ import {
 
 // ── small label tables for the inputs that have fixed funnel vocabularies ──
 const CARE_LABELS = {
-  screening: 'comprehensive health screening',
+  screening: 'comprehensive health checkup',
   knees: 'knees & joints (orthopedics / regenerative)',
   dental: 'dental (implants, crowns, restorative)',
   eyes: 'eyes (cataract / vision / laser)',
