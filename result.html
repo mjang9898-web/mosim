@@ -355,7 +355,7 @@
     var state = (window.kwState && kwState.loadAll()) || {};
 
     // ---- recap chips from the planner choices ----
-    var CARE = { screening:'Screening', knees:'Knees', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
+    var CARE = { screening:'Checkup', knees:'Knees', dental:'Dental', eyes:'Vision', unsure:'Care guidance' };
     var LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible length' };
     var PARTY = { solo:'Just you', couple:'You & your spouse', family:'With family' };
     var PACE = { relaxed:'Relaxed pace', balanced:'Balanced pace', full:'Full days' };
@@ -405,7 +405,7 @@
       screening: { label:'Health Checkup — Comprehensive', price:'avg. $1,600', detail:'heart & cancer markers · full-body imaging' },
       knees:     { label:'Knees & Joints — Ortho consult + imaging', price:'avg. $900',   detail:'X-ray/MRI · treatment plan' },
       dental:    { label:'Dental — Implants (2 teeth)', price:'avg. $3,000', detail:'' },
-      eyes:      { label:'Eyes — Cataract / vision correction', price:'avg. $2,400', detail:'exam · both eyes' }
+      eyes:      { label:'Vision — Cataract / laser correction', price:'avg. $2,400', detail:'exam · both eyes' }
     };
     (function renderCareEst() {
       var box = document.getElementById('careEst');

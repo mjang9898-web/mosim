@@ -76,7 +76,7 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true, status: 'reserved' });
 }
 
-const CARE_LABELS = { screening: 'health checkup', knees: 'knees & joints', dental: 'dental', eyes: 'eyes', unsure: 'care guidance' };
+const CARE_LABELS = { screening: 'health checkup', knees: 'knees & joints', dental: 'dental', eyes: 'vision', unsure: 'care guidance' };
 function customerName(user) {
   return (user.user_metadata && user.user_metadata.name) || (user.email ? user.email.split('@')[0] : 'there');
 }

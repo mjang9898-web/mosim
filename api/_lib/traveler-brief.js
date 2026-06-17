@@ -20,7 +20,7 @@ const CARE_LABELS = {
   screening: 'comprehensive health checkup',
   knees: 'knees & joints (orthopedics / regenerative)',
   dental: 'dental (implants, crowns, restorative)',
-  eyes: 'eyes (cataract / vision / laser)',
+  eyes: 'vision care (cataract / laser correction)',
   unsure: 'not sure yet — wants a gentle care-guidance consult early',
 };
 

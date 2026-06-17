@@ -11,7 +11,7 @@ const STATUS_LINE = {
   quoted:     "Confirmed and ready — your concierge fee quote is on its way.",
   booked:     "You're booked. We'll send pre-arrival details before you fly."
 };
-const CARE   = { screening:'Health checkup', knees:'Knees & joints', dental:'Dental', eyes:'Eyes', unsure:'Care guidance' };
+const CARE   = { screening:'Health checkup', knees:'Knees & joints', dental:'Dental', eyes:'Vision', unsure:'Care guidance' };
 const LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible' };
 const PARTY  = { solo:'Just you', couple:'You & spouse', family:'With family' };
 const PACE   = { relaxed:'Relaxed', balanced:'Balanced', full:'Full days' };

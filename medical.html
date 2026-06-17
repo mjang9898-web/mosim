@@ -13,7 +13,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mosim — Medical care in Korea</title>
-<meta name="description" content="The planned care that's costly and cold back home — health checkup, knees & joints, dental, eyes — done beautifully in Korea, with someone beside you.">
+<meta name="description" content="The planned care that's costly and cold back home — health checkup, knees & joints, dental, vision — done beautifully in Korea, with someone beside you.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -225,6 +225,7 @@
       desc:'A thorough full-body checkup — cancer markers, MRI/CT, cardiac, endoscopy, reported in English.',
       price:'850', duration:'4–8 hours',
       positioning:"A thorough head-to-toe checkup in a single half-day — heart, scans, and the screenings that matter most — with your results explained to you in clear English within two days. In Korea a comprehensive checkup that would take weeks of separate appointments at home is done in one calm visit, with your Mosim companion handling every form and interpreting throughout.",
+      introTitle:'What a checkup covers',
       intro:[
         {h:'Bloodwork & metabolic',d:'CBC, cholesterol panel, blood sugar (A1C), liver, kidney and thyroid function, vitamin D.'},
         {h:'Cancer screening',d:'Tumor markers (CEA, AFP, CA 19-9, PSA or CA-125) paired with targeted imaging.'},
@@ -242,10 +243,19 @@
       ],
       addons:[{n:'NK-cell immunity panel',p:'$220'},{n:'Microbiome / SIBO screen',p:'$180'},{n:'Stress hormone curve (cortisol)',p:'$140'},{n:'Concierge transport (3 days)',p:'$280'}] },
 
-    { code:'ortho', eyebrow:'Knees & joints', name:'Knees & joints', gallery:['/assets/medical-drawer/ortho-d1.webp','/assets/medical-drawer/ortho-d2.webp'],
+    { code:'ortho', eyebrow:'Knees & joints', name:'Knees & joints', noGallery:true,
       desc:'Orthopedics for the aches that make life smaller — knees, hips, spine. Back to moving freely.',
       price:'500', duration:'1–2 hours',
       positioning:"Korea is a world leader in advanced knee and joint care, including regenerative treatments you can't easily get at home — with imaging-based diagnosis and a recovery plan paced gently to you.",
+      introTitle:'What we treat',
+      intro:[
+        {h:'Knee',d:'Arthritis, worn cartilage and meniscus tears — from injections to regenerative repair and, when needed, replacement.'},
+        {h:'Hip & shoulder',d:'Joint pain, rotator-cuff and impingement problems, hip arthritis.'},
+        {h:'Spine & back',d:'Disc and nerve pain, diagnosed by MRI and treated without surgery wherever possible.'},
+        {h:'Regenerative options',d:'PRP and Korea-pioneered stem-cell cartilage repair you can’t easily get at home.'},
+        {h:'How it works',d:'Imaging-based diagnosis first, then a clear treatment and recovery plan paced gently to you.'},
+        {h:'Your results',d:'Findings and options explained in plain English, with your Mosim companion at every visit.'}
+      ],
       hospitals:['SNU Bundang','Seoul National Univ. Hospital','Asan Medical','Severance','Bumin Hospital'],
       tiers:[
         {name:'Consult & MRI',dur:'2 hours · same day',price:'500',blurb:'MRI-guided diagnosis with a sports-medicine orthopedist.',inc:['Targeted MRI (knee, hip, or shoulder)','Sports-medicine consult','Treatment options + cost','Written report','No-commitment plan']},
@@ -254,10 +264,19 @@
       ],
       addons:[{n:'Sports-medicine physiotherapy (3 visits)',p:'$420'},{n:'Body-composition + gait analysis',p:'$220'},{n:'Knee brace (custom-fit)',p:'$180'},{n:'In-home physio (Seoul · 1 visit)',p:'$240'}] },
 
-    { code:'dental', eyebrow:'Dental', name:'Dental', gallery:['/assets/medical-drawer/dental-d1.webp','/assets/medical/card-dental.webp'],
+    { code:'dental', eyebrow:'Dental', name:'Dental', noGallery:true,
       desc:'The dental work that’s unthinkable back home — implants, crowns, restorative — by trusted hands.',
       price:'220', duration:'1–3 visits',
       positioning:"Korea is trusted worldwide for implants, crowns, and orthodontics — done with German-grade materials at clinics open six days a week, at a fraction of what the same work costs at home.",
+      introTitle:'What we do',
+      intro:[
+        {h:'Implants',d:'Single tooth or full-arch, with bone grafting when needed — Osstem and Straumann systems.'},
+        {h:'Crowns & veneers',d:'German-grade ceramic, often designed and fitted within the same week.'},
+        {h:'Restorative & general',d:'Fillings, root canals, extractions, and a thorough cleaning (scaling).'},
+        {h:'Cosmetic',d:'Professional whitening and full smile makeovers.'},
+        {h:'Orthodontics',d:'Clear-aligner and braces consultations.'},
+        {h:'Why Korea',d:'Trusted materials and clinics open six days a week, at a fraction of the cost back home.'}
+      ],
       hospitals:['SNU Dental','Yonsei Dental Hospital','Apsun Dental','Dr. Lee Dental','Bluedent Apgujeong'],
       tiers:[
         {name:'Hygiene & exam',dur:'90 min · 1 visit',price:'220',blurb:'Scaling, polish, X-ray, and a full dental review.',inc:['Scaling + polish','Panoramic X-ray','Cavity check + plan','Whitening session','Take-home tray']},
@@ -266,10 +285,19 @@
       ],
       addons:[{n:'Whitening upgrade (Zoom)',p:'$180'},{n:'Clear-aligner consult',p:'$120'},{n:'Wisdom-tooth extraction (per tooth)',p:'$160'},{n:'Sedation / anxiety package',p:'$240'}] },
 
-    { code:'eye', eyebrow:'Eyes', name:'Eyes', gallery:['/assets/medical-drawer/eye-d1.webp','/assets/medical-drawer/eye-d2.webp'],
+    { code:'eye', eyebrow:'Vision', name:'Vision', noGallery:true,
       desc:'Cataracts, vision, and eye health — so the world comes back into focus.',
       price:'1,600', duration:'1–2 hours',
       positioning:"Korea is among the most experienced places in the world for laser vision and cataract care — gentle same-day procedures, English-speaking eye surgeons, and an unhurried follow-up the next morning before you fly home.",
+      introTitle:'What we treat',
+      intro:[
+        {h:'Cataracts',d:'Lens replacement with premium multifocal options — a gentle, same-day procedure.'},
+        {h:'Vision correction',d:'LASIK, SMILE and LASEK to reduce or end your need for glasses.'},
+        {h:'Aging eyes',d:'Presbyopia and lens-exchange options for clearer near and far vision.'},
+        {h:'Eye health',d:'Glaucoma, retina and macular checks, and dry-eye care.'},
+        {h:'How it works',d:'A full exam and imaging first; most procedures are same-day with a next-morning follow-up.'},
+        {h:'Your results',d:'Everything explained in clear English, your companion beside you throughout.'}
+      ],
       hospitals:['BGN Eye Hospital','Dream Eye Center','Saevit Eye','BalGeunSesang','Yonsei Severance Ophthalmology'],
       tiers:[
         {name:'Cataract / LASIK',dur:'1 hour · same day',price:'1,600',blurb:'Cataract lens replacement or the classic flap procedure — fast recovery.',inc:['Pre-op screening + topography','Procedure on both eyes','Same-day discharge','Next-day follow-up','6 months of drops included']},
@@ -443,8 +471,8 @@
           return '<div class="g" style="background-image:url(\'' + f + '\')"></div>';
         }).join('') + '</div>';
     }
-    // optional "what's checked" overview (definition-style list)
-    var intro = m.intro ? '<div class="dr-h">What a checkup covers</div><div class="dr-intro">' +
+    // optional overview (definition-style list); per-card heading via m.introTitle
+    var intro = m.intro ? '<div class="dr-h">' + (m.introTitle || 'What this covers') + '</div><div class="dr-intro">' +
       m.intro.map(function (it) {
         return '<div class="ii"><span class="ih">' + it.h + '</span><span class="id">' + it.d + '</span></div>';
       }).join('') + '</div>' : '';
