@@ -1,506 +1,163 @@
 {
   "samgyeopsal": {
-    "title": "File:Korean.cuisine-Samgyeopsal-01.jpg",
-    "author": "by hellochris",
+    "title": "Korean pork belly - Samgyeopsal",
+    "author": "Geoff Peters",
     "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean.cuisine-Samgyeopsal-01.jpg"
-  },
-  "hanwoo": {
-    "title": "File:Hanu 4.jpg",
-    "author": "Park Jong-jin",
-    "license": "CC BY 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu_4.jpg"
-  },
-  "hanwoo-2": {
-    "title": "File:Hanu.jpg",
-    "author": "mycrefun",
-    "license": "CC0",
-    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu.jpg"
-  },
-  "hanwoo-3": {
-    "title": "File:Songaji (Korean cattle).jpg",
-    "author": "국립국어원",
-    "license": "CC BY-SA 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASongaji_%28Korean_cattle%29.jpg"
-  },
-  "hanwoo-4": {
-    "title": "File:Hanu 2.jpg",
-    "author": "Park Jong-jin",
-    "license": "CC BY 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu_2.jpg"
-  },
-  "hanwoo-5": {
-    "title": "File:Hanu 3.jpg",
-    "author": "Park Jong-jin",
-    "license": "CC BY 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu_3.jpg"
-  },
-  "hanwoo-6": {
-    "title": "File:Hanu 5.jpg",
-    "author": "Charlie Yoon",
-    "license": "CC0",
-    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu_5.jpg"
-  },
-  "galbi": {
-    "title": "File:Korean.food-Galbi-03.jpg",
-    "author": "ayustety (a flickr user)",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean.food-Galbi-03.jpg"
-  },
-  "galbi-2": {
-    "title": "File:Korean barbeque-Galbi-08.jpg",
-    "author": "by miyagawa",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Galbi-08.jpg"
-  },
-  "galbi-3": {
-    "title": "File:Korean soup-Galbi-nakji-yeonpo-tang.jpg",
-    "author": "L. W. Yang",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_soup-Galbi-nakji-yeonpo-tang.jpg"
-  },
-  "galbi-4": {
-    "title": "File:Korean barbeque-Galbi-16.jpg",
-    "author": "by 南宮博士",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Galbi-16.jpg"
-  },
-  "galbi-5": {
-    "title": "File:Korean barbeque-Galbi-04.jpg",
-    "author": "by psd (flickr)",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Galbi-04.jpg"
-  },
-  "galbi-6": {
-    "title": "File:Korean barbeque-Galbi-05.jpg",
-    "author": "by psd (flickr)",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Galbi-05.jpg"
-  },
-  "la-galbi": {
-    "title": "File:Korean.food-Galbi-03.jpg",
-    "author": "ayustety (a flickr user)",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean.food-Galbi-03.jpg"
-  },
-  "dak-galbi": {
-    "title": "File:Cooking Dak-galbi in Seoul Korea.jpg",
-    "author": "Sgroey",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ACooking_Dak-galbi_in_Seoul_Korea.jpg"
-  },
-  "dak-galbi-2": {
-    "title": "File:Spicy fried chicken feet.jpg",
-    "author": "Youngsil",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASpicy_fried_chicken_feet.jpg"
-  },
-  "dak-galbi-3": {
-    "title": "File:Dak-galbi 2.jpg",
-    "author": "Lisa Risager",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ADak-galbi_2.jpg"
-  },
-  "dak-galbi-4": {
-    "title": "File:Dak-galbi 1.jpg",
-    "author": "Lisa Risager",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ADak-galbi_1.jpg"
-  },
-  "dak-galbi-5": {
-    "title": "File:Dak-galbi 3.jpg",
-    "author": "Lisa Risager",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ADak-galbi_3.jpg"
-  },
-  "dak-galbi-6": {
-    "title": "File:Korean cuisine-Dak galbi-01.jpg",
-    "author": "Kuru man from Japan",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_cuisine-Dak_galbi-01.jpg"
-  },
-  "jeyuk": {
-    "title": "File:Jeyuk-bokkeum 1.jpg",
-    "author": "Charles Haynes",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum_1.jpg"
-  },
-  "jeyuk-2": {
-    "title": "File:Jeyuk-bokkeum 2.jpg",
-    "author": "국립국어원",
-    "license": "CC BY-SA 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum_2.jpg"
-  },
-  "sutbul-galbi": {
-    "title": "File:Korean Spicy Charcoal-grilled Chicken.jpg",
-    "author": "Real rism",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_Spicy_Charcoal-grilled_Chicken.jpg"
-  },
-  "chimaek": {
-    "title": "File:Iksan City 48 Korean Style Fried chicken.jpg",
-    "author": "KOREA.NET",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AIksan_City_48_Korean_Style_Fried_chicken.jpg"
-  },
-  "chimaek-2": {
-    "title": "File:치맥페스티벌.jpg",
-    "author": "대구광역시",
-    "license": "KOGL Type 1",
-    "license_url": "http://www.kogl.or.kr/info/licenseType1.do",
-    "source": "https://commons.wikimedia.org/wiki/File%3A%EC%B9%98%EB%A7%A5%ED%8E%98%EC%8A%A4%ED%8B%B0%EB%B2%8C.jpg"
-  },
-  "chimaek-3": {
-    "title": "File:20250826 182848 fried chicken and beer (Chimaek) in Taichung.jpg",
-    "author": "Saimmx",
-    "license": "CC0",
-    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3A20250826_182848_fried_chicken_and_beer_%28Chimaek%29_in_Taichung.jpg"
-  },
-  "chimaek-4": {
-    "title": "File:Chi McBride and Bryan Fuller.jpg",
-    "author": "Kristin Dos Santos",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AChi_McBride_and_Bryan_Fuller.jpg"
-  },
-  "chimaek-5": {
-    "title": "File:Chi McClean 11 12 2018 -2 (46559530131).jpg",
-    "author": "Justin Higuchi from Los Angeles, CA, USA",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AChi_McClean_11_12_2018_-2_%2846559530131%29.jpg"
-  },
-  "chimaek-6": {
-    "title": "File:Chi McClean 11 12 2018 -1 (46559530981).jpg",
-    "author": "Justin Higuchi from Los Angeles, CA, USA",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AChi_McClean_11_12_2018_-1_%2846559530981%29.jpg"
-  },
-  "jokbal": {
-    "title": "File:Korean Food Jokbal, pork feet.jpg",
-    "author": "Jo Hanshin",
-    "license": "CC0",
-    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_Food_Jokbal%2C_pork_feet.jpg"
-  },
-  "jokbal-2": {
-    "title": "File:Jokbal 2.jpg",
-    "author": "국립국어원",
-    "license": "CC BY-SA 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJokbal_2.jpg"
-  },
-  "jokbal-3": {
-    "title": "File:Korean food-Jokbal-01.jpg",
-    "author": "Emmanuel P.",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_food-Jokbal-01.jpg"
-  },
-  "jokbal-4": {
-    "title": "File:Jokbal-namdaemunmarket.jpg",
-    "author": "Kbarends",
-    "license": "CC BY-SA 3.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJokbal-namdaemunmarket.jpg"
-  },
-  "jokbal-5": {
-    "title": "File:Jokbal korea.jpg",
-    "author": "LR0725",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJokbal_korea.jpg"
-  },
-  "jokbal-6": {
-    "title": "File:Korean food Jokbal, Jok-Bal.jpg",
-    "author": "Jo Hanshin",
-    "license": "CC0",
-    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_food_Jokbal%2C_Jok-Bal.jpg"
-  },
-  "gopchang": {
-    "title": "File:Baek-sundae-gopchang-bokkeum.jpg",
-    "author": "LWYang",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABaek-sundae-gopchang-bokkeum.jpg"
-  },
-  "gopchang-2": {
-    "title": "File:Gopchang closeup.jpg",
-    "author": "donza",
-    "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AGopchang_closeup.jpg"
-  },
-  "gopchang-3": {
-    "title": "File:Gopchang-jeongol.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AGopchang-jeongol.jpg"
-  },
-  "gopchang-4": {
-    "title": "File:Gopchang and yeomtong 2.jpg",
-    "author": "donza",
-    "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AGopchang_and_yeomtong_2.jpg"
-  },
-  "gopchang-5": {
-    "title": "File:Gopchang-jeongol 2.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AGopchang-jeongol_2.jpg"
-  },
-  "gopchang-6": {
-    "title": "File:Gopchang-jeongol 1.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AGopchang-jeongol_1.jpg"
-  },
-  "eel": {
-    "title": "File:Korean grilled eel-Jangeo gui-01.jpg",
-    "author": "Richy!",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_grilled_eel-Jangeo_gui-01.jpg"
-  },
-  "eel-2": {
-    "title": "File:Korean cuisine-Jangeo hoe-01.jpg",
-    "author": "Gilad Rom",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_cuisine-Jangeo_hoe-01.jpg"
-  },
-  "eel-3": {
-    "title": "File:KOCIS Jangeo-gui (Broiled eel) (4811484230).jpg",
-    "author": "Korea.net / Korean Culture and Information Service",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKOCIS_Jangeo-gui_%28Broiled_eel%29_%284811484230%29.jpg"
-  },
-  "eel-4": {
-    "title": "File:Korean barbeque-Jangeo.gui-01.jpg",
-    "author": "by Sung Sook",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Jangeo.gui-01.jpg"
-  },
-  "eel-5": {
-    "title": "File:Korean barbeque-Jangeo.gui-02.jpg",
-    "author": "by Sung Sook",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_barbeque-Jangeo.gui-02.jpg"
-  },
-  "eel-6": {
-    "title": "File:Korean cuisine sliced and grilled eel01.jpg",
-    "author": "Mar del Este",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_cuisine_sliced_and_grilled_eel01.jpg"
-  },
-  "budae": {
-    "title": "File:Budae-jjigae 1.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABudae-jjigae_1.jpg"
-  },
-  "budae-2": {
-    "title": "File:Korean stew-Budae jjigae-01.jpg",
-    "author": "by stuart_spivack (flickr)",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_stew-Budae_jjigae-01.jpg"
-  },
-  "budae-3": {
-    "title": "File:Budae jjigae indonesia.jpg",
-    "author": "Agus Damanik",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABudae_jjigae_indonesia.jpg"
-  },
-  "budae-4": {
-    "title": "File:Budae jjigae, Hoho Korean Restaurant, Singapore - 20160911.jpg",
-    "author": "Jacklee",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABudae_jjigae%2C_Hoho_Korean_Restaurant%2C_Singapore_-_20160911.jpg"
-  },
-  "budae-5": {
-    "title": "File:Budae jjigae ízesítő.jpg",
-    "author": "Xiaolongimnida",
-    "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABudae_jjigae_%C3%ADzes%C3%ADt%C5%91.jpg"
-  },
-  "budae-6": {
-    "title": "File:Budae jjigae ingredients.jpg",
-    "author": "The Pancake of Heaven!",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ABudae_jjigae_ingredients.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_pork_belly-Samgyeopsal-01.jpg"
   },
   "samgyeopsal-2": {
-    "title": "File:Samgyeopsal in Sual.jpg",
-    "author": "Trixia De Guzman",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASamgyeopsal_in_Sual.jpg"
+    "title": "Samgyeopsal (pork belly)",
+    "author": "idkjm123",
+    "license": "CC0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Samgyeopsal_(pork_belly).jpg"
   },
   "samgyeopsal-3": {
-    "title": "File:020250903 samgyeopsal.jpg",
-    "author": "Marsilar",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3A020250903_samgyeopsal.jpg"
-  },
-  "samgyeopsal-4": {
-    "title": "File:Samgyeopsal dinner 2.jpg",
-    "author": "에그란",
-    "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASamgyeopsal_dinner_2.jpg"
-  },
-  "samgyeopsal-5": {
-    "title": "File:Samgyeopsal dinner 3.jpg",
-    "author": "에그란",
-    "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASamgyeopsal_dinner_3.jpg"
-  },
-  "samgyeopsal-6": {
-    "title": "File:Samgyeopsal dinner 1.jpg",
-    "author": "에그란",
-    "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ASamgyeopsal_dinner_1.jpg"
-  },
-  "la-galbi-2": {
-    "title": "File:Yoshinoya karbi black curry.jpg",
-    "author": "Tokumeigakarinoaoshima",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AYoshinoya_karbi_black_curry.jpg"
-  },
-  "la-galbi-3": {
-    "title": "File:LA yangnyeom-galbi.jpg",
-    "author": "Marcelo Träsel",
+    "title": "Korea food - Samgyeopsal",
+    "author": "titanium22",
     "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ALA_yangnyeom-galbi.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Korea.food-Samgyeopsal-03.jpg"
   },
-  "la-galbi-4": {
-    "title": "File:Korean BBQ-LA Galbi-01.jpg",
-    "author": "SauceSupreme",
+  "chimaek": {
+    "title": "Iksan City Korean-style fried chicken with beer (chimaek spread)",
+    "author": "KOREA.NET",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Iksan_City_48_Korean_Style_Fried_chicken.jpg"
+  },
+  "chimaek-2": {
+    "title": "BBQ yangnyeom (sweet-spicy glazed) Korean fried chicken close-up",
+    "author": "Startandstar",
+    "license": "CC0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:BBQ_Yangnyeom_chicken_Korean_fried_chicken.jpg"
+  },
+  "chimaek-3": {
+    "title": "Korean yangnyeom fried chicken in serving box",
+    "author": "Startandstar",
+    "license": "CC0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_Yangnyeom_chicken.jpg"
+  },
+  "galbi": {
+    "title": "Korean barbecue-Dwaeji galbi-01 — plated charcoal-grilled marinated galbi with sesame and banchan",
+    "author": "egg (Hong, Yun Seon)",
     "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AKorean_BBQ-LA_Galbi-01.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Korean_barbecue-Dwaeji_galbi-01.jpg"
   },
-  "la-galbi-5": {
-    "title": "File:20210212 LA갈비.jpg",
-    "author": "Kth696586",
-    "license": "CC BY-SA 3.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3A20210212_LA%EA%B0%88%EB%B9%84.jpg"
+  "hanwoo": {
+    "title": "Galbi - marbled beef short rib cut on a plate",
+    "author": "National Institute of Korean Language (국립국어원)",
+    "license": "CC BY-SA 2.0 kr",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Galbi_2.jpg"
   },
-  "la-galbi-6": {
-    "title": "File:L.A. galbi.jpg",
-    "author": "Alpha",
+  "dak-galbi": {
+    "title": "Dak-galbi",
+    "author": "Hye-youngJung",
+    "license": "CC0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File%3ADak-galbi.jpg"
+  },
+  "dak-galbi-2": {
+    "title": "Cheese dak galbi set 20200308-01",
+    "author": "円周率３パーセント",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACheese%20dak%20galbi%20set%2020200308-01.jpg"
+  },
+  "jeyuk": {
+    "title": "Jeyuk-bokkeum 1",
+    "author": "Charles Haynes",
     "license": "CC BY-SA 2.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AL.A._galbi.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jeyuk-bokkeum_1.jpg"
+  },
+  "jeyuk-2": {
+    "title": "Jeyuk-bokkeum 4",
+    "author": "대경라이프 (Daegyeong Life)",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jeyuk-bokkeum_4.jpg"
   },
   "jeyuk-3": {
-    "title": "File:Jeyuk-bokkeum 4.jpg",
-    "author": "대경라이프",
-    "license": "CC BY-SA 4.0",
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum_4.jpg"
-  },
-  "jeyuk-4": {
-    "title": "File:Jeyuk-bokkeum 3.jpg",
-    "author": "국립국어원",
+    "title": "Jeyuk-bokkeum 2",
+    "author": "국립국어원 (National Institute of Korean Language)",
     "license": "CC BY-SA 2.0 kr",
-    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum_3.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jeyuk-bokkeum_2.jpg"
   },
-  "jeyuk-5": {
-    "title": "File:Jeyuk-bokkeum, Korean food 02.jpg",
-    "author": "Korea Agro-Fisheries &amp; Food Trade Corporation (한국농수산식품유통공사)",
-    "license": "KOGL Type 1",
-    "license_url": "http://www.kogl.or.kr/info/licenseType1.do",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum%2C_Korean_food_02.jpg"
+  "budae": {
+    "title": "Budae jjigae (army base stew) with radially arranged ingredients",
+    "author": "T.Tseng",
+    "license": "CC BY 2.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Budae_jjigae_(28587380901).jpg"
   },
-  "jeyuk-6": {
-    "title": "File:Jeyuk-bokkeum.jpg",
-    "author": "왜관아줌마",
+  "budae-2": {
+    "title": "Budae jjigae with ramen noodles and melted cheese topping",
+    "author": "Jacklee",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Budae_jjigae,_Hoho_Korean_Restaurant,_Singapore_-_20160911.jpg"
+  },
+  "budae-3": {
+    "title": "Budae jjigae served in a hot pot with sausages, tofu and vegetables",
+    "author": "T.Tseng",
+    "license": "CC BY 2.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Budae_jjigae_(28048555734).jpg"
+  },
+  "jokbal": {
+    "title": "Jokbal 2",
+    "author": "National Institute of Korean Language (국립국어원)",
+    "license": "CC BY-SA 2.0 KR",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jokbal_2.jpg"
+  },
+  "jokbal-2": {
+    "title": "Jokbal korea",
+    "author": "LR0725",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jokbal_korea.jpg"
+  },
+  "jokbal-3": {
+    "title": "Jokbal on a plate 2011",
+    "author": "Nesnad",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Jokbal_on_a_plate_2011.jpg"
+  },
+  "sutbul-galbi": {
+    "title": "Korean barbeque-Bulgogi-14",
+    "author": "Elliot",
+    "license": "CC BY 2.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File%3AKorean%20barbeque-Bulgogi-14.jpg"
+  },
+  "gopchang": {
+    "title": "Gopchang and yeomtong 2",
+    "author": "donza",
     "license": "CC BY 4.0",
-    "license_url": "https://creativecommons.org/licenses/by/4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AJeyuk-bokkeum.jpg"
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Gopchang_and_yeomtong_2.jpg"
   },
-  "sutbul-galbi-2": {
-    "title": "File:Hanu-sutbul-gui 2.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu-sutbul-gui_2.jpg"
+  "gopchang-2": {
+    "title": "Gopchang and yeomtong 1",
+    "author": "donza",
+    "license": "CC BY 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Gopchang_and_yeomtong_1.jpg"
   },
-  "sutbul-galbi-3": {
-    "title": "File:Hanu-sutbul-gui 6.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu-sutbul-gui_6.jpg"
-  },
-  "sutbul-galbi-4": {
-    "title": "File:Hanu-sutbul-gui 3.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu-sutbul-gui_3.jpg"
-  },
-  "sutbul-galbi-5": {
-    "title": "File:Hanu-sutbul-gui 1.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu-sutbul-gui_1.jpg"
-  },
-  "sutbul-galbi-6": {
-    "title": "File:Hanu-sutbul-gui 4.jpg",
-    "author": "lazy fri13th",
-    "license": "CC BY 2.0",
-    "license_url": "https://creativecommons.org/licenses/by/2.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AHanu-sutbul-gui_4.jpg"
+  "gopchang-3": {
+    "title": "Gopchang 2",
+    "author": "뚱표아빠의 세상사는 이야기",
+    "license": "CC BY 4.0",
+    "license_url": "https://commons.wikimedia.org/",
+    "source": "https://commons.wikimedia.org/wiki/File:Gopchang_2.jpg"
   }
 }
