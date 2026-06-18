@@ -14,10 +14,7 @@ window.EXPERIENCE_DATA = {
       "gallery": [
         "/assets/culture-heritage/gyeongbokgung.webp",
         "/assets/culture-heritage/gyeongbokgung-2.webp",
-        "/assets/culture-heritage/gyeongbokgung-3.webp",
-        "/assets/culture-heritage/gyeongbokgung-4.webp",
-        "/assets/culture-heritage/gyeongbokgung-5.webp",
-        "/assets/culture-heritage/gyeongbokgung-6.webp"
+        "/assets/culture-heritage/gyeongbokgung-3.webp"
       ],
       "heroEyebrow": "Royal palace · Joseon dynasty seat",
       "tagline": "The grandest of Seoul's five royal palaces — where the kings of Korea held court for five hundred years.",
