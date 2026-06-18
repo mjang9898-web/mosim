@@ -168,8 +168,8 @@ const CULTURE_DETAILS = {
       '/assets/culture-heritage/gyeongbokgung-2.webp',
       '/assets/culture-heritage/gyeongbokgung-3.webp',
     ],
-    youtubeId: '7tNzW7GEHZo',
-    videoTitle: 'A walking tour of Gyeongbokgung Palace · 4K',
+    youtubeId: 'aXPVA4jHa5g',
+    videoTitle: "Walking through Seoul's historic heart | Gwanghwamun",
   },
 
   changdeokgung: {

@@ -40,8 +40,8 @@ window.EXPERIENCE_DATA = {
           "Closed Tuesdays. Hanbok wearers enter free of charge."
         ]
       ],
-      "yt": "7tNzW7GEHZo",
-      "vtitle": "A walking tour of Gyeongbokgung Palace · 4K"
+      "yt": "aXPVA4jHa5g",
+      "vtitle": "Walking through Seoul's historic heart | Gwanghwamun"
     },
     {
       "code": "changdeokgung",
