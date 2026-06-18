@@ -195,7 +195,7 @@ const DATA = {
 };
 
 // Assert expected counts so a source change that silently drops cards is caught.
-const EXPECT = { Heritage: 18, Famous: 16, Shop: 16, Cuisine: 56 };
+const EXPECT = { Heritage: 12, Famous: 16, Shop: 16, Cuisine: 56 };
 const counts = Object.fromEntries(Object.entries(DATA).map(([k, v]) => [k, v.length]));
 let mismatch = false;
 for (const [k, n] of Object.entries(EXPECT)) {

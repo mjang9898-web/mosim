@@ -299,7 +299,7 @@
     var gallery = '<div class="dr-gallery">' + imgs.map(function (f, idx) {
       return '<div class="g' + (useMain && idx === 0 ? ' main' : '') + '" style="background-image:url(\'' + f + '\')"></div>';
     }).join('') + '</div>';
-    var video = '<div class="dr-video"><iframe src="https://www.youtube.com/embed/' + it.yt + '" title="' + it.vtitle + '" loading="lazy" allowfullscreen></iframe></div><div class="dr-vtitle">' + it.vtitle + '</div>';
+    var video = it.yt ? '<div class="dr-video"><iframe src="https://www.youtube.com/embed/' + it.yt + '" title="' + it.vtitle + '" loading="lazy" allowfullscreen></iframe></div><div class="dr-vtitle">' + it.vtitle + '</div>' : '';
     var facts = '<div class="dr-h">Good to know</div><ul class="facts">' + it.facts.map(function (f) {
       return '<li><span class="fl">' + f[0] + '</span><span class="fv">' + f[1] + '</span></li>';
     }).join('') + '</ul>';

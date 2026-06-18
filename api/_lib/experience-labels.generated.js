@@ -2,115 +2,79 @@
 // js/step3-culture.jsx (CULTURE_PAGES) + js/step4-cuisine.jsx (ALLERGENS/DIETS).
 // Do not edit by hand — regenerate with `npm run build`. Server-only: imported
 // by api/schedule.js to translate funnel codes into a human-readable brief.
-// Experiences: 56 total (6 beyond-Seoul).
+// Experiences: 50 total (6 beyond-Seoul).
 export const EXPERIENCE_LABELS = {
   "gyeongbokgung": {
-    "name": "Korean Royal Palace Tour",
+    "name": "Gyeongbokgung Royal Palace",
     "group": "Heritage",
     "region": "seoul",
     "meta": "Half day · with historian"
   },
   "changdeokgung": {
-    "name": "Royal Garden Palace Visit",
+    "name": "Changdeokgung Palace",
     "group": "Heritage",
     "region": "seoul",
     "meta": "3 hours · UNESCO"
   },
-  "deoksugung": {
-    "name": "Evening Lantern Palace Walk",
+  "huwon": {
+    "name": "Huwon, the Secret Garden",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "2 hours · evening"
+    "meta": "90 minutes · timed entry"
   },
-  "changgyeonggung": {
-    "name": "Moonlit Palace Night Opening",
+  "bukchon": {
+    "name": "Bukchon Hanok Village",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "2 hours · seasonal"
+    "meta": "2–3 hours · walking"
   },
   "jongmyo": {
-    "name": "Royal Ancestral Shrine",
+    "name": "Jongmyo Shrine & Royal Rite",
     "group": "Heritage",
     "region": "seoul",
     "meta": "2 hours · UNESCO"
   },
-  "huwon": {
-    "name": "The King's Secret Garden Walk",
+  "bulguksa": {
+    "name": "Bulguksa Temple & Seokguram",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "90 min · guided"
-  },
-  "bukchon": {
-    "name": "Traditional Hanok Village Stroll",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "2 hours · walking"
-  },
-  "bongeunsa": {
-    "name": "City Mountain Temple Visit",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "90 min · meditation"
-  },
-  "jogyesa": {
-    "name": "Flower Lantern Temple Visit",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "60 min · seasonal"
+    "meta": "Day trip · Gyeongju"
   },
   "haeinsa": {
-    "name": "Tripitaka Templestay Overnight",
+    "name": "Haeinsa & the Tripitaka Koreana",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "24 hours · with monk"
+    "meta": "Overnight · mountain"
   },
-  "meditation": {
-    "name": "Buddhist Meditation Session",
+  "folkvillage": {
+    "name": "Korean Folk Village",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "2 hours · with monk"
+    "meta": "Half day · near Seoul"
   },
-  "tea": {
-    "name": "Private Tea Ceremony",
+  "hwaseong": {
+    "name": "Suwon Hwaseong Fortress",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "90 min · private room"
-  },
-  "calligraphy": {
-    "name": "Brush Calligraphy with Master",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "2 hours · private"
+    "meta": "Half day · Suwon"
   },
   "hanbok": {
-    "name": "Royal Dress Fitting & Photoshoot",
+    "name": "Royal Hanbok Photoshoot",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "Half day · private"
+    "meta": "2 hours · private studio"
   },
   "royalcuisine": {
-    "name": "Royal Court Cuisine Tasting",
+    "name": "Royal Court Cuisine",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "2 hours · with sommelier"
+    "meta": "2.5 hours · seated banquet"
   },
   "nationalmuseum": {
-    "name": "National History Museum",
+    "name": "National Museum of Korea",
     "group": "Heritage",
     "region": "seoul",
-    "meta": "3 hours · curator-led"
-  },
-  "warmemorial": {
-    "name": "War Memorial & Monument",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "2 hours · guided"
-  },
-  "cheonggye": {
-    "name": "Cheonggyecheon Stream Walk",
-    "group": "Heritage",
-    "region": "seoul",
-    "meta": "90 min · evening best"
+    "meta": "Half day · guided"
   },
   "seongsu": {
     "name": "Brooklyn-of-Seoul Café & Boutique Walk",
