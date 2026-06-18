@@ -2,7 +2,7 @@
 // js/step3-culture.jsx (CULTURE_PAGES) + js/step4-cuisine.jsx (ALLERGENS/DIETS).
 // Do not edit by hand — regenerate with `npm run build`. Server-only: imported
 // by api/schedule.js to translate funnel codes into a human-readable brief.
-// Experiences: 50 total (6 beyond-Seoul).
+// Experiences: 46 total (6 beyond-Seoul).
 export const EXPERIENCE_LABELS = {
   "gyeongbokgung": {
     "name": "Gyeongbokgung Royal Palace",
@@ -107,10 +107,10 @@ export const EXPERIENCE_LABELS = {
     "meta": "2 hours · walking"
   },
   "hongdae": {
-    "name": "Youth Street Fashion Quarter",
-    "group": "Shop",
+    "name": "An Evening in Vibrant Hongdae",
+    "group": "Famous",
     "region": "seoul",
-    "meta": "3 hours · evening best"
+    "meta": "An early evening stroll · Seoul's youthful, electric quarter"
   },
   "ikseondong": {
     "name": "Hanok Alleys, Cafés & Boutiques",
@@ -184,89 +184,59 @@ export const EXPERIENCE_LABELS = {
     "region": "seoul",
     "meta": "Full day · 18 holes"
   },
-  "kpop-concert": {
-    "name": "K-Pop Concert with VIP Access",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "3 hours · soundcheck pass"
-  },
-  "hybe": {
-    "name": "K-Pop Label Studio Tour",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "90 min · BTS HQ"
-  },
-  "smtown": {
-    "name": "K-Pop Artists Museum",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "2 hours · self-paced"
-  },
-  "kpop-class": {
-    "name": "K-Pop Dance Class",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "2 hours · private"
-  },
   "namsan-tower": {
     "name": "N Seoul Tower at Sunset",
     "group": "Famous",
     "region": "seoul",
-    "meta": "2 hours · cable car"
+    "meta": "Late afternoon into dusk · Seoul spread out beneath you"
   },
   "lotte": {
-    "name": "Skyscraper SkyDeck at Sunset",
+    "name": "Lotte World Tower Sky Deck",
     "group": "Famous",
     "region": "seoul",
-    "meta": "60 min · 555m"
+    "meta": "An hour at the top · 500 metres above the skyline"
   },
   "hanriver-yacht": {
-    "name": "Han River Sunset Yacht Cruise",
+    "name": "A Han River Sunset Cruise",
     "group": "Famous",
     "region": "seoul",
-    "meta": "2 hours · with champagne"
-  },
-  "hanriver": {
-    "name": "Han River Sunrise Kayak",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "90 min · sunrise"
-  },
-  "forestbath": {
-    "name": "Mountain Forest Bathing",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "Half day · with guide"
+    "meta": "Golden hour on the water · Bridges lit one by one"
   },
   "dmz": {
-    "name": "Border Zone Private Tour",
+    "name": "A Private DMZ Border Tour",
     "group": "Famous",
     "region": "seoul",
-    "meta": "Full day · pre-cleared"
+    "meta": "A guided half-day · The world's last Cold War frontier"
   },
-  "royalmusic": {
-    "name": "Royal Court Music Recital",
+  "kpop-concert": {
+    "name": "A K-Pop Concert, Seated in Style",
     "group": "Famous",
     "region": "seoul",
-    "meta": "90 min · private"
-  },
-  "bboy": {
-    "name": "B-Boy Showcase in Hongdae",
-    "group": "Famous",
-    "region": "seoul",
-    "meta": "90 min · world champions"
+    "meta": "One unforgettable evening · The world's most-watched stage"
   },
   "nanta": {
-    "name": "Non-Verbal Drum Show",
+    "name": "A Korean Drum & Rhythm Show",
     "group": "Famous",
     "region": "seoul",
-    "meta": "90 min · family-friendly"
+    "meta": "About 90 minutes · Non-verbal, pure rhythm"
   },
-  "pansori": {
-    "name": "Korean Epic Vocal Performance",
+  "cheonggye": {
+    "name": "A Cheonggyecheon Evening Walk",
     "group": "Famous",
     "region": "seoul",
-    "meta": "90 min · with translator"
+    "meta": "An easy evening · A stream through downtown Seoul"
+  },
+  "cherry": {
+    "name": "Cherry Blossoms in Full Bloom",
+    "group": "Famous",
+    "region": "seoul",
+    "meta": "Spring only · Korea's most beloved season"
+  },
+  "bukhansan": {
+    "name": "Bukhansan, Seoul's Mountain",
+    "group": "Famous",
+    "region": "seoul",
+    "meta": "A morning · Granite peaks above the city"
   },
   "jeju": {
     "name": "Jeju Island",
