@@ -112,52 +112,6 @@
   @media(max-width:760px){ .kw-chaprail{gap:4px 16px;} .kw-chaprail-link{font-size:15px;} }
 
   /* ════════════════════════════════════════════════════════════════════
-     Page tabs — Heritage / Crafts / Modern
-     ════════════════════════════════════════════════════════════════════ */
-  .kw-pagetabs {
-    display: flex; align-items: stretch; gap: 0;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 28px;
-  }
-  .kw-pagetab {
-    background: transparent; border: none;
-    padding: 14px 28px 16px;
-    min-height: 56px;
-    display: flex; flex-direction: column; gap: 4px;
-    text-align: left;
-    cursor: pointer;
-    color: var(--ink-2);
-    position: relative;
-    transition: color .15s;
-  }
-  .kw-pagetab:hover { color: var(--navy); }
-  .kw-pagetab.is-active { color: var(--navy); }
-  .kw-pagetab.is-active::after {
-    content: ""; position: absolute;
-    left: 0; right: 0; bottom: -1px;
-    height: 2px; background: var(--gold);
-  }
-  .kw-pagetab-num {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic; font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .18em; text-transform: uppercase;
-    color: var(--gold);
-  }
-  .kw-pagetab-label {
-    font-size: 19px; font-weight: 700;
-    letter-spacing: -0.012em;
-    line-height: 1.1;
-  }
-  .kw-pagetab-count {
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    font-weight: 500; font-size: 13px;
-    color: var(--ink-2);
-    margin-left: 8px;
-  }
-  .kw-pagetab.is-active .kw-pagetab-count { color: var(--gold); }
-
-  /* ════════════════════════════════════════════════════════════════════
      Culture-tile grid — denser, smaller cards (4 cols)
      ════════════════════════════════════════════════════════════════════ */
   .kw-cul-grid {
@@ -506,52 +460,6 @@
   }
   .kw-city-cta:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-  /* ════════════════════════════════════════════════════════════════════
-     Pagination
-     ════════════════════════════════════════════════════════════════════ */
-  .kw-pagination {
-    grid-column: 1 / -1;
-    margin-top: 12px;
-    padding: 22px 0 4px;
-    display: flex; align-items: center; justify-content: center;
-    gap: 6px;
-  }
-  .kw-pagination-btn {
-    height: 38px;
-    min-width: 38px;
-    padding: 0 12px;
-    border-radius: 999px;
-    border: 1.5px solid var(--line);
-    background: #fff;
-    color: var(--navy);
-    font-size: 14px; font-weight: 600;
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: border-color .15s, background .15s, color .15s;
-  }
-  .kw-pagination-btn:hover:not(:disabled) {
-    border-color: var(--navy);
-  }
-  .kw-pagination-btn:disabled {
-    opacity: .35; cursor: not-allowed;
-  }
-  .kw-pagination-num {
-    background: transparent;
-    border: none;
-    color: var(--ink-2);
-    font-weight: 700;
-  }
-  .kw-pagination-num:hover { color: var(--navy); }
-  .kw-pagination-num.is-active {
-    background: var(--navy); color: #fff;
-    border-color: var(--navy);
-  }
-  .kw-pagination-info {
-    margin: 0 16px;
-    font-size: 13px; font-weight: 500;
-    color: var(--ink-2);
-  }
 
   /* ════════════════════════════════════════════════════════════════════
      Basket — same pattern as Step 2
@@ -878,7 +786,7 @@
     .kw-detail-facts dd { padding-top: 0; }
   }
   @media(max-width:1080px){ .kw-cul-grid{grid-template-columns:repeat(3,1fr);} .kw-city-grid{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:760px){ .kw-cul-grid{grid-template-columns:repeat(2,1fr);} .kw-city-grid{grid-template-columns:1fr;} .kw-pagetabs{overflow-x:auto;} }
+  @media(max-width:760px){ .kw-cul-grid{grid-template-columns:repeat(2,1fr);} .kw-city-grid{grid-template-columns:1fr;} }
   @media(max-width:480px){ .kw-cul-grid{grid-template-columns:1fr;} }
 </style>
 <script src="js/analytics.js"></script>
