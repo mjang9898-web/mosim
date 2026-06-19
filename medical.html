@@ -56,7 +56,8 @@
   .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; padding:54px 0 8px;}
   .card{background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; cursor:pointer; text-align:left; display:flex; flex-direction:column; transition:box-shadow .15s, transform .15s; padding:0;}
   .card:hover{box-shadow:0 24px 50px -28px rgba(27,42,74,.4); transform:translateY(-2px);}
-  .card .photo{aspect-ratio:16/9; background:linear-gradient(135deg,#EFE6D2,#C9B68C 70%,#6E7A92); background-size:cover; background-position:center;}
+  .card .photo{aspect-ratio:16/9; background:linear-gradient(135deg,#EFE6D2,#C9B68C 70%,#6E7A92); background-size:cover; background-position:center; position:relative;}
+  .med-badge{position:absolute; top:12px; left:12px; background:rgba(27,42,74,.92); color:#fff; font-size:12px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; padding:6px 11px; border-radius:999px; box-shadow:0 4px 14px -4px rgba(0,0,0,.45);}
   .card .body{padding:24px 26px 26px;}
   .card .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold);}
   .card h3{font-size:25px; font-weight:600; margin:8px 0 8px;}
@@ -221,7 +222,7 @@
   // 4 north-star procedures (checkup · knees/ortho · dental · eyes).
   var P = '/assets/medical-drawer/';
   var MED = [
-    { code:'checkup', eyebrow:'Health checkup', name:'Health checkup', noGallery:true,
+    { code:'checkup', badge:'Korea-renowned', eyebrow:'Health checkup', name:'Health checkup', noGallery:true,
       desc:'A thorough full-body checkup — cancer markers, MRI/CT, cardiac, endoscopy, reported in English.',
       price:'850', duration:'4–8 hours',
       positioning:"A thorough head-to-toe checkup in a single half-day — heart, scans, and the screenings that matter most — with your results explained to you in clear English within two days. In Korea a comprehensive checkup that would take weeks of separate appointments at home is done in one calm visit, with your Mosim companion handling every form and interpreting throughout.",
@@ -285,7 +286,7 @@
       ],
       addons:[{n:'Whitening upgrade (Zoom)',p:'$180'},{n:'Clear-aligner consult',p:'$120'},{n:'Wisdom-tooth extraction (per tooth)',p:'$160'},{n:'Sedation / anxiety package',p:'$240'}] },
 
-    { code:'eye', eyebrow:'Vision', name:'Vision', noGallery:true,
+    { code:'eye', badge:'Korea-pioneered', eyebrow:'Vision', name:'Vision', noGallery:true,
       desc:'Cataracts, vision, and eye health — so the world comes back into focus.',
       price:'1,600', duration:'1–2 hours',
       positioning:"Korea is among the most experienced places in the world for laser vision and cataract care — gentle same-day procedures, English-speaking eye surgeons, and an unhurried follow-up the next morning before you fly home.",
@@ -307,7 +308,7 @@
       addons:[{n:'Dry-eye intense-pulse-light (IPL)',p:'$320'},{n:'Night-vision lens upgrade',p:'$280'},{n:'Concierge airport transfer',p:'$120'},{n:'Second-eye scheduling',p:'incl.'}] },
 
     // ---- additional care (revealed by "& more") ----
-    { code:'plastic', extra:true, eyebrow:'Plastic surgery', name:'Plastic surgery',
+    { code:'plastic', extra:true, badge:'World-renowned', eyebrow:'Plastic surgery', name:'Plastic surgery',
       photo:'/assets/medical/medical-gemini-g3zmjr.webp',
       noGallery:true,
       introTitle:'What we do',
@@ -330,7 +331,7 @@
       ],
       addons:[{n:'PRP scar healing accelerator',p:'$420'},{n:'Recovery hotel upgrade (5-star)',p:'$1,200'},{n:'Photo + video documentation',p:'$240'},{n:'In-flight medical escort (one-way)',p:'$1,800'}] },
 
-    { code:'derm', extra:true, eyebrow:'Dermatology', name:'Dermatology',
+    { code:'derm', extra:true, badge:'K-beauty origin', eyebrow:'Dermatology', name:'Dermatology',
       photo:'/assets/medical/medical-chatgpt-092412.webp',
       noGallery:true,
       introTitle:'What we treat',
@@ -352,7 +353,7 @@
       ],
       addons:[{n:'Skin booster (Profhilo)',p:'$420'},{n:'Carbon laser peel',p:'$180'},{n:'Eyelash perm + lift',p:'$80'},{n:'Take-home K-beauty kit ($300 value)',p:'$120'}] },
 
-    { code:'hanbang', extra:true, eyebrow:'Korean medicine', name:'Korean traditional medicine',
+    { code:'hanbang', extra:true, badge:'Uniquely Korean', eyebrow:'Korean medicine', name:'Korean traditional medicine',
       photo:'/assets/medical/medical-gemini-uycgpl.webp',
       noGallery:true,
       introTitle:'What we offer',
@@ -440,7 +441,7 @@
       ],
       addons:[{n:'Korean-brand filler upgrade (Restylane)',p:'$240'},{n:'Eyebrow lift threads (4 threads)',p:'$420'},{n:'Lip filler add-on (0.5cc)',p:'$280'},{n:'Recovery LED + cooling mask',p:'$80'}] },
 
-    { code:'stemcell', extra:true, eyebrow:'Regenerative', name:'Stem cell & regenerative',
+    { code:'stemcell', extra:true, badge:'World-first', eyebrow:'Regenerative', name:'Stem cell & regenerative',
       photo:'/assets/medical/medical-istock-1326646524.webp',
       noGallery:true,
       introTitle:'What we offer',
@@ -472,7 +473,7 @@
     el.setAttribute('tabindex', '0');
     el.setAttribute('aria-label', m.name);
     el.innerHTML =
-      '<div class="photo" style="background-image:url(\'' + (m.photo || '/assets/medical/card-' + m.code + '.webp') + '\')"></div>' +
+      '<div class="photo" style="background-image:url(\'' + (m.photo || '/assets/medical/card-' + m.code + '.webp') + '\')">' + (m.badge ? '<span class="med-badge">' + m.badge + '</span>' : '') + '</div>' +
       '<div class="body"><div class="eyebrow">' + m.eyebrow + '</div>' +
       '<h3>' + m.name + '</h3><div class="desc">' + m.desc + '</div>' +
       '<div class="foot"><span class="price">From $' + m.price + ' <span>· ' + m.duration + '</span></span>' +

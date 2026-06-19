@@ -21,6 +21,13 @@ const CARE_LABELS = {
   knees: 'knees & joints (orthopedics / regenerative)',
   dental: 'dental (implants, crowns, restorative)',
   eyes: 'vision care (cataract / laser correction)',
+  derm: 'dermatology & skin treatments (laser, pigmentation, K-skin)',
+  hanbang: 'Korean traditional medicine (hanbang) — acupuncture, herbal care',
+  hair: 'hair restoration (PRP / FUE transplant)',
+  iv: 'IV nutrient therapy (wellness drips)',
+  aesthetic: 'aesthetic medicine (Botox, filler, skin boosters)',
+  plastic: 'plastic / cosmetic surgery (consult + procedure)',
+  stemcell: 'stem-cell & regenerative treatment (joints, longevity)',
   unsure: 'not sure yet — wants a gentle care-guidance consult early',
 };
 

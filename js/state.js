@@ -12,7 +12,7 @@
 
   // Planner funnel data model — see docs/superpowers/specs/2026-06-01-planner-funnel-design.md
   var DEFAULT_STATE = {
-    // Step 1 · Care.  needs: ['screening','knees','dental','eyes','unsure']
+    // Step 1 · Care.  needs: ['screening','knees','dental','eyes','derm','hanbang','hair','aesthetic','plastic','stemcell','unsure']
     // note: client-side ONLY — must NOT be persisted to the DB (privacy promise).
     care: { needs: [], note: '' },
     // Step 2 · Trip
