@@ -148,3 +148,22 @@ create policy "bookings own delete" on public.bookings for delete
 -- private storage bucket 'bookings' (customer confirmations); files keyed under <uid>/...
 -- insert into storage.buckets (id, name, public) values ('bookings','bookings', false) on conflict (id) do nothing;
 -- storage.objects policies: authenticated users may insert/select files under their own <uid> prefix.
+
+-- 9) pending_itineraries — anon funnel-result stash (added 2026-06-19; applied via Management API)
+-- Survives the email-confirmation signup gap: result.html (anon) stashes the funnel
+-- state + AI plan keyed by an unguessable claim_token, carried into the signup URL
+-- (?claim=<token>); after the user lands authenticated, /api/claim-itinerary moves
+-- the row into public.itineraries under their user_id. RLS enabled with ZERO policies
+-- → anon/authenticated have no access; only the service-role endpoints reach it.
+create table if not exists public.pending_itineraries (
+  claim_token uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  state       jsonb not null,                                  -- funnel state (care.note stripped before insert)
+  schedule    jsonb not null,                                  -- AI 7-day plan
+  title       text,
+  expires_at  timestamptz not null default (now() + interval '7 days')
+);
+create index if not exists pending_itineraries_expires_idx
+  on public.pending_itineraries(expires_at);
+alter table public.pending_itineraries enable row level security;
+-- (No client policies on purpose — all access via service-role endpoints.)

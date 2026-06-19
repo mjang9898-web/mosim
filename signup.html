@@ -97,10 +97,12 @@
     const next = u.searchParams.get('next');
     const save = u.searchParams.get('save');
     const reserve = u.searchParams.get('reserve');
+    const claim = u.searchParams.get('claim');   // stashed-itinerary token (survives email-confirm tab gap)
     if (next === 'result') {
       const params = [];
       if (save) params.push('save=1');
       if (reserve === '1') params.push('reserve=1');
+      if (claim) params.push('claim=' + encodeURIComponent(claim));
       return '/result.html' + (params.length ? ('?' + params.join('&')) : '');
     }
     if (next === 'me') return '/me.html';

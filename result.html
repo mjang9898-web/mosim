@@ -350,6 +350,8 @@
 </div></div>
 
 <script src="js/state.js"></script>
+<!-- Supabase auth/RLS client — used to claim a stashed plan and (new-tab case) re-read it by id. -->
+<script type="module" src="/js/auth.js"></script>
 <script>
   (function () {
     var state = (window.kwState && kwState.loadAll()) || {};
@@ -676,12 +678,6 @@
       });
     }
 
-    if (!plan) { showPending(); return; }
-
-    var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
-    var dayCount = renderItinerary(plan, trip);
-    renderStayEst(dayCount - 1);   // nights = itinerary days − 1 (min 1, clamped in fn)
-
     // ---- auth helper ----
     function authToken() {
       try {
@@ -695,9 +691,84 @@
     }
     var member = !!authToken();
 
-    // URL intents carried back from signup/signin (?save=1&reserve=1).
+    // URL intents carried back from signup/signin (?save=1&reserve=1&claim=<token>).
     var qp = new URLSearchParams(window.location.search);
     var wantReserve = qp.get('reserve') === '1';
+    var claimToken = qp.get('claim');
+
+    // ---- Claim a stashed plan, with new-tab restore ----------------------------
+    // After email-confirm signup the browser lands here in a NEW tab whose
+    // sessionStorage is empty. We carry a `claim` token in the URL; here we:
+    //   1) promote the stash into the user's itineraries (POST /api/claim-itinerary),
+    //   2) cache the new id so ensureSaved()/reserve reuse it (no duplicate insert),
+    //   3) if the local plan is empty (new-tab), re-read the just-claimed row via the
+    //      same RLS Supabase path My Page uses, so we can render `plan` + `state`.
+    // Returns a Promise that resolves once `plan`/`state` are ready (or stay null).
+    function claimAndRestore() {
+      if (!claimToken) return Promise.resolve();
+      var tok = authToken();
+      if (!tok) return Promise.resolve();   // not authed yet — nothing to claim under
+      return fetch('/api/claim-itinerary', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + tok },
+        body: JSON.stringify({ claim_token: claimToken })
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          // Strip ?claim from the URL either way so a refresh/share doesn't re-trigger.
+          stripClaimFromUrl();
+          var j = res.j || {};
+          if (!res.ok || !j.ok || !j.id) {
+            // 404 not_found / 410 expired / error → graceful: fall back to local plan
+            // (same tab) or pending (new tab) handled by the caller.
+            return;
+          }
+          // Cache the saved id so ensureSaved()/reserve reuse it (no duplicate insert).
+          try { sessionStorage.setItem('mosim.schedule.saved', j.id); } catch (e) {}
+          // New-tab case: local plan is empty → re-read the row we just created.
+          if (!plan) {
+            return fetchItineraryById(j.id).then(function (row) {
+              if (row && Array.isArray(row.schedule) && row.schedule.length) {
+                plan = row.schedule;
+                // Hydrate local session so reserve/ensureSaved + recap stay consistent.
+                if (row.state && typeof row.state === 'object') {
+                  state = row.state;
+                  trip = state.trip || {};
+                  try { sessionStorage.setItem('mosim.state.v1', JSON.stringify(state)); } catch (e) {}
+                }
+                try { sessionStorage.setItem('mosim.schedule.v1', JSON.stringify(plan)); } catch (e) {}
+              }
+            });
+          }
+        })
+        .catch(function () { stripClaimFromUrl(); });
+    }
+
+    function stripClaimFromUrl() {
+      try {
+        var u = new URL(window.location.href);
+        if (u.searchParams.has('claim')) {
+          u.searchParams.delete('claim');
+          window.history.replaceState({}, '', u.pathname + (u.search ? u.search : '') + u.hash);
+        }
+      } catch (e) {}
+    }
+
+    // Read a single itinerary row the user owns, via the same RLS-protected Supabase
+    // JS path My Page uses (js/me-itineraries.js?v=d5b8af66 No new backend endpoint needed.
+    function fetchItineraryById(id) {
+      if (!window.kwAuth || !window.kwAuth.init) return Promise.resolve(null);
+      return window.kwAuth.init().then(function (supa) {
+        return supa.from('itineraries').select('schedule, state').eq('id', id).maybeSingle();
+      }).then(function (r) { return (r && r.data) ? r.data : null; })
+        .catch(function () { return null; });
+    }
+
+    // Render the resolved plan into the page (recap chips already drawn above).
+    function renderResolvedPlan() {
+      var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
+      var dayCount = renderItinerary(plan, trip);
+      renderStayEst(dayCount - 1);   // nights = itinerary days − 1 (min 1, clamped in fn)
+    }
 
     function toast(text) {
       var t = document.createElement('div');
@@ -773,37 +844,124 @@
       });
     }
 
-    if (member) {
-      var ns = document.querySelector('.nav-save'); if (ns) { ns.textContent = 'My Page'; ns.setAttribute('href', '/me.html'); }
+    // After plan/state are (re)resolved, redraw recap chips — covers the new-tab
+    // restore where state was empty when chips were first drawn.
+    function rebuildRecap() {
+      var el = document.getElementById('recap'); if (!el) return;
+      el.innerHTML = '';
+      var chips2 = [];
+      var care2 = (state.care && state.care.needs) || [];
+      if (care2.length) chips2.push(care2.map(function (k) { return CARE[k] || k; }).join(' + '));
+      var t2 = state.trip || {};
+      var tw2 = t2.when || {};
+      if (tw2.mode === 'dates' && tw2.dates && tw2.dates.start) {
+        chips2.push(LENGTH[t2.length] || 'Flexible length');
+      } else {
+        if (tw2.season) chips2.push(tw2.season.charAt(0).toUpperCase() + tw2.season.slice(1));
+        chips2.push(LENGTH[t2.length] || 'Flexible length');
+      }
+      if (PARTY[t2.party]) chips2.push(PARTY[t2.party]);
+      var c2 = state.comfort || {};
+      if (PACE[c2.pace]) chips2.push(PACE[c2.pace]);
+      // keep module-level `chips` in sync (used by ensureSaved title)
+      chips.length = 0; chips2.forEach(function (c) { chips.push(c); });
+      chips2.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; el.appendChild(s); });
+    }
 
-      // Save quietly so the plan always lives in My Page (even before reserving).
-      ensureSaved().then(function (id) {
-        if (id && !wantReserve) toast('✓ Saved to your page');
-        // Carried ?reserve=1 back from auth → auto-complete the reservation.
-        if (wantReserve && id) {
-          reserveItinerary(id).then(function (ok) { if (ok) { showReservedState(); toast('✓ Your trip is reserved'); } });
+    // ---- Guest "Create account" / "Reserve" intercept: stash plan → carry claim token ----
+    // Before sending an anonymous visitor through signup (which opens result.html in a
+    // new, sessionStorage-empty tab via the email-confirm link), stash the plan server-side
+    // and append &claim=<token> so the post-signup landing can restore + attribute it.
+    // Stash failure degrades gracefully → just follow the original href.
+    var stashPromise = null;
+    function ensureStashed() {
+      if (stashPromise) return stashPromise;
+      if (!plan) return Promise.resolve(null);   // nothing to stash
+      var safeState;
+      try { safeState = JSON.parse(JSON.stringify(state || {})); } catch (e) { safeState = {}; }
+      if (safeState.care) delete safeState.care.note;   // privacy: strip client-only note (2중 방어)
+      var title = (chips[0] ? ('Korea trip — ' + chips[0]) : 'Your Korea trip').slice(0, 120);
+      stashPromise = fetch('/api/stash-itinerary', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ state: safeState, schedule: plan, title: title })
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.ok && j.claim_token) ? j.claim_token : null; })
+        .catch(function () { return null; });
+      return stashPromise;
+    }
+
+    function wireGuestStash() {
+      var anchors = [document.getElementById('step-create'), document.getElementById('reserve-cta')];
+      anchors.forEach(function (a) {
+        if (!a) return;
+        a.addEventListener('click', function (ev) {
+          // member path is handled separately (reserve-cta gets its own handler when member);
+          // only intercept for guests with a plan to stash.
+          if (member || !plan) return;
+          var href = a.getAttribute('href');
+          if (!href) return;
+          ev.preventDefault();
+          ensureStashed().then(function (token) {
+            var dest = href;
+            if (token) {
+              dest += (href.indexOf('?') === -1 ? '?' : '&') + 'claim=' + encodeURIComponent(token);
+            }
+            window.location.href = dest;   // graceful: navigates even if stash failed (token null)
+          });
+        });
+      });
+    }
+
+    // ---- Boot: claim (if any) → render plan or pending → wire member/guest flows ----
+    function boot() {
+      claimAndRestore().then(function () {
+        if (!plan) { showPending(); return; }   // same-tab no-plan or claim miss → pending
+
+        renderResolvedPlan();
+        rebuildRecap();
+        member = !!authToken();   // re-check (claim may have happened post-auth)
+
+        if (member) {
+          var ns = document.querySelector('.nav-save'); if (ns) { ns.textContent = 'My Page'; ns.setAttribute('href', '/me.html'); }
+
+          // Save quietly so the plan always lives in My Page (even before reserving).
+          // (claim already cached the saved id, so ensureSaved reuses it — no dup row.)
+          ensureSaved().then(function (id) {
+            if (id && !wantReserve) toast('✓ Saved to your page');
+            // Carried ?reserve=1 back from auth → auto-complete the reservation.
+            if (wantReserve && id) {
+              reserveItinerary(id).then(function (ok) { if (ok) { showReservedState(); toast('✓ Your trip is reserved'); } });
+            }
+          });
+
+          // In-page Reserve buttons (close section CTA + sticky bar) → reserve directly.
+          var resBtn = document.getElementById('reserve-cta');
+          if (resBtn) resBtn.addEventListener('click', function (e) { e.preventDefault(); doReserve(); });
+        } else {
+          // Guest: intercept Create account / Reserve to stash + carry claim token.
+          wireGuestStash();
+        }
+
+        // ---- sticky proceed bar ----
+        var bar = document.getElementById('resultBar');
+        var rbCta = document.getElementById('rb-cta');
+        if (rbCta) rbCta.addEventListener('click', function () {
+          if (isReserved) { window.location.href = '/me.html'; return; }
+          if (member) { doReserve(); return; }
+          var talk = document.getElementById('talk');
+          if (talk) talk.scrollIntoView({ behavior: 'smooth' });
+        });
+        // hide the bar once the invite section is on screen (no redundant overlap)
+        if ('IntersectionObserver' in window && bar) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { bar.classList.toggle('hidden', e.isIntersecting); });
+          }, { threshold: 0.25 }).observe(document.getElementById('talk'));
         }
       });
-
-      // In-page Reserve buttons (close section CTA + sticky bar) → reserve directly.
-      var resBtn = document.getElementById('reserve-cta');
-      if (resBtn) resBtn.addEventListener('click', function (e) { e.preventDefault(); doReserve(); });
     }
 
-    // ---- sticky proceed bar ----
-    var bar = document.getElementById('resultBar');
-    document.getElementById('rb-cta').addEventListener('click', function () {
-      if (isReserved) { window.location.href = '/me.html'; return; }
-      if (member) { doReserve(); return; }
-      var talk = document.getElementById('talk');
-      if (talk) talk.scrollIntoView({ behavior: 'smooth' });
-    });
-    // hide the bar once the invite section is on screen (no redundant overlap)
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { bar.classList.toggle('hidden', e.isIntersecting); });
-      }, { threshold: 0.25 }).observe(document.getElementById('talk'));
-    }
+    boot();
   })();
 </script>
 <script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');fetch('/api/admin/trips?action=whoami',{headers:{authorization:'Bearer '+t}}).then(function(res){if(res.ok){el.textContent='Cockpit';el.setAttribute('href','/cockpit.html');}}).catch(function(){});}}catch(x){}})();</script>

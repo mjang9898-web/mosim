@@ -662,7 +662,7 @@
     sel.disabled = true;
     try {
       const body = { itinerary_id: id }; body[field] = value;
-      const r = await fetch('/api/admin/trip-status', {
+      const r = await fetch('/api/admin/trips?action=trip-status', {
         method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
         body: JSON.stringify(body)
       });
@@ -727,7 +727,7 @@
     btn.disabled = true; btn.textContent = 'Creating…';
     const msg = document.getElementById('book-msg'); msg.textContent = ''; msg.style.color = '#a00';
     try {
-      const r = await fetch('/api/admin/trip-status', {
+      const r = await fetch('/api/admin/trips?action=trip-status', {
         method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
         body: JSON.stringify(body)
       });
@@ -1138,7 +1138,7 @@
   async function loadBk() {
     const list = document.getElementById('bk-list');
     let r;
-    try { r = await fetch('/api/admin/bookings?itinerary_id=' + encodeURIComponent(bkCurrentId), { headers: { authorization: 'Bearer ' + token } }); }
+    try { r = await fetch('/api/admin/trips?action=bookings&itinerary_id=' + encodeURIComponent(bkCurrentId), { headers: { authorization: 'Bearer ' + token } }); }
     catch (e) { list.textContent = 'Could not load.'; return; }
     if (!r.ok) { list.textContent = 'Could not load.'; return; }
     const bks = (await r.json()).bookings || [];
@@ -1159,7 +1159,7 @@
     if (btn) btn.disabled = true;
     let ok = false;
     try {
-      const r = await fetch('/api/admin/booking-link', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ itinerary_id: bkCurrentId, category: category, label: label, url: url }) });
+      const r = await fetch('/api/admin/trips?action=booking-link', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ itinerary_id: bkCurrentId, category: category, label: label, url: url }) });
       if (r.ok) { ok = true; await loadBk(); }
       else { const e = await r.json().catch(() => ({})); alert(e.error || 'Could not add.'); }
     } catch (e) { alert('Could not add.'); }
@@ -1176,7 +1176,7 @@
   }
   async function delLink(id) {
     if (!window.confirm('Delete this link?')) return;
-    const r = await fetch('/api/admin/booking-link', { method: 'DELETE', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ id: id }) });
+    const r = await fetch('/api/admin/trips?action=booking-link', { method: 'DELETE', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ id: id }) });
     if (r.ok) await loadBk();
     else alert('Could not delete.');
   }

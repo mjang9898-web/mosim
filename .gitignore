@@ -63,3 +63,6 @@ _workspace/
 
 # design mockup output (not source)
 itinerary-preview-sample.pdf
+
+# agent work scratch — never commit
+_workspace_prev/
