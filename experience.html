@@ -208,8 +208,9 @@
   // generated from the funnel source by scripts/build-experience-data.mjs).
   var SECTORS = [
     { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history." },
-    { key:'Famous',   blurb:'The icons — the ballpark, the skyline, the fairway, the border.' },
     { key:'Shop',     blurb:"Markets, K-beauty, and Seoul's design districts." },
+    { key:'Famous',   blurb:'The icons — the ballpark, the skyline, the fairway, the border.' },
+    { key:'Beyond',   label:'Beyond Seoul', blurb:'A day or two beyond Seoul — Jeju, Busan, Gyeongju and more.' },
     { key:'Cuisine',  blurb:'From royal hansik to a street-food snack.' }
   ];
   var DATA = window.EXPERIENCE_DATA || {};
@@ -235,7 +236,7 @@
 
     var hasMore = items.length > PREVIEW;
     var extra = items.length - PREVIEW;
-    var head = '<div class="cat-head"><div class="cat-l"><h2>' + s.key + '</h2><span class="blurb">' + s.blurb + '</span></div>' +
+    var head = '<div class="cat-head"><div class="cat-l"><h2>' + (s.label || s.key) + '</h2><span class="blurb">' + s.blurb + '</span></div>' +
       (hasMore
         ? '<button type="button" class="more-link" aria-expanded="false">' + extra + ' more →</button>'
         : '') +
