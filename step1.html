@@ -116,9 +116,13 @@
     </button>
   </div>
 
+  <div style="text-align:center; margin:22px 0 4px;">
+    <a href="medical.html" target="_blank" rel="noopener" style="font-size:16px; color:var(--ink-2); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px;">Want to see what each involves? Browse all care →</a>
+  </div>
+
   <div class="note-box">
     <label for="note">Anything you'd like us to know? <span style="font-weight:500;color:var(--ink-2);">(optional)</span></label>
-    <textarea id="note" placeholder="A symptom, a worry, a question — whatever's on your mind."></textarea>
+    <textarea id="note" placeholder="e.g. Considering knee surgery and want a full checkup too — or any symptom, worry, or question."></textarea>
     <p class="privacy">We don't store this — it's used only to help our AI build your best plan.</p>
   </div>
 </div>
@@ -152,7 +156,7 @@
     }
     function refresh() {
       var n = selected().length;
-      countEl.textContent = n === 0 ? 'Choose what you need' : (n + ' selected — pick as many as you like');
+      countEl.textContent = n === 0 ? "Pick any that apply — or “I'm not sure yet”" : (n + ' selected — pick as many as you like');
     }
 
     tiles.addEventListener('click', function (ev) {

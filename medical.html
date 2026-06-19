@@ -535,7 +535,11 @@
       }).join('') + '</div>' : '';
     var hosp = '<div class="dr-h">Trusted partner hospitals</div><div class="hosp">' +
       m.hospitals.map(function (h) { return '<span>' + h + '</span>'; }).join('') + '</div>';
-    var tiers = '<div class="dr-h">Packages</div>' + m.tiers.map(function (t) {
+    var tiers = '<div class="dr-h">Packages</div>' + m.tiers.filter(function (t) {
+      // Pricing is still being finalized — hide the highest (≥ $5k) tiers pre-trust;
+      // those are discussed in the personal consultation, not anchored in the funnel.
+      return (parseInt(String(t.price).replace(/[^0-9]/g, ''), 10) || 0) < 5000;
+    }).map(function (t) {
       return '<div class="tier"><div class="th"><span class="tn">' + t.name + '</span>' +
         '<span class="tp"><small>from</small> $' + t.price + '</span></div>' +
         '<div class="td">' + t.dur + '</div><div class="tb">' + t.blurb + '</div><ul>' +
