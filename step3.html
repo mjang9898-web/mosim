@@ -93,6 +93,24 @@
 
   .kw-q-input { min-width: 0; }
 
+  /* Single-scroll chapters + sticky chapter rail (replaces the old page tabs) */
+  .kw-chaprail{position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:6px 24px; align-items:baseline;
+    background:rgba(247,242,234,.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); padding:14px 2px; margin:0;}
+  .kw-chaprail-link{font-family:'Lora',serif; font-size:17px; font-weight:600; color:var(--ink-2); text-decoration:none;
+    display:inline-flex; align-items:baseline; gap:7px; padding:2px; border-bottom:2px solid transparent;}
+  .kw-chaprail-link:hover{color:var(--navy);}
+  .kw-chaprail-link.is-active{color:var(--navy); border-bottom-color:var(--gold);}
+  .kw-chaprail-count{font-family:'Inter',sans-serif; font-size:13px; font-weight:500; color:var(--ink-2);}
+  .kw-chapter{padding:34px 0 8px; scroll-margin-top:76px;}
+  .kw-chapter-head{margin:0 0 18px;}
+  .kw-chapter-title{font-family:'Lora',serif; font-size:clamp(23px,2.8vw,30px); font-weight:600; color:var(--navy); line-height:1.14;}
+  .kw-chapter-count{font-family:'Inter',sans-serif; font-size:15px; font-weight:500; color:var(--ink-2); margin-left:12px;}
+  .kw-chapter-blurb{font-size:18px; color:var(--ink); margin-top:6px; line-height:1.5;}
+  .kw-peek-show{font-family:'Inter',sans-serif; font-size:15px; font-weight:600; border-radius:999px; padding:11px 18px;
+    cursor:pointer; border:1px solid var(--gold); background:var(--gold-soft,#F3E7C9); color:var(--navy); white-space:nowrap;}
+  @media(max-width:760px){ .kw-chaprail{gap:4px 16px;} .kw-chaprail-link{font-size:15px;} }
+
   /* ════════════════════════════════════════════════════════════════════
      Page tabs — Heritage / Crafts / Modern
      ════════════════════════════════════════════════════════════════════ */
@@ -897,7 +915,7 @@
 <script src="js/state.js"></script>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="js/step3-culture.js?v=8d2148bf" defer></script>
+<script src="js/step3-culture.js?v=13fdaa81" defer></script>
 <script>
   (function () {
     var countEl = document.getElementById('count');
@@ -932,12 +950,37 @@
     mount();
     refresh();
 
-    document.getElementById('continue').addEventListener('click', function () {
+    var continueBtn = document.getElementById('continue');
+    var fbIn = continueBtn.parentNode;
+    function goStep4() {
       // Selection is already persisted by the component; ensure a value exists.
       if (window.kwState && window.kwState.loadStep('experiences') == null) {
         window.kwState.saveStep('experiences', []);
       }
       window.location.href = 'step4.html';
+    }
+    continueBtn.addEventListener('click', function () {
+      var seen = window.kwExpVisited || 1, total = window.kwExpTotal || 4;
+      // Gentle, ONE-TIME, equal-weight nudge — only if some categories are still
+      // unseen, and never on the second click. It never blocks: Continue works.
+      if (seen >= total || sessionStorage.getItem('kwExpPeekAsked')) { goStep4(); return; }
+      sessionStorage.setItem('kwExpPeekAsked', '1');
+      countEl.textContent = "There's also Shopping, Famous icons & a trip Beyond Seoul —";
+      countEl.style.color = 'var(--navy)';
+      if (!document.getElementById('peekShow')) {
+        var showBtn = document.createElement('button');
+        showBtn.type = 'button'; showBtn.id = 'peekShow'; showBtn.className = 'kw-peek-show';
+        showBtn.textContent = 'Peek at those';
+        fbIn.insertBefore(showBtn, continueBtn);
+        continueBtn.textContent = 'Continue anyway →';
+        showBtn.addEventListener('click', function () {
+          showBtn.remove();
+          continueBtn.textContent = 'Continue →';
+          countEl.style.color = '';
+          refresh();
+          if (typeof window.kwExpScrollToUnseen === 'function') window.kwExpScrollToUnseen();
+        });
+      }
     });
   })();
 </script>

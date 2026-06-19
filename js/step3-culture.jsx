@@ -10,6 +10,21 @@ const { useState } = React;
 // the drawer's hero photo keeps the full-size original.
 const thumbUrl = (path) => path && path.replace(/\/([^/]+\.webp)$/, '/thumbs/$1');
 
+// Single-scroll chapter titles/blurbs (replace the old "Page Ⅰ-Ⅳ" tab framing
+// so the four worlds read as distinct categories, not one paged list).
+const CHAP_TITLE = {
+  heritage: 'Heritage',
+  shop: 'Shopping & Markets',
+  famous: 'Famous Icons',
+  beyond: 'Beyond Seoul',
+};
+const CHAP_BLURB = {
+  heritage: "Palaces, hanok, temples — Korea's living history.",
+  shop: "Markets, K-beauty, and Seoul's design districts.",
+  famous: 'The icons — the ballpark, the skyline, the fairway, the border.',
+  beyond: 'A day or two beyond Seoul — Jeju, Busan, Gyeongju and more.',
+};
+
 
 // ─── 50 cultural experiences ──────────────────────────────────────────
 // Spread across 3 thematic pages: Heritage / Shop / Famous.
@@ -1175,7 +1190,6 @@ const CULTURE_DETAILS = {
 };
 
 function Step3Culture() {
-  const [pageIdx, setPageIdx] = useState(0);
   // Hydrate the basket from the experiences array persisted by an earlier visit.
   const [selected, setSelected] = useState(() => {
     let prior = [];
@@ -1188,24 +1202,48 @@ function Step3Culture() {
     return new Set(prior);
   });
   const [detailCode, setDetailCode] = useState(null);
-  // Per-tab "& more" expansion — show the first 8 cards until expanded
+  // Per-chapter "& more" expansion — show the first 8 cards until expanded
   const [expandedPages, setExpandedPages] = useState({});
+  // Single-scroll: which chapter is in view (rail highlight) + which have been
+  // seen (for the gentle one-time "peek at the rest?" Continue nudge).
+  const [activeChap, setActiveChap] = useState(CULTURE_PAGES[0].id);
+  const [visited, setVisited] = useState(() => new Set([CULTURE_PAGES[0].id]));
+  const chapRefs = React.useRef({});
 
-  const currentPage = CULTURE_PAGES[pageIdx];
   const allSelectedItems = CULTURE_PAGES.flatMap(p => p.items.filter(it => selected.has(it.code)));
-
   const INITIAL_CARDS = 8;
-  const isPageExpanded = !!expandedPages[currentPage.id];
-  const visibleItems = (currentPage.kind === 'cities' || isPageExpanded)
-    ? currentPage.items
-    : currentPage.items.slice(0, INITIAL_CARDS);
-  const hiddenCount = currentPage.items.length - visibleItems.length;
 
   // Persist the selected experience codes (array) on every change, so the
   // page's Continue button (and the result page) always read current picks.
   React.useEffect(() => {
     if (window.kwState) window.kwState.saveStep('experiences', Array.from(selected));
   }, [selected]);
+
+  // Watch chapters: highlight the in-view one in the rail and mark it "seen".
+  React.useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const id = e.target.getAttribute('data-chap');
+        setActiveChap(id);
+        setVisited((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    Object.values(chapRefs.current).forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  // Expose progress to the fixed-footer Continue so it can offer a one-time,
+  // never-blocking "peek at the rest?" nudge when chapters are still unseen.
+  React.useEffect(() => {
+    window.kwExpTotal = CULTURE_PAGES.length;
+    window.kwExpVisited = visited.size;
+    window.kwExpScrollToUnseen = () => {
+      const next = CULTURE_PAGES.find((p) => !visited.has(p.id)) || CULTURE_PAGES[0];
+      const el = chapRefs.current[next.id];
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }, [visited]);
 
   const toggle = code => {
     setSelected(prev => {
@@ -1234,153 +1272,138 @@ function Step3Culture() {
     <>
     <div className="kw-q-input">
 
-            {/* Page tabs */}
-            <div className="kw-pagetabs">
-              {CULTURE_PAGES.map((p, i) => {
-                const pageSelCount = p.items.filter(it => selected.has(it.code)).length;
+            {/* Chapter rail — names all four worlds; smooth-scrolls; highlights the in-view one */}
+            <nav className="kw-chaprail" aria-label="Experience categories">
+              {CULTURE_PAGES.map((p) => {
+                const n = p.items.filter(it => selected.has(it.code)).length;
                 return (
-                  <button
+                  <a
                     key={p.id}
-                    className={`kw-pagetab ${i === pageIdx ? 'is-active' : ''}`}
-                    onClick={() => setPageIdx(i)}
+                    href={`#chap-${p.id}`}
+                    className={`kw-chaprail-link ${activeChap === p.id ? 'is-active' : ''}`}
+                    onClick={(e) => { e.preventDefault(); const el = chapRefs.current[p.id]; if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}
                   >
-                    <span className="kw-pagetab-num">{p.eyebrow}</span>
-                    <span className="kw-pagetab-label">
-                      {p.label}
-                      <span className="kw-pagetab-count">
-                        {p.kind === 'cities'
-                          ? `${p.items.length} cities`
-                          : `${p.items.length}${pageSelCount > 0 ? ` · ${pageSelCount} picked` : ''}`}
-                      </span>
-                    </span>
-                  </button>
+                    {CHAP_TITLE[p.id] || p.label}
+                    <span className="kw-chaprail-count">{p.items.length}{n > 0 ? ` · ${n}✓` : ''}</span>
+                  </a>
                 );
               })}
-            </div>
+            </nav>
 
-            {/* Page content — items grid or city cards */}
-            {currentPage.kind === 'cities' ? (
-              <div className="kw-city-grid">
-                {currentPage.items.map(c => {
-                  const sel = selected.has(c.code);
-                  return (
-                  <div
-                    key={c.code}
-                    className={`kw-city kw-photo-${c.theme} ${sel ? 'is-selected' : ''}`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => openDetail(c)}
-                  >
-                    <div
-                      className={`kw-city-photo ${c.image ? 'has-image' : ''}`}
-                      style={c.image ? { backgroundImage: `url('${thumbUrl(c.image)}')` } : undefined}
-                    >
-                      {!c.image && <span className="kw-city-monogram">{c.mono}</span>}
-                      <span className="kw-city-photo-region">{c.region}</span>
-                      {sel && <span className="kw-city-check" aria-hidden="true">✓</span>}
-                    </div>
-                    <div className="kw-city-body">
-                      <div className="kw-city-name">{c.name}</div>
-                      <p className="kw-city-desc">{c.desc}</p>
-                      <div className="kw-city-acts">
-                        {c.activities.map(a => (
-                          <span key={a} className="kw-city-chip">{a}</span>
-                        ))}
-                      </div>
-                      <div className="kw-city-foot">
-                        <button
-                          className="kw-city-add"
-                          onClick={(e) => { e.stopPropagation(); toggle(c.code); }}
-                        >
-                          {sel ? <>✓ Added</> : <><span className="kw-city-add-plus">+</span> Add this trip</>}
-                        </button>
-                        <span className="kw-city-cta">View details →</span>
-                      </div>
-                    </div>
-                  </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="kw-cul-grid">
-              {visibleItems.map(it => {
-                const sel = selected.has(it.code);
-                return (
-                  <div
-                    key={it.code}
-                    className={`kw-cul kw-photo-${it.theme} ${sel ? 'is-selected' : ''}`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => openDetail(it)}
-                  >
-                    <div
-                      className={`kw-cul-photo ${it.image ? 'has-image' : ''}`}
-                      style={it.image ? { backgroundImage: `url('${thumbUrl(it.image)}')` } : undefined}
-                    >
-                      {!it.image && <span className="kw-cul-monogram">{it.mono}</span>}
-                      {sel && <span className="kw-cul-check" aria-hidden="true">✓</span>}
-                    </div>
-                    <span className="kw-cul-view">View details →</span>
-                    <div className="kw-cul-body">
-                      <span className="kw-cul-eyebrow">{it.eyebrow}</span>
-                      <div className="kw-cul-name">{it.name}</div>
-                      <div className="kw-cul-foot">
-                        <span className="kw-cul-meta">{it.meta}</span>
-                        <button
-                          className="kw-cul-add"
-                          onClick={(e) => { e.stopPropagation(); toggle(it.code); }}
-                        >
-                          {sel ? <>✓ Added</> : <><span className="kw-cul-add-plus">+</span> Add</>}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            )}
-
-            {/* "& more" reveal — keeps the first impression light */}
-            {currentPage.kind !== 'cities' && currentPage.items.length > INITIAL_CARDS && (
-              <div className="kw-more-row">
-                <button
-                  className="kw-more-btn"
-                  type="button"
-                  aria-expanded={isPageExpanded}
-                  onClick={() => setExpandedPages(prev => ({ ...prev, [currentPage.id]: !isPageExpanded }))}
+            {/* Four chapters stacked — every category passes under the eye on the way to Continue */}
+            {CULTURE_PAGES.map((page) => {
+              const isCities = page.kind === 'cities';
+              const expanded = !!expandedPages[page.id];
+              const items = (isCities || expanded) ? page.items : page.items.slice(0, INITIAL_CARDS);
+              return (
+                <section
+                  key={page.id}
+                  id={`chap-${page.id}`}
+                  data-chap={page.id}
+                  ref={(el) => { chapRefs.current[page.id] = el; }}
+                  className="kw-chapter"
                 >
-                  {isPageExpanded
-                    ? <>Show fewer <span className="kw-more-chev" aria-hidden="true">↑</span></>
-                    : <>&amp; more — see all {currentPage.items.length} <span className="kw-more-chev" aria-hidden="true">↓</span></>}
-                </button>
-              </div>
-            )}
+                  <div className="kw-chapter-head">
+                    <h2 className="kw-chapter-title">{CHAP_TITLE[page.id] || page.label}<span className="kw-chapter-count">{page.items.length}{isCities ? ' places' : ''}</span></h2>
+                    <p className="kw-chapter-blurb">{CHAP_BLURB[page.id] || ''}</p>
+                  </div>
 
-            {/* Pagination */}
-            <div className="kw-pagination">
-              <button
-                className="kw-pagination-btn"
-                onClick={() => setPageIdx(i => Math.max(0, i - 1))}
-                disabled={pageIdx === 0}
-              >
-                ← Previous
-              </button>
-              {CULTURE_PAGES.map((p, i) => (
-                <button
-                  key={p.id}
-                  className={`kw-pagination-btn kw-pagination-num ${i === pageIdx ? 'is-active' : ''}`}
-                  onClick={() => setPageIdx(i)}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <span className="kw-pagination-info">Page {pageIdx + 1} of {CULTURE_PAGES.length}</span>
-              <button
-                className="kw-pagination-btn"
-                onClick={() => setPageIdx(i => Math.min(CULTURE_PAGES.length - 1, i + 1))}
-                disabled={pageIdx === CULTURE_PAGES.length - 1}
-              >
-                Next →
-              </button>
-            </div>
+                  {isCities ? (
+                    <div className="kw-city-grid">
+                      {page.items.map(c => {
+                        const sel = selected.has(c.code);
+                        return (
+                        <div
+                          key={c.code}
+                          className={`kw-city kw-photo-${c.theme} ${sel ? 'is-selected' : ''}`}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => openDetail(c)}
+                        >
+                          <div
+                            className={`kw-city-photo ${c.image ? 'has-image' : ''}`}
+                            style={c.image ? { backgroundImage: `url('${thumbUrl(c.image)}')` } : undefined}
+                          >
+                            {!c.image && <span className="kw-city-monogram">{c.mono}</span>}
+                            <span className="kw-city-photo-region">{c.region}</span>
+                            {sel && <span className="kw-city-check" aria-hidden="true">✓</span>}
+                          </div>
+                          <div className="kw-city-body">
+                            <div className="kw-city-name">{c.name}</div>
+                            <p className="kw-city-desc">{c.desc}</p>
+                            <div className="kw-city-acts">
+                              {c.activities.map(a => (
+                                <span key={a} className="kw-city-chip">{a}</span>
+                              ))}
+                            </div>
+                            <div className="kw-city-foot">
+                              <button
+                                className="kw-city-add"
+                                onClick={(e) => { e.stopPropagation(); toggle(c.code); }}
+                              >
+                                {sel ? <>✓ Added</> : <><span className="kw-city-add-plus">+</span> Add this trip</>}
+                              </button>
+                              <span className="kw-city-cta">View details →</span>
+                            </div>
+                          </div>
+                        </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="kw-cul-grid">
+                      {items.map(it => {
+                        const sel = selected.has(it.code);
+                        return (
+                          <div
+                            key={it.code}
+                            className={`kw-cul kw-photo-${it.theme} ${sel ? 'is-selected' : ''}`}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => openDetail(it)}
+                          >
+                            <div
+                              className={`kw-cul-photo ${it.image ? 'has-image' : ''}`}
+                              style={it.image ? { backgroundImage: `url('${thumbUrl(it.image)}')` } : undefined}
+                            >
+                              {!it.image && <span className="kw-cul-monogram">{it.mono}</span>}
+                              {sel && <span className="kw-cul-check" aria-hidden="true">✓</span>}
+                            </div>
+                            <span className="kw-cul-view">View details →</span>
+                            <div className="kw-cul-body">
+                              <span className="kw-cul-eyebrow">{it.eyebrow}</span>
+                              <div className="kw-cul-name">{it.name}</div>
+                              <div className="kw-cul-foot">
+                                <span className="kw-cul-meta">{it.meta}</span>
+                                <button
+                                  className="kw-cul-add"
+                                  onClick={(e) => { e.stopPropagation(); toggle(it.code); }}
+                                >
+                                  {sel ? <>✓ Added</> : <><span className="kw-cul-add-plus">+</span> Add</>}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {!isCities && page.items.length > INITIAL_CARDS && (
+                    <div className="kw-more-row">
+                      <button
+                        className="kw-more-btn"
+                        type="button"
+                        aria-expanded={expanded}
+                        onClick={() => setExpandedPages(prev => ({ ...prev, [page.id]: !expanded }))}
+                      >
+                        {expanded
+                          ? <>Show fewer <span className="kw-more-chev" aria-hidden="true">↑</span></>
+                          : <>&amp; more — see all {page.items.length} <span className="kw-more-chev" aria-hidden="true">↓</span></>}
+                      </button>
+                    </div>
+                  )}
+                </section>
+              );
+            })}
 
             {/* Basket — visible across pages */}
             <div className="kw-cul-basket">
