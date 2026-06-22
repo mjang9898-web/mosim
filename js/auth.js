@@ -6,6 +6,8 @@
 //   getUser()                       → Promise<User | null>
 //   getProfile()                    → Promise<Profile | null>
 //   signInWithGoogle(returnTo)      → never resolves (redirects)
+//   signInWithApple(returnTo)       → { } on redirect, { error } if unavailable
+//   signInWithFacebook(returnTo)    → { } on redirect, { error } if unavailable
 //   signInWithEmail(email, pw)      → Promise<{ user, error }>
 //   signUpWithEmail(email, pw, name, returnTo) → Promise<{ user, error }>
 //   resetPassword(email, returnTo)  → Promise<{ error }>
@@ -64,6 +66,35 @@ async function signInWithGoogle(returnTo) {
   return {};
 }
 
+// Generic OAuth entry, mirroring signInWithGoogle's mechanism for any provider.
+// Resilient: an unconfigured provider may return { error } OR throw — either way
+// we resolve with { error } so callers can show a friendly message and the
+// console isn't polluted with an unhandled rejection.
+async function signInWithOAuthProvider(provider, returnTo) {
+  try {
+    const supa = await init();
+    const redirectTo = absoluteUrl(returnTo || '/me.html');
+    const { error } = await supa.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo }
+    });
+    if (error) return { error };
+    // On success the browser is redirected; nothing below this runs.
+    return {};
+  } catch (err) {
+    return { error: err instanceof Error ? err : new Error(String(err)) };
+  }
+}
+
+function signInWithApple(returnTo) {
+  return signInWithOAuthProvider('apple', returnTo);
+}
+
+// Facebook login — 보류(옵션A). Supabase Facebook provider 설정 후 복원
+// function signInWithFacebook(returnTo) {
+//   return signInWithOAuthProvider('facebook', returnTo);
+// }
+
 async function signInWithEmail(email, password) {
   const supa = await init();
   const { data, error } = await supa.auth.signInWithPassword({ email, password });
@@ -113,6 +144,7 @@ function absoluteUrl(pathOrUrl) {
 
 window.kwAuth = {
   init, getUser, getProfile,
-  signInWithGoogle, signInWithEmail, signUpWithEmail,
+  signInWithGoogle, signInWithApple, /* signInWithFacebook — 보류(옵션A). Supabase Facebook provider 설정 후 복원 */ signInWithOAuthProvider,
+  signInWithEmail, signUpWithEmail,
   resetPassword, updatePassword, signOut, onChange
 };
