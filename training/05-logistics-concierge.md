@@ -11,7 +11,7 @@ transport, and the Mosim companion who is always beside the traveler.
 - DO match the **hotel** to the traveler's stay tier: `cozy` (comfortable, well-located),
   `comfort` (a notch up, central), `premium` (top-tier, full service).
 - DO use **private car & driver** for all transfers; keep journeys unhurried.
-- DO build in step-free, accessible transport for cane/wheelchair travelers.
+- DO use step-free, accessible transport by default — these are older travelers.
 - DO keep the **Mosim companion present** throughout — interpreting, transport,
   hospital accompaniment, and help with daily needs.
 - DON'T use public transit for a frail or tired traveler when a private car fits better.

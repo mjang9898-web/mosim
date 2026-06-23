@@ -360,7 +360,7 @@
     var CARE = { screening:'Checkup', knees:'Knees', dental:'Dental', eyes:'Vision', unsure:'Care guidance' };
     var LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible length' };
     var PARTY = { solo:'Just you', couple:'You & your spouse', family:'With family' };
-    var PACE = { relaxed:'Relaxed pace', balanced:'Balanced pace', full:'Full days' };
+    // NOTE: pace/mobility are retired (절충안 C) — no longer collected or shown as chips.
 
     var chips = [];
     var care = (state.care && state.care.needs) || [];
@@ -376,8 +376,6 @@
       if (LENGTH[trip.length]) chips.push(LENGTH[trip.length]); else chips.push('Flexible length');
     }
     if (PARTY[trip.party]) chips.push(PARTY[trip.party]);
-    var cuisinePace = (state.cuisine && state.cuisine.pace) || (state.comfort && state.comfort.pace) || '';
-    if (PACE[cuisinePace]) chips.push(PACE[cuisinePace]);
 
     var recapEl = document.getElementById('recap');
     chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
@@ -861,8 +859,6 @@
         chips2.push(LENGTH[t2.length] || 'Flexible length');
       }
       if (PARTY[t2.party]) chips2.push(PARTY[t2.party]);
-      var pace2 = (state.cuisine && state.cuisine.pace) || (state.comfort && state.comfort.pace) || '';
-      if (PACE[pace2]) chips2.push(PACE[pace2]);
       // keep module-level `chips` in sync (used by ensureSaved title)
       chips.length = 0; chips2.forEach(function (c) { chips.push(c); });
       chips2.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; el.appendChild(s); });

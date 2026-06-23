@@ -24,14 +24,14 @@ Step 2 — Trip            (step2.html)  여행 기본: dates/flexible, party, o
   ↓
 Step 3 — Experiences     (step3.html)  문화 체험 멀티 선택 (Heritage/Shop/Famous/Beyond, state.experiences)
   ↓
-Step 4 — Taste & comfort (step4.html)  pace · mobility(칩) + 먹고 싶은 음식 카드(탭별 progressive disclosure) + 매운맛(5단계, 한 번만) · allergens · diets · notes (state.cuisine)
+Step 4 — Taste          (step4.html)  먹고 싶은 음식 카드(탭 없는 단일 통합 grid, progressive disclosure) + 매운맛(5단계, 한 번만) · allergens · diets · notes (state.cuisine)
   ↓
 Result — 7일 일정        (result.html) /api/schedule(Claude) 생성 일정 + 컨시어지 후속 안내
 ```
 
-> **절충안 C 통합(2026-06-23):** 기존 Step 4(Comfort)와 Step 5(Cuisine)을 단일 **Step 4 "Taste & comfort"**로 통합해 5단계 → 4단계로 축소. 매운맛·식이제약 **중복 제거** — 더 정밀한 cuisine 기준(spice 5단계 / allergens / diets)으로 일원화하고, comfort의 거친 spice(4단계)·food 제약 슬라이스는 폐지. pace·mobility는 통합 step 상단에 칩으로 가볍게 유지. **Experience(Step 3)에는 절대 합치지 않는다.**
+> **절충안 C 통합(2026-06-23):** 기존 Step 4(Comfort)와 Step 5(Cuisine)을 단일 **Step 4 "Taste"**로 통합해 5단계 → 4단계로 축소. 매운맛·식이제약 **중복 제거** — 더 정밀한 cuisine 기준(spice 5단계 / allergens / diets)으로 일원화하고, comfort의 거친 spice(4단계)·food 제약 슬라이스는 폐지. **pace·mobility는 완전 폐기** — 더 이상 수집·표시하지 않는다(구저장 일정은 하위호환으로 throw 없이 무시). 음식 목록은 탭(Hansik/Street/Grill/Drinks) 없이 단일 통합 grid로 합치고 progressive disclosure(대표 12개 → "See all 30 dishes")를 유지한다. **Experience(Step 3)에는 절대 합치지 않는다.**
 
-상태 키: `sessionStorage["mosim.state.v1"]` — 새로고침 OK, 탭 닫으면 휘발. 스키마 정본은 `js/state.js`의 `DEFAULT_STATE`(care/trip/experiences/cuisine — comfort 슬라이스는 통합으로 pace·mobility만 cuisine으로 흡수, 기존 저장 일정은 하위호환 마이그레이션 처리). ⚠️ 기존 cuisine spice 5단계·allergens·diets가 매운맛·식이제약의 단일 소스.
+상태 키: `sessionStorage["mosim.state.v1"]` — 새로고침 OK, 탭 닫으면 휘발. 스키마 정본은 `js/state.js`의 `DEFAULT_STATE`(care/trip/experiences/cuisine — comfort 슬라이스 및 cuisine.{pace,mobility}는 폐기, 구저장 일정은 read()에서 throw 없이 무시). ⚠️ cuisine spice 5단계·allergens·diets가 매운맛·식이제약의 단일 소스.
 
 > **통일성 원칙(2026-06-23):** 랜딩(index.html)의 Medical·Experience·Cuisine 카드, funnel의 해당 단계 카드, browse 페이지(experience.html·medical.html)는 **단일 정본**에서 파생한다 — Experience·Cuisine은 `window.EXPERIENCE_DATA`(`scripts/build-experience-data.mjs`가 step3-culture.jsx + step4-cuisine.jsx에서 생성), Medical은 `js/medical-cards.js`. 같은 카드는 어디서나 같은 이미지·카피로 보인다.
 

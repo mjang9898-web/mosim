@@ -58,19 +58,6 @@ const SEASON_LABELS = {
   winter: 'winter',
 };
 
-const PACE_LABELS = {
-  relaxed: 'relaxed (few things per day)',
-  balanced: 'balanced',
-  full: 'full days (wants to see a lot)',
-};
-
-const MOBILITY_LABELS = {
-  walks_fine: 'walks fine',
-  tires_easily: 'tires easily — keep days short with rest',
-  cane_walker: 'uses a cane or walker — step-free, gentle routes only',
-  wheelchair: 'uses a wheelchair — fully accessible, step-free routes only',
-};
-
 // Cuisine spice scale (SPICE_LEVELS in js/step4-cuisine.jsx) — the single,
 // canonical 5-level scale. (The old 4-level comfort.spice is deprecated; see
 // LEGACY_SPICE_MAP below for one-time backward-compat of old saved itineraries.)
@@ -183,28 +170,15 @@ export function buildTravelerBrief(state) {
     lines.push('EXPERIENCES: none chosen.');
   }
 
-  // ── Cuisine (single source of truth for pace, mobility, spice & food) ──
-  // The funnel merged the old Comfort step into Cuisine (절충안 C). pace/mobility
-  // now live on cuisine; spice & dietary restrictions are the cuisine 5-level
-  // scale + allergens/diets. The deprecated state.comfort slice is read ONLY as a
-  // fallback for old saved itineraries / old sessionStorage — never written anew.
+  // ── Cuisine (food selection, spice & dietary restrictions) ──
+  // The funnel's Cuisine step carries the food inputs only: the dishes they want
+  // (items), the spice level (5-level scale), and dietary restrictions
+  // (allergens + diets). pace/mobility have been DROPPED from the funnel and are
+  // no longer injected into the brief. The deprecated state.comfort slice is read
+  // ONLY as a fallback for old saved itineraries / old sessionStorage (legacy
+  // spice & food restrictions) — never written anew.
   const cuisine = s.cuisine || {};
-  const comfort = s.comfort || {}; // legacy fallback source only
-
-  // pace / mobility: prefer cuisine, fall back to legacy comfort.
-  const pace = cuisine.pace || comfort.pace || '';
-  const mobility = cuisine.mobility || comfort.mobility || '';
-  const comfortBits = [];
-  if (pace) comfortBits.push('pace: ' + (PACE_LABELS[pace] || humanize(pace)));
-  if (mobility) comfortBits.push('mobility: ' + (MOBILITY_LABELS[mobility] || humanize(mobility)));
-  if (comfortBits.length) {
-    // Strong, directive framing: the traveler's stated comfort is the FIRST base
-    // the AI must build the 7-day plan around (customer input = top priority).
-    lines.push(
-      'COMFORT (governs how full each day is and which routes are step-free — build the whole week around this): '
-      + comfortBits.join('; ') + '.'
-    );
-  }
+  const comfort = s.comfort || {}; // legacy fallback source only (spice / food)
 
   // Spice: single canonical cuisine.spice (5-level). If absent but a legacy
   // comfort.spice exists, map it once onto the 5-level scale.

@@ -33,12 +33,11 @@
     //   diets:     array of DIETS codes (diet / religion / lifestyle)
     //   spice:     a single SPICE_LEVELS code ('none'|'mild'|'medium'|'spicy'|'extra') or null
     //   notes:     free-text note for the kitchen / concierge
-    //   pace:      'relaxed'|'balanced'|'full'                  (moved here from old comfort slice)
-    //   mobility:  'walks_fine'|'tires_easily'|'cane_walker'|'wheelchair'  (moved here from old comfort slice)
-    // NOTE: the old `comfort` slice is retired. We no longer write it, but read()
-    // migrates any legacy comfort.{pace,mobility} into cuisine so saved/old
-    // itineraries keep working (backward-compatible).
-    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '', pace: '', mobility: '' }
+    // NOTE: pace/mobility are RETIRED. They used to live on the old `comfort` slice,
+    // then briefly on `cuisine` (절충안 C). Neither is collected, written, or read
+    // anymore (the brief/recap no longer use them). read() only guarantees it never
+    // throws on an old saved state that still carries those fields.
+    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '' }
   };
 
   function read() {
@@ -47,15 +46,14 @@
       if (!raw) return Object.assign({}, DEFAULT_STATE);
       var parsed = JSON.parse(raw);
       var s = Object.assign({}, DEFAULT_STATE, parsed);
-      // Ensure cuisine carries the new shape even for older stored states.
+      // Ensure cuisine carries the current shape even for older stored states.
+      // Object.assign merges any legacy cuisine fields (incl. retired pace/mobility)
+      // harmlessly — they're simply ignored downstream. Never throw on old data.
       s.cuisine = Object.assign({}, DEFAULT_STATE.cuisine, parsed.cuisine || {});
-      // Backward-compat: an old session may have pace/mobility on a legacy
-      // `comfort` slice instead of cuisine. Absorb them when cuisine is empty,
-      // so the recap + planner read a single source. Never throws.
+      // Backward-compat: an old session may carry a legacy `comfort` slice.
+      // pace/mobility are retired, so we no longer absorb them — but keep the raw
+      // slice around so nothing downstream that defensively reads it explodes.
       if (parsed.comfort && typeof parsed.comfort === 'object') {
-        if (!s.cuisine.pace && parsed.comfort.pace) s.cuisine.pace = parsed.comfort.pace;
-        if (!s.cuisine.mobility && parsed.comfort.mobility) s.cuisine.mobility = parsed.comfort.mobility;
-        // keep the raw legacy slice available for read-only fallbacks (e.g. brief)
         s.comfort = parsed.comfort;
       }
       return s;

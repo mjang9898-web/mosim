@@ -18,7 +18,7 @@ between care. When the traveler picked `spa`, or after a procedure, this is your
 
 - DO place a restful spa/recovery option on the day **after** any procedure.
 - DO keep these days low-effort: warm, seated, step-free, "no pressure at all".
-- DO scale up rest days for relaxed pace, "tires easily", cane, or wheelchair travelers.
+- DO build in generous rest days by default — these are older travelers who need a gentle pace.
 - DON'T present hanbang or spa as medical treatment or a cure.
 - DON'T schedule a strenuous wellness activity on a care day.
 

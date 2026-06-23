@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mosim — Plan your trip · Step 4, Taste & comfort</title>
+<title>Mosim — Plan your trip · Step 4, Taste</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,15 +49,6 @@
 
   .cards-wrap{margin:36px 0 8px;}
 
-  /* ── Comfort chips (merged from old Step 4) — pace + mobility ─────── */
-  .kw-comfort{ margin:8px 0 4px; display:flex; flex-direction:column; gap:30px; }
-  .kw-comfort-q{ font-size:19px; font-weight:600; color:var(--navy); margin-bottom:14px; }
-  .kw-comfort-chips{ display:flex; flex-wrap:wrap; gap:10px; }
-  .kw-comfort-chip{ font-size:19px; border:2px solid var(--line); background:#fff; border-radius:999px; padding:12px 22px; cursor:pointer; color:var(--navy); min-height:48px; font-family:'Inter',sans-serif; transition:border-color .15s, box-shadow .15s; }
-  .kw-comfort-chip:hover{ border-color:var(--gold-soft); }
-  .kw-comfort-chip.is-sel{ border-color:var(--gold); font-weight:600; box-shadow:0 8px 22px -14px rgba(195,154,63,.6); }
-  /* gold divider between comfort chips and the food picker */
-  .kw-comfort-rule{ height:1px; background:var(--line); margin:34px 0 6px; }
   /* progressive-disclosure micro-copy under "See all" */
   .kw-more-note{ font-size:15px; color:var(--ink-2); margin-top:10px; }
 
@@ -857,38 +848,6 @@
   .kw-q-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
   .kw-q-input { min-width: 0; }
 
-  /* Page tabs — Hansik / Street / Grill / Drinks */
-  .kw-pagetabs {
-    display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 28px;
-  }
-  .kw-pagetab {
-    background: transparent; border: none;
-    padding: 16px 28px 18px;
-    display: flex; flex-direction: column; gap: 4px;
-    text-align: left; cursor: pointer;
-    color: var(--ink-2); position: relative;
-    transition: color .15s;
-    min-height: 44px;
-  }
-  .kw-pagetab:hover { color: var(--navy); }
-  .kw-pagetab.is-active { color: var(--navy); }
-  .kw-pagetab.is-active::after {
-    content: ""; position: absolute;
-    left: 0; right: 0; bottom: -1px;
-    height: 2px; background: var(--gold);
-  }
-  .kw-pagetab-num {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic; font-weight: 700;
-    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--gold);
-  }
-  .kw-pagetab-label { font-size: 19px; font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; }
-  .kw-pagetab-count { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; color: var(--ink-2); margin-left: 8px; }
-  .kw-pagetab.is-active .kw-pagetab-count { color: var(--gold); }
-
   /* Pagination row under the grid */
   .kw-pagination {
     grid-column: 1 / -1;
@@ -1062,10 +1021,10 @@
 
 <div class="wrap">
   <div class="head">
-    <div class="step-label">Step 4 of 4 · Taste &amp; comfort</div>
+    <div class="step-label">Step 4 of 4 · Taste</div>
     <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div>
-    <h1>Let's keep you comfortable.</h1>
-    <p>One last thing — how you like to move through a day, and what you love to eat. We plan around your body and your taste, never the clock.</p>
+    <h1>What would you love to taste?</h1>
+    <p>One last thing — the food. Pick the Korean dishes you're curious about, then tell us about allergies, diet, and how much spice you like. We plan around your taste.</p>
   </div>
 
   <div class="cards-wrap"><div id="root"></div></div>
@@ -1080,7 +1039,7 @@
 <script src="js/state.js"></script>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="js/step4-cuisine.js?v=1204dc6a" defer></script>
+<script src="js/step4-cuisine.js?v=09a647f9" defer></script>
 <script>
   (function () {
     var countEl = document.getElementById('count');
@@ -1120,7 +1079,7 @@
       // The component persists cuisine on every change; ensure a value exists
       // so loading.html / the planner always read a well-formed slice.
       if (window.kwState && window.kwState.loadStep('cuisine') == null) {
-        window.kwState.saveStep('cuisine', { items: [], allergens: [], diets: [], spice: null, notes: '', pace: '', mobility: '' });
+        window.kwState.saveStep('cuisine', { items: [], allergens: [], diets: [], spice: null, notes: '' });
       }
       window.location.href = 'loading.html';
     });

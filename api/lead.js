@@ -105,7 +105,6 @@ async function notifyByEmail({ name, email, from, travelWhen, interest, note, st
 
   const care = (state && state.care && state.care.needs) || [];
   const trip = (state && state.trip) || {};
-  const comfort = (state && state.comfort) || {};
   // Landing "Have a question?" form stamps interest='Landing inquiry' purely as a
   // source marker — show it as a Source row, not a (misleading) Care interest.
   const interestRow = interest === 'Landing inquiry'
@@ -118,8 +117,7 @@ async function notifyByEmail({ name, email, from, travelWhen, interest, note, st
     ['When', travelWhen],
     interestRow,
     ['Trip length', trip.length],
-    ['Party', trip.party],
-    ['Pace', comfort.pace]
+    ['Party', trip.party]
   ].filter(([, v]) => v).map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#8A8479">${esc(k)}</td><td style="padding:4px 0;font-weight:600">${esc(v)}</td></tr>`).join('');
 
   const intro = interest === 'Landing inquiry'

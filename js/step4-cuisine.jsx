@@ -997,20 +997,14 @@ const SPICE_LEVELS = [
 { code: 'spicy', pips: 3, label: 'Spicy', sub: 'I like real heat' },
 { code: 'extra', pips: 4, label: 'Maximum heat', sub: "Don't hold back" }];
 
-// ─── Comfort chips (merged from old Step 4) — pace + mobility ──────────
-const PACE_OPTS = [
-{ code: 'relaxed',  label: 'Relaxed' },
-{ code: 'balanced', label: 'Balanced' },
-{ code: 'full',     label: 'Full days' }];
+// How many dishes to show in the unified grid before "See all"
+// (progressive disclosure). 12 = a generous, representative spread across the
+// ~30 dishes that doesn't overwhelm a senior visitor on first view, while
+// still surfacing variety from every category (hansik/street/grill/drinks).
+const DISH_PREVIEW = 12;
 
-const MOBILITY_OPTS = [
-{ code: 'walks_fine',   label: 'I walk fine' },
-{ code: 'tires_easily', label: 'I tire easily' },
-{ code: 'cane_walker',  label: 'I use a cane or walker' },
-{ code: 'wheelchair',   label: 'I use a wheelchair' }];
-
-// How many dishes to show per tab before "See all" (progressive disclosure).
-const DISH_PREVIEW = 6;
+// Single unified food list — all four former tabs flattened into one array.
+const ALL_DISHES = FB_PAGES.flatMap((p) => p.items);
 
 
 // Local eyebrow label (the shared one lives in step1-trip-shared.jsx, which this
@@ -1026,31 +1020,20 @@ function SectionEyebrow({ num, label }) {
 
 function Step4Cuisine() {
   // Hydrate every field from the persisted cuisine slice (restore on re-visit).
-  // pace/mobility were merged in from the old Comfort step (절충안 C) — they now
-  // live on the cuisine slice. Hydrate from cuisine first, then fall back to a
-  // legacy comfort slice so a part-finished old session still restores.
+  // Step 4 now collects food & taste only — pace/mobility are retired.
   const prior = loadCuisineState() || {};
-  const legacyComfort = (function () {
-    try { return (window.kwState && window.kwState.loadStep('comfort')) || {}; } catch (e) { return {}; }
-  })();
-  const initPace = prior.pace || legacyComfort.pace || '';
-  const initMobility = prior.mobility || legacyComfort.mobility || '';
 
-  const [pageIdx, setPageIdx] = useState(0);
-  const [showAll, setShowAll] = useState(false);   // progressive disclosure for the active tab
+  const [showAll, setShowAll] = useState(false);   // progressive disclosure for the unified list
   const [selected, setSelected] = useState(() => new Set(Array.isArray(prior.items) ? prior.items : []));
   const [allergens, setAllergens] = useState(() => new Set(Array.isArray(prior.allergens) ? prior.allergens : []));
   const [diets, setDiets] = useState(() => new Set(Array.isArray(prior.diets) ? prior.diets : []));
   const [spice, setSpice] = useState(prior.spice != null ? prior.spice : null);
   const [notes, setNotes] = useState(typeof prior.notes === 'string' ? prior.notes : '');
-  const [pace, setPace] = useState(initPace);
-  const [mobility, setMobility] = useState(initMobility);
   const [detailCode, setDetailCode] = useState(null);
 
   // Persist the full cuisine slice on every change so the fixed-footer Continue
   // (in step4.html) and the result page always read the current picks. Same
   // pattern as Step3Culture — selections are saved as you go, never on submit only.
-  // pace/mobility ride on the cuisine slice now (comfort slice retired).
   React.useEffect(() => {
     if (window.kwState) {
       window.kwState.saveStep('cuisine', {
@@ -1059,25 +1042,19 @@ function Step4Cuisine() {
         diets: Array.from(diets),
         spice: spice,
         notes: notes,
-        pace: pace,
-        mobility: mobility,
       });
     }
-  }, [selected, allergens, diets, spice, notes, pace, mobility]);
-
-  // Collapse back to the preview when switching tabs — each tab starts compact.
-  const selectPage = (i) => { setPageIdx(i); setShowAll(false); };
+  }, [selected, allergens, diets, spice, notes]);
 
   const openDetail = (item) => {
     if (CUISINE_DETAILS[item.code]) { setDetailCode(item.code); return; }
     alert('Detail page for "' + item.name + '" — coming soon.');
   };
   const detailItem = detailCode
-    ? FB_PAGES.flatMap((p) => p.items).find((it) => it.code === detailCode)
+    ? ALL_DISHES.find((it) => it.code === detailCode)
     : null;
 
-  const currentPage = FB_PAGES[pageIdx];
-  const allSelectedItems = FB_PAGES.flatMap((p) => p.items.filter((it) => selected.has(it.code)));
+  const allSelectedItems = ALL_DISHES.filter((it) => selected.has(it.code));
 
   const toggle = (code) => {
     setSelected((prev) => {
@@ -1099,40 +1076,6 @@ function Step4Cuisine() {
     <>
       <div className="kw-q-input">
 
-        {/* ── Comfort chips (merged from old Step 4) — pace + mobility ── */}
-        <div className="kw-comfort">
-          <div className="kw-comfort-field">
-            <div className="kw-comfort-q">Your ideal pace</div>
-            <div className="kw-comfort-chips">
-              {PACE_OPTS.map((o) =>
-                <button
-                  key={o.code}
-                  type="button"
-                  className={`kw-comfort-chip ${pace === o.code ? 'is-sel' : ''}`}
-                  onClick={() => setPace(o.code)}>
-                  {o.label}
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="kw-comfort-field">
-            <div className="kw-comfort-q">Getting around</div>
-            <div className="kw-comfort-chips">
-              {MOBILITY_OPTS.map((o) =>
-                <button
-                  key={o.code}
-                  type="button"
-                  className={`kw-comfort-chip ${mobility === o.code ? 'is-sel' : ''}`}
-                  onClick={() => setMobility(o.code)}>
-                  {o.label}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="kw-comfort-rule" aria-hidden="true" />
-
         {/* ── Sub-step Ⅰ — Choose what you'd love to taste ─────────── */}
         <div className="kw-substep">
           <div className="kw-substep-l">
@@ -1140,37 +1083,16 @@ function Step4Cuisine() {
             <span className="kw-substep-title">Choose what you'd love to taste</span>
           </div>
           <span className="kw-substep-hint">
-            Four kinds — Hansik, Street, Grill, Drinks. Pick as many as you like.
+            Hansik, street food, grills, and drinks — all in one place. Pick as many as you like.
           </span>
         </div>
 
         <section className="kw-q-row kw-q-row-full">
           <div className="kw-q-input">
 
-            {/* Page tabs */}
-            <div className="kw-pagetabs">
-              {FB_PAGES.map((p, i) => {
-                const pageSelCount = p.items.filter((it) => selected.has(it.code)).length;
-                return (
-                  <button
-                    key={p.id}
-                    className={`kw-pagetab ${i === pageIdx ? 'is-active' : ''}`}
-                    onClick={() => selectPage(i)} style={{ fontFamily: "-apple-system" }}>
-
-                    <span className="kw-pagetab-num" style={{ fontFamily: "-apple-system" }}>{p.eyebrow}</span>
-                    <span className="kw-pagetab-label" style={{ fontFamily: "Inter" }}>
-                      {p.label}
-                      <span className="kw-pagetab-count">
-                        {`${p.items.length}${pageSelCount > 0 ? ` · ${pageSelCount} picked` : ''}`}
-                      </span>
-                    </span>
-                  </button>);
-              })}
-            </div>
-
-            {/* Page content — progressive disclosure: preview first, then reveal */}
+            {/* Unified food grid — progressive disclosure: preview first, then reveal */}
             <div className="kw-cul-grid">
-                {(showAll ? currentPage.items : currentPage.items.slice(0, DISH_PREVIEW)).map((it) => {
+                {(showAll ? ALL_DISHES : ALL_DISHES.slice(0, DISH_PREVIEW)).map((it) => {
                 const sel = selected.has(it.code);
                 return (
                   <div
@@ -1202,7 +1124,7 @@ function Step4Cuisine() {
               </div>
 
             {/* Progressive disclosure — show a representative few, reveal the rest */}
-            {currentPage.items.length > DISH_PREVIEW &&
+            {ALL_DISHES.length > DISH_PREVIEW &&
               <div className="kw-more-row">
                 <button
                   type="button"
@@ -1210,11 +1132,11 @@ function Step4Cuisine() {
                   onClick={() => setShowAll((v) => !v)}>
                   {showAll
                     ? <>Show fewer<span className="kw-more-chev">↑</span></>
-                    : <>See all {currentPage.items.length} {currentPage.label} dishes<span className="kw-more-chev">↓</span></>}
+                    : <>See all {ALL_DISHES.length} dishes<span className="kw-more-chev">↓</span></>}
                 </button>
                 {!showAll &&
                   <div className="kw-more-note">
-                    Showing {DISH_PREVIEW} of {currentPage.items.length} — these are the favorites.
+                    Showing {DISH_PREVIEW} of {ALL_DISHES.length} — these are the favorites.
                   </div>
                 }
               </div>
@@ -1459,7 +1381,7 @@ function CuisineDetailDrawer({ item, detail, isSelected, onToggle, onClose }) {
         <header className="kw-drawer-top">
           <nav className="kw-drawer-crumb" aria-label="Breadcrumb">
             <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
-              ← Step 4 · Taste & comfort
+              ← Step 4 · Taste
             </a>
             <span className="kw-drawer-crumb-sep" aria-hidden="true">/</span>
             <span className="kw-drawer-crumb-now">{item.name}</span>

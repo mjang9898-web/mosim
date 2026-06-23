@@ -18,13 +18,14 @@ they didn't pick — **and pace them by their stated duration**.
 - A **Full day** or **Half day** experience is that day's ONE main outing. Do **not** put
   another long or high-energy activity on the same day.
 - **Never stack two heavy things on one day** — e.g. golf (full day) + KBO baseball
-  (3h evening), or two day-trips. That was a real failure: golf and baseball landed on the
-  same day for a relaxed traveler. Spread big items across **different** days with a calmer
+  (3h evening), or two day-trips. That was a real failure: golf and baseball once landed on
+  the same day. Spread big items across **different** days with a calmer
   day or rest in between.
 - Short outings ("90 min", "2 hours") may share a day, but keep it gentle and leave room
   to sit and rest.
-- On a **relaxed** pace, or **tires easily / cane / wheelchair**: at most **one** main
-  outing per day, surrounded by rest. Add light days and spread experiences out.
+- By default, plan at most **one** main outing per day, surrounded by rest — these are
+  older travelers and the pace should always be gentle. Add light days and spread
+  experiences out.
 
 ## Trusted places (by interest, in/around Seoul)
 
@@ -70,8 +71,8 @@ or longer trip (within the day cap).
   the day's only main outing. DON'T stack two heavy or long activities on one day.
 - If the brief says experiences are `minimal`, include **almost no** sightseeing — at
   most one very easy outing.
-- DON'T plan long walks, stairs, or crowded peak-hour visits for travelers who tire
-  easily or use a cane/wheelchair.
+- DON'T plan long walks, stairs, or crowded peak-hour visits — keep routes easy and
+  step-free for these older travelers by default.
 
 ## Style
 

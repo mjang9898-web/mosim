@@ -34,13 +34,12 @@ days flow kindly, never stacking heavy things back-to-back.
       Don't also schedule a Seoul-based timed activity (golf, KBO baseball, an evening show)
       on it; e.g. never a Seoul baseball game the evening you return from Jeju. Put those on a
       full Seoul day instead.
-- **Pace & mobility** decide how full each day is:
-  - relaxed / "I tire easily" / cane / wheelchair → **2 slots a day**, more rest days,
-    gentle step-free activities, and **at most ONE main outing per day** with rest
-    before and after it. Never put two outings on the same day for these travelers —
-    spread the chosen experiences across more days and add light/rest days as needed.
-  - balanced → **3 slots a day**.
-  - full days → **3–4 slots a day**.
+- **Keep every day gentle — these are older travelers.** Default to **2–3 slots a day**,
+  with gentle, step-free activities and plenty of rest. Plan **at most ONE main outing per
+  day**, with rest before and after it — never put two outings on the same day. Spread the
+  chosen experiences across more days and add light/rest days as needed so no day feels
+  heavy. Only ever go to 3–4 slots on a clearly easy day, and never at the cost of the
+  no-stacking and rest-after-care rules.
 - **Respect each experience's stated duration and never overload a day.** Each chosen
   experience arrives with a duration tag in parentheses (e.g. "Full day · 18 holes",
   "3 hours · evening"). A **Full day** or **Half day** outing IS that day's one main

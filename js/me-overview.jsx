@@ -14,7 +14,7 @@ const STATUS_LINE = {
 const CARE   = { screening:'Health checkup', knees:'Knees & joints', dental:'Dental', eyes:'Vision', unsure:'Care guidance' };
 const LENGTH = { under1w:'Under a week', '1to2w':'1–2 weeks', '2plus':'2+ weeks', unsure:'Flexible' };
 const PARTY  = { solo:'Just you', couple:'You & spouse', family:'With family' };
-const PACE   = { relaxed:'Relaxed', balanced:'Balanced', full:'Full days' };
+// NOTE: pace/mobility are retired (절충안 C) — no longer collected or shown.
 
 const card  = { background:'#fff', border:'1px solid #E5DBC8', borderRadius:16, padding:24 };
 const label = { fontSize:12.5, fontWeight:600, letterSpacing:'1.6px', textTransform:'uppercase', color:'#C39A3F' };
@@ -190,17 +190,12 @@ function MeOverview() {
   const state   = itin.state || {};
   const care    = (state.care && state.care.needs) || [];
   const trip    = state.trip || {};
-  const comfort = state.comfort || {};
-  // pace moved onto the cuisine slice (절충안 C); fall back to legacy comfort.pace
-  // so older saved itineraries still show their Pace fact.
-  const pace    = (state.cuisine && state.cuisine.pace) || comfort.pace || '';
   const days    = Array.isArray(itin.schedule) ? itin.schedule.length : null;
   const stageIdx = STAGES.indexOf(itin.status) >= 0 ? STAGES.indexOf(itin.status) : 0;
 
   const facts = [];
   if (LENGTH[trip.length]) facts.push(['When', LENGTH[trip.length]]);
   if (PARTY[trip.party])   facts.push(['Travelers', PARTY[trip.party] + (trip.partySize > 1 ? ' · ' + trip.partySize : '')]);
-  if (PACE[pace])          facts.push(['Pace', PACE[pace]]);
   if (days)                facts.push(['Plan', days + '-day plan']);
 
   const paid = payg && payg.status === 'paid';
