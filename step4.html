@@ -900,7 +900,7 @@
   /* Dietary section layout */
   .kw-diet-section { display: flex; flex-direction: column; gap: 18px; }
   .kw-diet-header { display: grid; grid-template-columns: 360px 1fr; gap: 96px; align-items: baseline; }
-  .kw-diet-header-help { font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.5; white-space: nowrap; }
+  .kw-diet-header-help { font-size: 17px; font-weight: 500; color: var(--ink-2); line-height: 1.45; text-align: right; white-space: nowrap; }
 
   /* Allergens grid */
   .kw-allergen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
@@ -983,7 +983,7 @@
   @media(max-width:760px){
     .kw-q-row, .kw-diet-header { grid-template-columns: 1fr; gap: 18px; }
     .kw-substep-hint { text-align: left; flex-basis: auto; white-space: normal; }
-    .kw-diet-header-help { white-space: normal; }
+    .kw-diet-header-help { white-space: normal; text-align: left; }
     .kw-diet-row { grid-template-columns: 1fr; gap: 6px; }
     .kw-diet-row-label { padding-top: 0; }
   }
