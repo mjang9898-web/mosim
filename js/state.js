@@ -27,15 +27,18 @@
     // Step 3 · Experiences — array of culture card codes, e.g.
     // ['gyeongbokgung','bukchon','tea','jeju'].  See js/step3-culture.jsx CULTURE_PAGES.
     experiences: [],
-    // Step 4 · Comfort & food
-    comfort: { pace: '', mobility: '', spice: '', food: [] },
-    // Step 5 · Cuisine — dishes/drinks the traveler wants, plus dietary detail.
+    // Step 4 · Taste & comfort — merged Comfort + Cuisine (절충안 C, funnel 5→4).
     //   items:     array of FB_PAGES dish codes (see js/step4-cuisine.jsx)
     //   allergens: array of ALLERGENS codes
     //   diets:     array of DIETS codes (diet / religion / lifestyle)
     //   spice:     a single SPICE_LEVELS code ('none'|'mild'|'medium'|'spicy'|'extra') or null
     //   notes:     free-text note for the kitchen / concierge
-    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '' }
+    //   pace:      'relaxed'|'balanced'|'full'                  (moved here from old comfort slice)
+    //   mobility:  'walks_fine'|'tires_easily'|'cane_walker'|'wheelchair'  (moved here from old comfort slice)
+    // NOTE: the old `comfort` slice is retired. We no longer write it, but read()
+    // migrates any legacy comfort.{pace,mobility} into cuisine so saved/old
+    // itineraries keep working (backward-compatible).
+    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '', pace: '', mobility: '' }
   };
 
   function read() {
@@ -43,7 +46,19 @@
       var raw = sessionStorage.getItem(STORAGE_KEY);
       if (!raw) return Object.assign({}, DEFAULT_STATE);
       var parsed = JSON.parse(raw);
-      return Object.assign({}, DEFAULT_STATE, parsed);
+      var s = Object.assign({}, DEFAULT_STATE, parsed);
+      // Ensure cuisine carries the new shape even for older stored states.
+      s.cuisine = Object.assign({}, DEFAULT_STATE.cuisine, parsed.cuisine || {});
+      // Backward-compat: an old session may have pace/mobility on a legacy
+      // `comfort` slice instead of cuisine. Absorb them when cuisine is empty,
+      // so the recap + planner read a single source. Never throws.
+      if (parsed.comfort && typeof parsed.comfort === 'object') {
+        if (!s.cuisine.pace && parsed.comfort.pace) s.cuisine.pace = parsed.comfort.pace;
+        if (!s.cuisine.mobility && parsed.comfort.mobility) s.cuisine.mobility = parsed.comfort.mobility;
+        // keep the raw legacy slice available for read-only fallbacks (e.g. brief)
+        s.comfort = parsed.comfort;
+      }
+      return s;
     } catch (e) {
       console.warn('[kw.state] failed to read state, resetting', e);
       return Object.assign({}, DEFAULT_STATE);

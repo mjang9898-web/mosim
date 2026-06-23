@@ -191,13 +191,16 @@ function MeOverview() {
   const care    = (state.care && state.care.needs) || [];
   const trip    = state.trip || {};
   const comfort = state.comfort || {};
+  // pace moved onto the cuisine slice (절충안 C); fall back to legacy comfort.pace
+  // so older saved itineraries still show their Pace fact.
+  const pace    = (state.cuisine && state.cuisine.pace) || comfort.pace || '';
   const days    = Array.isArray(itin.schedule) ? itin.schedule.length : null;
   const stageIdx = STAGES.indexOf(itin.status) >= 0 ? STAGES.indexOf(itin.status) : 0;
 
   const facts = [];
   if (LENGTH[trip.length]) facts.push(['When', LENGTH[trip.length]]);
   if (PARTY[trip.party])   facts.push(['Travelers', PARTY[trip.party] + (trip.partySize > 1 ? ' · ' + trip.partySize : '')]);
-  if (PACE[comfort.pace])  facts.push(['Pace', PACE[comfort.pace]]);
+  if (PACE[pace])          facts.push(['Pace', PACE[pace]]);
   if (days)                facts.push(['Plan', days + '-day plan']);
 
   const paid = payg && payg.status === 'paid';

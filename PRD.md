@@ -1,7 +1,7 @@
 # K-Wellness Concierge — Product Requirements
 
 ## 1. 제품 한 줄
-시니어 인바운드 여행객(50-70대, 영미권)이 한국에서 받을 의료·여행·체험·컴포트·미식 정보를 **5단계 funnel**로 입력하면, AI가 7일 일정을 작성하고 컨시어지가 검수해 전달하는 정적 웹 funnel.
+시니어 인바운드 여행객(50-70대, 영미권)이 한국에서 받을 의료·여행·체험·미식/컴포트 정보를 **4단계 funnel**로 입력하면, AI가 7일 일정을 작성하고 컨시어지가 검수해 전달하는 정적 웹 funnel.
 
 ## 2. 타깃 사용자
 
@@ -18,20 +18,20 @@
 ```
 랜딩 (index.html)
   ↓ 랜딩에서 Medical · Experience · Cuisine 세 영역을 funnel/browse와 동일 카드로 미리보기 + "Plan my trip" 진입
-Step 1 — Care        (step1.html)  의료/웰니스 케어 니즈 멀티 선택 (state.care)
+Step 1 — Care            (step1.html)  의료/웰니스 케어 니즈 멀티 선택 (state.care)
   ↓
-Step 2 — Trip        (step2.html)  여행 기본: dates/flexible, party, origin, stay (state.trip)
+Step 2 — Trip            (step2.html)  여행 기본: dates/flexible, party, origin, stay (state.trip)
   ↓
-Step 3 — Experiences (step3.html)  문화 체험 멀티 선택 (Heritage/Shop/Famous/Beyond, state.experiences)
+Step 3 — Experiences     (step3.html)  문화 체험 멀티 선택 (Heritage/Shop/Famous/Beyond, state.experiences)
   ↓
-Step 4 — Comfort     (step4.html)  pace / mobility / spice / food 제약 (state.comfort)
+Step 4 — Taste & comfort (step4.html)  pace · mobility(칩) + 먹고 싶은 음식 카드(탭별 progressive disclosure) + 매운맛(5단계, 한 번만) · allergens · diets · notes (state.cuisine)
   ↓
-Step 5 — Cuisine     (step5.html)  먹고 싶은 음식 카드 선택 + allergens/diets/spice/notes (state.cuisine)
-  ↓
-Result — 7일 일정    (result.html) /api/schedule(Claude) 생성 일정 + 컨시어지 후속 안내
+Result — 7일 일정        (result.html) /api/schedule(Claude) 생성 일정 + 컨시어지 후속 안내
 ```
 
-상태 키: `sessionStorage["mosim.state.v1"]` — 새로고침 OK, 탭 닫으면 휘발. 스키마 정본은 `js/state.js`의 `DEFAULT_STATE`(care/trip/experiences/comfort/cuisine).
+> **절충안 C 통합(2026-06-23):** 기존 Step 4(Comfort)와 Step 5(Cuisine)을 단일 **Step 4 "Taste & comfort"**로 통합해 5단계 → 4단계로 축소. 매운맛·식이제약 **중복 제거** — 더 정밀한 cuisine 기준(spice 5단계 / allergens / diets)으로 일원화하고, comfort의 거친 spice(4단계)·food 제약 슬라이스는 폐지. pace·mobility는 통합 step 상단에 칩으로 가볍게 유지. **Experience(Step 3)에는 절대 합치지 않는다.**
+
+상태 키: `sessionStorage["mosim.state.v1"]` — 새로고침 OK, 탭 닫으면 휘발. 스키마 정본은 `js/state.js`의 `DEFAULT_STATE`(care/trip/experiences/cuisine — comfort 슬라이스는 통합으로 pace·mobility만 cuisine으로 흡수, 기존 저장 일정은 하위호환 마이그레이션 처리). ⚠️ 기존 cuisine spice 5단계·allergens·diets가 매운맛·식이제약의 단일 소스.
 
 > **통일성 원칙(2026-06-23):** 랜딩(index.html)의 Medical·Experience·Cuisine 카드, funnel의 해당 단계 카드, browse 페이지(experience.html·medical.html)는 **단일 정본**에서 파생한다 — Experience·Cuisine은 `window.EXPERIENCE_DATA`(`scripts/build-experience-data.mjs`가 step3-culture.jsx + step4-cuisine.jsx에서 생성), Medical은 `js/medical-cards.js`. 같은 카드는 어디서나 같은 이미지·카피로 보인다.
 
@@ -52,7 +52,7 @@ Design spec: `docs/superpowers/specs/2026-05-29-split-payment-design.md`
 ## 4. 기능 요구사항
 
 ### 4.1 반드시 (MVP — 현재 구현됨)
-- [x] 5단계 funnel 페이지 분리 (Care/Trip/Experiences/Comfort/Cuisine, HTML 정적)
+- [x] 4단계 funnel 페이지 분리 (Care/Trip/Experiences/Taste & comfort, HTML 정적) — Comfort+Cuisine은 절충안 C로 단일 step 통합(2026-06-23)
 - [x] 단계 간 데이터 sessionStorage 전달 (`js/state.js` kwState)
 - [x] 랜딩 ↔ funnel ↔ browse 카드 단일 정본 통일 (Medical·Experience·Cuisine)
 - [x] AI(Claude) 7일 일정 생성 (`api/schedule.js` + `api/_lib/traveler-brief.js`) — care/trip/experiences/comfort/**cuisine** 입력 전부 반영. ⚠️ `js/schedule.js`(템플릿)는 죽은 레거시

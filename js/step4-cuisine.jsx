@@ -991,15 +991,30 @@ const DIETS = [
 
 // ─── Spice tolerance ──────────────────────────────────────────────────
 const SPICE_LEVELS = [
-{ code: 'none', pips: 0, label: 'No spice', sub: 'Hold the gochugaru' },
-{ code: 'mild', pips: 1, label: 'Mild', sub: 'A whisper of warmth' },
+{ code: 'none', pips: 0, label: 'No spice', sub: 'Hold the chili' },
+{ code: 'mild', pips: 1, label: 'Mild', sub: 'A gentle warmth' },
 { code: 'medium', pips: 2, label: 'Korean medium', sub: 'How locals eat' },
-{ code: 'spicy', pips: 3, label: 'Spicy', sub: 'Bring it on' },
+{ code: 'spicy', pips: 3, label: 'Spicy', sub: 'I like real heat' },
 { code: 'extra', pips: 4, label: 'Maximum heat', sub: "Don't hold back" }];
+
+// ─── Comfort chips (merged from old Step 4) — pace + mobility ──────────
+const PACE_OPTS = [
+{ code: 'relaxed',  label: 'Relaxed' },
+{ code: 'balanced', label: 'Balanced' },
+{ code: 'full',     label: 'Full days' }];
+
+const MOBILITY_OPTS = [
+{ code: 'walks_fine',   label: 'I walk fine' },
+{ code: 'tires_easily', label: 'I tire easily' },
+{ code: 'cane_walker',  label: 'I use a cane or walker' },
+{ code: 'wheelchair',   label: 'I use a wheelchair' }];
+
+// How many dishes to show per tab before "See all" (progressive disclosure).
+const DISH_PREVIEW = 6;
 
 
 // Local eyebrow label (the shared one lives in step1-trip-shared.jsx, which this
-// page does not load — step5.html mounts only this component, like step3).
+// page does not load — step4.html mounts only this component, like step3).
 function SectionEyebrow({ num, label }) {
   return (
     <div className="kw-eyebrow">
@@ -1011,18 +1026,31 @@ function SectionEyebrow({ num, label }) {
 
 function Step4Cuisine() {
   // Hydrate every field from the persisted cuisine slice (restore on re-visit).
+  // pace/mobility were merged in from the old Comfort step (절충안 C) — they now
+  // live on the cuisine slice. Hydrate from cuisine first, then fall back to a
+  // legacy comfort slice so a part-finished old session still restores.
   const prior = loadCuisineState() || {};
+  const legacyComfort = (function () {
+    try { return (window.kwState && window.kwState.loadStep('comfort')) || {}; } catch (e) { return {}; }
+  })();
+  const initPace = prior.pace || legacyComfort.pace || '';
+  const initMobility = prior.mobility || legacyComfort.mobility || '';
+
   const [pageIdx, setPageIdx] = useState(0);
+  const [showAll, setShowAll] = useState(false);   // progressive disclosure for the active tab
   const [selected, setSelected] = useState(() => new Set(Array.isArray(prior.items) ? prior.items : []));
   const [allergens, setAllergens] = useState(() => new Set(Array.isArray(prior.allergens) ? prior.allergens : []));
   const [diets, setDiets] = useState(() => new Set(Array.isArray(prior.diets) ? prior.diets : []));
   const [spice, setSpice] = useState(prior.spice != null ? prior.spice : null);
   const [notes, setNotes] = useState(typeof prior.notes === 'string' ? prior.notes : '');
+  const [pace, setPace] = useState(initPace);
+  const [mobility, setMobility] = useState(initMobility);
   const [detailCode, setDetailCode] = useState(null);
 
   // Persist the full cuisine slice on every change so the fixed-footer Continue
-  // (in step5.html) and the result page always read the current picks. Same
+  // (in step4.html) and the result page always read the current picks. Same
   // pattern as Step3Culture — selections are saved as you go, never on submit only.
+  // pace/mobility ride on the cuisine slice now (comfort slice retired).
   React.useEffect(() => {
     if (window.kwState) {
       window.kwState.saveStep('cuisine', {
@@ -1031,9 +1059,14 @@ function Step4Cuisine() {
         diets: Array.from(diets),
         spice: spice,
         notes: notes,
+        pace: pace,
+        mobility: mobility,
       });
     }
-  }, [selected, allergens, diets, spice, notes]);
+  }, [selected, allergens, diets, spice, notes, pace, mobility]);
+
+  // Collapse back to the preview when switching tabs — each tab starts compact.
+  const selectPage = (i) => { setPageIdx(i); setShowAll(false); };
 
   const openDetail = (item) => {
     if (CUISINE_DETAILS[item.code]) { setDetailCode(item.code); return; }
@@ -1066,14 +1099,48 @@ function Step4Cuisine() {
     <>
       <div className="kw-q-input">
 
-        {/* ── Sub-step Ⅰ — Choose your tastings ───────────────────── */}
+        {/* ── Comfort chips (merged from old Step 4) — pace + mobility ── */}
+        <div className="kw-comfort">
+          <div className="kw-comfort-field">
+            <div className="kw-comfort-q">Your ideal pace</div>
+            <div className="kw-comfort-chips">
+              {PACE_OPTS.map((o) =>
+                <button
+                  key={o.code}
+                  type="button"
+                  className={`kw-comfort-chip ${pace === o.code ? 'is-sel' : ''}`}
+                  onClick={() => setPace(o.code)}>
+                  {o.label}
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="kw-comfort-field">
+            <div className="kw-comfort-q">Getting around</div>
+            <div className="kw-comfort-chips">
+              {MOBILITY_OPTS.map((o) =>
+                <button
+                  key={o.code}
+                  type="button"
+                  className={`kw-comfort-chip ${mobility === o.code ? 'is-sel' : ''}`}
+                  onClick={() => setMobility(o.code)}>
+                  {o.label}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="kw-comfort-rule" aria-hidden="true" />
+
+        {/* ── Sub-step Ⅰ — Choose what you'd love to taste ─────────── */}
         <div className="kw-substep">
           <div className="kw-substep-l">
             <span className="kw-substep-numeral">Step Ⅰ</span>
-            <span className="kw-substep-title">Choose your tastings</span>
+            <span className="kw-substep-title">Choose what you'd love to taste</span>
           </div>
           <span className="kw-substep-hint">
-            Four pages — Hansik, Street, Grill, Drinks.
+            Four kinds — Hansik, Street, Grill, Drinks. Pick as many as you like.
           </span>
         </div>
 
@@ -1088,7 +1155,7 @@ function Step4Cuisine() {
                   <button
                     key={p.id}
                     className={`kw-pagetab ${i === pageIdx ? 'is-active' : ''}`}
-                    onClick={() => setPageIdx(i)} style={{ fontFamily: "-apple-system" }}>
+                    onClick={() => selectPage(i)} style={{ fontFamily: "-apple-system" }}>
 
                     <span className="kw-pagetab-num" style={{ fontFamily: "-apple-system" }}>{p.eyebrow}</span>
                     <span className="kw-pagetab-label" style={{ fontFamily: "Inter" }}>
@@ -1101,9 +1168,9 @@ function Step4Cuisine() {
               })}
             </div>
 
-            {/* Page content */}
+            {/* Page content — progressive disclosure: preview first, then reveal */}
             <div className="kw-cul-grid">
-                {currentPage.items.map((it) => {
+                {(showAll ? currentPage.items : currentPage.items.slice(0, DISH_PREVIEW)).map((it) => {
                 const sel = selected.has(it.code);
                 return (
                   <div
@@ -1134,30 +1201,24 @@ function Step4Cuisine() {
               })}
               </div>
 
-            {/* Pagination */}
-            <div className="kw-pagination">
-              <button
-                className="kw-pagination-btn"
-                onClick={() => setPageIdx((i) => Math.max(0, i - 1))}
-                disabled={pageIdx === 0}>
-                ← Previous
-              </button>
-              {FB_PAGES.map((p, i) =>
-              <button
-                key={p.id}
-                className={`kw-pagination-btn kw-pagination-num ${i === pageIdx ? 'is-active' : ''}`}
-                onClick={() => setPageIdx(i)}>
-                  {i + 1}
+            {/* Progressive disclosure — show a representative few, reveal the rest */}
+            {currentPage.items.length > DISH_PREVIEW &&
+              <div className="kw-more-row">
+                <button
+                  type="button"
+                  className="kw-more-btn"
+                  onClick={() => setShowAll((v) => !v)}>
+                  {showAll
+                    ? <>Show fewer<span className="kw-more-chev">↑</span></>
+                    : <>See all {currentPage.items.length} {currentPage.label} dishes<span className="kw-more-chev">↓</span></>}
                 </button>
-              )}
-              <span className="kw-pagination-info">Page {pageIdx + 1} of {FB_PAGES.length}</span>
-              <button
-                className="kw-pagination-btn"
-                onClick={() => setPageIdx((i) => Math.min(FB_PAGES.length - 1, i + 1))}
-                disabled={pageIdx === FB_PAGES.length - 1}>
-                Next →
-              </button>
-            </div>
+                {!showAll &&
+                  <div className="kw-more-note">
+                    Showing {DISH_PREVIEW} of {currentPage.items.length} — these are the favorites.
+                  </div>
+                }
+              </div>
+            }
 
             {/* Basket */}
             <div className="kw-cul-basket">
@@ -1195,14 +1256,14 @@ function Step4Cuisine() {
           </div>
         </section>
 
-        {/* ── Sub-step Ⅱ — Dietary requirements ────────────────────── */}
+        {/* ── Sub-step Ⅱ — Dietary needs ───────────────────────────── */}
         <div className="kw-substep">
           <div className="kw-substep-l">
             <span className="kw-substep-numeral">Step Ⅱ</span>
-            <span className="kw-substep-title">Dietary requirements</span>
+            <span className="kw-substep-title">Dietary needs</span>
           </div>
           <span className="kw-substep-hint">
-            We verify every dish with the kitchen — be as specific as you'd like.
+            We check every dish with the kitchen — be as specific as you'd like.
           </span>
         </div>
 
@@ -1215,7 +1276,7 @@ function Step4Cuisine() {
                 <h2 className="kw-q-title">Anything you can't eat?</h2>
               </div>
               <p className="kw-diet-header-help">
-                Tick every allergen — even mild ones. We brief every chef before service.
+                Tick every allergen — even mild ones. We tell every chef before your meal.
               </p>
             </div>
             <div className="kw-allergen-grid">
@@ -1256,11 +1317,11 @@ function Step4Cuisine() {
           <div className="kw-diet-section">
             <div className="kw-diet-header">
               <div>
-                <SectionEyebrow num="02" label="Diet & Religion" />
+                <SectionEyebrow num="02" label="Diet & Faith" />
                 <h2 className="kw-q-title">Any diet or faith we should honor?</h2>
               </div>
               <p className="kw-diet-header-help">
-                Halal, Kosher, temple-style, plant-based — planned around without explaining twice.
+                Halal, Kosher, temple-style, plant-based — we plan around it, no need to explain twice.
               </p>
             </div>
             <div className="kw-diet-grid">
@@ -1292,7 +1353,7 @@ function Step4Cuisine() {
                 <h2 className="kw-q-title">How spicy do you like it?</h2>
               </div>
               <p className="kw-diet-header-help">
-                From gentle doenjang to face-melting buldak — tell us where your palate lives.
+                We ask just once, and every dish in your week is set to match.
               </p>
             </div>
             <div className="kw-spice">
@@ -1321,10 +1382,10 @@ function Step4Cuisine() {
         <section className="kw-q-row">
           <div>
             <SectionEyebrow num="04" label="Notes" />
-            <h2 className="kw-q-title">Anything else to tell the kitchen?</h2>
+            <h2 className="kw-q-title">Anything else for the kitchen?</h2>
             <p className="kw-q-help">
-              A dish you've been dreaming about, a restaurant on your list, a sensitivity that
-              doesn't fit the boxes above, or the time your mother made you a meal you want to recreate.
+              A dish you've been dreaming of, a restaurant on your list, or a sensitivity that
+              doesn't fit the boxes above. Optional.
             </p>
           </div>
           <div className="kw-q-input">
@@ -1332,7 +1393,7 @@ function Step4Cuisine() {
               <div className="kw-notes-card-head">
                 <span className="kw-notes-card-label">
                   <span className="kw-notes-card-pen">✎</span>
-                  Write your dietary notes here
+                  Write a note for the chefs
                 </span>
                 <span className="kw-notes-card-secure">• Shared with chefs · optional</span>
               </div>
@@ -1341,7 +1402,7 @@ function Step4Cuisine() {
                 rows={5}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Severe peanut allergy — anaphylactic. I've always wanted to try makgeolli at a brewery. My partner is FODMAP-sensitive so no garlic-heavy dishes. Hoping for one fine-dining night and otherwise casual." />
+                placeholder="e.g. Severe peanut allergy. I'd love to try makgeolli at a brewery. One fine-dining night, otherwise casual." />
             </div>
           </div>
         </section>
@@ -1398,7 +1459,7 @@ function CuisineDetailDrawer({ item, detail, isSelected, onToggle, onClose }) {
         <header className="kw-drawer-top">
           <nav className="kw-drawer-crumb" aria-label="Breadcrumb">
             <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
-              ← Step 5 · Cuisine
+              ← Step 4 · Taste & comfort
             </a>
             <span className="kw-drawer-crumb-sep" aria-hidden="true">/</span>
             <span className="kw-drawer-crumb-now">{item.name}</span>

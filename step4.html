@@ -12,18 +12,18 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mosim — Plan your trip · Step 4, Comfort &amp; food</title>
+<title>Mosim — Plan your trip · Step 4, Taste & comfort</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
+  :root{ --ivory:#F7F2EA; --ivory-soft:#FBF8F2; --navy:#1B2A4A; --navy-soft:#2A3C5E; --gold:#C39A3F; --gold-soft:#D9BD7E; --gold-tint:rgba(195,154,63,.10); --ink:#54514B; --ink-2:#8A8479; --line:#E5DBC8; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
-  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:124px;}
+  body{background:var(--ivory); color:var(--navy); font-family:'Inter',-apple-system,system-ui,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:96px;}
   :focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:4px; }
   .wrap{max-width:1200px; margin:0 auto; padding:0 36px;}
-  h1,.brand{font-family:'Lora',Georgia,serif;}
+  h1,h3,.brand{font-family:'Lora',Georgia,serif;}
   a{color:inherit;}
 
   nav{padding:18px 0; border-bottom:1px solid var(--line);}
@@ -47,22 +47,1004 @@
   .head h1{font-size:clamp(30px,4.5vw,40px); font-weight:600; line-height:1.12; text-wrap:balance;}
   .head p{font-size:19px; color:var(--ink); max-width:none; margin:16px auto 0; line-height:1.6; text-wrap:balance;}
 
-  .field{margin:36px 0;}
-  .field .q{font-size:19px; font-weight:600; color:var(--navy); margin-bottom:14px;}
-  .chip-group{display:flex; flex-wrap:wrap; gap:10px;}
-  .chip{font-size:19px; border:2px solid var(--line); background:#fff; border-radius:999px; padding:12px 22px; cursor:pointer; color:var(--navy); min-height:48px; font-family:'Inter',sans-serif;}
-  .chip:hover{border-color:var(--gold-soft);}
-  .chip.sel{border-color:var(--gold); font-weight:600; box-shadow:0 8px 22px -14px rgba(195,154,63,.6);}
-  .custom{margin-top:12px; width:100%; max-width:420px; height:50px; border:2px solid var(--line); border-radius:11px; background:#fff; padding:0 16px; font-size:19px; font-family:'Inter',sans-serif; color:var(--navy);}
-  .custom:focus{outline:none; border-color:var(--gold);}
+  .cards-wrap{margin:36px 0 8px;}
+
+  /* ── Comfort chips (merged from old Step 4) — pace + mobility ─────── */
+  .kw-comfort{ margin:8px 0 4px; display:flex; flex-direction:column; gap:30px; }
+  .kw-comfort-q{ font-size:19px; font-weight:600; color:var(--navy); margin-bottom:14px; }
+  .kw-comfort-chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .kw-comfort-chip{ font-size:19px; border:2px solid var(--line); background:#fff; border-radius:999px; padding:12px 22px; cursor:pointer; color:var(--navy); min-height:48px; font-family:'Inter',sans-serif; transition:border-color .15s, box-shadow .15s; }
+  .kw-comfort-chip:hover{ border-color:var(--gold-soft); }
+  .kw-comfort-chip.is-sel{ border-color:var(--gold); font-weight:600; box-shadow:0 8px 22px -14px rgba(195,154,63,.6); }
+  /* gold divider between comfort chips and the food picker */
+  .kw-comfort-rule{ height:1px; background:var(--line); margin:34px 0 6px; }
+  /* progressive-disclosure micro-copy under "See all" */
+  .kw-more-note{ font-size:15px; color:var(--ink-2); margin-top:10px; }
 
   .footbar{position:fixed; left:0; right:0; bottom:0; background:rgba(247,242,234,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line); z-index:10;}
   .fb-in{max-width:1200px; margin:0 auto; padding:16px 36px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .back{font-size:16px; color:var(--ink); text-decoration:none; padding:10px 4px; min-height:44px; display:inline-flex; align-items:center;}
+  .count{font-size:15px; color:var(--ink-2);}
   .btn{font-size:17px; font-weight:600; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 30px; min-height:44px; cursor:pointer; font-family:'Inter',sans-serif;}
   .btn:hover{background:var(--navy-soft);}
 
   @media(max-width:520px){ .head h1{font-size:28px;} }
+
+  /* ── Ported K-Wellness culture picker (re-skinned to Warm Trust) ───── */
+  #root h1, #root h2, #root h3{ font-family:'Lora', Georgia, serif; }
+  /* ════════════════════════════════════════════════════════════════════
+     Step 3 Culture — inherits Steps 1+2 visual system, but with a
+     denser smaller-card grid (4 cols) and paginated browse (50 items
+     across 3 pages: Heritage / Crafts / Modern).
+     ════════════════════════════════════════════════════════════════════ */
+#root { color: var(--ink); }
+  #root * { box-sizing: border-box; }
+  #root a { color: inherit; text-decoration: none; }
+  #root a.kw-cta { color: #fff; }
+  #root a.kw-cta.kw-cta-ghost { color: var(--navy); }
+  #root button { font: inherit; cursor: pointer; }
+  #root ul { list-style: none; margin: 0; padding: 0; }
+
+  /* CTA */
+  .kw-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 50px; padding: 0 28px;
+    border-radius: 999px; border: none;
+    background: var(--gold); color: #fff;
+    font-weight: 600; font-size: 17px;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
+  }
+  .kw-cta:hover { background: var(--navy); }
+  .kw-cta-lg { height: 62px; padding: 0 38px; font-size: 19px; }
+  .kw-cta-ghost {
+    background: transparent; color: var(--navy);
+    border: 1.5px solid var(--line);
+  }
+  .kw-cta-ghost:hover { background: var(--ivory-soft); }
+
+  .kw-q-input { min-width: 0; }
+
+  /* Single-scroll chapters + sticky chapter rail (replaces the old page tabs) */
+  .kw-chaprail{position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:6px 24px; align-items:baseline;
+    background:rgba(247,242,234,.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); padding:14px 2px; margin:0;}
+  .kw-chaprail-link{font-family:'Lora',serif; font-size:17px; font-weight:600; color:var(--ink-2); text-decoration:none;
+    display:inline-flex; align-items:baseline; gap:7px; padding:2px; border-bottom:2px solid transparent;}
+  .kw-chaprail-link:hover{color:var(--navy);}
+  .kw-chaprail-link.is-active{color:var(--navy); border-bottom-color:var(--gold);}
+  .kw-chaprail-count{font-family:'Inter',sans-serif; font-size:13px; font-weight:500; color:var(--ink-2);}
+  .kw-chapter{padding:34px 0 8px; scroll-margin-top:76px;}
+  .kw-chapter-head{margin:0 0 18px;}
+  .kw-chapter-title{font-family:'Lora',serif; font-size:clamp(23px,2.8vw,30px); font-weight:600; color:var(--navy); line-height:1.14;}
+  .kw-chapter-count{font-family:'Inter',sans-serif; font-size:15px; font-weight:500; color:var(--ink-2); margin-left:12px;}
+  .kw-chapter-blurb{font-size:18px; color:var(--ink); margin-top:6px; line-height:1.5;}
+  .kw-peek-show{font-family:'Inter',sans-serif; font-size:15px; font-weight:600; border-radius:999px; padding:11px 18px;
+    cursor:pointer; border:1px solid var(--gold); background:var(--gold-soft,#F3E7C9); color:var(--navy); white-space:nowrap;}
+  @media(max-width:760px){ .kw-chaprail{gap:4px 16px;} .kw-chaprail-link{font-size:15px;} }
+
+  /* ════════════════════════════════════════════════════════════════════
+     Culture-tile grid — denser, smaller cards (4 cols)
+     ════════════════════════════════════════════════════════════════════ */
+  .kw-cul-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .kw-cul {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.2,.7,.3,1),
+                box-shadow .25s, border-color .25s;
+    display: flex; flex-direction: column;
+  }
+  .kw-cul:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px -10px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.04);
+    border-color: rgba(0,0,0,.08);
+  }
+  .kw-cul.is-selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold),
+                0 10px 28px -10px rgba(195,154,63,.25);
+  }
+  /* Selected card gets a clear gold tint + a checkmark badge on the photo,
+     mirroring the step-1 care tiles so a tap visibly "takes". */
+  .kw-cul.is-selected .kw-cul-body { background: var(--gold-tint, rgba(195,154,63,.10)); }
+  .kw-cul-check {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 800; line-height: 1;
+    box-shadow: 0 2px 8px rgba(27,42,74,.28);
+  }
+  .kw-cul-photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, var(--photo-a, #e8e8ed) 0%, var(--photo-b, #c5c5cc) 60%, var(--photo-c, #a5a5ac) 100%);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kw-cul-photo::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 140% 60% at 50% 0%, rgba(255,255,255,.3), transparent 60%),
+      radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0,0,0,.12), transparent 60%);
+    pointer-events: none;
+  }
+  .kw-cul-photo::after {
+    content: ""; position: absolute; inset: 10px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  /* When a real photo is loaded, lighten the radial gradient so the image shows through
+     while keeping the inner border accent for visual consistency with placeholder cards. */
+  .kw-cul-photo.has-image::before {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 40%, rgba(0,0,0,.18) 100%);
+  }
+  .kw-cul-photo.has-image::after {
+    border-color: rgba(255,255,255,.28);
+  }
+  .kw-cul-monogram {
+    position: relative; z-index: 1;
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700; font-style: italic;
+    font-size: 48px;
+    color: var(--photo-fg, rgba(0,0,0,.35));
+    letter-spacing: -0.04em;
+    line-height: 1; opacity: .6;
+  }
+  .kw-cul-view {
+    position: absolute;
+    top: 10px; right: 10px;
+    z-index: 2;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    color: var(--navy);
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+  }
+  .kw-cul:hover .kw-cul-view {
+    opacity: 1; transform: translateY(0);
+  }
+  .kw-cul-body {
+    padding: 14px 16px 14px;
+    display: flex; flex-direction: column;
+    gap: 8px; flex: 1;
+  }
+  .kw-cul-eyebrow {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .kw-cul.is-selected .kw-cul-eyebrow { color: var(--gold); }
+  .kw-cul-name {
+    font-size: 19px; font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.014em;
+    line-height: 1.22;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .kw-cul-foot {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    gap: 8px;
+  }
+  /* "& more" reveal button under the grid */
+  .kw-more-row { text-align: center; margin: 26px 0 4px; }
+  .kw-more-btn {
+    font-size: 18px; font-weight: 600; color: var(--navy);
+    background: #fff; border: 1.5px solid var(--gold); border-radius: 999px;
+    padding: 13px 28px; min-height: 50px; cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+  }
+  .kw-more-btn:hover { background: var(--ivory-soft); box-shadow: 0 16px 30px -22px rgba(195,154,63,.55); }
+  .kw-more-chev { margin-left: 6px; color: var(--gold); }
+  .kw-cul-meta {
+    font-size: 15px; font-weight: 600;
+    color: var(--ink-2);
+    letter-spacing: .01em;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Hit area ≥44px (tap target) — the visible pill stays compact via a 32px-tall
+     inner background while padding extends the tappable region to 44px. */
+  .kw-cul-add {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px;
+    min-height: 44px;
+    height: 44px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--navy); color: #fff; border: none;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: background .15s, transform .15s, box-shadow .15s;
+    flex: none;
+  }
+  .kw-cul-add:hover {
+    background: var(--gold);
+    transform: translateY(-1px);
+  }
+  .kw-cul-add-plus { font-size: 16px; font-weight: 500; line-height: 1; }
+  .kw-cul.is-selected .kw-cul-add {
+    background: var(--gold-tint);
+    color: var(--gold);
+    box-shadow: inset 0 0 0 1.5px var(--gold);
+  }
+  .kw-cul.is-selected .kw-cul-add:hover {
+    background: var(--gold); color: #fff;
+  }
+
+  /* Single warm-neutral card surface — replaces legacy per-theme pastels */
+  .kw-cul-photo, .kw-city-photo, .kw-basket-thumb {
+    --photo-a:#F1E9D8; --photo-b:#E3D6BC; --photo-c:#D9BD7E; --photo-fg:#1B2A4A;
+  }
+
+  /* ═════════════════════════════════════════════════════════════════
+     City cards — Page Ⅳ Beyond Seoul. One card per city.
+     ═════════════════════════════════════════════════════════════════ */
+  .kw-city-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .kw-city {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    transition: transform .25s cubic-bezier(.2,.7,.3,1),
+                box-shadow .25s, border-color .25s;
+  }
+  .kw-city:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px -12px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.04);
+    border-color: rgba(0,0,0,.08);
+  }
+  /* Selected city — same gold ring + tint + checkmark as the experience cards,
+     so picking a Jeju/Busan trip looks identical to picking any other card. */
+  .kw-city.is-selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold),
+                0 16px 40px -12px rgba(195,154,63,.28);
+  }
+  .kw-city.is-selected .kw-city-body { background: var(--gold-tint); }
+  .kw-city-check {
+    position: absolute; top: 14px; left: 14px; z-index: 3;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; line-height: 1;
+    box-shadow: 0 3px 10px rgba(27,42,74,.3);
+  }
+  .kw-city-photo {
+    position: relative;
+    aspect-ratio: 5 / 3;
+    background: linear-gradient(135deg, var(--photo-a) 0%, var(--photo-b) 60%, var(--photo-c) 100%);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: flex; align-items: center; padding: 0 24px;
+    color: var(--photo-fg);
+  }
+  .kw-city-photo::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 140% 60% at 50% 0%, rgba(255,255,255,.32), transparent 60%),
+      radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0,0,0,.12), transparent 60%);
+    pointer-events: none;
+  }
+  .kw-city-photo::after {
+    content: ""; position: absolute; inset: 14px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  /* When a real photo is loaded, swap the bright gradient overlay for a darker one
+     so the region tag stays legible on top of the image. */
+  .kw-city-photo.has-image {
+    color: #fff;
+  }
+  .kw-city-photo.has-image::before {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 40%, rgba(0,0,0,.42) 100%);
+  }
+  .kw-city-photo.has-image::after {
+    border-color: rgba(255,255,255,.32);
+  }
+  .kw-city-monogram {
+    position: relative; z-index: 1;
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700; font-style: italic;
+    font-size: 80px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    opacity: .55;
+  }
+  .kw-city-photo-region {
+    position: relative; z-index: 1;
+    margin-left: auto;
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic; font-weight: 600;
+    font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .85;
+    text-align: right;
+    max-width: 60%;
+  }
+  .kw-city-body {
+    padding: 22px 24px 22px;
+    display: flex; flex-direction: column;
+    gap: 14px;
+    flex: 1;
+  }
+  .kw-city-name {
+    font-size: 26px; font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.022em; line-height: 1.1;
+  }
+  .kw-city-desc {
+    margin: 0;
+    font-size: 19px; font-weight: 500;
+    color: var(--ink); line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .kw-city-acts {
+    display: flex; flex-wrap: wrap; gap: 6px 7px;
+  }
+  .kw-city-chip {
+    font-size: 13px; font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--ivory-soft);
+    color: var(--ink);
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .kw-city-foot {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  /* Primary "+ Add this trip" affordance — matches the experience-card Add
+     button (≥44px tap target), so city selection is obvious + consistent. */
+  .kw-city-add {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    min-height: 44px; height: 44px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: var(--navy); color: #fff; border: none;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: .01em;
+    cursor: pointer;
+    transition: background .15s, transform .15s, box-shadow .15s;
+    flex: none;
+  }
+  .kw-city-add:hover { background: var(--gold); transform: translateY(-1px); }
+  .kw-city-add-plus { font-size: 19px; font-weight: 500; line-height: 1; }
+  .kw-city.is-selected .kw-city-add {
+    background: var(--gold-tint); color: var(--gold);
+    box-shadow: inset 0 0 0 1.5px var(--gold);
+  }
+  .kw-city.is-selected .kw-city-add:hover { background: var(--gold); color: #fff; }
+  .kw-city-cta {
+    font-size: 16px; font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    min-height: 44px;
+    display: inline-flex; align-items: center;
+    padding: 0 4px;
+  }
+  .kw-city-cta:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+
+  /* ════════════════════════════════════════════════════════════════════
+     Basket — same pattern as Step 2
+     ════════════════════════════════════════════════════════════════════ */
+  .kw-cul-basket {
+    grid-column: 1 / -1;
+    background: var(--ivory-soft);
+    border-radius: 20px;
+    padding: 22px 26px 24px;
+    margin-top: 24px;
+    display: flex; flex-direction: column; gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.04),
+                inset 0 1px 0 rgba(255,255,255,.5);
+    position: relative;
+  }
+  .kw-cul-basket::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 26px;
+    width: 48px; height: 3px;
+    background: var(--gold);
+    border-radius: 0 0 3px 3px;
+  }
+  .kw-basket-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px;
+  }
+  .kw-basket-eyebrow {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700; font-style: italic;
+    font-size: 13px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .kw-basket-count {
+    color: var(--navy); font-weight: 700; font-style: normal;
+    font-size: 19px; letter-spacing: 0; margin-left: 8px;
+    text-transform: none;
+  }
+  .kw-basket-clear {
+    font-size: 13px; font-weight: 600; color: var(--gold);
+    cursor: pointer;
+  }
+  .kw-basket-clear:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .kw-basket-items {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .kw-basket-item {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px 10px 8px 8px;
+    min-width: 0;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .kw-basket-item:hover {
+    border-color: var(--line);
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .kw-basket-thumb {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--photo-a) 0%, var(--photo-b) 60%, var(--photo-c) 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic; font-weight: 700;
+    font-size: 15px; color: var(--photo-fg);
+    letter-spacing: -0.02em;
+  }
+  .kw-basket-item-info {
+    display: flex; flex-direction: column; gap: 1px;
+    min-width: 0;
+  }
+  .kw-basket-item-name {
+    font-size: 14px; font-weight: 700; color: var(--navy);
+    letter-spacing: -0.005em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  .kw-basket-item-meta {
+    font-size: 13px; font-weight: 600; color: var(--ink-2);
+    letter-spacing: .01em;
+  }
+  .kw-basket-item-remove {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: transparent; border: none;
+    color: var(--ink-2);
+    font-size: 16px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .15s, color .15s;
+    margin-left: 2px;
+  }
+  .kw-basket-item-remove:hover {
+    background: var(--gold); color: #fff;
+  }
+  .kw-basket-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 52px; padding: 0 18px;
+    border-radius: 12px;
+    border: 1.5px dashed var(--line);
+    color: var(--ink-2);
+    font-size: 13px; font-weight: 600;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .kw-basket-add:hover {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(195,154,63,.04);
+  }
+  .kw-basket-add-icon {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--ink-2); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    transition: background .15s;
+  }
+  .kw-basket-add:hover .kw-basket-add-icon { background: var(--gold); }
+
+  /* ─── Detail drawer (opens when you click a culture card) ───────── */
+  @keyframes kw-scrim-in   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes kw-drawer-in  { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+  .kw-drawer-scrim {
+    position: fixed; inset: 0;
+    background: rgba(15, 14, 18, .42);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 90;
+    animation: kw-scrim-in .22s ease-out both;
+  }
+  .kw-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 88vw; max-width: 1180px;
+    background: #fff;
+    z-index: 100;
+    display: flex; flex-direction: column;
+    box-shadow: -24px 0 60px rgba(0,0,0,.14);
+    animation: kw-drawer-in .28s cubic-bezier(.22,.61,.36,1) both;
+  }
+  .kw-drawer-top {
+    flex: none; height: 64px; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .kw-drawer-crumb {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--ink-2);
+  }
+  .kw-drawer-crumb a {
+    color: var(--ink); text-decoration: none;
+    font-weight: 600; transition: color .15s;
+  }
+  .kw-drawer-crumb a:hover { color: var(--gold); }
+  .kw-drawer-crumb-sep { color: var(--line); }
+  .kw-drawer-crumb-now { color: var(--navy); font-weight: 600; }
+  .kw-drawer-close {
+    width: 38px; height: 38px;
+    border-radius: 50%; border: 1px solid var(--line);
+    background: #fff; color: var(--ink);
+    font-size: 22px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .kw-drawer-close:hover {
+    background: var(--ivory-soft);
+    border-color: var(--ink-2); color: var(--navy);
+  }
+  .kw-drawer-body {
+    flex: 1 1 auto; overflow-y: auto;
+    padding: 36px 44px 32px;
+  }
+  .kw-drawer-foot {
+    flex: none; padding: 18px 32px;
+    border-top: 1px solid var(--line);
+    background: rgba(255,255,255,.96);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  }
+  .kw-drawer-foot-l { display: flex; flex-direction: column; gap: 4px; }
+  .kw-drawer-foot-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .kw-drawer-foot-meta {
+    font-size: 14px; color: var(--ink); font-weight: 500;
+  }
+  .kw-drawer-foot-r {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* Detail body — hero / sections / facts / video */
+  .kw-detail-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: start;
+  }
+  .kw-detail-hero-l {
+    display: flex; flex-direction: column;
+  }
+  .kw-detail-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+  .kw-detail-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 44px; line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    margin: 0 0 20px;
+    font-weight: 700;
+  }
+  .kw-detail-tagline {
+    font-size: 20px; line-height: 1.55;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .kw-detail-gallery {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .kw-detail-hero-photo {
+    width: 100%; aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    background-size: cover; background-position: center;
+    background-color: var(--ivory-soft);
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  .kw-detail-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .kw-detail-thumb {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-size: cover; background-position: center;
+    background-color: var(--ivory-soft);
+    cursor: pointer; padding: 0;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .kw-detail-thumb:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,.10);
+  }
+  .kw-detail-thumb.is-active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(195,154,63,.18), 0 3px 8px rgba(0,0,0,.10);
+  }
+
+  .kw-detail-section { margin-bottom: 40px; }
+  .kw-detail-section:last-child { margin-bottom: 8px; }
+  .kw-detail-h3 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+
+  .kw-detail-facts {
+    border-top: 1px solid var(--line);
+    margin: 32px 0 0;
+  }
+  .kw-detail-fact-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    column-gap: 32px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .kw-detail-fact-row dt {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-2);
+    line-height: 1.4;
+    margin: 0;
+  }
+  .kw-detail-fact-row dd {
+    font-size: 15px; line-height: 1.55;
+    letter-spacing: -0.003em;
+    color: var(--navy);
+    margin: 0;
+  }
+
+  .kw-detail-video {
+    position: relative;
+    width: 100%; aspect-ratio: 16 / 9;
+    border-radius: 14px; overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 18px rgba(0,0,0,.12);
+  }
+  .kw-detail-video iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
+  .kw-detail-video-caption {
+    margin-top: 10px;
+    font-size: 13px; color: var(--ink-2);
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .kw-drawer { width: 100vw; }
+    .kw-drawer-top { padding: 0 20px; }
+    .kw-drawer-body { padding: 24px 20px 20px; }
+    .kw-drawer-foot { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px 20px; }
+    .kw-detail-hero { grid-template-columns: 1fr; gap: 22px; }
+    .kw-detail-title { font-size: 34px; }
+    .kw-detail-facts { grid-template-columns: 1fr; }
+    .kw-detail-facts dt { padding-bottom: 4px; border-bottom: 0; }
+    .kw-detail-facts dd { padding-top: 0; }
+  }
+  @media(max-width:1080px){ .kw-cul-grid{grid-template-columns:repeat(3,1fr);} .kw-city-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:760px){ .kw-cul-grid{grid-template-columns:repeat(2,1fr);} .kw-city-grid{grid-template-columns:1fr;} }
+  @media(max-width:480px){ .kw-cul-grid{grid-template-columns:1fr;} }
+
+  /* ════════════════════════════════════════════════════════════════════
+     CUISINE (Step 5) — substeps, page tabs, pagination, dietary sections,
+     allergens, diets, spice, notes, confidence band. Ported from the
+     original cuisine layout and re-skinned to the Warm Trust palette
+     (navy / gold / ivory, Lora serif) — no legacy magenta.
+     ════════════════════════════════════════════════════════════════════ */
+
+  /* Eyebrow label (matches the React SectionEyebrow) */
+  .kw-eyebrow { display: inline-flex; align-items: baseline; gap: 12px; color: var(--gold); }
+  .kw-eyebrow-num { font-family: 'Lora', Georgia, serif; font-weight: 700; font-size: 13px; letter-spacing: .08em; }
+  .kw-eyebrow-text { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+  /* Sub-step header */
+  .kw-substep {
+    margin: 8px 0 24px;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
+  }
+  .kw-substep-l { display: flex; align-items: baseline; gap: 20px; flex: 1 1 auto; min-width: 0; }
+  .kw-substep-numeral {
+    font-family: 'Lora', Georgia, serif; font-weight: 700; font-style: italic;
+    font-size: 13px; color: var(--gold);
+    letter-spacing: .18em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .kw-substep-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(24px, 2.4vw, 32px); font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.12; color: var(--navy);
+  }
+  .kw-substep-hint {
+    font-size: 19px; font-weight: 500; color: var(--ink-2);
+    flex: 0 1 360px; text-align: right; line-height: 1.45;
+  }
+
+  /* Q-row (label column + input column), like the earlier steps */
+  .kw-q-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    padding: 40px 0;
+    border-top: 1px solid var(--line);
+  }
+  .kw-q-row:first-of-type { border-top: none; padding-top: 16px; }
+  .kw-q-row-full { grid-template-columns: 1fr; }
+  .kw-substep + .kw-q-row { border-top: none; padding-top: 24px; }
+  .kw-q-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 26px; font-weight: 600;
+    letter-spacing: -0.018em; line-height: 1.18;
+    margin: 10px 0; color: var(--navy);
+  }
+  .kw-q-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+  .kw-q-input { min-width: 0; }
+
+  /* Page tabs — Hansik / Street / Grill / Drinks */
+  .kw-pagetabs {
+    display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .kw-pagetab {
+    background: transparent; border: none;
+    padding: 16px 28px 18px;
+    display: flex; flex-direction: column; gap: 4px;
+    text-align: left; cursor: pointer;
+    color: var(--ink-2); position: relative;
+    transition: color .15s;
+    min-height: 44px;
+  }
+  .kw-pagetab:hover { color: var(--navy); }
+  .kw-pagetab.is-active { color: var(--navy); }
+  .kw-pagetab.is-active::after {
+    content: ""; position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px; background: var(--gold);
+  }
+  .kw-pagetab-num {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic; font-weight: 700;
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .kw-pagetab-label { font-size: 19px; font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; }
+  .kw-pagetab-count { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; color: var(--ink-2); margin-left: 8px; }
+  .kw-pagetab.is-active .kw-pagetab-count { color: var(--gold); }
+
+  /* Pagination row under the grid */
+  .kw-pagination {
+    grid-column: 1 / -1;
+    margin-top: 12px; padding: 22px 0 4px;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+  }
+  .kw-pagination-btn {
+    height: 44px; min-width: 44px; padding: 0 14px;
+    border-radius: 999px; border: 1.5px solid var(--line);
+    background: #fff; color: var(--navy);
+    font-size: 15px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; transition: border-color .15s, background .15s, color .15s;
+  }
+  .kw-pagination-btn:hover:not(:disabled) { border-color: var(--gold); }
+  .kw-pagination-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .kw-pagination-num { background: transparent; color: var(--ink-2); font-weight: 700; }
+  .kw-pagination-num:hover { color: var(--navy); }
+  .kw-pagination-num.is-active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .kw-pagination-info { margin: 0 16px; font-size: 15px; font-weight: 500; color: var(--ink-2); }
+
+  /* Notes card */
+  .kw-notes-card {
+    background: var(--ivory-soft);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px 22px 22px;
+    box-shadow: inset 4px 0 0 var(--gold);
+  }
+  .kw-notes-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .kw-notes-card-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .14em; color: var(--gold); text-transform: uppercase;
+  }
+  .kw-notes-card-pen {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+  }
+  .kw-notes-card-secure { font-size: 12.5px; font-weight: 600; color: var(--ink-2); letter-spacing: .04em; }
+  .kw-textarea {
+    width: 100%; background: #fff;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    min-height: 120px; padding: 18px 20px;
+    font: inherit; font-size: 19px; color: var(--navy); line-height: 1.5; resize: vertical;
+  }
+  .kw-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-tint); outline: none; }
+
+  /* Dietary section layout */
+  .kw-diet-section { display: flex; flex-direction: column; gap: 18px; }
+  .kw-diet-header { display: grid; grid-template-columns: 360px 1fr; gap: 96px; align-items: baseline; }
+  .kw-diet-header-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+
+  /* Allergens grid */
+  .kw-allergen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .kw-allergen {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 14px 14px 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; text-align: left; position: relative; min-height: 78px;
+    transition: border-color .15s, background .15s, box-shadow .15s, transform .15s;
+  }
+  .kw-allergen:hover { border-color: var(--gold-soft); transform: translateY(-1px); box-shadow: 0 4px 14px -8px rgba(0,0,0,.18); }
+  .kw-allergen.is-selected { border-color: var(--gold); background: var(--gold-tint); box-shadow: inset 4px 0 0 var(--gold); padding-left: 18px; }
+  .kw-allergen-mono {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--photo-a, #F1E9D8) 0%, var(--photo-b, #E3D6BC) 60%, var(--photo-c, #D9BD7E) 100%);
+    display: flex; align-items: center; justify-content: center; flex: none;
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700;
+    font-size: 18px; color: var(--photo-fg, #1B2A4A); letter-spacing: -0.02em; opacity: .9;
+  }
+  .kw-allergen-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .kw-allergen-name { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -0.006em; line-height: 1.15; }
+  .kw-allergen-sub { font-size: 14px; font-weight: 500; color: var(--ink-2); line-height: 1.35; }
+  .kw-allergen.is-selected .kw-allergen-sub { color: var(--ink); }
+  .kw-allergen-check {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1.5px solid var(--line); background: #fff; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: transparent;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .kw-allergen.is-selected .kw-allergen-check { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+  /* Diet / religion / lifestyle cards */
+  .kw-diet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .kw-diet {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 16px;
+    padding: 18px 20px 18px 22px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 8px;
+    text-align: left; position: relative; min-width: 0;
+    transition: border-color .15s, background .15s, box-shadow .15s, transform .15s;
+  }
+  .kw-diet:hover { border-color: var(--gold-soft); transform: translateY(-1px); box-shadow: 0 6px 18px -10px rgba(0,0,0,.18); }
+  .kw-diet.is-selected { border-color: var(--gold); background: var(--gold-tint); box-shadow: inset 4px 0 0 var(--gold); }
+  .kw-diet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .kw-diet-name { font-size: 19px; font-weight: 700; color: var(--navy); letter-spacing: -0.014em; line-height: 1.15; }
+  .kw-diet-tag { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+  .kw-diet-desc { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.5; margin: 0; }
+
+  /* Spice tolerance — segmented control with chili pips */
+  .kw-spice { display: flex; align-items: stretch; gap: 6px; padding: 4px; background: var(--ivory-soft); border-radius: 14px; flex-wrap: wrap; }
+  .kw-spice-opt {
+    flex: 1 1 110px; background: transparent; border: none; border-radius: 10px;
+    padding: 12px 12px 14px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;
+    text-align: center; color: var(--ink-2); min-height: 44px;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .kw-spice-opt:hover { color: var(--navy); }
+  .kw-spice-opt.is-active { background: #fff; color: var(--navy); box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04); }
+  .kw-spice-pips { display: inline-flex; align-items: center; gap: 3px; height: 14px; }
+  .kw-spice-pip { width: 7px; height: 11px; background: var(--line); border-radius: 2px 2px 4px 4px / 2px 2px 6px 6px; transform: rotate(-8deg); }
+  .kw-spice-pip.on { background: var(--gold); }
+  .kw-spice-opt.is-active .kw-spice-pip.on { background: var(--gold); }
+  .kw-spice-label { font-size: 16px; font-weight: 700; letter-spacing: -0.005em; }
+  .kw-spice-sub { font-size: 14px; font-weight: 500; color: var(--ink-2); letter-spacing: .01em; }
+  .kw-spice-opt.is-active .kw-spice-sub { color: var(--ink); }
+
+  /* Confidence band — concierge double-checks every dish */
+  .kw-confband {
+    margin-top: 18px; padding: 14px 18px;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--ivory-soft);
+    display: flex; align-items: flex-start; gap: 14px; box-shadow: inset 4px 0 0 var(--gold);
+  }
+  .kw-confband-mark {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700; font-size: 16px; flex: none;
+  }
+  .kw-confband-body { display: flex; flex-direction: column; gap: 3px; }
+  .kw-confband-title { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -0.006em; }
+  .kw-confband-text { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.45; }
+
+  /* Dietary panel inside the dish detail drawer (CuisineDetailDrawer) */
+  .kw-diet-panel { display: flex; flex-direction: column; gap: 14px; }
+  .kw-diet-row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: start; }
+  .kw-diet-row-label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); padding-top: 4px; }
+  .kw-diet-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kw-diet-chip { font-size: 15px; font-weight: 600; padding: 6px 12px; border-radius: 999px; line-height: 1.2; }
+  .kw-diet-chip.kw-diet-contains { background: var(--ivory-soft); color: var(--navy); border: 1px solid var(--line); }
+  .kw-diet-chip.kw-diet-ok { background: rgba(195,154,63,.12); color: #8A6A1E; border: 1px solid var(--gold-soft); }
+  .kw-diet-chip.kw-diet-no { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .kw-diet-spice { display: inline-flex; align-items: center; gap: 6px; }
+  .kw-diet-pip { width: 8px; height: 12px; background: var(--line); border-radius: 2px 2px 4px 4px / 2px 2px 6px 6px; transform: rotate(-8deg); }
+  .kw-diet-pip.is-on { background: var(--gold); }
+  .kw-diet-spice-label { font-size: 16px; font-weight: 700; color: var(--navy); margin-left: 6px; }
+  .kw-diet-note { font-size: 15px; color: var(--ink); line-height: 1.5; margin: 4px 0 0; }
+
+  @media(max-width:760px){
+    .kw-q-row, .kw-diet-header { grid-template-columns: 1fr; gap: 18px; }
+    .kw-substep-hint { text-align: left; flex-basis: auto; }
+    .kw-diet-row { grid-template-columns: 1fr; gap: 6px; }
+    .kw-diet-row-label { padding-top: 0; }
+  }
 </style>
 <script src="js/analytics.js"></script>
 </head>
@@ -80,109 +1062,67 @@
 
 <div class="wrap">
   <div class="head">
-    <div class="step-label">Step 4 of 5 · Comfort &amp; food</div>
-    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span><span></span></div>
+    <div class="step-label">Step 4 of 4 · Taste &amp; comfort</div>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div>
     <h1>Let's keep you comfortable.</h1>
-    <p>So nothing is too much — we plan around your body and your taste, never the clock.</p>
+    <p>One last thing — how you like to move through a day, and what you love to eat. We plan around your body and your taste, never the clock.</p>
   </div>
 
-  <div class="field">
-    <div class="q">Your ideal pace</div>
-    <div class="chip-group" data-group="pace">
-      <button class="chip" data-value="relaxed" type="button">Relaxed</button>
-      <button class="chip" data-value="balanced" type="button">Balanced</button>
-      <button class="chip" data-value="full" type="button">Full days</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="q">Getting around</div>
-    <div class="chip-group" data-group="mobility">
-      <button class="chip" data-value="walks_fine" type="button">I walk fine</button>
-      <button class="chip" data-value="tires_easily" type="button">I tire easily</button>
-      <button class="chip" data-value="cane_walker" type="button">I use a cane or walker</button>
-      <button class="chip" data-value="wheelchair" type="button">I use a wheelchair</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="q">How do you like your food?</div>
-    <div class="chip-group" data-group="spice">
-      <button class="chip" data-value="mild" type="button">Mild, please</button>
-      <button class="chip" data-value="some" type="button">Some spice is fine</button>
-      <button class="chip" data-value="love" type="button">I love spicy</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="q">Anything to keep in mind? <span style="font-weight:500;color:var(--ink-2);">(optional)</span></div>
-    <div class="chip-group" data-group="food" data-multi>
-      <button class="chip" data-value="no_shellfish" type="button">No shellfish</button>
-      <button class="chip" data-value="no_pork" type="button">No pork</button>
-      <button class="chip" data-value="vegetarian" type="button">Vegetarian</button>
-      <button class="chip" data-value="diabetic" type="button">Diabetic-friendly</button>
-    </div>
-    <input class="custom" id="food-custom" type="text" placeholder="+ add your own (allergies, etc.)">
-  </div>
+  <div class="cards-wrap"><div id="root"></div></div>
 </div>
 
 <div class="footbar"><div class="fb-in">
   <a href="step3.html" class="back">← Back</a>
-  <button class="btn" id="continue" type="button">Continue →</button>
+  <span class="count" id="count">Pick as many as you like</span>
+  <button class="btn" id="continue" type="button">Generate my plan →</button>
 </div></div>
 
 <script src="js/state.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="js/step4-cuisine.js?v=1204dc6a" defer></script>
 <script>
   (function () {
-    var single = { pace: '', mobility: '', spice: '' };
+    var countEl = document.getElementById('count');
 
-    document.querySelectorAll('.chip-group').forEach(function (wrap) {
-      var group = wrap.getAttribute('data-group');
-      var multi = wrap.hasAttribute('data-multi');
-      wrap.addEventListener('click', function (ev) {
-        var c = ev.target.closest('.chip');
-        if (!c) return;
-        if (multi) {
-          c.classList.toggle('sel');
-        } else {
-          Array.prototype.forEach.call(wrap.querySelectorAll('.chip'), function (x) {
-            x.classList.toggle('sel', x === c);
-          });
-          single[group] = c.getAttribute('data-value');
-        }
-      });
-    });
-
-    function foodSelected() {
-      var wrap = document.querySelector('.chip-group[data-group="food"]');
-      var arr = Array.prototype.slice.call(wrap.querySelectorAll('.chip.sel')).map(function (c) { return c.getAttribute('data-value'); });
-      var custom = document.getElementById('food-custom').value.trim();
-      if (custom) arr.push(custom);
-      return arr;
+    function currentCount() {
+      var c = (window.kwState && window.kwState.loadStep('cuisine')) || null;
+      return (c && Array.isArray(c.items)) ? c.items.length : 0;
+    }
+    function refresh() {
+      var n = currentCount();
+      countEl.textContent = n === 0 ? 'Pick as many as you like'
+        : (n + ' dish' + (n === 1 ? '' : 'es') + ' chosen');
     }
 
-    // restore
-    var prior = (window.kwState && kwState.loadStep('comfort')) || null;
-    if (prior) {
-      ['pace', 'mobility', 'spice'].forEach(function (g) {
-        if (prior[g]) {
-          var c = document.querySelector('.chip-group[data-group="' + g + '"] .chip[data-value="' + prior[g] + '"]');
-          if (c) { c.classList.add('sel'); single[g] = prior[g]; }
-        }
-      });
-      if (prior.food && prior.food.length) {
-        var known = {};
-        document.querySelectorAll('.chip-group[data-group="food"] .chip').forEach(function (c) { known[c.getAttribute('data-value')] = c; });
-        var customParts = [];
-        prior.food.forEach(function (v) { if (known[v]) known[v].classList.add('sel'); else customParts.push(v); });
-        if (customParts.length) document.getElementById('food-custom').value = customParts.join(', ');
+    // The React component persists the cuisine slice on every change.
+    // Re-read it after any interaction in the picker to keep the count live.
+    var root = document.getElementById('root');
+    if (root) {
+      root.addEventListener('click', function () { setTimeout(refresh, 0); });
+      root.addEventListener('input', function () { setTimeout(refresh, 0); });
+    }
+
+    // Mount once the deferred component script has loaded.
+    function mount() {
+      if (window.Step4Cuisine && window.ReactDOM && window.React) {
+        ReactDOM.createRoot(document.getElementById('root'))
+          .render(React.createElement(window.Step4Cuisine));
+        refresh();
+      } else {
+        setTimeout(mount, 30);
       }
     }
+    mount();
+    refresh();
 
     document.getElementById('continue').addEventListener('click', function () {
-      var data = { pace: single.pace, mobility: single.mobility, spice: single.spice, food: foodSelected() };
-      if (window.kwState) kwState.saveStep('comfort', data);
-      window.location.href = 'step5.html';
+      // The component persists cuisine on every change; ensure a value exists
+      // so loading.html / the planner always read a well-formed slice.
+      if (window.kwState && window.kwState.loadStep('cuisine') == null) {
+        window.kwState.saveStep('cuisine', { items: [], allergens: [], diets: [], spice: null, notes: '', pace: '', mobility: '' });
+      }
+      window.location.href = 'loading.html';
     });
   })();
 </script>

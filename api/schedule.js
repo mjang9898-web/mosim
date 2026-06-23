@@ -1,4 +1,4 @@
-// POST /api/schedule  — body: the planner state (care/trip/experiences/comfort)
+// POST /api/schedule  — body: the planner state (care/trip/experiences/cuisine)
 // → { schedule: [ { day, title, cat, slots:[{t,place}] } ] }   cat ∈ care|rest|explore|travel
 import Anthropic from '@anthropic-ai/sdk';
 // The system prompt is COMPILED from the human-edited training notes in training/*.md
