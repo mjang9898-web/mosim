@@ -824,8 +824,9 @@
     letter-spacing: -0.02em; line-height: 1.12; color: var(--navy);
   }
   .kw-substep-hint {
-    font-size: 19px; font-weight: 500; color: var(--ink-2);
-    flex: 0 1 360px; text-align: right; line-height: 1.45;
+    font-size: 17px; font-weight: 500; color: var(--ink-2);
+    flex: 0 1 480px; text-align: right; line-height: 1.45;
+    white-space: nowrap;
   }
 
   /* Q-row (label column + input column), like the earlier steps */
@@ -899,7 +900,7 @@
   /* Dietary section layout */
   .kw-diet-section { display: flex; flex-direction: column; gap: 18px; }
   .kw-diet-header { display: grid; grid-template-columns: 360px 1fr; gap: 96px; align-items: baseline; }
-  .kw-diet-header-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+  .kw-diet-header-help { font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.5; white-space: nowrap; }
 
   /* Allergens grid */
   .kw-allergen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
@@ -1000,7 +1001,8 @@
 
   @media(max-width:760px){
     .kw-q-row, .kw-diet-header { grid-template-columns: 1fr; gap: 18px; }
-    .kw-substep-hint { text-align: left; flex-basis: auto; }
+    .kw-substep-hint { text-align: left; flex-basis: auto; white-space: normal; }
+    .kw-diet-header-help { white-space: normal; }
     .kw-diet-row { grid-template-columns: 1fr; gap: 6px; }
     .kw-diet-row-label { padding-top: 0; }
   }
@@ -1024,7 +1026,7 @@
     <div class="step-label">Step 4 of 4 · Taste</div>
     <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div>
     <h1>What would you love to taste?</h1>
-    <p>One last thing — the food. Pick the Korean dishes you're curious about, then tell us about allergies, diet, and how much spice you like. We plan around your taste.</p>
+    <p>Pick the Korean dishes you're curious about, then tell us your allergies, diet, and spice level — we'll plan to suit.</p>
   </div>
 
   <div class="cards-wrap"><div id="root"></div></div>
@@ -1039,7 +1041,7 @@
 <script src="js/state.js"></script>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="js/step4-cuisine.js?v=09a647f9" defer></script>
+<script src="js/step4-cuisine.js?v=7de81602" defer></script>
 <script>
   (function () {
     var countEl = document.getElementById('count');

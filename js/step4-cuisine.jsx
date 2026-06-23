@@ -1083,7 +1083,7 @@ function Step4Cuisine() {
             <span className="kw-substep-title">Choose what you'd love to taste</span>
           </div>
           <span className="kw-substep-hint">
-            Hansik, street food, grills, and drinks — all in one place. Pick as many as you like.
+            Hansik, street food, grills, drinks — pick as many as you like.
           </span>
         </div>
 
@@ -1185,7 +1185,7 @@ function Step4Cuisine() {
             <span className="kw-substep-title">Dietary needs</span>
           </div>
           <span className="kw-substep-hint">
-            We check every dish with the kitchen — be as specific as you'd like.
+            We check every dish with the kitchen — be as specific as you like.
           </span>
         </div>
 
@@ -1243,7 +1243,7 @@ function Step4Cuisine() {
                 <h2 className="kw-q-title">Any diet or faith we should honor?</h2>
               </div>
               <p className="kw-diet-header-help">
-                Halal, Kosher, temple-style, plant-based — we plan around it, no need to explain twice.
+                Halal, Kosher, temple-style, plant-based — we plan around it.
               </p>
             </div>
             <div className="kw-diet-grid">
