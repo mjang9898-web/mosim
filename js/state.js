@@ -31,13 +31,15 @@
     //   items:     array of FB_PAGES dish codes (see js/step4-cuisine.jsx)
     //   allergens: array of ALLERGENS codes
     //   diets:     array of DIETS codes (diet / religion / lifestyle)
-    //   spice:     a single SPICE_LEVELS code ('none'|'mild'|'medium'|'spicy'|'extra') or null
     //   notes:     free-text note for the kitchen / concierge
-    // NOTE: pace/mobility are RETIRED. They used to live on the old `comfort` slice,
-    // then briefly on `cuisine` (절충안 C). Neither is collected, written, or read
-    // anymore (the brief/recap no longer use them). read() only guarantees it never
-    // throws on an old saved state that still carries those fields.
-    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '' }
+    // NOTE: pace/mobility/spice are RETIRED user inputs. pace/mobility lived on the
+    // old `comfort` slice (then briefly on `cuisine`); the spice-tolerance question
+    // has been REMOVED from the funnel, so cuisine.spice is no longer collected.
+    // None of these are collected, written, or read anymore (the brief/recap no
+    // longer use them). read() only guarantees it never throws on an old saved
+    // state that still carries cuisine.spice / comfort.spice / pace / mobility —
+    // those legacy fields are merged harmlessly and simply ignored downstream.
+    cuisine: { items: [], allergens: [], diets: [], notes: '' }
   };
 
   function read() {
@@ -47,8 +49,9 @@
       var parsed = JSON.parse(raw);
       var s = Object.assign({}, DEFAULT_STATE, parsed);
       // Ensure cuisine carries the current shape even for older stored states.
-      // Object.assign merges any legacy cuisine fields (incl. retired pace/mobility)
-      // harmlessly — they're simply ignored downstream. Never throw on old data.
+      // Object.assign merges any legacy cuisine fields (incl. retired pace/mobility
+      // and the removed cuisine.spice user input) harmlessly — they're simply
+      // ignored downstream. Never throw on old data.
       s.cuisine = Object.assign({}, DEFAULT_STATE.cuisine, parsed.cuisine || {});
       // Backward-compat: an old session may carry a legacy `comfort` slice.
       // pace/mobility are retired, so we no longer absorb them — but keep the raw

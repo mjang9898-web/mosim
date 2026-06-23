@@ -989,7 +989,10 @@ const DIETS = [
   desc: 'Plant-based, no alliums (the 5 pungent vegetables). Naturally aligned with sachal eumsik.' }];
 
 
-// ─── Spice tolerance ──────────────────────────────────────────────────
+// ─── Spice scale (drawer menu metadata only) ──────────────────────────
+// NOT a user input — the per-dish spice question was retired. This lookup
+// table is referenced by CuisineDetailDrawer to render each dish's own
+// heat level (CUISINE_DETAILS[...].dietary.spice indexes into this array).
 const SPICE_LEVELS = [
 { code: 'none', pips: 0, label: 'No spice', sub: 'Hold the chili' },
 { code: 'mild', pips: 1, label: 'Mild', sub: 'A gentle warmth' },
@@ -1027,7 +1030,6 @@ function Step4Cuisine() {
   const [selected, setSelected] = useState(() => new Set(Array.isArray(prior.items) ? prior.items : []));
   const [allergens, setAllergens] = useState(() => new Set(Array.isArray(prior.allergens) ? prior.allergens : []));
   const [diets, setDiets] = useState(() => new Set(Array.isArray(prior.diets) ? prior.diets : []));
-  const [spice, setSpice] = useState(prior.spice != null ? prior.spice : null);
   const [notes, setNotes] = useState(typeof prior.notes === 'string' ? prior.notes : '');
   const [detailCode, setDetailCode] = useState(null);
 
@@ -1040,11 +1042,10 @@ function Step4Cuisine() {
         items: Array.from(selected),
         allergens: Array.from(allergens),
         diets: Array.from(diets),
-        spice: spice,
         notes: notes,
       });
     }
-  }, [selected, allergens, diets, spice, notes]);
+  }, [selected, allergens, diets, notes]);
 
   const openDetail = (item) => {
     if (CUISINE_DETAILS[item.code]) { setDetailCode(item.code); return; }
@@ -1198,7 +1199,7 @@ function Step4Cuisine() {
                 <h2 className="kw-q-title">Anything you can't eat?</h2>
               </div>
               <p className="kw-diet-header-help">
-                Tick every allergen — even mild ones. We tell every chef before your meal.
+                Tick every allergen — even mild ones; we brief the kitchen first.
               </p>
             </div>
             <div className="kw-allergen-grid">
@@ -1240,7 +1241,7 @@ function Step4Cuisine() {
             <div className="kw-diet-header">
               <div>
                 <SectionEyebrow num="02" label="Diet & Faith" />
-                <h2 className="kw-q-title">Any diet or faith we should honor?</h2>
+                <h2 className="kw-q-title">Any diet or faith to honor?</h2>
               </div>
               <p className="kw-diet-header-help">
                 Halal, Kosher, temple-style, plant-based — we plan around it.
@@ -1266,44 +1267,10 @@ function Step4Cuisine() {
           </div>
         </section>
 
-        {/* 03. SPICE TOLERANCE */}
-        <section className="kw-q-row kw-q-row-full">
-          <div className="kw-diet-section">
-            <div className="kw-diet-header">
-              <div>
-                <SectionEyebrow num="03" label="Spice" />
-                <h2 className="kw-q-title">How spicy do you like it?</h2>
-              </div>
-              <p className="kw-diet-header-help">
-                We ask just once, and every dish in your week is set to match.
-              </p>
-            </div>
-            <div className="kw-spice">
-              {SPICE_LEVELS.map((s) => {
-                const active = spice === s.code;
-                return (
-                  <button
-                    key={s.code}
-                    type="button"
-                    className={`kw-spice-opt ${active ? 'is-active' : ''}`}
-                    onClick={() => setSpice(s.code)}>
-                    <span className="kw-spice-pips">
-                      {[0, 1, 2, 3].map((i) =>
-                      <span key={i} className={`kw-spice-pip ${i < s.pips ? 'on' : ''}`} />
-                      )}
-                    </span>
-                    <span className="kw-spice-label">{s.label}</span>
-                    <span className="kw-spice-sub">{s.sub}</span>
-                  </button>);
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* 04. NOTES */}
+        {/* 03. NOTES */}
         <section className="kw-q-row">
           <div>
-            <SectionEyebrow num="04" label="Notes" />
+            <SectionEyebrow num="03" label="Notes" />
             <h2 className="kw-q-title">Anything else for the kitchen?</h2>
             <p className="kw-q-help">
               A dish you've been dreaming of, a restaurant on your list, or a sensitivity that

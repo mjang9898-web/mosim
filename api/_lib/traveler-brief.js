@@ -58,28 +58,6 @@ const SEASON_LABELS = {
   winter: 'winter',
 };
 
-// Cuisine spice scale (SPICE_LEVELS in js/step4-cuisine.jsx) — the single,
-// canonical 5-level scale. (The old 4-level comfort.spice is deprecated; see
-// LEGACY_SPICE_MAP below for one-time backward-compat of old saved itineraries.)
-const CUISINE_SPICE_LABELS = {
-  none: 'no spice — hold the gochugaru',
-  mild: 'mild — a whisper of warmth',
-  medium: 'Korean medium — how locals eat',
-  spicy: 'spicy',
-  extra: 'maximum heat — bring it on',
-};
-
-// Backward-compat ONLY: old saved state carried the coarse 4-level comfort.spice
-// (none|mild|some|love). Map it onto the canonical 5-level cuisine scale so an
-// old itinerary's spice preference still reaches the planner. New funnel state
-// never sets comfort.spice — it writes cuisine.spice directly.
-const LEGACY_SPICE_MAP = {
-  none: 'none',
-  mild: 'mild',
-  some: 'medium',
-  love: 'spicy',
-};
-
 // Humanize an unknown code into a readable best-effort label.
 function humanize(code) {
   return String(code || '')
@@ -170,23 +148,16 @@ export function buildTravelerBrief(state) {
     lines.push('EXPERIENCES: none chosen.');
   }
 
-  // ── Cuisine (food selection, spice & dietary restrictions) ──
+  // ── Cuisine (food selection & dietary restrictions) ──
   // The funnel's Cuisine step carries the food inputs only: the dishes they want
-  // (items), the spice level (5-level scale), and dietary restrictions
-  // (allergens + diets). pace/mobility have been DROPPED from the funnel and are
-  // no longer injected into the brief. The deprecated state.comfort slice is read
-  // ONLY as a fallback for old saved itineraries / old sessionStorage (legacy
-  // spice & food restrictions) — never written anew.
+  // (items) and dietary restrictions (allergens + diets). pace/mobility and the
+  // spice-tolerance question have been DROPPED from the funnel and are no longer
+  // injected into the brief. The deprecated state.comfort slice is read ONLY as a
+  // fallback for old saved itineraries / old sessionStorage (legacy food
+  // restrictions) — never written anew. Any legacy cuisine.spice / comfort.spice
+  // on an old state is simply ignored.
   const cuisine = s.cuisine || {};
-  const comfort = s.comfort || {}; // legacy fallback source only (spice / food)
-
-  // Spice: single canonical cuisine.spice (5-level). If absent but a legacy
-  // comfort.spice exists, map it once onto the 5-level scale.
-  let spiceCode = cuisine.spice || '';
-  if (!spiceCode && comfort.spice) spiceCode = LEGACY_SPICE_MAP[comfort.spice] || comfort.spice;
-  if (spiceCode) {
-    lines.push('SPICE LEVEL (match this in every meal): ' + (CUISINE_SPICE_LABELS[spiceCode] || humanize(spiceCode)) + '.');
-  }
+  const comfort = s.comfort || {}; // legacy fallback source only (food restrictions)
 
   // Dietary restrictions: cuisine.allergens + cuisine.diets are the source. If
   // BOTH are empty but a legacy comfort.food array exists, surface it as
