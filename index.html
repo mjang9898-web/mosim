@@ -185,6 +185,26 @@
   .final p{font-size:20px; color:#D7DCE6; margin:18px auto 32px; max-width:900px; line-height:1.6;}
   .btn-ivory{background:var(--ivory); color:var(--navy); font-size:17px; font-weight:600; border-radius:10px; padding:16px 32px; text-decoration:none; display:inline-block; min-height:44px;}
 
+  /* what we arrange — three unified areas (Medical · Experience · Cuisine).
+     Cards are rendered from the SAME sources as the funnel/browse pages:
+     Medical ← js/medical-cards.js, Experience & Cuisine ← js/experience-data.js. */
+  .areas{display:flex; flex-direction:column; gap:56px; margin-top:60px;}
+  .area-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:14px;}
+  .area-head .area-l{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+  .area-head h3{font-family:'Lora',serif; font-size:27px; font-weight:600; color:var(--navy);}
+  .area-head .blurb{font-size:18px; color:var(--ink);}
+  .area-head .browse{font-size:16px; font-weight:600; color:var(--navy); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; white-space:nowrap;}
+  .area-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px;}
+  .lcard{background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; text-align:left; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:box-shadow .15s, transform .15s;}
+  .lcard:hover{box-shadow:0 22px 44px -26px rgba(27,42,74,.4); transform:translateY(-2px);}
+  .lcard .photo{aspect-ratio:4/3; background:linear-gradient(135deg,#EFE6D2,#C9B68C 70%,#6E7A92) center/cover no-repeat; position:relative;}
+  .lcard .badge{position:absolute; top:12px; left:12px; background:rgba(247,242,234,.94); color:var(--navy); font-size:12px; font-weight:600; letter-spacing:.4px; padding:5px 11px; border-radius:999px;}
+  .lcard .lbody{padding:16px 18px 20px; display:flex; flex-direction:column; gap:6px; flex:1;}
+  .lcard .eyebrow{font-size:12px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:var(--gold);}
+  .lcard h4{font-family:'Lora',serif; font-size:20px; font-weight:600; color:var(--navy); line-height:1.25;}
+  .lcard .meta{font-size:16px; color:var(--ink); line-height:1.45; margin-top:2px;}
+  @media(max-width:900px){ .area-grid{grid-template-columns:1fr;} }
+
   /* footer */
   footer{background:var(--ivory); border-top:1px solid var(--line); padding:48px 0;}
   .foot-in{display:flex; justify-content:space-between; align-items:flex-start; gap:30px; flex-wrap:wrap;}
@@ -254,6 +274,16 @@
     </div>
   </div>
 </div>
+
+<!-- WHAT WE ARRANGE — Medical · Experience · Cuisine (unified with funnel/browse) -->
+<section id="arrange" class="blk"><div class="wrap">
+  <div class="center" style="max-width:760px;">
+    <div class="label">What we arrange</div>
+    <h2 style="margin-top:16px;">Care first — and the days around it.</h2>
+    <p class="lede">World-class medical care, the Korea you came to see, and a table of its food — all woven into one calm plan.</p>
+  </div>
+  <div class="areas" id="areas"></div>
+</div></section>
 
 <!-- HOW IT WORKS -->
 <section id="how" class="blk"><div class="wrap">
@@ -427,6 +457,53 @@
 <div class="wrap"><p class="fine">Mosim arranges and accompanies your medical journey in Korea. Hospitals and hotels are paid directly by you; Mosim charges a concierge fee for full-service planning and on-the-ground care. © 2026 Mosim.</p></div>
 </footer>
 
+<!-- shared card sources (same data the funnel/browse pages use) -->
+<script src="js/medical-cards.js"></script>
+<script src="js/experience-data.js"></script>
+<script>(function(){
+  var root = document.getElementById('areas'); if(!root) return;
+  var ED = window.EXPERIENCE_DATA || {};
+
+  // pick a few representative cards from each single source (no hand-written copy)
+  function pick(arr, n){ return (arr || []).slice(0, n); }
+
+  function medCardHTML(m){
+    return '<a class="lcard" href="medical.html" aria-label="'+m.name+'">'+
+      '<div class="photo" style="background-image:url(\''+(m.photo||'/assets/medical/card-'+m.code+'.webp')+'\')">'+
+      (m.badge?'<span class="badge">'+m.badge+'</span>':'')+'</div>'+
+      '<div class="lbody"><div class="eyebrow">'+m.eyebrow+'</div><h4>'+m.name+'</h4>'+
+      '<div class="meta">'+m.desc+'</div></div></a>';
+  }
+  function expCardHTML(it){
+    return '<a class="lcard" href="experience.html" aria-label="'+it.name+'">'+
+      '<div class="photo" style="background-image:url(\''+it.image+'\')"></div>'+
+      '<div class="lbody"><div class="eyebrow">'+it.eyebrow+'</div><h4>'+it.name+'</h4>'+
+      '<div class="meta">'+it.meta+'</div></div></a>';
+  }
+
+  var areas = [
+    { title:'Medical', blurb:'World-class hospitals, fully arranged.', href:'medical.html',
+      browse:'All medical care →',
+      cards:pick(window.MEDICAL_CARDS, 3).map(medCardHTML) },
+    { title:'Experience', blurb:"Korea between your appointments.", href:'experience.html',
+      browse:'Browse experiences →',
+      cards:pick((ED.Heritage||[]).concat(ED.Famous||[]), 3).map(expCardHTML) },
+    { title:'Cuisine', blurb:'From royal hansik to a street-food snack.', href:'experience.html#Cuisine',
+      browse:'Browse the table →',
+      cards:pick(ED.Cuisine, 3).map(expCardHTML) }
+  ];
+
+  areas.forEach(function(a){
+    if(!a.cards.length) return; // never render an empty area
+    var sec = document.createElement('section');
+    sec.innerHTML =
+      '<div class="area-head"><div class="area-l"><h3>'+a.title+'</h3>'+
+        '<span class="blurb">'+a.blurb+'</span></div>'+
+        '<a class="browse" href="'+a.href+'">'+a.browse+'</a></div>'+
+      '<div class="area-grid">'+a.cards.join('')+'</div>';
+    root.appendChild(sec);
+  });
+})();</script>
 <script>(function(){var el=document.getElementById('nav-auth');if(!el)return;try{var r=localStorage.getItem('sb-ktcwpowkyovyrlwajajm-auth-token');var s=r?JSON.parse(r):null;var t=s&&(s.access_token||(s.currentSession&&s.currentSession.access_token));var e=s&&(s.expires_at||(s.currentSession&&s.currentSession.expires_at));if(t&&(!e||e*1000>Date.now())){el.textContent='My Page';el.setAttribute('href','/me.html');fetch('/api/admin/trips?action=whoami',{headers:{authorization:'Bearer '+t}}).then(function(res){if(res.ok){el.textContent='Cockpit';el.setAttribute('href','/cockpit.html');}}).catch(function(){});}}catch(x){}})();</script>
 <script>(function(){var b=document.getElementById('nav-burger'),m=document.getElementById('navlinks');if(!b||!m)return;b.addEventListener('click',function(){var open=m.classList.toggle('open');b.setAttribute('aria-expanded',open?'true':'false');});})();</script>
 <script>(function(){

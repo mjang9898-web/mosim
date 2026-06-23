@@ -13,6 +13,7 @@ import {
   EXPERIENCE_LABELS,
   ALLERGEN_LABELS,
   DIET_LABELS,
+  CUISINE_LABELS,
 } from './experience-labels.generated.js';
 
 // ── small label tables for the inputs that have fixed funnel vocabularies ──
@@ -75,6 +76,16 @@ const SPICE_LABELS = {
   mild: 'mild spice only',
   some: 'some spice is fine',
   love: 'loves spicy food',
+};
+
+// Step 5 cuisine spice scale (SPICE_LEVELS in js/step4-cuisine.jsx) — a finer
+// 5-level scale than comfort.spice. Kept separate so each maps faithfully.
+const CUISINE_SPICE_LABELS = {
+  none: 'no spice — hold the gochugaru',
+  mild: 'mild — a whisper of warmth',
+  medium: 'Korean medium — how locals eat',
+  spicy: 'spicy',
+  extra: 'maximum heat — bring it on',
 };
 
 // Humanize an unknown code into a readable best-effort label.
@@ -184,6 +195,39 @@ export function buildTravelerBrief(state) {
       return known || String(c).trim();
     }).filter(Boolean);
     if (labeled.length) lines.push('FOOD RESTRICTIONS: ' + labeled.join('; ') + '.');
+  }
+
+  // ── Cuisine (Step 5) — the dishes/drinks they chose + dietary detail ──
+  // These are the specific foods the traveler asked for; the planner MUST place
+  // them into real meal slots across the week (lunches, dinners, a tasting night),
+  // honoring the allergens, diets, and spice level below. This is finer-grained
+  // and takes precedence over the coarse comfort.food/comfort.spice above when
+  // they overlap (comfort.* came from an earlier, simpler step).
+  const cuisine = s.cuisine || {};
+  const cItems = Array.isArray(cuisine.items) ? cuisine.items : [];
+  const cAllergens = Array.isArray(cuisine.allergens) ? cuisine.allergens : [];
+  const cDiets = Array.isArray(cuisine.diets) ? cuisine.diets : [];
+
+  if (cItems.length) {
+    const dishes = cItems.map((c) => CUISINE_LABELS[c] || humanize(c));
+    lines.push(
+      'CUISINE — DISHES THEY WANT (work EVERY one into a real meal slot during the week): '
+      + dishes.join('; ') + '.'
+    );
+  }
+  if (cAllergens.length) {
+    const al = cAllergens.map((c) => ALLERGEN_LABELS[c] || humanize(c));
+    lines.push('CUISINE ALLERGENS (strict — never serve these, brief every kitchen): ' + al.join('; ') + '.');
+  }
+  if (cDiets.length) {
+    const dl = cDiets.map((c) => DIET_LABELS[c] || humanize(c));
+    lines.push('CUISINE DIET / RELIGION (honor without exception): ' + dl.join('; ') + '.');
+  }
+  if (cuisine.spice) {
+    lines.push('CUISINE SPICE LEVEL: ' + (CUISINE_SPICE_LABELS[cuisine.spice] || humanize(cuisine.spice)) + '.');
+  }
+  if (cuisine.notes && String(cuisine.notes).trim()) {
+    lines.push('CUISINE NOTE (in their own words): "' + String(cuisine.notes).trim() + '"');
   }
 
   return lines.join('\n');

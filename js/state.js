@@ -28,7 +28,14 @@
     // ['gyeongbokgung','bukchon','tea','jeju'].  See js/step3-culture.jsx CULTURE_PAGES.
     experiences: [],
     // Step 4 · Comfort & food
-    comfort: { pace: '', mobility: '', spice: '', food: [] }
+    comfort: { pace: '', mobility: '', spice: '', food: [] },
+    // Step 5 · Cuisine — dishes/drinks the traveler wants, plus dietary detail.
+    //   items:     array of FB_PAGES dish codes (see js/step4-cuisine.jsx)
+    //   allergens: array of ALLERGENS codes
+    //   diets:     array of DIETS codes (diet / religion / lifestyle)
+    //   spice:     a single SPICE_LEVELS code ('none'|'mild'|'medium'|'spicy'|'extra') or null
+    //   notes:     free-text note for the kitchen / concierge
+    cuisine: { items: [], allergens: [], diets: [], spice: null, notes: '' }
   };
 
   function read() {

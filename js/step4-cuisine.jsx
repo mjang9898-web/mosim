@@ -9,6 +9,18 @@ const { useState } = React;
 // both list thumbnails and drawer photos.
 const thumbUrl = (path) => path && path.replace(/\/([^/]+\.webp)$/, '/thumbs/$1');
 
+// Read the persisted cuisine slice so a re-visit restores every prior pick.
+// Mirrors Step3Culture's kwState hydration — selections never reset mid-funnel.
+function loadCuisineState() {
+  try {
+    if (window.kwState) {
+      const c = window.kwState.loadStep('cuisine');
+      if (c && typeof c === 'object') return c;
+    }
+  } catch (e) {}
+  return null;
+}
+
 // ─── Food & beverage catalog, paginated ────────────────────────────────
 const FB_PAGES = [
 {
@@ -986,13 +998,42 @@ const SPICE_LEVELS = [
 { code: 'extra', pips: 4, label: 'Maximum heat', sub: "Don't hold back" }];
 
 
+// Local eyebrow label (the shared one lives in step1-trip-shared.jsx, which this
+// page does not load — step5.html mounts only this component, like step3).
+function SectionEyebrow({ num, label }) {
+  return (
+    <div className="kw-eyebrow">
+      <span className="kw-eyebrow-num">{num}</span>
+      <span className="kw-eyebrow-text">{label}</span>
+    </div>
+  );
+}
+
 function Step4Cuisine() {
+  // Hydrate every field from the persisted cuisine slice (restore on re-visit).
+  const prior = loadCuisineState() || {};
   const [pageIdx, setPageIdx] = useState(0);
-  const [selected, setSelected] = useState(() => new Set());
-  const [allergens, setAllergens] = useState(() => new Set());
-  const [diets, setDiets] = useState(() => new Set());
-  const [spice, setSpice] = useState(null);
+  const [selected, setSelected] = useState(() => new Set(Array.isArray(prior.items) ? prior.items : []));
+  const [allergens, setAllergens] = useState(() => new Set(Array.isArray(prior.allergens) ? prior.allergens : []));
+  const [diets, setDiets] = useState(() => new Set(Array.isArray(prior.diets) ? prior.diets : []));
+  const [spice, setSpice] = useState(prior.spice != null ? prior.spice : null);
+  const [notes, setNotes] = useState(typeof prior.notes === 'string' ? prior.notes : '');
   const [detailCode, setDetailCode] = useState(null);
+
+  // Persist the full cuisine slice on every change so the fixed-footer Continue
+  // (in step5.html) and the result page always read the current picks. Same
+  // pattern as Step3Culture — selections are saved as you go, never on submit only.
+  React.useEffect(() => {
+    if (window.kwState) {
+      window.kwState.saveStep('cuisine', {
+        items: Array.from(selected),
+        allergens: Array.from(allergens),
+        diets: Array.from(diets),
+        spice: spice,
+        notes: notes,
+      });
+    }
+  }, [selected, allergens, diets, spice, notes]);
 
   const openDetail = (item) => {
     if (CUISINE_DETAILS[item.code]) { setDetailCode(item.code); return; }
@@ -1022,17 +1063,8 @@ function Step4Cuisine() {
   const toggleDiet = toggleSet(setDiets);
 
   return (
-    <div className="kw-screen">
-      <BrandNav active="food" />
-
-      <div className="kw-wrap">
-        <StepBar active={3} />
-
-        <header className="kw-page-hero">
-          <SectionEyebrow num="04" label="Step 04 of 05" />
-          <h1>What would you love <span className="kw-accent">to taste?</span></h1>
-          <p style={{ maxWidth: "90ch" }}>From a bubbling Kimchi-stew to a three-star tasting menu — pick the food and beverage you want in your week. We'll handle the reservations, the allergens, and everything in between.</p>
-        </header>
+    <>
+      <div className="kw-q-input">
 
         {/* ── Sub-step Ⅰ — Choose your tastings ───────────────────── */}
         <div className="kw-substep">
@@ -1307,36 +1339,24 @@ function Step4Cuisine() {
               <textarea
                 className="kw-textarea"
                 rows={5}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g. Severe peanut allergy — anaphylactic. I've always wanted to try makgeolli at a brewery. My partner is FODMAP-sensitive so no garlic-heavy dishes. Hoping for one fine-dining night and otherwise casual." />
             </div>
           </div>
         </section>
 
-        {detailItem &&
-          <CuisineDetailDrawer
-            item={detailItem}
-            detail={CUISINE_DETAILS[detailItem.code]}
-            isSelected={selected.has(detailItem.code)}
-            onToggle={() => toggle(detailItem.code)}
-            onClose={() => setDetailCode(null)} />
-        }
-
-        {/* Action bar */}
-        <div className="kw-actionbar">
-          <div className="kw-actionbar-l">
-            <a href="step3.html"
-            className="kw-cta kw-cta-ghost kw-cta-sm"
-            style={{ height: 50, fontSize: 15, padding: '0 22px' }}>
-              ← Back to Culture
-            </a>
-            <span className="kw-actionbar-note">Your answers are saved as you type.</span>
-          </div>
-          <button className="kw-cta kw-cta-lg">
-            Generate my AI Trip &nbsp;›
-          </button>
-        </div>
       </div>
-    </div>);
+
+      {detailItem &&
+        <CuisineDetailDrawer
+          item={detailItem}
+          detail={CUISINE_DETAILS[detailItem.code]}
+          isSelected={selected.has(detailItem.code)}
+          onToggle={() => toggle(detailItem.code)}
+          onClose={() => setDetailCode(null)} />
+      }
+    </>);
 }
 
 // ─── CuisineDetailDrawer — right-side panel for a dish ────────────────
@@ -1378,7 +1398,7 @@ function CuisineDetailDrawer({ item, detail, isSelected, onToggle, onClose }) {
         <header className="kw-drawer-top">
           <nav className="kw-drawer-crumb" aria-label="Breadcrumb">
             <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }}>
-              ← Step 4 · Cuisine
+              ← Step 5 · Cuisine
             </a>
             <span className="kw-drawer-crumb-sep" aria-hidden="true">/</span>
             <span className="kw-drawer-crumb-now">{item.name}</span>

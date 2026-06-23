@@ -233,6 +233,7 @@
     if (!items.length) return;
     var sec = document.createElement('section');
     sec.className = 'cat';
+    sec.id = s.key; // deep-link target, e.g. experience.html#Cuisine
 
     var hasMore = items.length > PREVIEW;
     var extra = items.length - PREVIEW;

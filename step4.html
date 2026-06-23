@@ -80,8 +80,8 @@
 
 <div class="wrap">
   <div class="head">
-    <div class="step-label">Step 4 of 4 · Comfort &amp; food</div>
-    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div>
+    <div class="step-label">Step 4 of 5 · Comfort &amp; food</div>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span><span></span></div>
     <h1>Let's keep you comfortable.</h1>
     <p>So nothing is too much — we plan around your body and your taste, never the clock.</p>
   </div>
@@ -128,7 +128,7 @@
 
 <div class="footbar"><div class="fb-in">
   <a href="step3.html" class="back">← Back</a>
-  <button class="btn" id="continue" type="button">See my plan →</button>
+  <button class="btn" id="continue" type="button">Continue →</button>
 </div></div>
 
 <script src="js/state.js"></script>
@@ -182,7 +182,7 @@
     document.getElementById('continue').addEventListener('click', function () {
       var data = { pace: single.pace, mobility: single.mobility, spice: single.spice, food: foodSelected() };
       if (window.kwState) kwState.saveStep('comfort', data);
-      window.location.href = 'loading.html';
+      window.location.href = 'step5.html';
     });
   })();
 </script>

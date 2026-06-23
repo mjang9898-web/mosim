@@ -217,6 +217,7 @@
   </div>
 </aside>
 
+<script src="js/medical-cards.js"></script>
 <script>
 (function () {
   // 4 north-star procedures (checkup · knees/ortho · dental · eyes).
@@ -463,6 +464,15 @@
       ],
       addons:[{n:'Exosome facial add-on',p:'$680'},{n:'Longevity marker panel (90 markers)',p:'$420'},{n:'Telomere length test',p:'$280'},{n:'Hyperbaric oxygen (3 sessions)',p:'$540'}] }
   ];
+
+  // The four primary card faces are the single source of truth in
+  // js/medical-cards.js (shared with the landing). Overlay them by code so
+  // the Medical browse grid and index.html always match. Drawer-only detail
+  // (positioning · intro · hospitals · tiers · addons) stays here.
+  (window.MEDICAL_CARDS || []).forEach(function (c) {
+    var m = MED.filter(function (x) { return x.code === c.code; })[0];
+    if (m) { for (var k in c) m[k] = c[k]; }
+  });
 
   // ---- render cards ----
   var cardsEl = document.getElementById('cards');

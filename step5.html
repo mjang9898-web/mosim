@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mosim — Plan your trip · Step 3, Experiences</title>
+<title>Mosim — Plan your trip · Step 5, Cuisine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -788,6 +788,251 @@
   @media(max-width:1080px){ .kw-cul-grid{grid-template-columns:repeat(3,1fr);} .kw-city-grid{grid-template-columns:repeat(2,1fr);} }
   @media(max-width:760px){ .kw-cul-grid{grid-template-columns:repeat(2,1fr);} .kw-city-grid{grid-template-columns:1fr;} }
   @media(max-width:480px){ .kw-cul-grid{grid-template-columns:1fr;} }
+
+  /* ════════════════════════════════════════════════════════════════════
+     CUISINE (Step 5) — substeps, page tabs, pagination, dietary sections,
+     allergens, diets, spice, notes, confidence band. Ported from the
+     original cuisine layout and re-skinned to the Warm Trust palette
+     (navy / gold / ivory, Lora serif) — no legacy magenta.
+     ════════════════════════════════════════════════════════════════════ */
+
+  /* Eyebrow label (matches the React SectionEyebrow) */
+  .kw-eyebrow { display: inline-flex; align-items: baseline; gap: 12px; color: var(--gold); }
+  .kw-eyebrow-num { font-family: 'Lora', Georgia, serif; font-weight: 700; font-size: 13px; letter-spacing: .08em; }
+  .kw-eyebrow-text { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+  /* Sub-step header */
+  .kw-substep {
+    margin: 8px 0 24px;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;
+  }
+  .kw-substep-l { display: flex; align-items: baseline; gap: 20px; flex: 1 1 auto; min-width: 0; }
+  .kw-substep-numeral {
+    font-family: 'Lora', Georgia, serif; font-weight: 700; font-style: italic;
+    font-size: 13px; color: var(--gold);
+    letter-spacing: .18em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .kw-substep-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(24px, 2.4vw, 32px); font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.12; color: var(--navy);
+  }
+  .kw-substep-hint {
+    font-size: 19px; font-weight: 500; color: var(--ink-2);
+    flex: 0 1 360px; text-align: right; line-height: 1.45;
+  }
+
+  /* Q-row (label column + input column), like the earlier steps */
+  .kw-q-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    padding: 40px 0;
+    border-top: 1px solid var(--line);
+  }
+  .kw-q-row:first-of-type { border-top: none; padding-top: 16px; }
+  .kw-q-row-full { grid-template-columns: 1fr; }
+  .kw-substep + .kw-q-row { border-top: none; padding-top: 24px; }
+  .kw-q-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 26px; font-weight: 600;
+    letter-spacing: -0.018em; line-height: 1.18;
+    margin: 10px 0; color: var(--navy);
+  }
+  .kw-q-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+  .kw-q-input { min-width: 0; }
+
+  /* Page tabs — Hansik / Street / Grill / Drinks */
+  .kw-pagetabs {
+    display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .kw-pagetab {
+    background: transparent; border: none;
+    padding: 16px 28px 18px;
+    display: flex; flex-direction: column; gap: 4px;
+    text-align: left; cursor: pointer;
+    color: var(--ink-2); position: relative;
+    transition: color .15s;
+    min-height: 44px;
+  }
+  .kw-pagetab:hover { color: var(--navy); }
+  .kw-pagetab.is-active { color: var(--navy); }
+  .kw-pagetab.is-active::after {
+    content: ""; position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px; background: var(--gold);
+  }
+  .kw-pagetab-num {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic; font-weight: 700;
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .kw-pagetab-label { font-size: 19px; font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; }
+  .kw-pagetab-count { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px; color: var(--ink-2); margin-left: 8px; }
+  .kw-pagetab.is-active .kw-pagetab-count { color: var(--gold); }
+
+  /* Pagination row under the grid */
+  .kw-pagination {
+    grid-column: 1 / -1;
+    margin-top: 12px; padding: 22px 0 4px;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+  }
+  .kw-pagination-btn {
+    height: 44px; min-width: 44px; padding: 0 14px;
+    border-radius: 999px; border: 1.5px solid var(--line);
+    background: #fff; color: var(--navy);
+    font-size: 15px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; transition: border-color .15s, background .15s, color .15s;
+  }
+  .kw-pagination-btn:hover:not(:disabled) { border-color: var(--gold); }
+  .kw-pagination-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .kw-pagination-num { background: transparent; color: var(--ink-2); font-weight: 700; }
+  .kw-pagination-num:hover { color: var(--navy); }
+  .kw-pagination-num.is-active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .kw-pagination-info { margin: 0 16px; font-size: 15px; font-weight: 500; color: var(--ink-2); }
+
+  /* Notes card */
+  .kw-notes-card {
+    background: var(--ivory-soft);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px 22px 22px;
+    box-shadow: inset 4px 0 0 var(--gold);
+  }
+  .kw-notes-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .kw-notes-card-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .14em; color: var(--gold); text-transform: uppercase;
+  }
+  .kw-notes-card-pen {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+  }
+  .kw-notes-card-secure { font-size: 12.5px; font-weight: 600; color: var(--ink-2); letter-spacing: .04em; }
+  .kw-textarea {
+    width: 100%; background: #fff;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    min-height: 120px; padding: 18px 20px;
+    font: inherit; font-size: 19px; color: var(--navy); line-height: 1.5; resize: vertical;
+  }
+  .kw-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-tint); outline: none; }
+
+  /* Dietary section layout */
+  .kw-diet-section { display: flex; flex-direction: column; gap: 18px; }
+  .kw-diet-header { display: grid; grid-template-columns: 360px 1fr; gap: 96px; align-items: baseline; }
+  .kw-diet-header-help { font-size: 19px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+
+  /* Allergens grid */
+  .kw-allergen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .kw-allergen {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 14px 14px 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; text-align: left; position: relative; min-height: 78px;
+    transition: border-color .15s, background .15s, box-shadow .15s, transform .15s;
+  }
+  .kw-allergen:hover { border-color: var(--gold-soft); transform: translateY(-1px); box-shadow: 0 4px 14px -8px rgba(0,0,0,.18); }
+  .kw-allergen.is-selected { border-color: var(--gold); background: var(--gold-tint); box-shadow: inset 4px 0 0 var(--gold); padding-left: 18px; }
+  .kw-allergen-mono {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--photo-a, #F1E9D8) 0%, var(--photo-b, #E3D6BC) 60%, var(--photo-c, #D9BD7E) 100%);
+    display: flex; align-items: center; justify-content: center; flex: none;
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700;
+    font-size: 18px; color: var(--photo-fg, #1B2A4A); letter-spacing: -0.02em; opacity: .9;
+  }
+  .kw-allergen-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .kw-allergen-name { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -0.006em; line-height: 1.15; }
+  .kw-allergen-sub { font-size: 14px; font-weight: 500; color: var(--ink-2); line-height: 1.35; }
+  .kw-allergen.is-selected .kw-allergen-sub { color: var(--ink); }
+  .kw-allergen-check {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1.5px solid var(--line); background: #fff; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: transparent;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .kw-allergen.is-selected .kw-allergen-check { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+  /* Diet / religion / lifestyle cards */
+  .kw-diet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .kw-diet {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 16px;
+    padding: 18px 20px 18px 22px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 8px;
+    text-align: left; position: relative; min-width: 0;
+    transition: border-color .15s, background .15s, box-shadow .15s, transform .15s;
+  }
+  .kw-diet:hover { border-color: var(--gold-soft); transform: translateY(-1px); box-shadow: 0 6px 18px -10px rgba(0,0,0,.18); }
+  .kw-diet.is-selected { border-color: var(--gold); background: var(--gold-tint); box-shadow: inset 4px 0 0 var(--gold); }
+  .kw-diet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .kw-diet-name { font-size: 19px; font-weight: 700; color: var(--navy); letter-spacing: -0.014em; line-height: 1.15; }
+  .kw-diet-tag { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+  .kw-diet-desc { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.5; margin: 0; }
+
+  /* Spice tolerance — segmented control with chili pips */
+  .kw-spice { display: flex; align-items: stretch; gap: 6px; padding: 4px; background: var(--ivory-soft); border-radius: 14px; flex-wrap: wrap; }
+  .kw-spice-opt {
+    flex: 1 1 110px; background: transparent; border: none; border-radius: 10px;
+    padding: 12px 12px 14px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center;
+    text-align: center; color: var(--ink-2); min-height: 44px;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .kw-spice-opt:hover { color: var(--navy); }
+  .kw-spice-opt.is-active { background: #fff; color: var(--navy); box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 0 rgba(0,0,0,.04); }
+  .kw-spice-pips { display: inline-flex; align-items: center; gap: 3px; height: 14px; }
+  .kw-spice-pip { width: 7px; height: 11px; background: var(--line); border-radius: 2px 2px 4px 4px / 2px 2px 6px 6px; transform: rotate(-8deg); }
+  .kw-spice-pip.on { background: var(--gold); }
+  .kw-spice-opt.is-active .kw-spice-pip.on { background: var(--gold); }
+  .kw-spice-label { font-size: 16px; font-weight: 700; letter-spacing: -0.005em; }
+  .kw-spice-sub { font-size: 14px; font-weight: 500; color: var(--ink-2); letter-spacing: .01em; }
+  .kw-spice-opt.is-active .kw-spice-sub { color: var(--ink); }
+
+  /* Confidence band — concierge double-checks every dish */
+  .kw-confband {
+    margin-top: 18px; padding: 14px 18px;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--ivory-soft);
+    display: flex; align-items: flex-start; gap: 14px; box-shadow: inset 4px 0 0 var(--gold);
+  }
+  .kw-confband-mark {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 700; font-size: 16px; flex: none;
+  }
+  .kw-confband-body { display: flex; flex-direction: column; gap: 3px; }
+  .kw-confband-title { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -0.006em; }
+  .kw-confband-text { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.45; }
+
+  /* Dietary panel inside the dish detail drawer (CuisineDetailDrawer) */
+  .kw-diet-panel { display: flex; flex-direction: column; gap: 14px; }
+  .kw-diet-row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: start; }
+  .kw-diet-row-label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); padding-top: 4px; }
+  .kw-diet-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kw-diet-chip { font-size: 15px; font-weight: 600; padding: 6px 12px; border-radius: 999px; line-height: 1.2; }
+  .kw-diet-chip.kw-diet-contains { background: var(--ivory-soft); color: var(--navy); border: 1px solid var(--line); }
+  .kw-diet-chip.kw-diet-ok { background: rgba(195,154,63,.12); color: #8A6A1E; border: 1px solid var(--gold-soft); }
+  .kw-diet-chip.kw-diet-no { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .kw-diet-spice { display: inline-flex; align-items: center; gap: 6px; }
+  .kw-diet-pip { width: 8px; height: 12px; background: var(--line); border-radius: 2px 2px 4px 4px / 2px 2px 6px 6px; transform: rotate(-8deg); }
+  .kw-diet-pip.is-on { background: var(--gold); }
+  .kw-diet-spice-label { font-size: 16px; font-weight: 700; color: var(--navy); margin-left: 6px; }
+  .kw-diet-note { font-size: 15px; color: var(--ink); line-height: 1.5; margin: 4px 0 0; }
+
+  @media(max-width:760px){
+    .kw-q-row, .kw-diet-header { grid-template-columns: 1fr; gap: 18px; }
+    .kw-substep-hint { text-align: left; flex-basis: auto; }
+    .kw-diet-row { grid-template-columns: 1fr; gap: 6px; }
+    .kw-diet-row-label { padding-top: 0; }
+  }
 </style>
 <script src="js/analytics.js"></script>
 </head>
@@ -805,51 +1050,52 @@
 
 <div class="wrap">
   <div class="head">
-    <div class="step-label">Step 3 of 5 · Experiences</div>
-    <div class="progress"><span class="done"></span><span class="done"></span><span class="now"></span><span></span><span></span></div>
-    <h1>What would you love to experience?</h1>
-    <p>Browse what calls to you — palaces, markets, K-pop, a day beyond Seoul.<br>Choose freely between your appointments. Nothing is locked in, and nothing will be rushed.</p>
+    <div class="step-label">Step 5 of 5 · Cuisine</div>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div>
+    <h1>What would you love to taste?</h1>
+    <p>From a bubbling kimchi stew to a three-star tasting menu — pick the food and drink you want in your week.<br>We'll handle the reservations, the allergens, and everything in between.</p>
   </div>
 
   <div class="cards-wrap"><div id="root"></div></div>
 </div>
 
 <div class="footbar"><div class="fb-in">
-  <a href="step2.html" class="back">← Back</a>
+  <a href="step4.html" class="back">← Back</a>
   <span class="count" id="count">Pick as many as you like</span>
-  <button class="btn" id="continue" type="button">Continue →</button>
+  <button class="btn" id="continue" type="button">Generate my plan →</button>
 </div></div>
 
 <script src="js/state.js"></script>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="js/step3-culture.js?v=13fdaa81" defer></script>
+<script src="js/step4-cuisine.js?v=7bd68e6c" defer></script>
 <script>
   (function () {
     var countEl = document.getElementById('count');
 
     function currentCount() {
-      var picks = (window.kwState && window.kwState.loadStep('experiences')) || [];
-      return Array.isArray(picks) ? picks.length : 0;
+      var c = (window.kwState && window.kwState.loadStep('cuisine')) || null;
+      return (c && Array.isArray(c.items)) ? c.items.length : 0;
     }
     function refresh() {
       var n = currentCount();
       countEl.textContent = n === 0 ? 'Pick as many as you like'
-        : (n + ' selected');
+        : (n + ' dish' + (n === 1 ? '' : 'es') + ' chosen');
     }
 
-    // The React component persists the experiences array on every change.
-    // Re-read it after any interaction inside the picker to keep the count live.
+    // The React component persists the cuisine slice on every change.
+    // Re-read it after any interaction in the picker to keep the count live.
     var root = document.getElementById('root');
     if (root) {
       root.addEventListener('click', function () { setTimeout(refresh, 0); });
+      root.addEventListener('input', function () { setTimeout(refresh, 0); });
     }
 
     // Mount once the deferred component script has loaded.
     function mount() {
-      if (window.Step3Culture && window.ReactDOM && window.React) {
+      if (window.Step4Cuisine && window.ReactDOM && window.React) {
         ReactDOM.createRoot(document.getElementById('root'))
-          .render(React.createElement(window.Step3Culture));
+          .render(React.createElement(window.Step4Cuisine));
         refresh();
       } else {
         setTimeout(mount, 30);
@@ -858,37 +1104,13 @@
     mount();
     refresh();
 
-    var continueBtn = document.getElementById('continue');
-    var fbIn = continueBtn.parentNode;
-    function goStep4() {
-      // Selection is already persisted by the component; ensure a value exists.
-      if (window.kwState && window.kwState.loadStep('experiences') == null) {
-        window.kwState.saveStep('experiences', []);
+    document.getElementById('continue').addEventListener('click', function () {
+      // The component persists cuisine on every change; ensure a value exists
+      // so loading.html / the planner always read a well-formed slice.
+      if (window.kwState && window.kwState.loadStep('cuisine') == null) {
+        window.kwState.saveStep('cuisine', { items: [], allergens: [], diets: [], spice: null, notes: '' });
       }
-      window.location.href = 'step4.html';
-    }
-    continueBtn.addEventListener('click', function () {
-      var seen = window.kwExpVisited || 1, total = window.kwExpTotal || 4;
-      // Gentle, ONE-TIME, equal-weight nudge — only if some categories are still
-      // unseen, and never on the second click. It never blocks: Continue works.
-      if (seen >= total || sessionStorage.getItem('kwExpPeekAsked')) { goStep4(); return; }
-      sessionStorage.setItem('kwExpPeekAsked', '1');
-      countEl.textContent = "There's also Shopping, Famous icons & a trip Beyond Seoul —";
-      countEl.style.color = 'var(--navy)';
-      if (!document.getElementById('peekShow')) {
-        var showBtn = document.createElement('button');
-        showBtn.type = 'button'; showBtn.id = 'peekShow'; showBtn.className = 'kw-peek-show';
-        showBtn.textContent = 'Peek at those';
-        fbIn.insertBefore(showBtn, continueBtn);
-        continueBtn.textContent = 'Continue anyway →';
-        showBtn.addEventListener('click', function () {
-          showBtn.remove();
-          continueBtn.textContent = 'Continue →';
-          countEl.style.color = '';
-          refresh();
-          if (typeof window.kwExpScrollToUnseen === 'function') window.kwExpScrollToUnseen();
-        });
-      }
+      window.location.href = 'loading.html';
     });
   })();
 </script>

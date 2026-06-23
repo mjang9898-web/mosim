@@ -302,3 +302,36 @@ export const DIET_LABELS = {
   "gluten-free": "Gluten-Free",
   "temple": "Buddhist Temple-style"
 };
+
+export const CUISINE_LABELS = {
+  "bibimbap": "Bibimbap — Mixed Rice with Vegetables",
+  "samgyetang": "Samgyetang — Ginseng Chicken Soup",
+  "sundubu": "Sundubu-jjigae — Soft Tofu Stew",
+  "kimchi-jjigae": "Kimchi-jjigae — Aged Kimchi Stew",
+  "doenjang-jjigae": "Doenjang-jjigae — Soybean Paste Stew",
+  "japchae": "Japchae — Sweet Potato Glass Noodles",
+  "naengmyeon": "Naengmyeon — Icy Buckwheat Noodles",
+  "kimbap": "Kimbap — Seaweed Rice Rolls",
+  "mandu": "Mandu — Hand-folded Dumplings",
+  "jeon": "Jeon — Savory Vegetable & Seafood Pancakes",
+  "bossam": "Bossam — Boiled Pork Belly Wraps",
+  "tteokbokki": "Tteokbokki — Spicy Rice Cakes",
+  "hotteok": "Hotteok — Brown Sugar Syrup Pancakes",
+  "bungeoppang": "Bungeoppang — Fish-shaped Red Bean Cakes",
+  "sundae": "Sundae — Korean Blood Sausage Plate",
+  "pajeon": "Haemul-pajeon — Seafood Scallion Pancake",
+  "gwangjang-tour": "Gwangjang Market Food Tour",
+  "samgyeopsal": "Samgyeopsal — Pork Belly Grill",
+  "hanwoo": "Hanwoo — Premium Korean Beef Tasting",
+  "galbi": "Galbi — Marinated Short Rib Grill",
+  "dak-galbi": "Dak-galbi — Spicy Chicken Stir-fry",
+  "jeyuk": "Jeyuk-bokkeum — Fiery Pork Stir-fry",
+  "sutbul-galbi": "Sutbul-Galbi — Charcoal Grill House",
+  "chimaek": "Chimaek — Korean Fried Chicken & Beer",
+  "jokbal": "Jokbal — Soy-braised Pig Trotters",
+  "gopchang": "Gopchang — Grilled Beef Intestines",
+  "budae": "Budae-jjigae — Army Base Hot Pot",
+  "makgeolli-flight": "Makgeolli Flight — Five Brewers",
+  "andong-soju": "Andong Premium Soju Tasting",
+  "dalgona": "Bingsu & Dalgona Dessert Tasting"
+};
