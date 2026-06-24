@@ -283,7 +283,7 @@ renderSchedule(schedule);
 
 ## 하네스: mosim-site 빌드 팀
 
-**목표:** 프론트(JSX/정적)·백엔드(Supabase/serverless/PayPal)·QA(Playwright)·콘텐츠를 전문 에이전트 팀으로 일관되게 빌드/검증한다.
+**목표:** 프론트(JSX/정적)·백엔드(Supabase/serverless/PayPal)·QA(Playwright)·콘텐츠·보안을 전문 에이전트 팀으로 일관되게 빌드/검증한다.
 
 **트리거:** mosim-site의 비자명한 빌드/수정/풀스택 작업 요청 시 `mosim-orchestrator` 스킬을 사용하라(에이전트 팀 기본). 단순 질문/조회는 직접 응답 가능. 에이전트는 `.claude/agents/`, 컨벤션 스킬은 `.claude/skills/mosim-*`에 있다.
 
@@ -291,3 +291,4 @@ renderSchedule(schedule);
 | 날짜 | 변경 내용 | 대상 | 사유 |
 |------|----------|------|------|
 | 2026-05-29 | 초기 구성 (에이전트4 + 스킬3 + 오케스트레이터) | 전체 | 하네스 신규 구축 |
+| 2026-06-24 | security-reviewer 에이전트 + mosim-security-conventions 스킬 추가, 오케스트레이터에 보안 게이트(DB/RLS·auth·결제·api/*·헤더 변경 시 security-reviewer PASS 필수) 편입 | agents/security-reviewer.md, skills/mosim-security-conventions, mosim-orchestrator | 개인정보+건강 민감정보 보호 — 사이트 자체 보안 체계 (장대표님 지시) |

@@ -1,11 +1,13 @@
 ---
 name: mosim-orchestrator
-description: Coordinates the mosim-site agent team (frontend-builder, backend-engineer, visual-qa, content-designer) to deliver features and fixes on this K-wellness lead-gen funnel. Use for ANY non-trivial build/change/fix on mosim-site — UI sections, funnel steps, result page, Supabase/serverless/auth/payment, copy, or full-stack features. Also triggers on follow-ups: "다시 실행/재실행/업데이트/수정/보완", "이전 결과 기반으로", and partial reruns of a prior task. Simple one-off questions can be answered directly without the team.
+description: Coordinates the mosim-site agent team (frontend-builder, backend-engineer, visual-qa, content-designer, security-reviewer) to deliver features and fixes on this K-wellness lead-gen funnel. Use for ANY non-trivial build/change/fix on mosim-site — UI sections, funnel steps, result page, Supabase/serverless/auth/payment, copy, full-stack features, or security review/audit. Also triggers on follow-ups: "다시 실행/재실행/업데이트/수정/보완", "이전 결과 기반으로", "보안 점검/감사", and partial reruns of a prior task. Simple one-off questions can be answered directly without the team.
 ---
 
 # mosim-site Orchestrator
 
-mosim-site의 에이전트 팀을 엮어 기능/수정을 전달한다. 에이전트: frontend-builder, backend-engineer, visual-qa, content-designer (모두 opus). 컨벤션 스킬: mosim-frontend-conventions, mosim-backend-conventions, mosim-visual-verify.
+mosim-site의 에이전트 팀을 엮어 기능/수정을 전달한다. 에이전트: frontend-builder, backend-engineer, visual-qa, content-designer, security-reviewer (모두 opus). 컨벤션 스킬: mosim-frontend-conventions, mosim-backend-conventions, mosim-visual-verify, mosim-security-conventions.
+
+이 사이트는 **개인정보 + 건강 민감정보**를 받는다. 그래서 동작(visual-qa)과 **안전(security-reviewer)** 둘 다 게이트다.
 
 ## Phase 0: 컨텍스트 확인 (시작 시 항상)
 1. `_workspace/` 존재 + 사용자가 부분 수정 요청 → **부분 재실행**(해당 에이전트만 재호출).
@@ -20,8 +22,9 @@ mosim-site의 에이전트 팀을 엮어 기능/수정을 전달한다. 에이�
 |---|---|---|
 | UI 섹션/컴포넌트 | frontend-builder → visual-qa | 카피/디자인 얽히면 content-designer 선행 |
 | 카피/브랜드/디자인 리뷰 | content-designer (→ frontend-builder 배치) | |
-| Supabase/serverless/auth/payment | backend-engineer → visual-qa(e2e) | 비용 트리거 먼저 플래그 |
-| 풀스택 기능 | content-designer/spec → (frontend + backend 팀) → visual-qa | 아래 팀 패턴 |
+| Supabase/serverless/auth/payment | backend-engineer → **security-reviewer** → visual-qa(e2e) | 비용 트리거 먼저 플래그 · 보안 게이트 필수 |
+| 풀스택 기능 | content-designer/spec → (frontend + backend 팀) → visual-qa(+ DB/auth/api 닿으면 security-reviewer) | 아래 팀 패턴 |
+| 보안 점검/감사 | security-reviewer (단독) | mosim-security-conventions 체크리스트로 PASS/FAIL·P0~P2 |
 | 단순 버그픽스 | 영향 에이전트 1명 → visual-qa | |
 
 **비자명한 창작/기능은 먼저 spec을 잡는다**: `superpowers:brainstorming` → `superpowers:writing-plans`로 spec/plan을 만든 뒤 팀이 구현한다(이 프로젝트의 기존 워크플로). 단순/명확하면 생략.
@@ -53,6 +56,7 @@ mosim-site의 에이전트 팀을 엮어 기능/수정을 전달한다. 에이�
 
 ## 끝내기 전 (게이트)
 - UI/풀스택 변경은 **visual-qa PASS 없이 "완료" 금지**(빌드 성공 ≠ 동작). 메모리 [[feedback-visual-verify]] 참조.
+- **보안 민감 변경은 security-reviewer PASS 없이 "완료" 금지.** 대상: **DB 스키마/RLS · auth/로그인 · 결제 · `api/*` 신규·수정 · env/시크릿 · 보안 헤더/CSP · 새 외부 출처/의존성.** 순수 카피·이미지·랜딩 레이아웃 등은 면제(단 사용자 입력을 새로 렌더하면 XSS만 빠르게 확인). 판정 기준은 `mosim-security-conventions`.
 - 비용 발생 항목은 **착수 전 사용자에 플래그**(zero-cost 단계). 메모리 [[zero-cost-build-phase]] 참조.
 - 위험/되돌리기 어려운 작업(푸시·배포·DB 파괴·결제 라이브)은 사용자 확인 후.
 
@@ -63,3 +67,4 @@ mosim-site의 에이전트 팀을 엮어 기능/수정을 전달한다. 에이�
 - **정상**: "result 페이지에 X 섹션 추가" → 초기 실행 → frontend-builder 구현(mosim-frontend-conventions 준수) → visual-qa 데스크탑/모바일 PASS → 보고.
 - **에러**: backend-engineer가 RLS 정책 적용 실패 → 1회 재시도 → 재실패 시 누락 명시하고 나머지 진행, 사용자에 수동 단계 안내.
 - **후속**: "방금 그 섹션 카피만 다시" → Phase 0에서 부분 재실행 판별 → content-designer만 재호출 → frontend-builder 반영 → visual-qa.
+- **보안 게이트**: "새 테이블에 사용자 메모 저장" → backend-engineer 구현 → **security-reviewer 검수**(RLS 본인행만? care.note 비저장 유지? 인증?) → FAIL이면 backend에 회신·수정·재검수 → PASS 후 visual-qa → 보고.
