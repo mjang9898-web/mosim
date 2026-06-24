@@ -12,8 +12,8 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mosim — Experience Korea</title>
-<meta name="description" content="A taste of what you can experience in Korea between your appointments — palaces, markets, the river at dawn, a table of Korean food. Plan it into your trip.">
+<title>Mosim — Korean Food</title>
+<meta name="description" content="A taste of the Korean table between your appointments — from royal hansik to a street-food snack, soothing soups to a sizzling barbecue. Plan it into your trip.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -143,8 +143,8 @@
   <div class="navlinks" id="navlinks">
     <a href="index.html#how">How it works</a>
     <a href="medical.html">Medical</a>
-    <a href="experience.html" class="active">Experience</a>
-    <a href="cuisine.html">Food</a>
+    <a href="experience.html">Experience</a>
+    <a href="cuisine.html" class="active">Food</a>
     <a href="pricing.html">Pricing</a>
     <a href="our-story.html">Our story</a>
     <a href="faq.html">FAQ</a>
@@ -159,8 +159,8 @@
 <div class="wrap">
   <section class="hero">
     <div class="label">Between your appointments</div>
-    <h1 style="margin-top:16px;">Here's what you can experience in Korea.</h1>
-    <p>Your care comes first — but the days around it are yours. A palace at golden hour, a street-food market, the river at dawn, a quiet tea ceremony. A taste below; plan whatever speaks to you into your trip.</p>
+    <h1 style="margin-top:16px;">A taste of the Korean table.</h1>
+    <p>Your care comes first — but the meals around it can be a comfort all their own. From royal hansik to a street-food snack, a soothing bowl of soup to a sizzling barbecue. A taste below; plan whatever speaks to you into your trip.</p>
   </section>
 
   <div id="cats"></div>
@@ -205,15 +205,10 @@
 
 <script>
 (function () {
-  // Old #Cuisine deep links now live on their own page — preserve them.
-  if (location.hash === '#Cuisine') { location.replace('cuisine.html'); return; }
   // Sector order + blurbs (cards themselves come from window.EXPERIENCE_DATA,
   // generated from the funnel source by scripts/build-experience-data.mjs).
   var SECTORS = [
-    { key:'Heritage', blurb:"Palaces, hanok, temples — Korea's living history." },
-    { key:'Shop',     blurb:"Markets, K-beauty, and Seoul's design districts." },
-    { key:'Famous',   blurb:'The icons — the ballpark, the skyline, the fairway, the border.' },
-    { key:'Beyond',   label:'Beyond Seoul', blurb:'A day or two beyond Seoul — Jeju, Busan, Gyeongju and more.' }
+    { key:'Cuisine', blurb:'From royal hansik to a street-food snack.' }
   ];
   var DATA = window.EXPERIENCE_DATA || {};
   var PREVIEW = 4; // cards shown before "more"
