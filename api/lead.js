@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { enforceRateLimit } from './_lib/rate-limit.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,6 +15,9 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  // A real visitor submits the contact form a handful of times at most.
+  // 10 / 10min per IP allows retries/edits but stops form-spam floods.
+  if (enforceRateLimit(req, res, { key: 'lead', limit: 10, windowMs: 10 * 60 * 1000 })) return;
 
   if (!supa) {
     console.error('[api/lead] Supabase env vars not set');

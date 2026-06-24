@@ -3,6 +3,7 @@
 // leads.user_id is set NULL to keep historical lead records (anonymized).
 
 import { createClient } from '@supabase/supabase-js';
+import { enforceRateLimit } from './_lib/rate-limit.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -18,6 +19,9 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  // Account deletion is a rare, confirmed action. 10 / min per IP is ample for a
+  // real user (and any retry) while preventing abuse of the auth-admin delete path.
+  if (enforceRateLimit(req, res, { key: 'delete-account', limit: 10, windowMs: 60 * 1000 })) return;
   if (!admin) return res.status(500).json({ error: 'Server not configured' });
 
   const auth = req.headers.authorization || '';
