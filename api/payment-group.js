@@ -8,6 +8,7 @@ import { companionPayEmail } from './_lib/pay-emails.js';
 import {
   groupSize, tripDays, perPersonFee, ensurePaymentGroup
 } from './_lib/payment-group.js';
+import { enforceRateLimit } from './_lib/rate-limit.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -23,6 +24,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default async function handler(req, res) {
   if (!supa) return res.status(500).json({ error: 'Server not configured' });
+
+  // Covers both the public /pay summary (GET, polled on load + after each payment)
+  // and the owner/admin create-or-get + companion-email (POST). 30 / min per IP
+  // clears all honest use of the shared pay page while capping token brute-force.
+  if (enforceRateLimit(req, res, { key: 'payment-group', limit: 30, windowMs: 60 * 1000 })) return;
 
   if (req.method === 'GET') {
     const token = (req.query.token || '').toString();

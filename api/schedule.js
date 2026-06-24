@@ -6,6 +6,7 @@ import Anthropic from '@anthropic-ai/sdk';
 // planner, edit training/*.md — not this file.
 import { SYSTEM_PROMPT } from './_lib/itinerary-prompt.generated.js';
 import { buildTravelerBrief } from './_lib/traveler-brief.js';
+import { enforceRateLimit } from './_lib/rate-limit.js';
 
 // Itinerary generation runs ~28s for rich multi-city plans; allow headroom so
 // Vercel doesn't kill the function before the model finishes (Hobby max = 60s).
@@ -81,6 +82,9 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  // Paid Claude call — throttle hardest. A normal funnel run hits this 1–2 times,
+  // so 5 / 5min per IP leaves generous headroom while blunting rapid hammering.
+  if (enforceRateLimit(req, res, { key: 'schedule', limit: 5, windowMs: 5 * 60 * 1000 })) return;
   if (!client) {
     console.error('[api/schedule] ANTHROPIC_API_KEY not set');
     return res.status(500).json({ error: 'Server not configured' });
