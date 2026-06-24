@@ -83,10 +83,14 @@
   .morebtn:hover{background:var(--ivory-soft); box-shadow:0 16px 30px -22px rgba(195,154,63,.55);}
   .morebtn .chev{margin-left:6px; color:var(--gold);}
 
-  /* "more is possible" */
-  .more{margin:36px 0 0; background:var(--ivory-soft); border:1px solid var(--line); border-radius:16px; padding:30px 34px; text-align:center;}
-  .more h3{font-size:22px; font-weight:600; margin-bottom:8px;}
-  .more p{font-size:19px; color:var(--ink); line-height:1.6; max-width:none; margin:0 auto;}
+  /* closing gate */
+  .btn-gold{background:var(--gold); color:var(--navy);}
+  .btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--gold);}
+  .gate{margin:64px 0 0; background:var(--navy); color:#fff; border-radius:20px; padding:48px 40px; text-align:center;}
+  .gate h2{color:#fff; font-size:clamp(26px,3.4vw,34px); font-weight:600; text-wrap:balance;}
+  .gate p{color:#D7DCE6; font-size:19px; margin:16px auto 28px; max-width:none; line-height:1.6; text-wrap:balance;}
+  .gate .row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .gate .btn-ghost{color:#fff; border-color:var(--gold-soft);}
 
   /* closing cta */
   .closing{text-align:center; padding:72px 0 88px;}
@@ -185,9 +189,14 @@
     <button class="morebtn" id="moreBtn" type="button" aria-expanded="false" aria-controls="cards">&amp; more — see all care <span class="chev" aria-hidden="true">↓</span></button>
   </div>
 
-  <div class="more">
-    <h3>And much more is possible.</h3>
-    <p>Most guests begin here — but Korea's hospitals do far more. Something else (cardiac, oncology, a second opinion, or care we haven't listed)? Just ask — we'll find the right specialists.</p>
+  <div class="gate" id="gate">
+    <div class="label" style="color:var(--gold-soft);">More to explore</div>
+    <h2 style="margin-top:14px;">And much more is possible.</h2>
+    <p>Most guests begin here — but Korea's hospitals do far more. Cardiac, oncology, a second opinion, or care we haven't listed? Just ask, and we'll find you the right specialists. Start a free account and we'll begin shaping it with you, someone beside you the whole way.</p>
+    <div class="row">
+      <a href="signup.html" class="btn btn-gold">Start a free account</a>
+      <a href="signin.html" class="btn btn-ghost">Sign in</a>
+    </div>
   </div>
 
   <section class="closing">
