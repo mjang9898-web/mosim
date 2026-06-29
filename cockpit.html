@@ -400,7 +400,8 @@
       + '<td class="num">' + Number(m.count || 0) + '</td>'
       + '<td class="num">' + usd(m.gross) + '</td></tr>').join('');
     const feesNote = fees.note ? '<div class="fees-note">' + esc(fees.note) + '</div>' : '';
-    const feesRow = '<tr class="fees"><td>Fees' + feesNote + '</td><td class="num">—</td><td class="num">—</td></tr>';
+    const feesCell = fees.total != null ? '−' + usd(fees.total) : '—';
+    const feesRow = '<tr class="fees"><td>Processing fees' + feesNote + '</td><td class="num">—</td><td class="num">' + feesCell + '</td></tr>';
     const byMethodTable =
       '<div class="fin-sec"><h2>Revenue by method</h2>'
       + '<table class="trips"><thead><tr><th>Method</th><th class="num">Count</th><th class="num">Gross (' + esc(f.currency || 'USD') + ')</th></tr></thead><tbody>'

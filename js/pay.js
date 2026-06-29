@@ -46,10 +46,56 @@
   function loadPayPalSdk(clientId) {
     return new Promise((resolve, reject) => {
       const sc = document.createElement('script');
-      sc.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(clientId) + '&currency=USD';
+      // components=buttons,card-fields → enables both the wallet button and the
+      // Advanced (inline) Card Fields. card-fields only renders if the account is eligible.
+      sc.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(clientId)
+        + '&currency=USD&components=buttons,card-fields';
       sc.onload = resolve; sc.onerror = reject;
       document.head.appendChild(sc);
     });
+  }
+
+  // ── shared validation + order/capture (one source for buttons AND card fields) ──
+  function validAmount(msgEl) {
+    const amt = parseFloat($('amount').value);
+    const max = parseFloat($('amount').max);
+    if (!amt || amt <= 0 || amt > max) {
+      msgEl.style.color = '#a00';
+      msgEl.textContent = 'Enter an amount between $0.01 and ' + fmt(max) + '.';
+      return false;
+    }
+    return true;
+  }
+
+  async function createOrderReq() {
+    $('msg').textContent = '';
+    const r = await fetch('/api/paypal-order', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'create', token, amount: $('amount').value })
+    });
+    const b = await r.json();
+    if (!r.ok) { $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Could not start payment'; throw new Error(b.error || 'create failed'); }
+    return b.orderID;
+  }
+
+  // Captures, then refreshes the on-screen summary. Returns the capture body so
+  // callers (card button) can re-enable themselves on a partial payment.
+  async function captureAndRender(orderID) {
+    const r = await fetch('/api/paypal-order', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'capture', token, orderID })
+    });
+    const b = await r.json();
+    if (!r.ok) { $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Payment failed'; return b; }
+    try {
+      render(await loadSummary());              // authoritative — preserves title & people
+    } catch (_) {
+      $('total').textContent = fmt(b.total); $('paid').textContent = fmt(b.paid); $('balance').textContent = fmt(b.balance);
+      if (b.status === 'paid' || b.balance <= 0) { $('payArea').style.display = 'none'; $('paidArea').style.display = 'block'; }
+    }
+    $('msg').style.color = '#0a6';
+    $('msg').textContent = b.status === 'paid' ? 'Fully paid ✓ Thank you!' : 'Payment received ✓';
+    return b;
   }
 
   function mountButtons() {
@@ -59,45 +105,87 @@
         return actions.resolve();
       },
       createOrder: async () => {
-        $('msg').textContent = '';
         if (!consented()) { warnConsent(); throw new Error('consent required'); }
-        const amt = parseFloat($('amount').value);
-        const max = parseFloat($('amount').max);
-        if (!amt || amt <= 0 || amt > max) {
-          $('msg').style.color = '#a00';
-          $('msg').textContent = 'Enter an amount between $0.01 and ' + fmt(max) + '.';
-          throw new Error('invalid amount');
-        }
-        const r = await fetch('/api/paypal-order', {
-          method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ action: 'create', token, amount: $('amount').value })
-        });
-        const b = await r.json();
-        if (!r.ok) { $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Could not start payment'; throw new Error(b.error); }
-        return b.orderID;
+        if (!validAmount($('msg'))) throw new Error('invalid amount');
+        return createOrderReq();
       },
-      onApprove: async (data) => {
-        const r = await fetch('/api/paypal-order', {
-          method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ action: 'capture', token, orderID: data.orderID })
-        });
-        const b = await r.json();
-        if (!r.ok) { $('msg').style.color = '#a00'; $('msg').textContent = b.error || 'Payment failed'; return; }
-        try {
-          render(await loadSummary());            // authoritative — preserves title & people
-        } catch (_) {
-          // fall back to the totals the capture returned (people/title unchanged on screen)
-          $('total').textContent = fmt(b.total); $('paid').textContent = fmt(b.paid); $('balance').textContent = fmt(b.balance);
-          if (b.status === 'paid' || b.balance <= 0) { $('payArea').style.display = 'none'; $('paidArea').style.display = 'block'; }
-        }
-        $('msg').style.color = '#0a6';
-        $('msg').textContent = b.status === 'paid' ? 'Fully paid ✓ Thank you!' : 'Payment received ✓';
-      },
+      onApprove: async (data) => { await captureAndRender(data.orderID); },
       onError: () => { $('msg').style.color = '#a00'; $('msg').textContent = 'PayPal error — please try again.'; }
     }).render('#paypal-buttons').catch((e) => {
       console.error('paypal mount', e);
       $('msg').style.color = '#a00';
       $('msg').textContent = 'Could not load PayPal. Please reload.';
+    });
+  }
+
+  // Advanced (inline) Card Fields — Visa/MC/Amex/Discover. Renders ONLY if the
+  // PayPal account is eligible for Advanced Card Payments; otherwise the whole
+  // card section stays hidden and the PayPal button alone carries the page.
+  function mountCardFields() {
+    const section = $('card-section');
+    if (!section || !window.paypal || typeof window.paypal.CardFields !== 'function') return;
+    const cardStyle = {
+      input: { 'font-size': '19px', 'font-family': 'Inter, -apple-system, system-ui, sans-serif', color: '#1B2A4A' },
+      '.invalid': { color: '#A4452F' },
+      ':focus': { color: '#1B2A4A' }
+    };
+    let cardField;
+    try {
+      cardField = window.paypal.CardFields({
+        style: cardStyle,
+        createOrder: createOrderReq,
+        // 3DS / Strong Customer Auth is handled by the SDK during submit(); onApprove
+        // only fires once liability is resolved → we capture only on success.
+        onApprove: async (data) => {
+          const b = await captureAndRender(data.orderID);
+          const btn = $('card-submit');
+          if (btn && !(b && (b.status === 'paid' || b.balance <= 0))) { btn.disabled = false; btn.textContent = 'Pay with card'; }
+        },
+        onError: (err) => {
+          console.error('[pay] card-fields error', err);
+          $('card-msg').style.color = '#a00';
+          $('card-msg').textContent = 'We couldn’t complete that card payment. Please re-check the details, or use the PayPal button above.';
+          const btn = $('card-submit'); if (btn) { btn.disabled = false; btn.textContent = 'Pay with card'; }
+        }
+      });
+    } catch (e) {
+      console.error('[pay] CardFields init failed', e);
+      section.style.display = 'none';
+      return;
+    }
+
+    // Eligibility gate: a sandbox/live account without Advanced Card Payments
+    // approval is NOT eligible → hide cleanly (no console errors, button still works).
+    if (!cardField.isEligible || !cardField.isEligible()) {
+      section.style.display = 'none';
+      console.info('[pay] Advanced Card Fields not eligible for this PayPal account — inline card form hidden; PayPal button remains active.');
+      return;
+    }
+
+    try {
+      cardField.NameField().render('#card-name');
+      cardField.NumberField().render('#card-number');
+      cardField.ExpiryField().render('#card-expiry');
+      cardField.CVVField().render('#card-cvv');
+    } catch (e) {
+      console.error('[pay] card field render failed', e);
+      section.style.display = 'none';
+      return;
+    }
+    section.style.display = 'block';
+
+    const btn = $('card-submit');
+    btn.addEventListener('click', () => {
+      $('card-msg').textContent = '';
+      if (!consented()) { warnConsent(); return; }
+      if (!validAmount($('card-msg'))) return;
+      btn.disabled = true; btn.textContent = 'Processing…';
+      cardField.submit().catch((err) => {
+        console.error('[pay] card submit', err);
+        $('card-msg').style.color = '#a00';
+        $('card-msg').textContent = 'That card couldn’t be processed. Please check the number, expiry and code — or use the PayPal button above.';
+        btn.disabled = false; btn.textContent = 'Pay with card';
+      });
     });
   }
 
@@ -201,10 +289,11 @@
       render(summary);
       if (summary.balance > 0 && summary.status !== 'paid') {
         if (cfg.paymentMock) {
-          mountMockButton();
+          mountMockButton();                       // test mode: no SDK, no card fields
         } else {
           await loadPayPalSdk(cfg.paypalClientId);
           mountButtons();
+          mountCardFields();                       // self-hides if account not eligible
         }
       }
     } catch (e) {

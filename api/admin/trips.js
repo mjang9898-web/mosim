@@ -376,6 +376,9 @@ function deriveMethod(p) {
   const cap = (p.paypal_capture_id || '').trim();
   const ord = (p.paypal_order_id || '').trim();
   if (/^mock/i.test(cap) || /^mock/i.test(ord)) return 'test';
+  // Stored method (card/paypal, set at capture) wins; fall back for legacy/pre-migration rows.
+  const stored = (p.method || '').trim().toLowerCase();
+  if (stored === 'card' || stored === 'paypal') return stored;
   if (cap || ord) return 'paypal';
   return 'other';
 }
@@ -392,6 +395,7 @@ async function handleFinance(req, res) {
       { method: 'test',   label: 'Test / mock', count: 0, gross: 0 }
     ],
     fees: { total: null, note: "Processing fees populate once a payment provider's fee reporting is connected." },
+    // ^ total stays null (note shown) until we actually have a fee figure from PayPal.
     transactions: [],
     receivables: []
   };
@@ -422,23 +426,30 @@ async function handleFinance(req, res) {
   const itinByGroup = {};
   groups.forEach((g) => { itinByGroup[g.id] = g.itinerary_id; });
   try {
-    const { data, error } = await admin
-      .from('payments')
-      .select('id, payment_group_id, payer_name, payer_email, amount, paypal_order_id, paypal_capture_id, status, created_at')
-      .order('created_at', { ascending: false })
-      .limit(200);
-    if (error) throw error;
-    const rows = data || [];
+    // Prefer the C4 accounting columns (method/fee_amount/net_amount); if they
+    // aren't migrated yet (db/2026-06-29-payment-fees.sql) PostgREST 400s on the
+    // unknown columns — fall back to the base shape so finance still loads.
+    const FULL_COLS = 'id, payment_group_id, payer_name, payer_email, amount, paypal_order_id, paypal_capture_id, status, method, fee_amount, net_amount, created_at';
+    const BASE_COLS = 'id, payment_group_id, payer_name, payer_email, amount, paypal_order_id, paypal_capture_id, status, created_at';
+    let hasFeeCols = true;
+    let resp = await admin.from('payments').select(FULL_COLS).order('created_at', { ascending: false }).limit(200);
+    if (resp.error) {
+      hasFeeCols = false;
+      resp = await admin.from('payments').select(BASE_COLS).order('created_at', { ascending: false }).limit(200);
+    }
+    if (resp.error) throw resp.error;
+    const rows = resp.data || [];
 
     const methodIdx = {};
     finance.byMethod.forEach((m, i) => { methodIdx[m.method] = i; });
 
-    let collected = 0, refunded = 0;
+    let collected = 0, refunded = 0, fees = 0;
     rows.forEach((p) => {
       const amt = Number(p.amount) || 0;
       const method = deriveMethod(p);
       if (p.status === 'completed') {
         collected += amt;
+        fees += Number(p.fee_amount) || 0;   // 0 when absent → no double-count
         const idx = methodIdx[method];
         if (idx != null) { finance.byMethod[idx].count += 1; finance.byMethod[idx].gross += amt; }
       } else if (p.status === 'refunded') {
@@ -447,7 +458,9 @@ async function handleFinance(req, res) {
     });
     finance.summary.collected = collected;
     finance.summary.refunded = refunded;
-    finance.summary.net = collected - refunded; // fees = 0 today
+    finance.summary.net = collected - refunded - fees;   // PG fees now deducted (C4)
+    // Surface a real fee total once we have fee data; otherwise keep the "not connected yet" note.
+    if (hasFeeCols && fees > 0) finance.fees = { total: fees, note: null };
 
     finance.transactions = rows.map((p) => ({
       id: p.id,
@@ -455,6 +468,7 @@ async function handleFinance(req, res) {
       payer_name: p.payer_name || null,
       payer_email: p.payer_email || null,
       amount: Number(p.amount) || 0,
+      fee: p.fee_amount != null ? Number(p.fee_amount) || 0 : null,
       method: deriveMethod(p),
       status: p.status || null,
       capture_id: p.paypal_capture_id || p.paypal_order_id || null,

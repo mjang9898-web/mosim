@@ -45,10 +45,21 @@ export async function captureOrder(orderId) {
   const pu = data.purchase_units?.[0];
   const cap = pu?.payments?.captures?.[0];
   const payer = data.payer || {};
+  // PG fee + net from PayPal's own breakdown (authoritative — never trust the client).
+  // seller_receivable_breakdown = { gross_amount, paypal_fee, net_amount }.
+  const srb = cap?.seller_receivable_breakdown || {};
+  const fee = srb.paypal_fee?.value != null ? Number(srb.paypal_fee.value) : null;
+  const net = srb.net_amount?.value != null ? Number(srb.net_amount.value) : null;
+  // Distinguish card vs wallet by the order's payment_source (set when paid).
+  const ps = data.payment_source || {};
+  const method = ps.card ? 'card' : (ps.paypal ? 'paypal' : null);
   return {
     captureId: cap?.id || null,
     amount: Number(cap?.amount?.value || 0),
     payerName: [payer.name?.given_name, payer.name?.surname].filter(Boolean).join(' ') || null,
-    payerEmail: payer.email_address || null
+    payerEmail: payer.email_address || null,
+    fee: Number.isFinite(fee) ? fee : null,
+    net: Number.isFinite(net) ? net : null,
+    method
   };
 }

@@ -54,6 +54,19 @@
     .nav-cta{ font-size:15px; font-weight:600; color:#fff; background:var(--navy); border:1.5px solid var(--navy); border-radius:999px; padding:9px 18px; min-height:44px; display:inline-flex; align-items:center; text-decoration:none; white-space:nowrap; }
     .nav-cta:hover{ background:var(--navy-soft); }
     .nav-div{ width:1px; height:22px; background:var(--ink-2); display:inline-block; flex:none; }
+    /* Advanced card fields (inline) — Warm Trust, senior-readable, ≥44px targets */
+    .or-div{ display:flex; align-items:center; gap:12px; margin:24px 0 4px; color:var(--ink-2); font-size:15px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+    .or-div::before,.or-div::after{ content:''; flex:1; height:1px; background:var(--line); }
+    .cf-input{ height:54px; border:1.5px solid var(--line); border-radius:10px; padding:2px 14px; background:#fff; display:flex; align-items:center; }
+    .cf-input.cf-focus{ border-color:var(--gold); box-shadow:0 0 0 2px rgba(195,154,63,.18); }
+    .cf-input.cf-invalid{ border-color:#A4452F; }
+    .cf-row{ display:flex; gap:12px; }
+    .cf-col{ flex:1; min-width:0; }
+    .card-brands{ font-size:14px; color:var(--ink-2); margin:14px 0 0; }
+    .card-pay-btn{ width:100%; font-size:19px; font-weight:600; padding:15px; margin-top:14px; border:0; border-radius:10px; background:var(--navy); color:#fff; cursor:pointer; min-height:50px; }
+    .card-pay-btn:hover{ background:var(--navy-soft); }
+    .card-pay-btn:disabled{ opacity:.6; cursor:default; }
+    #card-msg{ min-height:1.2em; margin-top:11px; font-size:15px; }
   </style>
 </head>
 <body>
@@ -78,6 +91,29 @@
         </label>
         <div id="msg"></div>
         <div id="paypal-buttons"></div>
+
+        <!-- Advanced (inline) card fields — shown only when this PayPal account is
+             eligible for Advanced Card Payments; otherwise hidden (PayPal button stays). -->
+        <div id="card-section" style="display:none">
+          <div class="or-div"><span>or pay with card</span></div>
+          <label for="card-name">Name on card</label>
+          <div id="card-name" class="cf-input"></div>
+          <label for="card-number">Card number</label>
+          <div id="card-number" class="cf-input"></div>
+          <div class="cf-row">
+            <div class="cf-col">
+              <label for="card-expiry">Expiry (MM/YY)</label>
+              <div id="card-expiry" class="cf-input"></div>
+            </div>
+            <div class="cf-col">
+              <label for="card-cvv">Security code</label>
+              <div id="card-cvv" class="cf-input"></div>
+            </div>
+          </div>
+          <div class="card-brands" aria-hidden="true">Visa · Mastercard · Amex · Discover</div>
+          <button type="button" id="card-submit" class="card-pay-btn">Pay with card</button>
+          <div id="card-msg"></div>
+        </div>
       </div>
       <div id="paidArea" style="display:none" class="paid">Fully paid ✓ — thank you!</div>
 

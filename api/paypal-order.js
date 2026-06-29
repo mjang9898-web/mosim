@@ -24,6 +24,24 @@ async function loadGroup(token) {
   return data;
 }
 
+// Best-effort C4 accounting write: set method + PG fee + net on the payment row
+// PayPal just settled. Degrades silently if the columns aren't migrated yet
+// (see db/2026-06-29-payment-fees.sql) — the payment itself is already recorded.
+async function stampFeeAndMethod(cap) {
+  if (!cap || !cap.captureId) return;
+  const patch = {};
+  if (cap.method != null) patch.method = cap.method;
+  if (cap.fee != null) patch.fee_amount = cap.fee;
+  if (cap.net != null) patch.net_amount = cap.net;
+  if (!Object.keys(patch).length) return;
+  try {
+    const { error } = await supa.from('payments').update(patch).eq('paypal_capture_id', cap.captureId);
+    if (error) console.warn('[paypal-order] fee/method stamp skipped (apply db/2026-06-29-payment-fees.sql?)', error.message);
+  } catch (e) {
+    console.warn('[paypal-order] fee/method stamp threw (non-fatal)', e?.message || e);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -100,6 +118,11 @@ export default async function handler(req, res) {
         console.error('[paypal-order] record_payment failed AFTER capture', orderID, cap.captureId, error);
         return res.status(500).json({ error: 'Payment captured but not recorded — contact support' });
       }
+      // C4 accounting: stamp method + PG fee + net on the just-recorded row.
+      // BEST-EFFORT — the payment is already recorded atomically above; if the
+      // fee/method columns aren't migrated yet this degrades silently (no throw,
+      // funnel/payment unaffected). Keyed on the unique PayPal capture id.
+      await stampFeeAndMethod(cap);
       return res.status(200).json({ ok: true, ...data });
     }
 
