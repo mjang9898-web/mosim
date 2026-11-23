@@ -1,0 +1,143 @@
+<!--
+  Mosim — Supabase Auth: Confirm signup email
+  Paste into Supabase → Authentication → Email Templates → "Confirm signup".
+  HARD RULE: {{ .ConfirmationURL }} is used verbatim as the button href. Do not alter/encode/wrap it.
+  Email-safe: table layout + inline styles only. Looks correct with images OFF (text branding).
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Confirm your email — Mosim</title>
+</head>
+<body style="margin:0; padding:0; background-color:#F7F2EA;">
+  <!-- Preheader (hidden) -->
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#F7F2EA; opacity:0;">
+    Welcome to Mosim — confirm your email and we'll be ready whenever you are.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F7F2EA;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
+
+          <!-- Wordmark -->
+          <tr>
+            <td align="center" style="padding:8px 0 24px 0; font-family:Georgia,'Times New Roman',serif; font-size:28px; font-weight:600; color:#1B2A4A; letter-spacing:0.5px;">
+              Mosim<span style="color:#C39A3F;">.</span>
+            </td>
+          </tr>
+
+          <!-- Card -->
+          <tr>
+            <td style="background-color:#FFFFFF; border:1px solid #E5DBC8; border-radius:16px; padding:44px 40px;">
+
+              <!-- Eyebrow label -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-family:-apple-system,Arial,sans-serif; font-size:12.5px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:#C39A3F; padding-bottom:16px;">
+                    Welcome to Mosim
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Headline -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-family:Georgia,'Times New Roman',serif; font-size:27px; line-height:1.3; font-weight:600; color:#1B2A4A; padding-bottom:20px;">
+                    You're never alone in Korea.
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Body -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="font-family:-apple-system,Arial,sans-serif; font-size:18px; line-height:1.65; color:#54514B; padding-bottom:18px;">
+                    Thank you for starting your journey with us. Mosim is your private, full-service concierge in Korea — medical care, travel, and everything in between. A real team plans, accompanies, and looks after you every step of the way.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family:-apple-system,Arial,sans-serif; font-size:18px; line-height:1.65; color:#54514B; padding-bottom:28px;">
+                    Please confirm your email address to finish setting up your account. <strong style="color:#1B2A4A;">Everything you've started is saved and waiting for you</strong> — confirming brings it right back.
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Button -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="padding:4px 0 12px 0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="center" style="background-color:#1B2A4A; border-radius:10px;">
+                          <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block; font-family:-apple-system,Arial,sans-serif; font-size:18px; font-weight:600; color:#FFFFFF; text-decoration:none; padding:17px 38px; border-radius:10px;">
+                            Confirm your email
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Fallback link -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-family:-apple-system,Arial,sans-serif; font-size:15px; line-height:1.6; color:#8A8479; padding-top:14px;">
+                    If the button doesn't work, copy and paste this link into your browser:<br>
+                    <a href="{{ .ConfirmationURL }}" target="_blank" style="color:#1B2A4A; text-decoration:underline; word-break:break-all;">{{ .ConfirmationURL }}</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Divider -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="padding:28px 0 24px 0;">
+                    <span style="color:#C39A3F; font-size:16px;">&bull;</span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Reassurance close -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="font-family:-apple-system,Arial,sans-serif; font-size:16px; line-height:1.6; color:#54514B;">
+                    Whenever you're ready, we're here. No rush, and no pressure — just a steady hand for your time in Korea.
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:28px 24px 8px 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-family:-apple-system,Arial,sans-serif; font-size:14px; line-height:1.6; color:#8A8479; padding-bottom:6px;">
+                    Mosim <span style="color:#C39A3F;">&middot;</span> mosimkorea.com
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="font-family:-apple-system,Arial,sans-serif; font-size:13px; line-height:1.6; color:#8A8479;">
+                    This is a transactional email about your Mosim account. If you didn't create an account, you can safely ignore this message.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

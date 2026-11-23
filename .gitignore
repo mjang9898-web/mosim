@@ -66,3 +66,6 @@ itinerary-preview-sample.pdf
 
 # agent work scratch — never commit
 _workspace_prev/
+
+# Marketing media (videos 1.3GB) — local only, backed up outside git
+marketing/
