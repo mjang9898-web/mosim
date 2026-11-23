@@ -1,11 +1,11 @@
 // Shared concierge-fee math + create-or-get for payment_groups.
-// Single source of truth for the pricing policy ($1,200 per traveler for a 7-day
+// Single source of truth for the pricing policy ($1,900 per traveler for a 7-day
 // trip, prorated to the itinerary's actual day count). Used by:
 //   - api/payment-group.js        (owner/admin creates a group, public summary)
 //   - api/admin/trip-status.js    (auto-create on 'booked')
 import crypto from 'node:crypto';
 
-export const BASE_FEE = 1200;   // concierge fee per traveler for a one-week (7-day) trip
+export const BASE_FEE = 1900;   // concierge fee per traveler for a one-week (7-day) trip
 export const BASE_DAYS = 7;     // the fee is prorated from this baseline to the actual trip length
 
 // How many travelers — current planner model is trip.partySize; fall back to the
@@ -29,7 +29,7 @@ export function tripDays(state, schedule) {
   return byRange[t.length] || BASE_DAYS;
 }
 
-// $1,200 for a 7-day trip, prorated to the actual number of days, per traveler.
+// $1,900 for a 7-day trip, prorated to the actual number of days, per traveler.
 export function perPersonFee(days) {
   return Math.round((BASE_FEE / BASE_DAYS) * days);
 }

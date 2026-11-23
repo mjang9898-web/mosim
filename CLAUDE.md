@@ -48,7 +48,7 @@ mosim-site/
 로그인한 사용자는 result 페이지에서 "Save this itinerary" CTA로 일정을 `public.itineraries`에 영구 저장한다. My Page (`/me.html`)는 Supabase JS로 RLS-보호된 `profiles` + `itineraries`를 직접 읽고, 4개 탭(Itineraries / Status / Profile / Settings)을 렌더한다. 인증은 Supabase Auth — Google OAuth 또는 Email/Password.
 
 로그인 사용자는 저장된 일정에 대해 컨시어지 수수료를 결제할 수 있다. `/api/payment-group`이
-일정당 `payment_groups` 행(총액 = $1,200 × 인원수, 조정 가능)을 만들고, `/pay?g=<token>`는
+일정당 `payment_groups` 행(총액 = $1,900 × 인원수, 조정 가능)을 만들고, `/pay?g=<token>`는
 로그인 없이 누구나 잔액을 분할 결제할 수 있는 공유 페이지다. 결제는 PayPal(한국 법인 계정),
 캡처는 `record_payment()`로 기록된다. 실비는 고객이 vendor에 직접 결제 — Mosim 미관여.
 

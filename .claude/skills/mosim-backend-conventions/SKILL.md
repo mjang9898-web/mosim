@@ -51,7 +51,7 @@ PAT 필요(사용자 발급→작업 후 즉시 revoke). 프로젝트 ref·prod 
 
 ## 결제 (PayPal) — split-payment 배포됨 (2026-05-29)
 - 한국 법인이라 **Stripe 불가 → PayPal**. concierge-fee-only 모델(실비는 vendor로 직접 결제 — Mosim 미관여). 셋업/테스트 무료. `PAYPAL_ENV=sandbox`(운영 전환 시 `live` + 실 법인 키).
-- 테이블: `payment_groups`(itinerary_id, share_token, total_amount=$1200×인원, amount_paid, status `open|paid`) + `payments`(거래 기록). 캡처는 `record_payment()` RPC로 원자적 기록(위 service-definer + REVOKE 패턴).
+- 테이블: `payment_groups`(itinerary_id, share_token, total_amount=$1900×인원, amount_paid, status `open|paid`) + `payments`(거래 기록). 캡처는 `record_payment()` RPC로 원자적 기록(위 service-definer + REVOKE 패턴).
 - 엔드포인트: `/api/payment-group`(소유자 create-or-get + 토큰 public 요약), `/api/paypal-order`(action `create`|`capture`). PayPal는 **SDK 없이 fetch로 REST 호출**(`api/_lib/paypal.js`: OAuth→createOrder→captureOrder). 기록 금액은 **캡처 응답값** 사용(클라 입력 신뢰 X). 페이지: 로그인 없는 `pay.html`+`js/pay.js`(분할 결제 링크). 금액 검증 `api/_lib/amount.js`.
 - 스펙/플랜: `docs/superpowers/specs|plans/2026-05-29-split-payment*`.
 

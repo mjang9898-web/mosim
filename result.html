@@ -305,7 +305,7 @@
   <div class="pay">
     <div class="payrow">
       <div class="pl"><b>To Mosim</b><span>Your concierge — private car &amp; driver, interpreter-guide, every meal, 24/7 support.</span></div>
-      <div class="pr" id="mosimFee">$1,200<small id="mosimFeeNote">per traveler · all-in</small></div>
+      <div class="pr" id="mosimFee">$1,900<small id="mosimFeeNote">per traveler · all-in</small></div>
     </div>
     <div class="payrow direct">
       <div class="pl"><b>To the hospital</b><span>Your medical care — paid directly to the hospital, never marked up by us.<span class="est" id="careEst"><b>Estimate · from the care you chose</b><span class="estnote">Pulled from your chosen medical cards · your hospital confirms the final price.</span></span></span></div>
@@ -381,8 +381,8 @@
     chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
 
     // ---- "What you pay": Mosim fee (party total) + per-care ESTIMATE ----
-    // Fee framing only — numbers unchanged: $1,200 per traveler, one-week prorated.
-    var PER_TRAVELER = 1200;
+    // Fee framing only — numbers unchanged: $1,900 per traveler, one-week prorated.
+    var PER_TRAVELER = 1900;
     var PARTY_SIZE = { solo:1, couple:2, family:4 };
     function fmtUsd(n) { return '$' + Number(n).toLocaleString('en-US'); }
     (function renderMosimFee() {

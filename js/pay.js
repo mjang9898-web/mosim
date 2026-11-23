@@ -28,7 +28,7 @@
   function render(s) {
     $('trip').textContent = s.title + ' · ' + (s.days ? s.days + '-day trip · ' : '') + s.people + (s.people === 1 ? ' traveler' : ' travelers');
     if ($('basis') && s.perPerson) {
-      $('basis').textContent = fmt(s.perPerson) + ' per traveler' + (s.days ? ' · ' + s.days + ' days, prorated from a $1,200 week' : '');
+      $('basis').textContent = fmt(s.perPerson) + ' per traveler' + (s.days ? ' · ' + s.days + ' days, prorated from a $1,900 week' : '');
     }
     $('total').textContent = fmt(s.total);
     $('paid').textContent = fmt(s.paid);

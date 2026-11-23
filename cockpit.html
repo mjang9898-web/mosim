@@ -230,7 +230,7 @@
       <input id="book-total" type="number" min="0" step="1" style="width:140px; font-size:18px; padding:9px 11px; border:1px solid var(--border); border-radius:9px;" />
       <button id="book-recompute" type="button" style="font:inherit; font-size:13px; color:var(--navy); background:none; border:none; text-decoration:underline; cursor:pointer;">recompute</button>
     </div>
-    <div style="font-size:12px; color:#aaa; margin-top:5px;">$1,200 per traveler for a 7-day trip, prorated to this trip's day count. Edit the total if you've agreed on a different amount.</div>
+    <div style="font-size:12px; color:#aaa; margin-top:5px;">$1,900 per traveler for a 7-day trip, prorated to this trip's day count. Edit the total if you've agreed on a different amount.</div>
     <div id="book-msg" style="min-height:1.2em; font-size:14px; margin:14px 0 0;"></div>
     <div id="book-result" style="display:none; margin-top:14px; padding:14px; background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px;"></div>
     <div style="display:flex; gap:10px; margin-top:18px;">
@@ -673,7 +673,7 @@
   }
 
   // ── Booking modal: confirm travelers + concierge total, create payment group ──
-  const BASE_FEE = 1200, BASE_DAYS = 7;
+  const BASE_FEE = 1900, BASE_DAYS = 7;
   const bookModal = document.getElementById('book-modal');
   let bookCtx = null;   // { trip, sel }
 
