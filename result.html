@@ -381,18 +381,41 @@
     chips.forEach(function (c) { var s = document.createElement('span'); s.textContent = c; recapEl.appendChild(s); });
 
     // ---- "What you pay": Mosim fee (party total) + per-care ESTIMATE ----
-    // Fee framing only — numbers unchanged: $1,900 per traveler, one-week prorated.
-    var PER_TRAVELER = 1900;
-    var PARTY_SIZE = { solo:1, couple:2, family:4 };
+    // Mirror of api/_lib/payment-group.js (the source of truth — what the server
+    // actually charges). test/result-fee-parity.test.mjs extracts the block between
+    // the markers below and asserts it matches computeTotal exactly; keep in sync.
+    // FEE-MIRROR:BEGIN
+    var PER_TRAVELER = 1900;   // = BASE_FEE (per traveler, 7-day trip)
+    var BASE_DAYS = 7;         // = BASE_DAYS (prorate baseline)
+    function feeTravelers(st) {          // = groupSize(state)
+      var t = (st && st.trip) || {};
+      var ps = parseInt(t.partySize, 10);
+      if (isFinite(ps) && ps > 0) return ps;
+      var n = (parseInt(t.adults, 10) || 0) + (parseInt(t.children, 10) || 0);
+      return n > 0 ? n : 1;
+    }
+    function feeDays(st, schedule) {     // = tripDays(state, schedule)
+      if (Array.isArray(schedule) && schedule.length > 0) return schedule.length;
+      var t = (st && st.trip) || {};
+      var explicit = parseInt(t.days, 10);
+      if (isFinite(explicit) && explicit > 0) return explicit;
+      var byRange = { under1w: 5, '1to2w': 10, '2plus': 16 };
+      return byRange[t.length] || BASE_DAYS;
+    }
+    function feeTotal(st, schedule) {    // = computeTotal(state, schedule)
+      return Math.round((PER_TRAVELER / BASE_DAYS) * feeDays(st, schedule)) * feeTravelers(st);
+    }
+    // FEE-MIRROR:END
     function fmtUsd(n) { return '$' + Number(n).toLocaleString('en-US'); }
-    (function renderMosimFee() {
-      var n = PARTY_SIZE[trip.party] || 1;
-      var total = PER_TRAVELER * n;
+    // Re-run once the plan resolves (schedule length + possibly restored state).
+    function renderMosimFee() {
+      var n = feeTravelers(state);
+      var total = feeTotal(state, plan);
       var feeEl = document.getElementById('mosimFee');
       var noteEl = document.getElementById('mosimFeeNote');
       if (feeEl) feeEl.firstChild.nodeValue = fmtUsd(total);
       if (noteEl) noteEl.textContent = (n > 1 ? (n + ' travelers') : '1 traveler') + ' · all-in';
-    })();
+    }
 
     // ---- "To the hospital": per-care ESTIMATE from the chosen medical cards ----
     // PLACEHOLDER estimates — replace with real medical-card prices/options when the
@@ -766,6 +789,7 @@
       var itEl = document.getElementById('itinerary'); if (itEl) itEl.hidden = false;
       var dayCount = renderItinerary(plan, trip);
       renderStayEst(dayCount - 1);   // nights = itinerary days − 1 (min 1, clamped in fn)
+      renderMosimFee();              // server formula: plan.length days × traveler count
     }
 
     function toast(text) {
